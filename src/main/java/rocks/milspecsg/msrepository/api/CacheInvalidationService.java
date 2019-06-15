@@ -8,6 +8,12 @@ import java.util.function.Predicate;
 public interface CacheInvalidationService<T> {
 
 
+    /**
+     * Starts cache invalidation task
+     */
+    void startCacheInvalidationTask();
+
+
     Runnable getCacheInvalidationTask();
 
     /**

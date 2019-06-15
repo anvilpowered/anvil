@@ -1,9 +1,9 @@
 package rocks.milspecsg.msrepository.service;
 
 import org.bson.types.ObjectId;
-import rocks.milspecsg.msparties.api.RepositoryCacheService;
-import rocks.milspecsg.msparties.api.config.ConfigurationService;
-import rocks.milspecsg.msparties.model.Dbo;
+import rocks.milspecsg.msrepository.api.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.msrepository.model.Dbo;
 
 import java.util.Optional;
 

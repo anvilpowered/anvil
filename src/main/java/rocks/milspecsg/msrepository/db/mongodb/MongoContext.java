@@ -27,7 +27,7 @@ public abstract class MongoContext {
         datastore.ensureIndexes();
     }
 
-    abstract String getDbName();
+    protected abstract String getDbName();
 
-    abstract void initMorphiaMaps(Morphia morphia);
+    protected abstract void initMorphiaMaps(Morphia morphia);
 }

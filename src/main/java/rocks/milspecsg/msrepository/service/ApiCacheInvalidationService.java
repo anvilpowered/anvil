@@ -27,8 +27,6 @@ public abstract class ApiCacheInvalidationService<T> implements CacheInvalidatio
         startCacheInvalidationTask();
     }
 
-    abstract void startCacheInvalidationTask();
-
     /**
      * Cache invalidation task
      */
