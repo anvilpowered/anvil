@@ -29,3 +29,4 @@ public abstract class Dbo implements ObjectWithId<ObjectId> {
     @PrePersist
     void prePersist() {updatedUtc = new Date();}
 }
+

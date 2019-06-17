@@ -1,4 +1,10 @@
 rootProject.name = 'MSRepository'
 include 'api'
 include 'sponge'
+include 'api:repository'
+findProject(':api:repository')?.name = 'repository'
+include 'api:config'
+findProject(':api:config')?.name = 'config'
+include 'api:repository-cache'
+findProject(':api:repository-cache')?.name = 'repository-cache'
 

@@ -14,6 +14,10 @@ public interface CacheInvalidationService<T> {
     void startCacheInvalidationTask();
 
 
+    /**
+     *
+     * @return Cache invalidation task
+     */
     Runnable getCacheInvalidationTask();
 
     /**
