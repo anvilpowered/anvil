@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'rocks.milspecsg'
-version '0.1.0-dev'
+group = modGroup
+version = modVersion
 
 sourceCompatibility = 1.8
 
