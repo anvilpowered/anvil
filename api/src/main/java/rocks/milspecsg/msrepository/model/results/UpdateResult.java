@@ -37,7 +37,7 @@ public abstract class UpdateResult<TText> extends Result<TText> {
         this.success = success;
     }
 
-    public UpdateResult() {
+    protected UpdateResult() {
     }
 
     public UpdateResult(UpdateResults updateResults) {

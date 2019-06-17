@@ -1,2 +1,4 @@
 rootProject.name = 'MSRepository'
+include 'api'
+include 'sponge'
 

@@ -2,7 +2,7 @@ package rocks.milspecsg.msrepository.model.results;
 
 public abstract class PermissibleResult<TText> extends Result<TText> {
 
-    private PermissibleResult() {
+    protected PermissibleResult() {
     }
 
     public static <T> PermissibleResult<T> success(T successMessage, Class<? extends PermissibleResult<T>> clazz) {
