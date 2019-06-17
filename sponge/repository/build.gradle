@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+configurations {
+    extraLibs
+}
+
+group = modGroup
+version = modVersion
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spongepowered.org/maven' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile project(':api:api-repository')
+    extraLibs project(':api:api-repository')
+
+    compile('org.spongepowered:spongeapi:7.1.0') {
+        exclude(module: 'configurate-gson')
+        exclude(module: 'configurate-yaml')
+    }
+
+    configurations.compile.extendsFrom(configurations.extraLibs)
+}
+
+task testJar(type: Jar) {
+    classifier = 'tests'
+    from sourceSets.test.output
+    from sourceSets.main.output
+    from configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+}
