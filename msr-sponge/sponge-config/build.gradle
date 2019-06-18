@@ -19,7 +19,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     
-    compile project(':MSRepository:msr-api:api-config')
+    compile project(':msr-api:api-config')
 
     compile('org.spongepowered:spongeapi:7.1.0') {
         exclude(module: 'configurate-gson')
