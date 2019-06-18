@@ -6,8 +6,8 @@ configurations {
     extraLibs
 }
 
-group = modGroup
-version = modVersion
+group = "rocks.milspecsg"
+version = "0.1.0-dev"
 
 sourceCompatibility = 1.8
 

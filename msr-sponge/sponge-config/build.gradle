@@ -6,8 +6,8 @@ configurations {
     extraLibs
 }
 
-group = modGroup
-version = modVersion;
+group = "rocks.milspecsg"
+version = "0.1.0-dev"
 
 sourceCompatibility = 1.8
 
@@ -18,9 +18,8 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    compile project(':msr-api:api-config')
-    extraLibs project(':msr-api:api-config')
+    
+    compile project(':MSRepository:msr-api:api-config')
 
     compile('org.spongepowered:spongeapi:7.1.0') {
         exclude(module: 'configurate-gson')
