@@ -8,6 +8,8 @@ import rocks.milspecsg.msrepository.service.config.ApiConfigurationService;
 public class APIConfigurationModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(new TypeLiteral<ConfigurationService>() {}).to(new TypeLiteral<ApiConfigurationService>() {});
+        bind(new TypeLiteral<ConfigurationService>() {
+        }).to(new TypeLiteral<ApiConfigurationService>() {
+        });
     }
 }
