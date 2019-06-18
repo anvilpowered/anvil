@@ -34,5 +34,4 @@ task testJar(type: Jar) {
     from sourceSets.test.output
     from sourceSets.main.output
     from configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
-    exclude 'com.google.inject:guice:4.0'
 }

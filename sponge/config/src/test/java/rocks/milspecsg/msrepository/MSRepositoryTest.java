@@ -40,7 +40,7 @@ public class MSRepositoryTest {
 
         Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, injector.getInstance(ConfigurationService.class).getConfigList(ConfigKeys.SOME_LIST)));
         Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, injector.getInstance(ConfigurationService.class).getConfigMap(ConfigKeys.SOME_MAP)));
-
+        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, injector.getInstance(ConfigurationService.class).getConfigMap(ConfigKeys.ANOTHER_MAP)));
     }
 
     private void initSingletonServices() {

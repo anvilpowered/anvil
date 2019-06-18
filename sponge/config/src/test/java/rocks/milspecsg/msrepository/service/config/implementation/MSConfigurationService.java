@@ -29,6 +29,8 @@ public class MSConfigurationService extends ApiConfigurationService {
         nodeTypeMap.put(ConfigKeys.SOME_LIST, new TypeToken<List<Integer>>() {});
 
         nodeTypeMap.put(ConfigKeys.SOME_MAP, new TypeToken<Map<String, Map<String, Integer>>>() {});
+
+        nodeTypeMap.put(ConfigKeys.ANOTHER_MAP, new TypeToken<Map<Integer, List<String>>>() {});
     }
 
     @Override
@@ -58,6 +60,20 @@ public class MSConfigurationService extends ApiConfigurationService {
         map.put("sub2", sub2);
 
         defaultMapMap.put(ConfigKeys.SOME_MAP, map);
+
+        Map<Integer, List<String>> anotherMap = new HashMap<>();
+
+        List<String> l1 = new ArrayList<>();
+        l1.add("example.permission");
+        l1.add("another.permission");
+        List<String> l2 = new ArrayList<>();
+        l2.add("yes.another.permission");
+        l2.add("another.one");
+
+        anotherMap.put(1235123, l1);
+        anotherMap.put(854823, l2);
+
+        defaultMapMap.put(ConfigKeys.ANOTHER_MAP, anotherMap);
     }
 
     @Override
@@ -68,6 +84,8 @@ public class MSConfigurationService extends ApiConfigurationService {
         nodeNameMap.put(ConfigKeys.SOME_LIST, "someList");
 
         nodeNameMap.put(ConfigKeys.SOME_MAP, "someMap");
+
+        nodeNameMap.put(ConfigKeys.ANOTHER_MAP, "anotherMap");
     }
 
     @Override
@@ -78,5 +96,7 @@ public class MSConfigurationService extends ApiConfigurationService {
         nodeDescriptionMap.put(ConfigKeys.SOME_LIST, "\nSome random list");
 
         nodeDescriptionMap.put(ConfigKeys.SOME_MAP, "\nSome random map");
+
+        nodeDescriptionMap.put(ConfigKeys.ANOTHER_MAP, "\nTesting integer keys");
     }
 }

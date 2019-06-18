@@ -32,21 +32,21 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     protected Map<Integer, Integer> defaultIntegerMap;
     protected Map<Integer, String> defaultStringMap;
     protected Map<Integer, List<?>> defaultListMap;
-    protected Map<Integer, Map<String, ?>> defaultMapMap;
+    protected Map<Integer, Map<?, ?>> defaultMapMap;
 
     protected Map<Integer, Boolean> configBooleanMap;
     protected Map<Integer, Double> configDoubleMap;
     protected Map<Integer, Integer> configIntegerMap;
     protected Map<Integer, String> configStringMap;
     protected Map<Integer, List<?>> configListMap;
-    protected Map<Integer, Map<String, ?>> configMapMap;
+    protected Map<Integer, Map<?, ?>> configMapMap;
 
     protected Map<Integer, Map<Predicate<Boolean>, Function<Boolean, Boolean>>> booleanVerificationMap;
     protected Map<Integer, Map<Predicate<Double>, Function<Double, Double>>> doubleVerificationMap;
     protected Map<Integer, Map<Predicate<Integer>, Function<Integer, Integer>>> integerVerificationMap;
     protected Map<Integer, Map<Predicate<String>, Function<String, String>>> stringVerificationMap;
     protected Map<Integer, Map<Predicate<List<?>>, Function<List<?>, List<?>>>> listVerificationMap;
-    protected Map<Integer, Map<Predicate<Map<String, ?>>, Function<Map<String, ?>, Map<String, ?>>>> mapVerificationMap;
+    protected Map<Integer, Map<Predicate<Map<?, ?>>, Function<Map<?, ?>, Map<?, ?>>>> mapVerificationMap;
 
     /**
      * Maps {@link ConfigKeys} to configuration node names
@@ -179,6 +179,11 @@ public abstract class ApiConfigurationService implements ConfigurationService {
      */
     protected <T> T initConfigValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<? super T> typeToken, boolean[] modified) {
 
+        if (typeToken == null) {
+            throw new IllegalStateException("TypeToken cannot be null");
+        }
+
+
         // it ain't pretty but it works
 
         if (typeToken.isSubtypeOf(List.class)) {
@@ -205,14 +210,14 @@ public abstract class ApiConfigurationService implements ConfigurationService {
             try {
 
                 Method getMethod = Map.class.getMethod("get", Object.class);
-                Invokable<?, ?> invokable = nodeTypeMap.get(nodeKey).method(getMethod);
+                Invokable<?, ?> invokable = typeToken.method(getMethod);
                 TypeToken<?> subType = invokable.getReturnType();
 
-                Map<String, Object> result = new HashMap<>();
+                Map<Object, Object> result = new HashMap<>();
 
                 for (Map.Entry<?, ? extends CommentedConfigurationNode> entry : node.getChildrenMap().entrySet()) {
                     // here comes the recursion
-                    result.put((String) entry.getValue().getKey(), initConfigValue(null, entry.getValue(), subType, modified));
+                    result.put(entry.getValue().getKey(), initConfigValue(null, entry.getValue(), subType, modified));
                 }
 
                 if (nodeKey != null) configMapMap.put(nodeKey, result);
@@ -333,23 +338,23 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public <T> List<T> getDefaultList(int key, TypeToken<T> typeToken) {
+    public <T extends List<?>> T getDefaultList(int key, TypeToken<T> typeToken) {
         if (assertType(key, typeToken)) {
-            return (List<T>) defaultListMap.get(key);
+            return (T) defaultListMap.get(key);
         } else {
             throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
         }
     }
 
     @Override
-    public Map<String, ?> getDefaultMap(int key) {
+    public Map<?, ?> getDefaultMap(int key) {
         return defaultMapMap.get(key);
     }
 
     @Override
-    public <T> Map<String, T> getDefaultMap(int key, TypeToken<T> typeToken) {
+    public <T extends Map<?, ?>> T getDefaultMap(int key, TypeToken<T> typeToken) {
         if (assertType(key, typeToken)) {
-            return (Map<String, T>) defaultMapMap.get(key);
+            return (T) defaultMapMap.get(key);
         } else {
             throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
         }
@@ -381,23 +386,23 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public <T> List<T> getConfigList(int key, TypeToken<T> typeToken) {
+    public <T extends List<?>> T getConfigList(int key, TypeToken<T> typeToken) {
         if (assertType(key, typeToken)) {
-            return (List<T>) getConfigList(key);
+            return (T) getConfigList(key);
         } else {
             throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
         }
     }
 
     @Override
-    public Map<String, ?> getConfigMap(int key) {
+    public Map<?, ?> getConfigMap(int key) {
         return getValue(configMapMap, defaultMapMap, key);
     }
 
     @Override
-    public <T> Map<String, T> getConfigMap(int key, TypeToken<T> typeToken) {
+    public <T extends Map<?,?>> T getConfigMap(int key, TypeToken<T> typeToken) {
         if (assertType(key, typeToken)) {
-            return (Map<String, T>) getConfigList(key);
+            return (T) getConfigList(key);
         } else {
             throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
         }

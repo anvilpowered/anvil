@@ -56,20 +56,20 @@ public interface ConfigurationService {
      * @param typeToken {@link TypeToken} of value
      * @return default value for this key
      */
-    <T> List<T> getDefaultList(int key, TypeToken<T> typeToken);
+    <T extends List<?>> T getDefaultList(int key, TypeToken<T> typeToken);
 
     /**
      * @param key corresponds to {@link ConfigKeys} final ints
      * @return default value for this key
      */
-    Map<String, ?> getDefaultMap(int key);
+    Map<?, ?> getDefaultMap(int key);
 
     /**
      * @param key       corresponds to {@link ConfigKeys} final ints
      * @param typeToken {@link TypeToken} of value
      * @return default value for this key
      */
-    <T> Map<String, T> getDefaultMap(int key, TypeToken<T> typeToken);
+    <T extends Map<?, ?>> T getDefaultMap(int key, TypeToken<T> typeToken);
 
 //    /**
 //     * Will provide default values if the ones from the service are not present
@@ -122,20 +122,20 @@ public interface ConfigurationService {
      * @param typeToken {@link TypeToken} of value
      * @return default value for this key
      */
-    <T> List<T> getConfigList(int key, TypeToken<T> typeToken);
+    <T extends List<?>> T getConfigList(int key, TypeToken<T> typeToken);
 
     /**
      * @param key corresponds to {@link ConfigKeys} final ints
      * @return default value for this key
      */
-    Map<String, ?> getConfigMap(int key);
+    Map<?, ?> getConfigMap(int key);
 
     /**
      * @param key       corresponds to {@link ConfigKeys} final ints
      * @param typeToken {@link TypeToken} of value
      * @return default value for this key
      */
-    <T> Map<String, T> getConfigMap(int key, TypeToken<T> typeToken);
+    <T extends Map<?, ?>> T getConfigMap(int key, TypeToken<T> typeToken);
 
 
 }
