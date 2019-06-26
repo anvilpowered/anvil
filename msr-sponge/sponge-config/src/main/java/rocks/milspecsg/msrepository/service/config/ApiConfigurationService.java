@@ -6,7 +6,9 @@ import com.google.inject.Inject;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
+import org.spongepowered.api.text.Text;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 
@@ -180,7 +182,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     protected <T> T initConfigValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<? super T> typeToken, boolean[] modified) {
 
         if (typeToken == null) {
-            throw new IllegalStateException("TypeToken cannot be null");
+            throw new IllegalStateException("NodeTypeKey " + nodeKey + " does not exist. This needs to be added in your implementation of ApiConfigurationService!");
         }
 
 
@@ -339,11 +341,8 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     @Override
     public <T extends List<?>> T getDefaultList(int key, TypeToken<T> typeToken) {
-        if (assertType(key, typeToken)) {
-            return (T) defaultListMap.get(key);
-        } else {
-            throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
-        }
+        return getAssertedType(key, typeToken, k -> defaultListMap.get(key));
+
     }
 
     @Override
@@ -353,11 +352,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     @Override
     public <T extends Map<?, ?>> T getDefaultMap(int key, TypeToken<T> typeToken) {
-        if (assertType(key, typeToken)) {
-            return (T) defaultMapMap.get(key);
-        } else {
-            throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
-        }
+        return getAssertedType(key, typeToken, k -> defaultMapMap.get(key));
     }
 
     @Override
@@ -387,11 +382,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     @Override
     public <T extends List<?>> T getConfigList(int key, TypeToken<T> typeToken) {
-        if (assertType(key, typeToken)) {
-            return (T) getConfigList(key);
-        } else {
-            throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
-        }
+        return getAssertedType(key, typeToken, this::getConfigList);
     }
 
     @Override
@@ -400,12 +391,8 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public <T extends Map<?,?>> T getConfigMap(int key, TypeToken<T> typeToken) {
-        if (assertType(key, typeToken)) {
-            return (T) getConfigList(key);
-        } else {
-            throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value");
-        }
+    public <T extends Map<?, ?>> T getConfigMap(int key, TypeToken<T> typeToken) {
+        return getAssertedType(key, typeToken, this::getConfigMap);
     }
 
     /**
@@ -422,7 +409,25 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         } else return defaultMap.get(key);
     }
 
-    protected boolean assertType(int key, TypeToken<?> typeToken) {
-        return nodeTypeMap.containsKey(key) && nodeTypeMap.get(key).equals(typeToken);
+    protected <T> T getAssertedType(int key, TypeToken<T> typeToken, Function<Integer, ?> getter) {
+
+        boolean a = nodeTypeMap.containsKey(key);
+        boolean b = nodeTypeMap.get(key).isSupertypeOf(typeToken);
+
+        if (a && b) {
+            return (T) getter.apply(key);
+        } else if (a) {
+            System.err.println("Asserted type mismatch");
+            System.err.println("Type in map: " + nodeTypeMap.get(key).toString());
+            System.err.println("Asserted type: " + typeToken.toString());
+            throw new IllegalArgumentException("Invalid TypeToken or TypeToken does not match stored value for key: " + key + ", name: " + nodeNameMap.getOrDefault(key, "(no name)"));
+        } else {
+            throw new IllegalStateException("NodeTypeKey " + key + " does not exist. This needs to be added in your implementation of ApiConfigurationService!");
+        }
+    }
+
+    @Override
+    public TypeToken<?> getType(int key) {
+        return nodeTypeMap.get(key);
     }
 }

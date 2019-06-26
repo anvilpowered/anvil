@@ -1,9 +1,7 @@
 plugins {
     id 'java'
-}
-
-configurations {
-    extraLibs
+    id 'com.github.johnrengelman.shadow' version '4.0.0'
+    id 'org.spongepowered.plugin' version '0.8.1'
 }
 
 group = "rocks.milspecsg"
@@ -28,9 +26,21 @@ dependencies {
     //configurations.compile.extendsFrom(configurations.extraLibs)
 }
 
-task testJar(type: Jar) {
+shadowJar {
+
     classifier = 'tests'
     from sourceSets.test.output
     from sourceSets.main.output
-    from configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    configurations = [project.configurations.testRuntime]
+
+    dependencies {
+//        include(dependency(':msrepository:msr-sponge:spo'))
+////        include(dependency('rocks.milspecsg.msrepository:.*'))
+
+        include project(':msr-api:api-config')
+    }
+}
+
+artifacts {
+    archives shadowJar
 }

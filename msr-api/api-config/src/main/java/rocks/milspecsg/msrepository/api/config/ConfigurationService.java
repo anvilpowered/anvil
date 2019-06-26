@@ -138,4 +138,7 @@ public interface ConfigurationService {
     <T extends Map<?, ?>> T getConfigMap(int key, TypeToken<T> typeToken);
 
 
+    TypeToken<?> getType(int key);
+
+
 }

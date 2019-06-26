@@ -1,5 +1,6 @@
 package rocks.milspecsg.msrepository;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -14,6 +15,9 @@ import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.service.config.ApiConfigurationService;
 import rocks.milspecsg.msrepository.service.config.ConfigKeys;
 import rocks.milspecsg.msrepository.service.config.implementation.MSConfigurationService;
+
+import java.util.List;
+import java.util.Map;
 
 @Plugin(id = PluginInfo.Id, name = PluginInfo.Name, version = PluginInfo.Version, description = PluginInfo.Description, authors = PluginInfo.Authors, url = PluginInfo.Url)
 public class MSRepositoryTest {
@@ -38,9 +42,14 @@ public class MSRepositoryTest {
         initSingletonServices();
         Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Finished"));
 
-        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, injector.getInstance(ConfigurationService.class).getConfigList(ConfigKeys.SOME_LIST)));
-        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, injector.getInstance(ConfigurationService.class).getConfigMap(ConfigKeys.SOME_MAP)));
-        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, injector.getInstance(ConfigurationService.class).getConfigMap(ConfigKeys.ANOTHER_MAP)));
+        // tests
+
+        ConfigurationService configurationService = injector.getInstance(ConfigurationService.class);
+
+
+        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, configurationService.getConfigList(ConfigKeys.SOME_LIST, new TypeToken<List<Integer>>() {})));
+        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, configurationService.getConfigMap(ConfigKeys.SOME_MAP, new TypeToken<Map<String, Map<String, Integer>>>() {})));
+        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, configurationService.getConfigMap(ConfigKeys.ANOTHER_MAP, new TypeToken<Map<Integer, List<String>>>() {})));
     }
 
     private void initSingletonServices() {
