@@ -28,7 +28,13 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
     @Override
     public CompletableFuture<Optional<T>> insertOne(T item) {
         return CompletableFuture.supplyAsync(() -> {
-            Key<T> key = mongoContext.datastore.save(item);
+            Key<T> key;
+            try {
+                key = mongoContext.datastore.save(item);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Optional.empty();
+            }
             item.setId((ObjectId) key.getId());
             return Optional.of(item);
         });
