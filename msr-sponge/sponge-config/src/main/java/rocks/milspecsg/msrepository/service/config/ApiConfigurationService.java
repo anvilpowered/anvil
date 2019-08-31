@@ -49,7 +49,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     protected Map<Integer, Map<Predicate<String>, Function<String, String>>> stringVerificationMap;
     protected Map<Integer, Map<Predicate<List<?>>, Function<List<?>, List<?>>>> listVerificationMap;
     protected Map<Integer, Map<Predicate<Map<?, ?>>, Function<Map<?, ?>, Map<?, ?>>>> mapVerificationMap;
-
+//    protected Map<Integer, Map<? extends Predicate<? extends Map<?, ?>>, ? extends Function<? extends Map<?, ?>, ? extends Map<?, ?>>>> mapVerificationMap;
     /**
      * Maps {@link ConfigKeys} to configuration node names
      */
@@ -115,7 +115,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     abstract protected void initNodeDescriptionMap();
 
-    protected void initConfigMaps() {
+    public void initConfigMaps() {
         configBooleanMap = new HashMap<>();
         configDoubleMap = new HashMap<>();
         configIntegerMap = new HashMap<>();
