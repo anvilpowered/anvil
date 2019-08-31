@@ -182,7 +182,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
      * @param typeToken {@link TypeToken} representing the type of node. Use {@link #nodeTypeMap}
      * @return {@code true} if values were modified from service value, {@code false} otherwise
      */
-    protected <T> T initConfigValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<? super T> typeToken, boolean[] modified) {
+    protected <T> T initConfigValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<? extends T> typeToken, boolean[] modified) {
 
         if (typeToken == null) {
             throw new IllegalStateException("NodeTypeKey " + nodeKey + " does not exist. This needs to be added in your implementation of ApiConfigurationService!");
@@ -197,7 +197,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
             try {
 
                 Method getMethod = List.class.getMethod("get", int.class);
-                Invokable<? super T, ?> invokable = typeToken.method(getMethod);
+                Invokable<? extends T, ?> invokable = typeToken.method(getMethod);
                 List<?> list = verify(listVerificationMap.get(nodeKey), node.getList(invokable.getReturnType()), node, modified);
 
                 if (nodeKey != null) configListMap.put(nodeKey, list);
