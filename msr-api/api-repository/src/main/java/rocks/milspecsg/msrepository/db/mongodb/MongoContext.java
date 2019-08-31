@@ -12,14 +12,14 @@ public abstract class MongoContext {
 
     public Datastore datastore;
 
-    public void init(String hostname, int port, String dbName, String user, String password) {
+    public void init(String hostname, int port, String dbName, String username, String password) {
         String encodedPassword = password;
         try {
             encodedPassword = URLEncoder.encode(password, "UTF-8");
         } catch (UnsupportedEncodingException ignored) {
         }
 
-        String client_url = "mongodb://" + user + ":" + encodedPassword + "@" + hostname + ":" + port + "/";
+        String client_url = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/";
         MongoClientURI uri = new MongoClientURI(client_url);
 
         MongoClient mongoClient = new MongoClient(uri);
