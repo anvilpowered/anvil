@@ -9,6 +9,7 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.text.Text;
+import rocks.milspecsg.msrepository.api.config.ConfigLoadedListener;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 
@@ -65,8 +66,14 @@ public abstract class ApiConfigurationService implements ConfigurationService {
      */
     protected Map<Integer, TypeToken<?>> nodeTypeMap;
 
+    /**
+     * Stores a list of {@link ConfigLoadedListener} to notify
+     */
+    private List<ConfigLoadedListener> configLoadedListeners;
+
     @Inject
     public ApiConfigurationService(@DefaultConfig(sharedRoot = false) ConfigurationLoader<CommentedConfigurationNode> configLoader) {
+        configLoadedListeners = new ArrayList<>();
         this.configLoader = configLoader;
         //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Loading service"));
 
@@ -101,6 +108,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         configStringMap = new HashMap<>();
         configListMap = new HashMap<>();
         configMapMap = new HashMap<>();
+
         //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Config done"));
     }
 
@@ -116,6 +124,21 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     public void load() {
         initConfigMaps();
+        notifyConfigLoadedListeners();
+    }
+
+    private void notifyConfigLoadedListeners() {
+        configLoadedListeners.forEach(ConfigLoadedListener::loaded);
+    }
+
+    @Override
+    public void addConfigLoadedListener(ConfigLoadedListener configLoadedListener) {
+        this.configLoadedListeners.add(configLoadedListener);
+    }
+
+    @Override
+    public void removeConfigLoadedListener(ConfigLoadedListener configLoadedListener) {
+        this.configLoadedListeners.remove(configLoadedListener);
     }
 
     private void initConfigMaps() {

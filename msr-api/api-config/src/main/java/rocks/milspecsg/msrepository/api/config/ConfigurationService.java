@@ -14,6 +14,10 @@ public interface ConfigurationService {
      */
     void load();
 
+    void addConfigLoadedListener(ConfigLoadedListener configLoadedListener);
+
+    void removeConfigLoadedListener(ConfigLoadedListener configLoadedListener);
+
     /**
      * @param key corresponds to {@link ConfigKeys} final ints
      * @return default value for this key
