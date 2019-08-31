@@ -9,6 +9,12 @@ import java.util.Optional;
 public interface ConfigurationService {
 
     /**
+     * Loads config values
+     * Must be run
+     */
+    void load();
+
+    /**
      * @param key corresponds to {@link ConfigKeys} final ints
      * @return default value for this key
      */

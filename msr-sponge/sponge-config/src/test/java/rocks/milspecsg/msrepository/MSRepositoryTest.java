@@ -34,6 +34,8 @@ public class MSRepositoryTest {
     public void onServerStart(GameStartedServerEvent event) {
     }
 
+
+
     @Listener
     public void onServerInitialization(GameInitializationEvent event) {
         plugin = this;

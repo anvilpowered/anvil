@@ -101,7 +101,6 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         configStringMap = new HashMap<>();
         configListMap = new HashMap<>();
         configMapMap = new HashMap<>();
-        initConfigMaps();
         //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Config done"));
     }
 
@@ -115,7 +114,11 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     abstract protected void initNodeDescriptionMap();
 
-    public void initConfigMaps() {
+    public void load() {
+        initConfigMaps();
+    }
+
+    private void initConfigMaps() {
         configBooleanMap = new HashMap<>();
         configDoubleMap = new HashMap<>();
         configIntegerMap = new HashMap<>();
