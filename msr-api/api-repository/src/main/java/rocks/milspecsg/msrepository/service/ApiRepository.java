@@ -2,6 +2,7 @@ package rocks.milspecsg.msrepository.service;
 
 import com.google.inject.Inject;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -30,7 +31,11 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
         return CompletableFuture.supplyAsync(() -> {
             Key<T> key;
             try {
-                key = mongoContext.datastore.save(item);
+                Optional<Datastore> optionalDatastore = mongoContext.getDataStore();
+                if (!optionalDatastore.isPresent()) {
+                    return Optional.empty();
+                }
+                key = optionalDatastore.get().save(item);
             } catch (Exception e) {
                 e.printStackTrace();
                 return Optional.empty();
