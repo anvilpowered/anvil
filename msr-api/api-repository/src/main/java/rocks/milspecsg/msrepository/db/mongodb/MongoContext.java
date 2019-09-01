@@ -7,10 +7,11 @@ import org.mongodb.morphia.Morphia;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Optional;
 
 public abstract class MongoContext {
 
-    public Datastore datastore = null;
+    private Datastore datastore = null;
 
     public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
 
@@ -41,7 +42,11 @@ public abstract class MongoContext {
     }
 
     public void closeConnection() {
-        datastore.getMongo().close();
+        if (datastore != null) datastore.getMongo().close();
+    }
+
+    public Optional<Datastore> getDataStore() {
+        return Optional.ofNullable(datastore);
     }
 
     protected abstract void initMorphiaMaps(Morphia morphia);
