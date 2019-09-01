@@ -14,6 +14,7 @@ public abstract class MongoContext {
 
     public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
 
+        datastore.getMongo().close();
         String client_url;
 
         if (useAuth) {
@@ -39,6 +40,7 @@ public abstract class MongoContext {
         datastore = morphia.createDatastore(mongoClient, dbName);
         datastore.ensureIndexes();
     }
+
 
     protected abstract void initMorphiaMaps(Morphia morphia);
 }
