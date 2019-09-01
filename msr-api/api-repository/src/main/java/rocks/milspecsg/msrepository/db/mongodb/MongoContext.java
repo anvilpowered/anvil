@@ -10,7 +10,7 @@ import java.net.URLEncoder;
 
 public abstract class MongoContext {
 
-    public Datastore datastore;
+    public Datastore datastore = null;
 
     public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
 
