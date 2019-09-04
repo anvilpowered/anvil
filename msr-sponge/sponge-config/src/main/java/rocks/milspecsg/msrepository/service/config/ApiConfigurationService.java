@@ -20,7 +20,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * Service to load and save data from a service file
+ * Service to load and save data from a config file
  *
  * @author Cableguy20
  */
@@ -203,7 +203,6 @@ public abstract class ApiConfigurationService implements ConfigurationService {
      * @param nodeKey   {@link Integer} key of node
      * @param node      {@link CommentedConfigurationNode} to get value from
      * @param typeToken {@link TypeToken} representing the type of node. Use {@link #nodeTypeMap}
-     * @return {@code true} if values were modified from service value, {@code false} otherwise
      */
     protected <T> T initConfigValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<? extends T> typeToken, boolean[] modified) {
 

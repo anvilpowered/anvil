@@ -19,11 +19,11 @@ import java.util.function.Supplier;
 
 public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
 
+    @Inject
     protected MongoContext mongoContext;
 
     @Inject
-    public ApiRepository(MongoContext mongoContext) {
-        this.mongoContext = mongoContext;
+    public ApiRepository() {
     }
 
     @Override

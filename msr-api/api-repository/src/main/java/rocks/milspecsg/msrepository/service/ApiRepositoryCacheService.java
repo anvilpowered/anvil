@@ -1,5 +1,6 @@
 package rocks.milspecsg.msrepository.service;
 
+import com.google.inject.Inject;
 import org.bson.types.ObjectId;
 import rocks.milspecsg.msrepository.api.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
@@ -9,6 +10,7 @@ import java.util.Optional;
 
 public abstract class ApiRepositoryCacheService<T extends Dbo> extends ApiCacheInvalidationService<T> implements RepositoryCacheService<T> {
 
+    @Inject
     public ApiRepositoryCacheService(ConfigurationService configurationService) {
         super(configurationService);
     }
