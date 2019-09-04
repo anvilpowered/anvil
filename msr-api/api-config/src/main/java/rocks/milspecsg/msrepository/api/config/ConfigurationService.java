@@ -12,7 +12,7 @@ public interface ConfigurationService {
      * Loads config values
      * Must be run
      */
-    void load();
+    void load(Object plugin);
 
     void addConfigLoadedListener(ConfigLoadedListener configLoadedListener);
 

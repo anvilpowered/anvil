@@ -122,13 +122,13 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     abstract protected void initNodeDescriptionMap();
 
-    public void load() {
+    public void load(Object plugin) {
         initConfigMaps();
-        notifyConfigLoadedListeners();
+        notifyConfigLoadedListeners(plugin);
     }
 
-    private void notifyConfigLoadedListeners() {
-        configLoadedListeners.forEach(ConfigLoadedListener::loaded);
+    private void notifyConfigLoadedListeners(Object plugin) {
+        configLoadedListeners.forEach(listener -> listener.loaded(plugin));
     }
 
     @Override
