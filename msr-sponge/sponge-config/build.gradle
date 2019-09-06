@@ -28,6 +28,8 @@ dependencies {
 
 shadowJar {
 
+    archiveName = "MSRepositoryTest.jar"
+
     classifier = 'tests'
     from sourceSets.test.output
     from sourceSets.main.output

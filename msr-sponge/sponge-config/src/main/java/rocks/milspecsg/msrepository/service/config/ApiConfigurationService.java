@@ -71,6 +71,8 @@ public abstract class ApiConfigurationService implements ConfigurationService {
      */
     private List<ConfigLoadedListener> configLoadedListeners;
 
+    private boolean configValuesEdited = false;
+
     @Inject
     public ApiConfigurationService(@DefaultConfig(sharedRoot = false) ConfigurationLoader<CommentedConfigurationNode> configLoader) {
         configLoadedListeners = new ArrayList<>();
@@ -127,6 +129,24 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         notifyConfigLoadedListeners(plugin);
     }
 
+    public void save() {
+        //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Saving config"));
+        if (configValuesEdited) {
+            for (Integer nodeKey : nodeNameMap.keySet()) {
+                CommentedConfigurationNode node = rootConfigurationNode.getNode(nodeNameMap.get(nodeKey));
+                //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Loading node " + nodeKey));
+                saveConfigValue(nodeKey, node, nodeTypeMap.get(nodeKey));
+            }
+            configValuesEdited = false;
+        }
+
+        try {
+            configLoader.save(rootConfigurationNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void notifyConfigLoadedListeners(Object plugin) {
         configLoadedListeners.forEach(listener -> listener.loaded(plugin));
     }
@@ -176,27 +196,31 @@ public abstract class ApiConfigurationService implements ConfigurationService {
             }
         }
         if (updatedCount > 0) {
-            //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Saving service"));
-            try {
-                configLoader.save(rootConfigurationNode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+          save();
         }
     }
 
-    protected <T> void saveDefaultValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<T> typeToken) {
-        Optional<? extends T> def = getDefault(nodeKey, typeToken);
+    private <T> void saveValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<T> typeToken, Optional<? extends T> value) {
         try {
-            if (def.isPresent()) {
+            if (value.isPresent()) {
                 //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Saving service value (" + clazz.getName() + ")" + def.get()));
-                node.setValue(def.get());
+                node.setValue(value.get());
             } else {
                 throw new Exception("Casting error while generating configuration: This should not happen, please report this incident on the plugin page");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected <T> void saveConfigValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<T> typeToken) {
+        Optional<? extends T> def = getConfig(nodeKey, typeToken);
+        saveValue(nodeKey, node, typeToken, def);
+    }
+
+    protected <T> void saveDefaultValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<T> typeToken) {
+        Optional<? extends T> def = getDefault(nodeKey, typeToken);
+        saveValue(nodeKey, node, typeToken, def);
     }
 
     /**
@@ -340,6 +364,30 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     }
 
     @Override
+    public <T> Optional<? extends T> getConfig(int key, TypeToken<T> typeToken) {
+        try {
+            if (typeToken.isSubtypeOf(Boolean.class)) {
+                return Optional.of((T) getConfigBoolean(key));
+            } else if (typeToken.isSubtypeOf(Double.class)) {
+                return Optional.of((T) getConfigDouble(key));
+            } else if (typeToken.isSubtypeOf(Integer.class)) {
+                return Optional.of((T) getConfigInteger(key));
+            } else if (typeToken.isSubtypeOf(String.class)) {
+                return Optional.of((T) getConfigString(key));
+            } else if (typeToken.isSubtypeOf(List.class)) {
+                return Optional.of((T) getConfigList(key));
+            } else if (typeToken.isSubtypeOf(Map.class)) {
+                return Optional.of((T) getConfigMap(key));
+            } else {
+                throw new Exception("Class did not match any values");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Boolean getDefaultBoolean(int key) {
         return defaultBooleanMap.get(key);
     }
@@ -449,6 +497,54 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         } else {
             throw new IllegalStateException("NodeTypeKey " + key + " does not exist. This needs to be added in your implementation of ApiConfigurationService!");
         }
+    }
+
+    @Override
+    public void setConfigBoolean(int key, Boolean value) {
+        configBooleanMap.put(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public void setConfigDouble(int key, Double value) {
+        configDoubleMap.put(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public void setConfigInteger(int key, Integer value) {
+        configIntegerMap.put(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public void setConfigString(int key, String value) {
+        configStringMap.put(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public void setConfigList(int key, List<?> value) {
+        configListMap.put(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <T, L extends List<T>> void addToConfigList(int key, T value, TypeToken<L> typeToken) {
+        ((L) configListMap.get(key)).add(value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public void setConfigMap(int key, Map<?, ?> map) {
+        configMapMap.put(key, map);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <K, T, M extends Map<K, T>> void addToConfigMap(int key, K mapKey, T value, TypeToken<M> typeToken) {
+        ((M) configMapMap.get(key)).put(mapKey, value);
+        configValuesEdited = true;
     }
 
     @Override

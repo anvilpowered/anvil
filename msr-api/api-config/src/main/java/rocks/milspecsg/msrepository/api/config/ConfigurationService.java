@@ -14,6 +14,8 @@ public interface ConfigurationService {
      */
     void load(Object plugin);
 
+    void save();
+
     void addConfigLoadedListener(ConfigLoadedListener configLoadedListener);
 
     void removeConfigLoadedListener(ConfigLoadedListener configLoadedListener);
@@ -30,6 +32,13 @@ public interface ConfigurationService {
      * @return default value for this key
      */
     <T> Optional<? extends T> getDefault(int key, TypeToken<T> typeToken);
+
+    /**
+     * @param key       corresponds to {@link ConfigKeys} final ints
+     * @param typeToken {@link TypeToken} of value
+     * @return config value for this key
+     */
+    <T> Optional<? extends T> getConfig(int key, TypeToken<T> typeToken);
 
     /**
      * @param key corresponds to {@link ConfigKeys} final ints
@@ -147,6 +156,53 @@ public interface ConfigurationService {
      */
     <T extends Map<?, ?>> T getConfigMap(int key, TypeToken<T> typeToken);
 
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    void setConfigBoolean(int key, Boolean value);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    void setConfigDouble(int key, Double value);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    void setConfigInteger(int key, Integer value);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    void setConfigString(int key, String value);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    void setConfigList(int key, List<?> value);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    <T, L extends List<T>> void addToConfigList(int key, T value, TypeToken<L> typeToken);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    void setConfigMap(int key, Map<?, ?> map);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     */
+    <K, T, M extends Map<K, T>> void addToConfigMap(int key, K mapKey, T value, TypeToken<M> typeToken);
 
     TypeToken<?> getType(int key);
 
