@@ -195,6 +195,13 @@ public interface ConfigurationService {
     /**
      *
      * @param key corresponds to {@link ConfigKeys} final ints
+     * @return
+     */
+    boolean removeFromConfigList(int key, Object value);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
      */
     void setConfigMap(int key, Map<?, ?> map);
 
@@ -203,6 +210,13 @@ public interface ConfigurationService {
      * @param key corresponds to {@link ConfigKeys} final ints
      */
     <K, T, M extends Map<K, T>> void addToConfigMap(int key, K mapKey, T value, TypeToken<M> typeToken);
+
+    /**
+     *
+     * @param key corresponds to {@link ConfigKeys} final ints
+     * @return
+     */
+    <K, T, M extends Map<K, T>> T removeFromConfigMap(int key, K mapKey, TypeToken<M> typeToken);
 
     TypeToken<?> getType(int key);
 

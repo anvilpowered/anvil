@@ -6,9 +6,7 @@ import com.google.inject.Inject;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
-import org.spongepowered.api.text.Text;
 import rocks.milspecsg.msrepository.api.config.ConfigLoadedListener;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
@@ -536,6 +534,12 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     }
 
     @Override
+    public boolean removeFromConfigList(int key, Object value) {
+        configValuesEdited = true;
+        return configListMap.get(key).remove(value);
+    }
+
+    @Override
     public void setConfigMap(int key, Map<?, ?> map) {
         configMapMap.put(key, map);
         configValuesEdited = true;
@@ -545,6 +549,12 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     public <K, T, M extends Map<K, T>> void addToConfigMap(int key, K mapKey, T value, TypeToken<M> typeToken) {
         ((M) configMapMap.get(key)).put(mapKey, value);
         configValuesEdited = true;
+    }
+
+    @Override
+    public <K, T, M extends Map<K, T>> T removeFromConfigMap(int key, K mapKey, TypeToken<M> typeToken) {
+        configValuesEdited = true;
+        return ((M) configMapMap.get(key)).remove(mapKey);
     }
 
     @Override
