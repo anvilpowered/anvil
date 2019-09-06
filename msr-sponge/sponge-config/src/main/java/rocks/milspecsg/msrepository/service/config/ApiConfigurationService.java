@@ -409,23 +409,23 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     @Override
     public List<?> getDefaultList(int key) {
-        return defaultListMap.get(key);
+        return Collections.unmodifiableList(defaultListMap.get(key));
     }
 
     @Override
     public <T extends List<?>> T getDefaultList(int key, TypeToken<T> typeToken) {
-        return getAssertedType(key, typeToken, k -> defaultListMap.get(key));
+        return (T) Collections.unmodifiableList(getAssertedType(key, typeToken, k -> defaultListMap.get(key)));
 
     }
 
     @Override
     public Map<?, ?> getDefaultMap(int key) {
-        return defaultMapMap.get(key);
+        return Collections.unmodifiableMap(defaultMapMap.get(key));
     }
 
     @Override
     public <T extends Map<?, ?>> T getDefaultMap(int key, TypeToken<T> typeToken) {
-        return getAssertedType(key, typeToken, k -> defaultMapMap.get(key));
+        return (T) Collections.unmodifiableMap(getAssertedType(key, typeToken, k -> defaultMapMap.get(key)));
     }
 
     @Override
@@ -450,22 +450,22 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     @Override
     public List<?> getConfigList(int key) {
-        return getValue(configListMap, defaultListMap, key);
+        return Collections.unmodifiableList(getValue(configListMap, defaultListMap, key));
     }
 
     @Override
     public <T extends List<?>> T getConfigList(int key, TypeToken<T> typeToken) {
-        return getAssertedType(key, typeToken, this::getConfigList);
+        return (T) Collections.unmodifiableList(getAssertedType(key, typeToken, this::getConfigList));
     }
 
     @Override
     public Map<?, ?> getConfigMap(int key) {
-        return getValue(configMapMap, defaultMapMap, key);
+        return Collections.unmodifiableMap(getValue(configMapMap, defaultMapMap, key));
     }
 
     @Override
     public <T extends Map<?, ?>> T getConfigMap(int key, TypeToken<T> typeToken) {
-        return getAssertedType(key, typeToken, this::getConfigMap);
+        return (T) Collections.unmodifiableMap(getAssertedType(key, typeToken, this::getConfigMap));
     }
 
     /**

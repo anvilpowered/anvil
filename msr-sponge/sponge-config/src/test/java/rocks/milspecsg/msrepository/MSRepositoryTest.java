@@ -67,8 +67,6 @@ public class MSRepositoryTest {
         Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, configurationService.getConfigMap(ConfigKeys.SOME_MAP, new TypeToken<Map<String, Map<String, Integer>>>() {})));
         Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, configurationService.getConfigMap(ConfigKeys.ANOTHER_MAP, new TypeToken<Map<Integer, List<String>>>() {})));
 
-
-
     }
 
     private void initSingletonServices() {
