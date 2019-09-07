@@ -2,7 +2,6 @@ package rocks.milspecsg.msrepository.service;
 
 import com.google.inject.Inject;
 import com.mongodb.WriteResult;
-import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.DeleteOptions;
@@ -54,7 +53,7 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
     }
 
     @Override
-    public CompletableFuture<WriteResult> deleteOne(Query<T> query, DeleteOptions deleteOptions) {
+    public CompletableFuture<WriteResult> delete(Query<T> query, DeleteOptions deleteOptions) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 Optional<Datastore> optionalDatastore = mongoContext.getDataStore();
@@ -69,7 +68,7 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
         });    }
 
     @Override
-    public CompletableFuture<WriteResult> deleteOne(Query<T> query) {
+    public CompletableFuture<WriteResult> delete(Query<T> query) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 Optional<Datastore> optionalDatastore = mongoContext.getDataStore();
@@ -82,6 +81,11 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
                 return WriteResult.unacknowledged();
             }
         });
+    }
+
+    @Override
+    public CompletableFuture<WriteResult> deleteOne(ObjectId id) {
+        return delete(asQuery(id));
     }
 
     @Override
