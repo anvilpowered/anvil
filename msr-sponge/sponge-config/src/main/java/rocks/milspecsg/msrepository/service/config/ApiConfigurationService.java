@@ -131,7 +131,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Saving config"));
         if (configValuesEdited) {
             for (Integer nodeKey : nodeNameMap.keySet()) {
-                CommentedConfigurationNode node = rootConfigurationNode.getNode(nodeNameMap.get(nodeKey));
+                CommentedConfigurationNode node = fromString(nodeNameMap.get(nodeKey));
                 //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Loading node " + nodeKey));
                 saveConfigValue(nodeKey, node, nodeTypeMap.get(nodeKey));
             }
@@ -159,6 +159,15 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         this.configLoadedListeners.remove(configLoadedListener);
     }
 
+    private CommentedConfigurationNode fromString(String name) {
+        String[] path = name.split("[.]");
+        CommentedConfigurationNode node = rootConfigurationNode;
+        for (String s : path) {
+            node = node.getNode(s);
+        }
+        return node;
+    }
+
     private void initConfigMaps() {
         configBooleanMap = new HashMap<>();
         configDoubleMap = new HashMap<>();
@@ -175,7 +184,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
         int updatedCount = 0;
         for (Integer nodeKey : nodeNameMap.keySet()) {
-            CommentedConfigurationNode node = rootConfigurationNode.getNode(nodeNameMap.get(nodeKey));
+            CommentedConfigurationNode node = fromString(nodeNameMap.get(nodeKey));
             //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Loading node " + nodeKey));
             if (node.isVirtual()) {
                 saveDefaultValue(nodeKey, node, nodeTypeMap.get(nodeKey));
@@ -198,27 +207,12 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         }
     }
 
-    private <T> void saveValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<T> typeToken, Optional<? extends T> value) {
-        try {
-            if (value.isPresent()) {
-                //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Saving service value (" + clazz.getName() + ")" + def.get()));
-                node.setValue(value.get());
-            } else {
-                throw new Exception("Casting error while generating configuration: This should not happen, please report this incident on the plugin page");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     protected <T> void saveConfigValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<T> typeToken) {
-        Optional<? extends T> def = getConfig(nodeKey, typeToken);
-        saveValue(nodeKey, node, typeToken, def);
+        getConfig(nodeKey, typeToken).ifPresent(node::setValue);
     }
 
     protected <T> void saveDefaultValue(Integer nodeKey, CommentedConfigurationNode node, TypeToken<T> typeToken) {
-        Optional<? extends T> def = getDefault(nodeKey, typeToken);
-        saveValue(nodeKey, node, typeToken, def);
+        getDefault(nodeKey, typeToken).ifPresent(node::setValue);
     }
 
     /**
@@ -231,7 +225,6 @@ public abstract class ApiConfigurationService implements ConfigurationService {
         if (typeToken == null) {
             throw new IllegalStateException("NodeTypeKey " + nodeKey + " does not exist. This needs to be added in your implementation of ApiConfigurationService!");
         }
-
 
         // it ain't pretty but it works
 
@@ -341,17 +334,17 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     public <T> Optional<? extends T> getDefault(int key, TypeToken<T> typeToken) {
         try {
             if (typeToken.isSubtypeOf(Boolean.class)) {
-                return Optional.of((T) getDefaultBoolean(key));
+                return Optional.ofNullable((T) getDefaultBoolean(key));
             } else if (typeToken.isSubtypeOf(Double.class)) {
-                return Optional.of((T) getDefaultDouble(key));
+                return Optional.ofNullable((T) getDefaultDouble(key));
             } else if (typeToken.isSubtypeOf(Integer.class)) {
-                return Optional.of((T) getDefaultInteger(key));
+                return Optional.ofNullable((T) getDefaultInteger(key));
             } else if (typeToken.isSubtypeOf(String.class)) {
-                return Optional.of((T) getDefaultString(key));
+                return Optional.ofNullable((T) getDefaultString(key));
             } else if (typeToken.isSubtypeOf(List.class)) {
-                return Optional.of((T) getDefaultList(key));
+                return Optional.ofNullable((T) getDefaultList(key));
             } else if (typeToken.isSubtypeOf(Map.class)) {
-                return Optional.of((T) getDefaultMap(key));
+                return Optional.ofNullable((T) getDefaultMap(key));
             } else {
                 throw new Exception("Class did not match any values");
             }

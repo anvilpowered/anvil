@@ -81,9 +81,9 @@ public class MSConfigurationService extends ApiConfigurationService {
 
         nodeNameMap.put(ConfigKeys.PARTY_CREATE_COST_DOUBLE, "partyCreateCostDouble");
 
-        nodeNameMap.put(ConfigKeys.SOME_LIST, "someList");
+        nodeNameMap.put(ConfigKeys.SOME_LIST, "some.list");
 
-        nodeNameMap.put(ConfigKeys.SOME_MAP, "someMap");
+        nodeNameMap.put(ConfigKeys.SOME_MAP, "some.map");
 
         nodeNameMap.put(ConfigKeys.ANOTHER_MAP, "anotherMap");
     }
