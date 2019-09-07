@@ -1,6 +1,9 @@
 package rocks.milspecsg.msrepository.api;
 
+import com.mongodb.WriteResult;
+import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.DeleteOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.model.Dbo;
@@ -74,6 +77,10 @@ public interface Repository<T extends Dbo> {
     CompletableFuture<Optional<T>> insertOne(T item);
 
     CompletableFuture<Optional<T>> getOne(ObjectId id);
+
+    CompletableFuture<WriteResult> deleteOne(Query<T> query, DeleteOptions deleteOptions);
+
+    CompletableFuture<WriteResult> deleteOne(Query<T> query);
 
     UpdateOperations<T> createUpdateOperations();
 
