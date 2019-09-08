@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
 
@@ -53,6 +54,11 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
     }
 
     @Override
+    public CompletableFuture<List<ObjectId>> getAllIds() {
+        return CompletableFuture.supplyAsync(() -> asQuery().project("_id", true).asList().stream().map(Dbo::getId).collect(Collectors.toList()));
+    }
+
+    @Override
     public CompletableFuture<WriteResult> delete(Query<T> query, DeleteOptions deleteOptions) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -65,7 +71,8 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
                 e.printStackTrace();
                 return WriteResult.unacknowledged();
             }
-        });    }
+        });
+    }
 
     @Override
     public CompletableFuture<WriteResult> delete(Query<T> query) {

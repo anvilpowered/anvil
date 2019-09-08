@@ -77,6 +77,8 @@ public interface Repository<T extends Dbo> {
 
     CompletableFuture<Optional<T>> getOne(ObjectId id);
 
+    CompletableFuture<List<ObjectId>> getAllIds();
+
     CompletableFuture<WriteResult> delete(Query<T> query, DeleteOptions deleteOptions);
 
     CompletableFuture<WriteResult> delete(Query<T> query);
