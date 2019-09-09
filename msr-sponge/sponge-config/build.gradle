@@ -42,7 +42,13 @@ shadowJar {
 //        include(dependency(':msrepository:msr-sponge:spo'))
 ////        include(dependency('rocks.milspecsg.msrepository:.*'))
 
-        include project(':msr-api:api-config')
+        if (rootProject.getName().equals("MSRepository")) {
+            include project(':msr-api:api-config')
+        } else {
+            include project(':msrepository:msr-api:api-config')
+        }
+
+
     }
 }
 
