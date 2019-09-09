@@ -1,7 +1,13 @@
 rootProject.name = 'MSRepository'
-include 'msr-api'
-include 'msr-sponge'
-include 'msr-api:api-repository'
-include 'msr-api:api-config'
-include 'msr-sponge:sponge-repository'
-include 'msr-sponge:sponge-config'
+//include ':msr-api'
+//project(':msr-api').projectDir = new File('../msrepository:msr-api')
+//include 'msr-sponge'
+//project(':msr-api').projectDir = new File('../msrepository:msr-sponge')
+//include 'msr-api:api-repository'
+//project(':msr-api:api-repository').projectDir = new File('../msrepository:msr-api:api-repository')
+//include 'msr-api:api-config'
+//project(':msr-api:api-config').projectDir = new File('../msrepository:msr-api:api-config')
+//include 'msr-sponge:sponge-repository'
+//project(':msr-sponge:sponge-repository').projectDir = new File('../msrepository:msr-sponge:sponge-repository')
+//include 'msr-sponge:sponge-config'
+//project(':msr-sponge:sponge-config').projectDir = new File('../msrepository:msr-sponge:sponge-config')
