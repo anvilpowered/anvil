@@ -19,8 +19,12 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
-    compile parent.findProject(':msr-api:api-repository')
-    extraLibs parent.findProject(':msr-api:api-repository')
+    if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api:api-repository')
+        extraLibs project(':msr-api:api-repository')
+    } else {
+        implementation project(':msrepository:msr-api:api-repository')
+    }
 
     compile('org.spongepowered:spongeapi:7.1.0') {
         exclude(module: 'configurate-gson')
