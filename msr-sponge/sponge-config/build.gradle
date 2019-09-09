@@ -17,13 +17,12 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     
-    compile project(':msrepository:msr-api:api-config')
+    implementation parent.findProject(':msr-api:api-config')
 
     compile('org.spongepowered:spongeapi:7.1.0') {
         exclude(module: 'configurate-gson')
         exclude(module: 'configurate-yaml')
     }
-    //configurations.compile.extendsFrom(configurations.extraLibs)
 }
 
 shadowJar {
@@ -39,7 +38,7 @@ shadowJar {
 //        include(dependency(':msrepository:msr-sponge:spo'))
 ////        include(dependency('rocks.milspecsg.msrepository:.*'))
 
-        include project(':msrepository:msr-api:api-config')
+        include project(':msr-api:api-config')
     }
 }
 
