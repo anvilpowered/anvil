@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 
 public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
 
-    @Inject
     protected MongoContext mongoContext;
 
     @Inject
-    public ApiRepository() {
+    public ApiRepository(MongoContext mongoContext) {
+        this.mongoContext = mongoContext;
     }
 
     @Override
