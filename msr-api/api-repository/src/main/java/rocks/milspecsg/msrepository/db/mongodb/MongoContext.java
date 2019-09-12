@@ -7,11 +7,45 @@ import org.mongodb.morphia.Morphia;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class MongoContext {
 
     private Datastore datastore = null;
+
+    public MongoContext() {
+        this.connectionOpenedListeners = new ArrayList<>();
+        this.connectionClosedListeners = new ArrayList<>();
+    }
+
+    private List<ConnectionOpenedListener> connectionOpenedListeners;
+    private List<ConnectionClosedListener> connectionClosedListeners;
+
+    private void notifyConnectionOpenedListeners(Datastore datastore) {
+        connectionOpenedListeners.forEach(listener -> listener.loaded(datastore));
+    }
+
+    public void addConnectionOpenedListener(ConnectionOpenedListener connectionOpenedListener) {
+        connectionOpenedListeners.add(connectionOpenedListener);
+    }
+
+    public void removeConnectionOpenedListener(ConnectionOpenedListener connectionOpenedListener) {
+        connectionOpenedListeners.remove(connectionOpenedListener);
+    }
+
+    private void notifyConnectionClosedListeners(Datastore datastore) {
+        connectionClosedListeners.forEach(listener -> listener.closed(datastore));
+    }
+
+    public void addConnectionClosedListener(ConnectionClosedListener connectionClosedListener) {
+        connectionClosedListeners.add(connectionClosedListener);
+    }
+
+    public void removeConnectionClosedListener(ConnectionClosedListener connectionClosedListener) {
+        connectionClosedListeners.remove(connectionClosedListener);
+    }
 
     public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
 
@@ -39,10 +73,14 @@ public abstract class MongoContext {
 
         datastore = morphia.createDatastore(mongoClient, dbName);
         datastore.ensureIndexes();
+        notifyConnectionOpenedListeners(datastore);
     }
 
     public void closeConnection() {
-        if (datastore != null) datastore.getMongo().close();
+        if (datastore != null) {
+            notifyConnectionClosedListeners(datastore);
+            datastore.getMongo().close();
+        }
     }
 
     public Optional<Datastore> getDataStore() {
