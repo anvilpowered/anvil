@@ -58,9 +58,9 @@ public abstract class MongoContext {
             } catch (UnsupportedEncodingException ignored) {
             }
 
-            client_url = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/";
+            client_url = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/" + dbName;
         } else {
-            client_url = "mongodb://" + hostname + ":" + port + "/";
+            client_url = "mongodb://" + hostname + ":" + port + "/" + dbName;
         }
 
         MongoClientURI uri = new MongoClientURI(client_url);
