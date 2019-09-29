@@ -23,10 +23,13 @@ dependencies {
         implementation project(':msrepository:msr-api:api-config')
     }
 
-    compile('org.spongepowered:spongeapi:7.1.0') {
-        exclude(module: 'configurate-gson')
-        exclude(module: 'configurate-yaml')
-    }
+    compileOnly 'com.google.inject:guice:4.0'
+    implementation 'org.spongepowered:configurate-hocon:3.6'
+    implementation 'org.spongepowered:configurate-core:3.6'
+//    compile('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {
+//        exclude(module: 'configurate-gson')
+//        exclude(module: 'configurate-yaml')
+//    }
 }
 
 shadowJar {

@@ -2,11 +2,9 @@ package rocks.milspecsg.msrepository.service.config;
 
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
-import com.google.inject.Inject;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.spongepowered.api.config.DefaultConfig;
 import rocks.milspecsg.msrepository.api.config.ConfigLoadedListener;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
@@ -71,8 +69,7 @@ public abstract class ApiConfigurationService implements ConfigurationService {
 
     private boolean configValuesEdited = false;
 
-    @Inject
-    public ApiConfigurationService(@DefaultConfig(sharedRoot = false) ConfigurationLoader<CommentedConfigurationNode> configLoader) {
+    public ApiConfigurationService(ConfigurationLoader<CommentedConfigurationNode> configLoader) {
         configLoadedListeners = new ArrayList<>();
         this.configLoader = configLoader;
         //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Loading service"));
