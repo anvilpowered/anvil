@@ -23,9 +23,6 @@ public class TestCommand implements CommandExecutor {
     public CommandResult execute(CommandSource source, CommandContext context) throws CommandException {
         source.sendMessage(Text.of("test start"));
 
-
-
-
         configurationService.addToConfigList(ConfigKeys.SOME_LIST, 15, new TypeToken<List<Integer>>() {});
 
         configurationService.save();
