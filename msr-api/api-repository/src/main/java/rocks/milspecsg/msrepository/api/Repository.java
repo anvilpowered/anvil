@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.DeleteOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
-import rocks.milspecsg.msrepository.model.Dbo;
+import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +13,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface Repository<T extends Dbo> {
+public interface Repository<T extends MongoDbo> {
 
     /**
-     * Represents the default singular identifier for a {@link Dbo}
+     * Represents the default singular identifier for a {@link MongoDbo}
      * <p>
      * Should be overridden by other plugins who change the name of the object.
      * Examples: "Clan", "Faction", "Guild", "Member", ... etc
@@ -28,7 +28,7 @@ public interface Repository<T extends Dbo> {
     String getDefaultIdentifierSingularUpper();
 
     /**
-     * Represents the default plural identifier for a {@link Dbo}
+     * Represents the default plural identifier for a {@link MongoDbo}
      * <p>
      * Should be overridden by other plugins who change the name of party.
      * Examples: "Clans", "Factions", "Guilds", "Members" ... etc
@@ -40,7 +40,7 @@ public interface Repository<T extends Dbo> {
     String getDefaultIdentifierPluralUpper();
 
     /**
-     * Represents the default singular identifier for a {@link Dbo}
+     * Represents the default singular identifier for a {@link MongoDbo}
      * <p>
      * Should be overridden by other plugins who change the name of party.
      * Examples: "clan", "faction", "guild", "member" ... etc
@@ -57,7 +57,7 @@ public interface Repository<T extends Dbo> {
     String getDefaultIdentifierSingularLower();
 
     /**
-     * Represents the default plural identifier for a {@link Dbo}
+     * Represents the default plural identifier for a {@link MongoDbo}
      * <p>
      * Should be overridden by other plugins who change the name of party.
      * Examples: "clans", "factions", "guilds", "members" ... etc

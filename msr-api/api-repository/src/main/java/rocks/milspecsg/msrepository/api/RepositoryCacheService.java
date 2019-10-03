@@ -1,11 +1,11 @@
 package rocks.milspecsg.msrepository.api;
 
 import org.bson.types.ObjectId;
-import rocks.milspecsg.msrepository.model.Dbo;
+import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
 
 import java.util.Optional;
 
-public interface RepositoryCacheService<T extends Dbo> extends CacheInvalidationService<T> {
+public interface RepositoryCacheService<T extends MongoDbo> extends CacheInvalidationService<T> {
 
     Optional<T> getOne(ObjectId id);
 

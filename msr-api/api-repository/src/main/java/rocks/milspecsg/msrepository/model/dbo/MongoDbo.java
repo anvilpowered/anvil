@@ -1,4 +1,4 @@
-package rocks.milspecsg.msrepository.model;
+package rocks.milspecsg.msrepository.model.dbo;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
@@ -6,7 +6,7 @@ import org.mongodb.morphia.annotations.PrePersist;
 
 import java.util.Date;
 
-public abstract class Dbo implements ObjectWithId<ObjectId> {
+public abstract class MongoDbo implements ObjectWithId<ObjectId> {
 
     @Id
     private ObjectId id;

@@ -11,7 +11,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.Repository;
 import rocks.milspecsg.msrepository.api.RepositoryCacheService;
 import rocks.milspecsg.msrepository.db.mongodb.MongoContext;
-import rocks.milspecsg.msrepository.model.Dbo;
+import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
+public abstract class ApiRepository<T extends MongoDbo> implements Repository<T> {
 
     protected MongoContext mongoContext;
 
@@ -55,7 +55,7 @@ public abstract class ApiRepository<T extends Dbo> implements Repository<T> {
 
     @Override
     public CompletableFuture<List<ObjectId>> getAllIds() {
-        return CompletableFuture.supplyAsync(() -> asQuery().project("_id", true).asList().stream().map(Dbo::getId).collect(Collectors.toList()));
+        return CompletableFuture.supplyAsync(() -> asQuery().project("_id", true).asList().stream().map(MongoDbo::getId).collect(Collectors.toList()));
     }
 
     @Override

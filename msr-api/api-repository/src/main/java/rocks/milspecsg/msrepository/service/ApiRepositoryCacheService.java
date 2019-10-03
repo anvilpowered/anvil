@@ -4,11 +4,11 @@ import com.google.inject.Inject;
 import org.bson.types.ObjectId;
 import rocks.milspecsg.msrepository.api.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
-import rocks.milspecsg.msrepository.model.Dbo;
+import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
 
 import java.util.Optional;
 
-public abstract class ApiRepositoryCacheService<T extends Dbo> extends ApiCacheInvalidationService<T> implements RepositoryCacheService<T> {
+public abstract class ApiRepositoryCacheService<T extends MongoDbo> extends ApiCacheInvalidationService<T> implements RepositoryCacheService<T> {
 
     @Inject
     public ApiRepositoryCacheService(ConfigurationService configurationService) {

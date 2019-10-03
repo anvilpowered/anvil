@@ -1,4 +1,4 @@
-package rocks.milspecsg.msrepository.model;
+package rocks.milspecsg.msrepository.model.dbo;
 
 import java.util.Date;
 
