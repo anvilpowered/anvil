@@ -1,4 +1,4 @@
-package rocks.milspecsg.msrepository.model.dbo;
+package rocks.milspecsg.msrepository.model.data.dbo;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;

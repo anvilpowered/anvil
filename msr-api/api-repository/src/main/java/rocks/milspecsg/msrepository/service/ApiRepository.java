@@ -11,7 +11,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.Repository;
 import rocks.milspecsg.msrepository.api.RepositoryCacheService;
 import rocks.milspecsg.msrepository.db.mongodb.MongoContext;
-import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
+import rocks.milspecsg.msrepository.model.data.dbo.MongoDbo;
 
 import java.util.List;
 import java.util.Optional;

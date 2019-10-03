@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.DeleteOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
-import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
+import rocks.milspecsg.msrepository.model.data.dbo.MongoDbo;
 
 import java.util.List;
 import java.util.Optional;

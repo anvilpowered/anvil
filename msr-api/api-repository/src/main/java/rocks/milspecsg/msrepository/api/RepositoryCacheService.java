@@ -1,7 +1,7 @@
 package rocks.milspecsg.msrepository.api;
 
 import org.bson.types.ObjectId;
-import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
+import rocks.milspecsg.msrepository.model.data.dbo.MongoDbo;
 
 import java.util.Optional;
 

@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import org.bson.types.ObjectId;
 import rocks.milspecsg.msrepository.api.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
-import rocks.milspecsg.msrepository.model.dbo.MongoDbo;
+import rocks.milspecsg.msrepository.model.data.dbo.MongoDbo;
 
 import java.util.Optional;
 
