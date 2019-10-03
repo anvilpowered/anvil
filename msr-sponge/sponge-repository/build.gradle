@@ -23,7 +23,7 @@ dependencies {
         implementation project(':msr-api:api-repository')
         extraLibs project(':msr-api:api-repository')
     } else {
-        implementation project(':msrepository:msr-api:api-repository')
+        implementation project(':MSRepository:msr-api:api-repository')
     }
 
     compile('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {

@@ -20,7 +20,7 @@ dependencies {
     if (rootProject.getName().equals("MSRepository")) {
         implementation project(':msr-api:api-config')
     } else {
-        implementation project(':msrepository:msr-api:api-config')
+        implementation project(':MSRepository:msr-api:api-config')
     }
 
     implementation 'com.google.inject:guice:4.0'
@@ -46,7 +46,7 @@ shadowJar {
         if (rootProject.getName().equals("MSRepository")) {
             include project(':msr-api:api-config')
         } else {
-            include project(':msrepository:msr-api:api-config')
+            include project(':MSRepository:msr-api:api-config')
         }
 
 

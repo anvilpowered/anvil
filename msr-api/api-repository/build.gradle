@@ -19,7 +19,7 @@ dependencies {
     if (rootProject.getName().equals("MSRepository")) {
         implementation project(':msr-api:api-config')
     } else {
-        implementation project(':msrepository:msr-api:api-config')
+        implementation project(':MSRepository:msr-api:api-config')
     }
 
     implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
