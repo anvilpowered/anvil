@@ -13,8 +13,10 @@ import java.lang.annotation.Annotation;
 @SuppressWarnings({"unchecked", "UnstableApiUsage"})
 public class BindingExtensions {
 
-    public static BindingExtensions getInstance() {
-        return new BindingExtensions();
+    private final Binder binder;
+
+    public BindingExtensions(Binder binder) {
+        this.binder = binder;
     }
 
     public <TDbo extends ObjectWithId<?>,
@@ -22,7 +24,6 @@ public class BindingExtensions {
         From2 extends Repository<?, TDbo>,
         Target extends From1>
     void bind(
-        Binder binder,
         TypeToken<From1> from1,
         TypeToken<From2> from2,
         TypeToken<Target> target,
