@@ -1,15 +1,11 @@
-package rocks.milspecsg.msrepository.datastore.mongodb;
+package rocks.milspecsg.msrepository.datastore.json;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public abstract class MongoContext extends DataStoreContext<Datastore> {
+public abstract class JsonContext extends DataStoreContext<JsonDataStore> {
 
     public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
         String client_url;
@@ -26,19 +22,12 @@ public abstract class MongoContext extends DataStoreContext<Datastore> {
             client_url = "mongodb://" + hostname + ":" + port + "/" + dbName;
         }
 
-        MongoClientURI uri = new MongoClientURI(client_url);
-        MongoClient mongoClient = new MongoClient(uri);
-        Morphia morphia = new Morphia();
-        initMorphiaMaps(morphia);
-        Datastore dataStore = morphia.createDatastore(mongoClient, dbName);
-        dataStore.ensureIndexes();
+        JsonDataStore dataStore = new JsonDataStore();
         setDataStore(dataStore);
     }
 
     @Override
-    protected void closeConnection(Datastore dataStore) {
-        dataStore.getMongo().close();
-    }
+    protected void closeConnection(JsonDataStore dataStore) {
 
-    protected abstract void initMorphiaMaps(Morphia morphia);
+    }
 }

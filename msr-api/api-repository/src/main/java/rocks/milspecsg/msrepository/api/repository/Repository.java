@@ -1,7 +1,6 @@
 package rocks.milspecsg.msrepository.api.repository;
 
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
-import rocks.milspecsg.msrepository.model.data.dbo.MongoDbo;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.function.Function;
 public interface Repository<TKey, T extends ObjectWithId<TKey>> {
 
     /**
-     * Represents the default singular identifier for a {@link MongoDbo}
+     * Represents the default singular identifier for a {@link ObjectWithId}
      * <p>
      * Should be overridden by other plugins who change the name of the object.
      * Examples: "Clan", "Faction", "Guild", "Member", ... etc
@@ -24,7 +23,7 @@ public interface Repository<TKey, T extends ObjectWithId<TKey>> {
     String getDefaultIdentifierSingularUpper();
 
     /**
-     * Represents the default plural identifier for a {@link MongoDbo}
+     * Represents the default plural identifier for a {@link ObjectWithId}
      * <p>
      * Should be overridden by other plugins who change the name of party.
      * Examples: "Clans", "Factions", "Guilds", "Members" ... etc
@@ -36,7 +35,7 @@ public interface Repository<TKey, T extends ObjectWithId<TKey>> {
     String getDefaultIdentifierPluralUpper();
 
     /**
-     * Represents the default singular identifier for a {@link MongoDbo}
+     * Represents the default singular identifier for a {@link ObjectWithId}
      * <p>
      * Should be overridden by other plugins who change the name of party.
      * Examples: "clan", "faction", "guild", "member" ... etc
@@ -48,7 +47,7 @@ public interface Repository<TKey, T extends ObjectWithId<TKey>> {
     String getDefaultIdentifierSingularLower();
 
     /**
-     * Represents the default plural identifier for a {@link MongoDbo}
+     * Represents the default plural identifier for a {@link ObjectWithId}
      * <p>
      * Should be overridden by other plugins who change the name of party.
      * Examples: "clans", "factions", "guilds", "members" ... etc
@@ -108,22 +107,6 @@ public interface Repository<TKey, T extends ObjectWithId<TKey>> {
      * @return Whether or not an item was found and deleted
      */
     CompletableFuture<Boolean> deleteOne(TKey id);
-
-//    /**
-//     * Converts a {@link List>} to an {@link Optional} containing, if present, the first element
-//     *
-//     * @param list {@link List} to retrieve element from
-//     * @return {@link Optional#empty()} if the first element does not exist or is null
-//     * else an {@link Optional} containing the first element
-//     */
-//    static <U> Optional<U> single(List<U> list) {
-//        if (list == null || list.size() == 0) return Optional.empty();
-//        return Optional.ofNullable(list.get(0));
-//    }
-//
-//    static <U> Function<List<U>, Optional<U>> single() {
-//        return Repository::single;
-//    }
 
     default Optional<? extends RepositoryCacheService<TKey, T>> getRepositoryCacheService() {
         return Optional.empty();

@@ -18,7 +18,9 @@ public abstract class DataStoreContext<TDataStore> {
     abstract public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth);
 
     protected final void setDataStore(TDataStore dataStore) {
+        requestCloseConnection();
         this.dataStore = dataStore;
+        notifyConnectionOpenedListeners(dataStore);
     }
 
     public final Optional<TDataStore> getDataStore() {
@@ -34,7 +36,7 @@ public abstract class DataStoreContext<TDataStore> {
         }
     }
 
-    protected final void notifyConnectionOpenedListeners(TDataStore dataStore) {
+    private void notifyConnectionOpenedListeners(TDataStore dataStore) {
         connectionOpenedListeners.forEach(listener -> listener.loaded(dataStore));
     }
 
