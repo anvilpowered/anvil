@@ -4,7 +4,7 @@ import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 
-public interface Manager<TKey, T extends ObjectWithId<TKey>, R extends Repository<TKey, T>> {
+public interface Manager<T extends ObjectWithId<?>, R extends Repository<?, T>> {
 
     R getPrimaryRepository();
 
