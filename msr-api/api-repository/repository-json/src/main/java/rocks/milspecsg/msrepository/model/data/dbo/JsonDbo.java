@@ -1,14 +1,11 @@
 package rocks.milspecsg.msrepository.model.data.dbo;
 
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.PrePersist;
 
 import java.util.Date;
 
-public abstract class MongoDbo implements ObjectWithId<ObjectId> {
+public abstract class JsonDbo implements ObjectWithId<ObjectId> {
 
-    @Id
     private ObjectId id;
 
     private Date updatedUtc;
@@ -26,9 +23,5 @@ public abstract class MongoDbo implements ObjectWithId<ObjectId> {
         return updatedUtc;
     }
 
-    @PrePersist
-    void prePersist() {
-        updatedUtc = new Date();
-    }
+    void prePersist() {updatedUtc = new Date();}
 }
-
