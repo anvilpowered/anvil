@@ -64,7 +64,7 @@ public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository
                 default:
                     throw new IllegalStateException("Invalid dataStoreType");
             }
-        } catch (ProvisionException e) {
+        } catch (ProvisionException | NullPointerException e) {
             System.err.println("MSRepository: could not find requested data store: \"" + ds + "\". Did you bind it correctly?");
             throw e;
         }
