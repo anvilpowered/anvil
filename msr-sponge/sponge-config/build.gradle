@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '4.0.0'
-    id 'org.spongepowered.plugin' version '0.8.1'
+    id 'org.spongepowered.plugin'
+    id 'com.github.johnrengelman.shadow'
 }
 
 group = "rocks.milspecsg"

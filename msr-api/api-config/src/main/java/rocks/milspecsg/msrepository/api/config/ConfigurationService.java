@@ -195,7 +195,7 @@ public interface ConfigurationService {
     /**
      *
      * @param key corresponds to {@link ConfigKeys} final ints
-     * @return
+     * @return whether the key was successfully removed
      */
     boolean removeFromConfigList(int key, Object value);
 
@@ -214,7 +214,6 @@ public interface ConfigurationService {
     /**
      *
      * @param key corresponds to {@link ConfigKeys} final ints
-     * @return
      */
     <K, T, M extends Map<K, T>> T removeFromConfigMap(int key, K mapKey, TypeToken<M> typeToken);
 

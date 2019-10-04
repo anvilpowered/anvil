@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.spongepowered.plugin' version '0.8.1'
 }
 
 configurations {
@@ -18,4 +19,15 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api')
+    } else {
+        implementation project(':MSRepository:msr-api')
+    }
+
+    compileOnly('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {
+//        exclude(module: 'configurate-gson')
+//        exclude(module: 'configurate-yaml')
+    }
 }

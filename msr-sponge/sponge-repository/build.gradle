@@ -18,25 +18,25 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+//
+//    if (rootProject.getName().equals("MSRepository")) {
+//        implementation project(':msr-api:api-repository')
+//        extraLibs project(':msr-api:api-repository')
+//    } else {
+//        implementation project(':MSRepository:msr-api:api-repository')
+//    }
+//
+//    compile('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {
+//        exclude(module: 'configurate-gson')
+//        exclude(module: 'configurate-yaml')
+//    }
 
-    if (rootProject.getName().equals("MSRepository")) {
-        implementation project(':msr-api:api-repository')
-        extraLibs project(':msr-api:api-repository')
-    } else {
-        implementation project(':MSRepository:msr-api:api-repository')
-    }
-
-    compile('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {
-        exclude(module: 'configurate-gson')
-        exclude(module: 'configurate-yaml')
-    }
-
-    configurations.compile.extendsFrom(configurations.extraLibs)
+//    configurations.compile.extendsFrom(configurations.extraLibs)
 }
 
-task testJar(type: Jar) {
-    classifier = 'tests'
-    from sourceSets.test.output
-    from sourceSets.main.output
-    from configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
-}
+//task testJar(type: Jar) {
+//    classifier = 'tests'
+//    from sourceSets.test.output
+//    from sourceSets.main.output
+//    from configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+//}

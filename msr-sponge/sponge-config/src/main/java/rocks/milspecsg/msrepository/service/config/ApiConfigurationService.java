@@ -7,7 +7,6 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import rocks.milspecsg.msrepository.api.config.ConfigLoadedListener;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
-import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -48,17 +47,17 @@ public abstract class ApiConfigurationService implements ConfigurationService {
     protected Map<Integer, Map<Predicate<Map<?, ?>>, Function<Map<?, ?>, Map<?, ?>>>> mapVerificationMap;
 //    protected Map<Integer, Map<? extends Predicate<? extends Map<?, ?>>, ? extends Function<? extends Map<?, ?>, ? extends Map<?, ?>>>> mapVerificationMap;
     /**
-     * Maps {@link ConfigKeys} to configuration node names
+     * Maps ConfigKeys to configuration node names
      */
     protected Map<Integer, String> nodeNameMap;
 
     /**
-     * Maps {@link ConfigKeys} to configuration node descriptions
+     * Maps ConfigKeys to configuration node descriptions
      */
     protected Map<Integer, String> nodeDescriptionMap;
 
     /**
-     * Maps {@link ConfigKeys} to configuration node types
+     * Maps ConfigKeys to configuration node types
      */
     protected Map<Integer, TypeToken<?>> nodeTypeMap;
 
