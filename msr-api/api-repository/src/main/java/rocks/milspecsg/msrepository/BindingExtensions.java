@@ -31,4 +31,11 @@ public class BindingExtensions {
     ) {
         binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType())).annotatedWith(repoAnnotation).to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
     }
+
+    public <From, Target extends From> void bind(
+        TypeToken<From> from,
+        TypeToken<Target> target
+    ) {
+        binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType())).to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+    }
 }
