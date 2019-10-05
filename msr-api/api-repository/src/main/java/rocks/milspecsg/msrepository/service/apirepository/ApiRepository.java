@@ -8,8 +8,10 @@ import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-public abstract class ApiRepository<TKey, T extends ObjectWithId<TKey>, TDataStore> implements Repository<TKey, T> {
+public abstract class ApiRepository<TKey, T extends ObjectWithId<TKey>, C extends RepositoryCacheService<TKey, T>, TDataStore> implements Repository<TKey, T, C> {
 
     protected DataStoreContext<TDataStore> dataStoreContext;
 
@@ -55,5 +57,10 @@ public abstract class ApiRepository<TKey, T extends ObjectWithId<TKey>, TDataSto
     @Override
     public CompletableFuture<Boolean> deleteOne(TKey id) {
         return deleteOneFromDS(id).thenApplyAsync(dbResult -> (getRepositoryCacheService().map(c -> c.deleteOne(id).isPresent()).orElse(dbResult)));
+    }
+
+    @Override
+    public CompletableFuture<Optional<T>> ifNotPresent(Function<C, Optional<T>> fromCache, Supplier<Optional<T>> fromDB) {
+        return CompletableFuture.supplyAsync(getRepositoryCacheService().map(cache -> cache.ifNotPresent(fromCache, fromDB)).orElse(fromDB));
     }
 }

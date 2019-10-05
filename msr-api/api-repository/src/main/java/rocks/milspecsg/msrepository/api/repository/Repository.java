@@ -7,56 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public interface Repository<TKey, T extends ObjectWithId<TKey>> {
-
-    /**
-     * Represents the default singular identifier for a {@link ObjectWithId}
-     * <p>
-     * Should be overridden by other plugins who change the name of the object.
-     * Examples: "Clan", "Faction", "Guild", "Member", ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     */
-    String getDefaultIdentifierSingularUpper();
-
-    /**
-     * Represents the default plural identifier for a {@link ObjectWithId}
-     * <p>
-     * Should be overridden by other plugins who change the name of party.
-     * Examples: "Clans", "Factions", "Guilds", "Members" ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     */
-    String getDefaultIdentifierPluralUpper();
-
-    /**
-     * Represents the default singular identifier for a {@link ObjectWithId}
-     * <p>
-     * Should be overridden by other plugins who change the name of party.
-     * Examples: "clan", "faction", "guild", "member" ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     */
-    String getDefaultIdentifierSingularLower();
-
-    /**
-     * Represents the default plural identifier for a {@link ObjectWithId}
-     * <p>
-     * Should be overridden by other plugins who change the name of party.
-     * Examples: "clans", "factions", "guilds", "members" ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     */
-    String getDefaultIdentifierPluralLower();
+public interface Repository<TKey, T extends ObjectWithId<TKey>, C extends RepositoryCacheService<TKey, T>> {
 
     /**
      * @return An empty {@link T}
@@ -108,8 +61,10 @@ public interface Repository<TKey, T extends ObjectWithId<TKey>> {
      */
     CompletableFuture<Boolean> deleteOne(TKey id);
 
-    default Optional<? extends RepositoryCacheService<TKey, T>> getRepositoryCacheService() {
+    default Optional<C> getRepositoryCacheService() {
         return Optional.empty();
     }
+
+    CompletableFuture<Optional<T>> ifNotPresent(Function<C, Optional<T>> fromCache, Supplier<Optional<T>> fromDB);
 
 }

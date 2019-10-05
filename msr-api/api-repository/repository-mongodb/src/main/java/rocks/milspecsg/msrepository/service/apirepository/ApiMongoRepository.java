@@ -8,6 +8,7 @@ import org.mongodb.morphia.DeleteOptions;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
+import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public abstract class ApiMongoRepository<T extends ObjectWithId<ObjectId>> extends ApiRepository<ObjectId, T, Datastore> implements MongoRepository<T> {
+public abstract class ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>> extends ApiRepository<ObjectId, T, C, Datastore> implements MongoRepository<T, C> {
 
     public ApiMongoRepository(DataStoreContext<Datastore> mongoContext) {
         super(mongoContext);

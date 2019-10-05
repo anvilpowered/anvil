@@ -36,7 +36,7 @@ public interface RepositoryCacheService<TKey, T extends ObjectWithId<TKey>> exte
      * @param fromDB    {@link Supplier} that retrieves data from datastore
      * @return Attempts to retrieve an item from the cache. If the item is not found, retrieve it from the datastore
      */
-    Supplier<Optional<T>> ifNotPresent(Function<? super RepositoryCacheService<TKey, T>, Optional<T>> fromCache, Supplier<Optional<T>> fromDB);
+    <C extends RepositoryCacheService<TKey, T>> Supplier<Optional<T>> ifNotPresent(Function<C, Optional<T>> fromCache, Supplier<Optional<T>> fromDB);
 
     /**
      * @param id {@link TKey} to query repository with

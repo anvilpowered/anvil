@@ -43,8 +43,8 @@ public abstract class ApiRepositoryCacheService<TKey, T extends ObjectWithId<TKe
         return save(Collections.singletonList(fromDB)).stream().findAny();
     }
 
-    public Supplier<Optional<T>> ifNotPresent(Function<? super RepositoryCacheService<TKey, T>, Optional<T>> fromCache, Supplier<Optional<T>> fromDB) {
-        Optional<T> main = fromCache == null ? Optional.empty() : fromCache.apply(this);
+    public <C extends RepositoryCacheService<TKey, T>> Supplier<Optional<T>> ifNotPresent(Function<C, Optional<T>> fromCache, Supplier<Optional<T>> fromDB) {
+        Optional<T> main = fromCache == null ? Optional.empty() : fromCache.apply((C) this);
         if (main.isPresent()) {
             return () -> main;
         } else {

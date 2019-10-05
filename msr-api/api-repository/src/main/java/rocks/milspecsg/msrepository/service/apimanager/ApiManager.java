@@ -13,7 +13,7 @@ import rocks.milspecsg.msrepository.api.manager.annotation.MongoRepo;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
-public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository<?, T>> implements Manager<T, R> {
+public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository<?, T, ?>> implements Manager<T, R> {
 
     protected ConfigurationService configurationService;
 

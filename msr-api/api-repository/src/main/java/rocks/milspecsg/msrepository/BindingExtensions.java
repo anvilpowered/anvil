@@ -20,8 +20,8 @@ public class BindingExtensions {
     }
 
     public <TDbo extends ObjectWithId<?>,
-        From1 extends Repository<?, ?>,
-        From2 extends Repository<?, TDbo>,
+        From1 extends Repository<?, ?, ?>,
+        From2 extends Repository<?, TDbo, ?>,
         Target extends From1>
     void bind(
         TypeToken<From1> from1,

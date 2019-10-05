@@ -5,11 +5,12 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.DeleteOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
+import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface MongoRepository<T extends ObjectWithId<ObjectId>> extends Repository<ObjectId, T> {
+public interface MongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>> extends Repository<ObjectId, T, C> {
 
     CompletableFuture<WriteResult> deleteFromDS(Query<T> query, DeleteOptions deleteOptions);
 
