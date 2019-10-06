@@ -16,18 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository;
+package rocks.milspecsg.msrepository.api.tools.resultbuilder;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
-import rocks.milspecsg.msrepository.service.config.ApiConfigurationService;
+public interface ResultBuilder<TResult, TData> {
 
-public class APIConfigurationModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        bind(new TypeLiteral<ConfigurationService>() {
-        }).to(new TypeLiteral<ApiConfigurationService>() {
-        });
-    }
+    TResult success(TData data);
+
+    TResult fail(TData data);
+
 }

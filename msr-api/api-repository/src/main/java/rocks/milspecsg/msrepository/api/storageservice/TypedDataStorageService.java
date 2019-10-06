@@ -1,5 +1,5 @@
 /*
- *     MSRepository - MilSpecSG
+ *     MSParties - MilSpecSG
  *     Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository;
+package rocks.milspecsg.msrepository.api.storageservice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
-import rocks.milspecsg.msrepository.service.config.ApiConfigurationService;
+import com.google.common.reflect.TypeToken;
+import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
-public class APIConfigurationModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        bind(new TypeLiteral<ConfigurationService>() {
-        }).to(new TypeLiteral<ApiConfigurationService>() {
-        });
-    }
+public interface TypedDataStorageService<TKey, T extends ObjectWithId<TKey>> extends TypedStorageService<T> {
+
+    TypeToken<TKey> getTypeTokenTKey();
+
 }
