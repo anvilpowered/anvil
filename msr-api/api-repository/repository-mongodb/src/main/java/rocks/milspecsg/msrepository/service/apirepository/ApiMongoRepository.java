@@ -111,6 +111,11 @@ public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends 
     }
 
     @Override
+    default CompletableFuture<Boolean> deleteOne(ObjectId id) {
+        return CompletableFuture.supplyAsync(() -> asQuery(id).filter(q -> delete(q).join().getN() > 0).isPresent());
+    }
+
+    @Override
     default Optional<UpdateOperations<T>> inc(String field, Number value) {
         return createUpdateOperations().map(u -> u.inc(field, value));
     }
