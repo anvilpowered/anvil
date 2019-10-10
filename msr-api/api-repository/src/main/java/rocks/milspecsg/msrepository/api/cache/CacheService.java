@@ -18,17 +18,19 @@
 
 package rocks.milspecsg.msrepository.api.cache;
 
+import rocks.milspecsg.msrepository.api.storageservice.StorageService;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public interface CacheService<T> {
+public interface CacheService<T> extends StorageService<T> {
 
     /**
      * Starts cache invalidation task
      */
-    void startCacheInvalidationTask();
+    void startCacheInvalidationTask(Integer intervalSeconds);
 
     /**
      * Stop cache invalidation task
@@ -40,25 +42,6 @@ public interface CacheService<T> {
      * @return Cache invalidation task
      */
     Runnable getCacheInvalidationTask();
-
-    /**
-     * Add a {@link T} to the cache
-     *
-     * Checks whether object is already in cache
-     *
-     * @param t {@link T} to put to cache
-     * @return {@link Optional} with inserted {@link T} if successfully inserted.
-     * Otherwise {@link Optional#empty()}
-     */
-    Optional<T> put(T t);
-
-    /**
-     * Checks whether object is already in cache
-     *
-     * @param list {@link List<T>} to insert into cache
-     * @return {@link List<T>} containing all {@link T} that were successfully inserted
-     */
-    List<T> put(List<T> list);
 
     /**
      * @return A set containing all parties in the cache

@@ -19,10 +19,8 @@
 package rocks.milspecsg.msrepository;
 
 import com.google.common.reflect.TypeToken;
-import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
-import rocks.milspecsg.msrepository.api.manager.annotation.MongoRepo;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
@@ -38,8 +36,8 @@ public class BindingExtensions {
     }
 
     public <TDbo extends ObjectWithId<?>,
-        From1 extends Repository<?, ?, ?>,
-        From2 extends Repository<?, TDbo, ?>,
+        From1 extends Repository<?, ?, ?, ?>,
+        From2 extends Repository<?, TDbo, ?, ?>,
         Target extends From1>
     void bind(
         TypeToken<From1> from1,

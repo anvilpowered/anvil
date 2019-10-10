@@ -14,9 +14,6 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
-    implementation 'io.jsondb:jsondb-core:1.0.85'
-    implementation 'com.google.inject:guice:4.0'
-
     if (rootProject.getName().equals("MSRepository")) {
         implementation project(':msr-api:api-config')
         implementation project(':msr-api:api-repository')
@@ -26,5 +23,7 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-repository')
     }
 
+    implementation 'io.jsondb:jsondb-core:1.0.85'
+    implementation 'com.google.inject:guice:4.0'
     
 }

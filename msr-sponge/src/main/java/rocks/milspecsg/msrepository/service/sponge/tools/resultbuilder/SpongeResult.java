@@ -1,5 +1,5 @@
 /*
- *     MSRepository - MilSpecSG
+ *     MSParties - MilSpecSG
  *     Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.tools.resultbuilder;
+package rocks.milspecsg.msrepository.service.sponge.tools.resultbuilder;
 
-public interface StringResultBuilder<TResult> extends ResultBuilder<TResult, String> {
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import rocks.milspecsg.msrepository.api.tools.resultbuilder.Result;
+
+public class SpongeResult<TData> implements Result<Text, TData> {
+
+    @Override
+    public Text success(TData data) {
+        return Text.of(TextColors.GREEN, data);
+    }
+
+    @Override
+    public Text fail(TData data) {
+        return Text.of(TextColors.RED, data);
+    }
 }

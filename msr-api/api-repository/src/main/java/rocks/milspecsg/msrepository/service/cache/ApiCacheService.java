@@ -18,13 +18,12 @@
 
 package rocks.milspecsg.msrepository.service.cache;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -34,8 +33,7 @@ public abstract class ApiCacheService<T> implements CacheService<T> {
 
     protected Map<T, Long> cache;
 
-    Integer intervalSeconds = null;
-    Integer timeoutSeconds = null;
+    private Integer timeoutSeconds = null;
 
     public ApiCacheService(ConfigurationService configurationService) {
         this.configurationService = configurationService;
@@ -45,27 +43,20 @@ public abstract class ApiCacheService<T> implements CacheService<T> {
 
     private void configLoaded(Object plugin) {
         stopCacheInvalidationTask();
-        intervalSeconds = configurationService.getConfigInteger(ConfigKeys.CACHE_INVALIDATION_INTERVAL_SECONDS_INT);
+        Integer intervalSeconds = configurationService.getConfigInteger(ConfigKeys.CACHE_INVALIDATION_INTERVAL_SECONDS_INT);
         timeoutSeconds = configurationService.getConfigInteger(ConfigKeys.CACHE_INVALIDATION_TIMOUT_SECONDS_INT);
-        startCacheInvalidationTask();
+        startCacheInvalidationTask(intervalSeconds);
     }
 
-    /**
-     * Cache invalidation task
-     */
     @Override
     public Runnable getCacheInvalidationTask() {
         return () -> {
-
             List<T> toRemove = new ArrayList<>();
             for (T t : getAll()) {
                 if (System.currentTimeMillis() - cache.get(t) > timeoutSeconds * 1000L) {
-                    // if time has gone over limit
                     toRemove.add(t);
-                    //Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PluginPrefix, "Removing ", t));
                 }
             }
-            // remove from map
             toRemove.forEach(this::delete);
         };
     }
@@ -76,15 +67,17 @@ public abstract class ApiCacheService<T> implements CacheService<T> {
     }
 
     @Override
-    public Optional<T> put(T t) {
-        if (t == null) return Optional.empty();
-        cache.put(t, System.currentTimeMillis());
-        return Optional.of(t);
+    public CompletableFuture<Optional<T>> insertOne(T t) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (t == null) return Optional.empty();
+            cache.put(t, System.currentTimeMillis());
+            return Optional.of(t);
+        });
     }
 
     @Override
-    public List<T> put(List<T> list) {
-        return list.stream().map(t -> put(t).orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());
+    public CompletableFuture<List<T>> insert(List<T> list) {
+        return CompletableFuture.supplyAsync(() -> list.stream().map(t -> insertOne(t).join().orElse(null)).filter(Objects::nonNull).collect(Collectors.toList()));
     }
 
     @Override

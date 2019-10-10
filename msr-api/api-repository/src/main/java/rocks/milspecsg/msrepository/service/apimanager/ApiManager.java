@@ -31,7 +31,7 @@ import rocks.milspecsg.msrepository.api.manager.annotation.MongoRepo;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
-public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository<?, T, ?>> implements Manager<T, R> {
+public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository<?, T, ?, ?>> implements Manager<T, R> {
 
     protected ConfigurationService configurationService;
 
@@ -52,19 +52,19 @@ public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository
 
     @Inject(optional = true)
     @H2Repo
-    private Provider<R> h2RepositoryProvider;
+    private R h2Repository;
 
     @Inject(optional = true)
     @JsonRepo
-    private Provider<R> jsonRepositoryProvider;
+    private R jsonRepository;
 
     @Inject(optional = true)
     @MariaRepo
-    private Provider<R> mariaRepositoryProvider;
+    private R mariaRepository;
 
     @Inject(optional = true)
     @MongoRepo
-    private Provider<R> mongoRepositoryProvider;
+    private R mongoRepository;
 
     @Override
     public R getPrimaryRepository() {
@@ -72,15 +72,15 @@ public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository
         try {
             switch (ds) {
                 case "h2":
-                    return h2RepositoryProvider.get();
+                    return h2Repository;
                 case "json":
-                    return jsonRepositoryProvider.get();
+                    return jsonRepository;
                 case "mariadb":
-                    return mariaRepositoryProvider.get();
+                    return mariaRepository;
                 case "mongodb":
-                    return mongoRepositoryProvider.get();
+                    return mongoRepository;
                 default:
-                    throw new IllegalStateException("Invalid dataStoreType");
+                    throw new IllegalStateException("Invalid dataStoreName");
             }
         } catch (ProvisionException | NullPointerException e) {
             System.err.println("MSRepository: could not find requested data store: \"" + ds + "\". Did you bind it correctly?");

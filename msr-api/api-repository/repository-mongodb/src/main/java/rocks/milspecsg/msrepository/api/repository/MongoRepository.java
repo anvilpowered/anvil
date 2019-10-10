@@ -20,28 +20,37 @@ package rocks.milspecsg.msrepository.api.repository;
 
 import com.mongodb.WriteResult;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.DeleteOptions;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public interface MongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>> extends Repository<ObjectId, T, C> {
+public interface MongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>> extends Repository<ObjectId, T, C, Datastore> {
 
-    CompletableFuture<WriteResult> deleteFromDS(Query<T> query, DeleteOptions deleteOptions);
+    CompletableFuture<WriteResult> delete(Query<T> query);
 
-    CompletableFuture<WriteResult> deleteFromDS(Query<T> query);
+    default Optional<UpdateOperations<T>> createUpdateOperations() {
+        return Optional.empty();
+    }
 
-    UpdateOperations<T> createUpdateOperations();
+    default Optional<UpdateOperations<T>> inc(String field, Number value) {
+        return Optional.empty();
+    }
 
-    UpdateOperations<T> inc(String field, Number value);
+    default Optional<UpdateOperations<T>> inc(String field) {
+        return Optional.empty();
+    }
 
-    UpdateOperations<T> inc(String field);
+    default Optional<Query<T>> asQuery() {
+        return Optional.empty();
+    }
 
-    Query<T> asQuery();
-
-    Query<T> asQuery(ObjectId id);
+    default Optional<Query<T>> asQuery(ObjectId id) {
+        return Optional.empty();
+    }
 
 }

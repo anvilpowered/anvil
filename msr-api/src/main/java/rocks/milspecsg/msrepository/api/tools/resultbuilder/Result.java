@@ -16,22 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository;
+package rocks.milspecsg.msrepository.api.tools.resultbuilder;
 
-public interface PluginInfo<TString> {
+public interface Result<TResult, TData> {
 
-    String getId();
+    TResult success(TData data);
 
-    String getName();
-
-    String getVersion();
-
-    String getDescription();
-
-    String getURL();
-
-    String getAuthors();
-
-    TString getPrefix();
+    TResult fail(TData data);
 
 }

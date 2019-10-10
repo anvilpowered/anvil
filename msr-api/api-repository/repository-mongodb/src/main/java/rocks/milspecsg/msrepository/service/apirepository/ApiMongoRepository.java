@@ -22,32 +22,31 @@ import com.google.inject.Inject;
 import com.mongodb.WriteResult;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.DeleteOptions;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
-import rocks.milspecsg.msrepository.datastore.DataStoreContext;
+import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public abstract class ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>> extends ApiRepository<ObjectId, T, C, Datastore> implements MongoRepository<T, C> {
-
-    public ApiMongoRepository(DataStoreContext<Datastore> mongoContext) {
-        super(mongoContext);
-    }
+public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>>
+    extends Repository<ObjectId, T, C, Datastore>, MongoRepository<T, C> {
 
     @Override
-    public CompletableFuture<Optional<T>> insertOneIntoDS(T item) {
+    default CompletableFuture<Optional<T>> insertOne(T item) {
         return CompletableFuture.supplyAsync(() -> {
             Key<T> key;
             try {
-                Optional<Datastore> optionalDataStore = dataStoreContext.getDataStore();
+                Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
                 if (!optionalDataStore.isPresent()) {
                     return Optional.empty();
                 }
@@ -57,41 +56,32 @@ public abstract class ApiMongoRepository<T extends ObjectWithId<ObjectId>, C ext
                 return Optional.empty();
             }
             item.setId((ObjectId) key.getId());
+            getRepositoryCacheService().ifPresent(cache -> cache.insertOne(item));
             return Optional.of(item);
         });
     }
 
     @Override
-    public CompletableFuture<Optional<T>> getOneFromDS(ObjectId id) {
-        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(asQuery(id).get()));
+    default CompletableFuture<Optional<T>> getOne(ObjectId id) {
+        return CompletableFuture.supplyAsync(() -> asQuery(id).map(QueryResults::get));
     }
 
     @Override
-    public CompletableFuture<List<ObjectId>> getAllIds() {
-        return CompletableFuture.supplyAsync(() -> asQuery().project("_id", true).asList().stream().map(ObjectWithId::getId).collect(Collectors.toList()));
+    default CompletableFuture<List<ObjectId>> getAllIds() {
+        return CompletableFuture.supplyAsync(() ->
+            asQuery()
+                .map(q ->
+                    q.project("_id", true)
+                        .asList().stream().map(ObjectWithId::getId)
+                        .collect(Collectors.toList())
+                ).orElse(Collections.emptyList()));
     }
 
     @Override
-    public CompletableFuture<WriteResult> deleteFromDS(Query<T> query, DeleteOptions deleteOptions) {
+    default CompletableFuture<WriteResult> delete(Query<T> query) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                Optional<Datastore> optionalDataStore = dataStoreContext.getDataStore();
-                if (!optionalDataStore.isPresent()) {
-                    return WriteResult.unacknowledged();
-                }
-                return optionalDataStore.get().delete(query, deleteOptions);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return WriteResult.unacknowledged();
-            }
-        });
-    }
-
-    @Override
-    public CompletableFuture<WriteResult> deleteFromDS(Query<T> query) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                Optional<Datastore> optionalDataStore = dataStoreContext.getDataStore();
+                Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
                 if (!optionalDataStore.isPresent()) {
                     return WriteResult.unacknowledged();
                 }
@@ -104,23 +94,18 @@ public abstract class ApiMongoRepository<T extends ObjectWithId<ObjectId>, C ext
     }
 
     @Override
-    public CompletableFuture<Boolean> deleteOneFromDS(ObjectId id) {
-        return deleteFromDS(asQuery(id)).thenApplyAsync(result -> result.wasAcknowledged() && result.getN() > 0);
+    default Optional<UpdateOperations<T>> inc(String field, Number value) {
+        return createUpdateOperations().map(u -> u.inc(field, value));
     }
 
     @Override
-    public UpdateOperations<T> inc(String field, Number value) {
-        return createUpdateOperations().inc(field, value);
-    }
-
-    @Override
-    public UpdateOperations<T> inc(String field) {
+    default Optional<UpdateOperations<T>> inc(String field) {
         return inc(field, 1);
     }
 
     @Override
-    public Query<T> asQuery(ObjectId id) {
-        return asQuery().field("_id").equal(id);
+    default Optional<Query<T>> asQuery(ObjectId id) {
+        return asQuery().map(q -> q.field("_id").equal(id));
     }
 
 }

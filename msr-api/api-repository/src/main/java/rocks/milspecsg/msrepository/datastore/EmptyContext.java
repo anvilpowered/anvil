@@ -1,5 +1,5 @@
 /*
- *     MSRepository - MilSpecSG
+ *     MSParties - MilSpecSG
  *     Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.tools.resultbuilder;
+package rocks.milspecsg.msrepository.datastore;
 
-public interface ResultBuilder<TResult, TData> {
+public class EmptyContext extends DataStoreContext<Object> {
 
-    TResult success(TData data);
+    @Override
+    public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
+    }
 
-    TResult fail(TData data);
+    @Override
+    protected void closeConnection(Object o) {
+    }
 
 }

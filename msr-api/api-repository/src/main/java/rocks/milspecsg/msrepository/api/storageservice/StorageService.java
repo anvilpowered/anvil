@@ -19,10 +19,30 @@
 package rocks.milspecsg.msrepository.api.storageservice;
 
 import com.google.common.reflect.TypeToken;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
-public interface TypedDataStorageService<TKey, T extends ObjectWithId<TKey>> extends TypedStorageService<T> {
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
-    TypeToken<TKey> getTypeTokenTKey();
+public interface StorageService<T> {
+
+    /**
+     * @return An empty {@link T}
+     */
+    T generateEmpty();
+
+    TypeToken<T> getTypeTokenT();
+
+    /**
+     * @param item Object to insert
+     * @return The inserted item
+     */
+    CompletableFuture<Optional<T>> insertOne(T item);
+
+    /**
+     * @param list {@link List <T>} to insert
+     * @return {@link CompletableFuture} of {@link List<T>} containing all {@link T} that were successfully inserted
+     */
+    CompletableFuture<List<T>> insert(List<T> list);
 
 }

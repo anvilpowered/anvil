@@ -18,12 +18,14 @@
 
 package rocks.milspecsg.msrepository.model.data.dbo;
 
+import io.jsondb.annotation.Id;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
 
 public abstract class JsonDbo implements ObjectWithId<ObjectId> {
 
+    @Id
     private ObjectId id;
 
     private Date updatedUtc;
@@ -41,5 +43,7 @@ public abstract class JsonDbo implements ObjectWithId<ObjectId> {
         return updatedUtc;
     }
 
-    void prePersist() {updatedUtc = new Date();}
+    void prePersist() {
+        updatedUtc = new Date();
+    }
 }
