@@ -18,20 +18,18 @@
 
 package rocks.milspecsg.msrepository.service.apirepository;
 
-import com.google.inject.Inject;
 import com.mongodb.WriteResult;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.api.repository.Repository;
+import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -43,27 +41,39 @@ public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends 
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
-        return CompletableFuture.supplyAsync(() -> {
-            Key<T> key;
+        return applyFromDBToCacheConditionally(() -> {
+            Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
+            if (!optionalDataStore.isPresent()) {
+                return Optional.empty();
+            }
             try {
-                Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
-                if (!optionalDataStore.isPresent()) {
-                    return Optional.empty();
-                }
-                key = optionalDataStore.get().save(item);
+                item.setId((ObjectId) optionalDataStore.get().save(item).getId());
             } catch (Exception e) {
                 e.printStackTrace();
                 return Optional.empty();
             }
-            item.setId((ObjectId) key.getId());
-            getRepositoryCacheService().ifPresent(cache -> cache.insertOne(item));
             return Optional.of(item);
-        });
+        }, StorageService::insertOne);
+    }
+
+    @Override
+    default CompletableFuture<List<T>> insert(List<T> list) {
+        return applyFromDBToCache(() -> getDataStoreContext().getDataStore()
+                .map(dataStore -> list.stream().filter(item -> {
+                    try {
+                        item.setId((ObjectId) dataStore.save(item).getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    return true;
+                }).collect(Collectors.toList())).orElse(Collections.emptyList()),
+            StorageService::insert);
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
-        return CompletableFuture.supplyAsync(() -> asQuery(id).map(QueryResults::get));
+        return applyToBothConditionally(c -> c.getOne(id).join(), () -> asQuery(id).map(QueryResults::get));
     }
 
     @Override
@@ -79,7 +89,7 @@ public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends 
 
     @Override
     default CompletableFuture<WriteResult> delete(Query<T> query) {
-        return CompletableFuture.supplyAsync(() -> {
+        return applyFromDBToCache(() -> {
             try {
                 Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
                 if (!optionalDataStore.isPresent()) {
@@ -89,6 +99,13 @@ public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends 
             } catch (Exception e) {
                 e.printStackTrace();
                 return WriteResult.unacknowledged();
+            }
+        }, (c, w) -> {
+            try {
+                if (w.wasAcknowledged() || w.getN() > 0) {
+                    c.deleteOne((ObjectId) w.getUpsertedId());
+                }
+            } catch (Exception ignored) {
             }
         });
     }
