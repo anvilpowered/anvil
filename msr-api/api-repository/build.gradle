@@ -20,6 +20,6 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-config')
     }
     
-    implementation 'com.google.inject:guice:4.0'
+    implementation 'com.google.inject:guice:4.1.0'
     
 }

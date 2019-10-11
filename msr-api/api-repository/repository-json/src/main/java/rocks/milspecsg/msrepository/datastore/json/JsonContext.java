@@ -18,23 +18,24 @@
 
 package rocks.milspecsg.msrepository.datastore.json;
 
+import io.jsondb.JsonDBOperations;
 import io.jsondb.JsonDBTemplate;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
 
-public abstract class JsonContext extends DataStoreContext<JsonDBTemplate> {
+public abstract class JsonContext extends DataStoreContext<JsonDBOperations> {
 
     public void init(String baseScanPackage, int port, String dbFilesLocation, String username, String password, boolean useAuth) {
         if (!getDataStore().isPresent()) {
-            JsonDBTemplate dataStore = new JsonDBTemplate(dbFilesLocation, baseScanPackage);
+            JsonDBOperations dataStore = new JsonDBTemplate(dbFilesLocation, baseScanPackage);
             initCollections(dataStore);
             setDataStore(dataStore);
         }
     }
 
     @Override
-    protected void closeConnection(JsonDBTemplate dataStore) {
+    protected void closeConnection(JsonDBOperations dataStore) {
     }
 
-    protected abstract void initCollections(JsonDBTemplate dataStore);
+    protected abstract void initCollections(JsonDBOperations dataStore);
 }

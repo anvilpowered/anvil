@@ -22,6 +22,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 import rocks.milspecsg.msrepository.api.repository.Repository;
+import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.lang.annotation.Annotation;
@@ -36,8 +37,8 @@ public class BindingExtensions {
     }
 
     public <T extends ObjectWithId<?>,
-        From1 extends Repository<?, ?, ?, ?>,
-        From2 extends Repository<?, T, ?, ?>,
+        From1 extends DataStorageService<?, ?>,
+        From2 extends DataStorageService<?, T>,
         From3 extends From1,
         Target extends From1>
     void bind(
@@ -74,6 +75,7 @@ public class BindingExtensions {
         TypeToken<From> from,
         TypeToken<Target> target
     ) {
-        binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType())).to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+        binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType()))
+            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
     }
 }

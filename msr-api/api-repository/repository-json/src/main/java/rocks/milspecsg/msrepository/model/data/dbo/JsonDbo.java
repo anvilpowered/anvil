@@ -30,20 +30,20 @@ public abstract class JsonDbo implements ObjectWithId<ObjectId> {
 
     private Date updatedUtc;
 
-
     public ObjectId getId() {
         return id;
     }
 
     public void setId(ObjectId id) {
         this.id = id;
+        prePersist();
     }
 
     public Date getUpdatedUtc() {
         return updatedUtc;
     }
 
-    void prePersist() {
+    protected void prePersist() {
         updatedUtc = new Date();
     }
 }

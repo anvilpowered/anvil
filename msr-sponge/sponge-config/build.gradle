@@ -23,7 +23,7 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-config')
     }
 
-    implementation 'com.google.inject:guice:4.0'
+    implementation 'com.google.inject:guice:4.1.0'
     implementation('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {
         exclude(module: 'configurate-gson')
         exclude(module: 'configurate-yaml')

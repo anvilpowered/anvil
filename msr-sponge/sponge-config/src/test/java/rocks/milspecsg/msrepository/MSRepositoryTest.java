@@ -95,7 +95,7 @@ public class MSRepositoryTest {
         injector = spongeRootInjector.createChildInjector(new MSRepositoryTestModule());
     }
 
-    private static class MSRepositoryTestModule extends APIConfigurationModule {
+    private static class MSRepositoryTestModule extends ApiConfigurationModule {
         @Override
         protected void configure() {
             super.configure();

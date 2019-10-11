@@ -13,5 +13,5 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'com.google.inject:guice:4.0'
+    implementation 'com.google.inject:guice:4.1.0'
 }

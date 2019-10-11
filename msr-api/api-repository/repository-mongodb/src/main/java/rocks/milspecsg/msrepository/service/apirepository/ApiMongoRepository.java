@@ -102,7 +102,7 @@ public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends 
             }
         }, (c, w) -> {
             try {
-                if (w.wasAcknowledged() || w.getN() > 0) {
+                if (w.wasAcknowledged() && w.getN() > 0) {
                     c.deleteOne((ObjectId) w.getUpsertedId());
                 }
             } catch (Exception ignored) {

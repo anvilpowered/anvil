@@ -19,8 +19,6 @@
 package rocks.milspecsg.msrepository.service.apimanager;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.ProvisionException;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.manager.Manager;
@@ -28,67 +26,69 @@ import rocks.milspecsg.msrepository.api.manager.annotation.H2Repo;
 import rocks.milspecsg.msrepository.api.manager.annotation.JsonRepo;
 import rocks.milspecsg.msrepository.api.manager.annotation.MariaRepo;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoRepo;
-import rocks.milspecsg.msrepository.api.repository.Repository;
+import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Objects;
 
-public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository<?, T, ?, ?>> implements Manager<T, R> {
+public abstract class ApiManager<T extends ObjectWithId<?>, R extends DataStorageService<?, T>> implements Manager<T, R> {
 
     protected ConfigurationService configurationService;
-
-    private String dataStoreName = "";
 
     public ApiManager(ConfigurationService configurationService) {
         this.configurationService = configurationService;
         configurationService.addConfigLoadedListener(this::configLoaded);
     }
 
-    protected final String getDataStoreName() {
-        return dataStoreName;
-    }
-
-    private void configLoaded(Object plugin) {
-        dataStoreName = configurationService.getConfigString(ConfigKeys.DATA_STORE_NAME);
-    }
-
     @Inject(optional = true)
     @H2Repo
-    private R h2Repository;
+    private R h2Service;
 
     @Inject(optional = true)
     @JsonRepo
-    private R jsonRepository;
+    private R jsonService;
 
     @Inject(optional = true)
     @MariaRepo
-    private R mariaRepository;
+    private R mariaService;
 
     @Inject(optional = true)
     @MongoRepo
-    private R mongoRepository;
+    private R mongoService;
 
-    @Override
-    public R getPrimaryRepository() {
-        String ds = "";
+    private R currentService = null;
+
+    private void configLoaded(Object plugin) {
+        String dataStoreName = configurationService.getConfigString(ConfigKeys.DATA_STORE_NAME);
         try {
-            if (dataStoreName != null) {
-                ds = dataStoreName.toLowerCase();
-            }
-            switch (ds) {
+            switch (dataStoreName.toLowerCase()) {
                 case "h2":
-                    return Objects.requireNonNull(h2Repository);
+                    currentService = Objects.requireNonNull(h2Service);
+                    break;
                 case "json":
-                    return Objects.requireNonNull(jsonRepository);
+                    currentService = Objects.requireNonNull(jsonService);
+                    break;
                 case "mariadb":
-                    return Objects.requireNonNull(mariaRepository);
+                    currentService = Objects.requireNonNull(mariaService);
+                    break;
                 case "mongodb":
-                    return Objects.requireNonNull(mongoRepository);
+                    currentService = Objects.requireNonNull(mongoService);
+                    break;
                 default:
                     throw new IllegalStateException("Invalid dataStoreName");
             }
         } catch (Exception e) {
-            System.err.println("MSRepository: Could not find requested data store: \"" + ds + "\". Did you bind it correctly?");
+            System.err.println("MSRepository: Could not find requested data store: \"" + dataStoreName + "\". Did you bind it correctly?");
+            throw e;
+        }
+    }
+
+    @Override
+    public R getPrimaryStorageService() {
+        try {
+            return Objects.requireNonNull(currentService);
+        } catch (Exception e){
+            System.err.println("MSRepository: DataStoreName has not been loaded yet!");
             throw e;
         }
     }
