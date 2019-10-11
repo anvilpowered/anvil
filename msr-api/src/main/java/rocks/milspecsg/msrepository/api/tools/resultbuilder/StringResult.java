@@ -19,49 +19,26 @@
 package rocks.milspecsg.msrepository.api.tools.resultbuilder;
 
 public interface StringResult<TResult> extends Result<TResult, String> {
-
     StringResult.Builder<TResult> builder();
-
     interface Builder<TResult> {
-
         Builder<TResult> aqua();
-
         Builder<TResult> black();
-
         Builder<TResult> blue();
-
         Builder<TResult> dark_aqua();
-
         Builder<TResult> dark_blue();
-
         Builder<TResult> dark_gray();
-
         Builder<TResult> dark_green();
-
         Builder<TResult> dark_purple();
-
         Builder<TResult> dark_red();
-
         Builder<TResult> gold();
-
         Builder<TResult> gray();
-
         Builder<TResult> green();
-
         Builder<TResult> light_purple();
-
         Builder<TResult> red();
-
         Builder<TResult> reset();
-
         Builder<TResult> white();
-
         Builder<TResult> yellow();
-
         Builder<TResult> append(Object... content);
-
         TResult build();
-
     }
-
 }

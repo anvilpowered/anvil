@@ -19,8 +19,13 @@
 package rocks.milspecsg.msrepository.service.sponge.tools.resultbuilder;
 
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.format.TextColors;
 import rocks.milspecsg.msrepository.api.tools.resultbuilder.StringResult;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class SpongeStringResult extends SpongeResult<String> implements StringResult<Text> {
     
@@ -31,122 +36,122 @@ public class SpongeStringResult extends SpongeResult<String> implements StringRe
 
     private static class SpongeStringResultBuilder implements Builder<Text> {
         
-        private final Text.Builder builder;
+        final List<TextElement> elements;
 
         private SpongeStringResultBuilder() {
-            builder = Text.builder();
+            elements = new ArrayList<>();
         }
 
         @Override
         public Builder<Text> aqua() {
-            builder.append(Text.of(TextColors.AQUA));
+            elements.add(TextColors.AQUA);
             return this;
         }
 
         @Override
         public Builder<Text> black() {
-            builder.append(Text.of(TextColors.BLACK));
+            elements.add(TextColors.BLACK);
             return this;
         }
 
         @Override
         public Builder<Text> blue() {
-            builder.append(Text.of(TextColors.BLUE));
+            elements.add(TextColors.BLUE);
             return this;
         }
 
         @Override
         public Builder<Text> dark_aqua() {
-            builder.append(Text.of(TextColors.DARK_AQUA));
+            elements.add(TextColors.DARK_AQUA);
             return this;
         }
 
         @Override
         public Builder<Text> dark_blue() {
-            builder.append(Text.of(TextColors.DARK_BLUE));
+            elements.add(TextColors.DARK_BLUE);
             return this;
         }
 
         @Override
         public Builder<Text> dark_gray() {
-            builder.append(Text.of(TextColors.DARK_GRAY));
+            elements.add(TextColors.DARK_GRAY);
             return this;
         }
 
         @Override
         public Builder<Text> dark_green() {
-            builder.append(Text.of(TextColors.DARK_GREEN));
+            elements.add(TextColors.DARK_GREEN);
             return this;
         }
 
         @Override
         public Builder<Text> dark_purple() {
-            builder.append(Text.of(TextColors.DARK_PURPLE));
+            elements.add(TextColors.DARK_PURPLE);
             return this;
         }
 
         @Override
         public Builder<Text> dark_red() {
-            builder.append(Text.of(TextColors.DARK_RED));
+            elements.add(TextColors.DARK_RED);
             return this;
         }
 
         @Override
         public Builder<Text> gold() {
-            builder.append(Text.of(TextColors.GOLD));
+            elements.add(TextColors.GOLD);
             return this;
         }
 
         @Override
         public Builder<Text> gray() {
-            builder.append(Text.of(TextColors.GRAY));
+            elements.add(TextColors.GRAY);
             return this;
         }
 
         @Override
         public Builder<Text> green() {
-            builder.append(Text.of(TextColors.GREEN));
+            elements.add(TextColors.GREEN);
             return this;
         }
 
         @Override
         public Builder<Text> light_purple() {
-            builder.append(Text.of(TextColors.LIGHT_PURPLE));
+            elements.add(TextColors.LIGHT_PURPLE);
             return this;
         }
 
         @Override
         public Builder<Text> red() {
-            builder.append(Text.of(TextColors.RED));
+            elements.add(TextColors.RED);
             return this;
         }
 
         @Override
         public Builder<Text> reset() {
-            builder.append(Text.of(TextColors.RESET));
+            elements.add(TextColors.RESET);
             return this;
         }
 
         @Override
         public Builder<Text> white() {
-            builder.append(Text.of(TextColors.WHITE));
+            elements.add(TextColors.WHITE);
             return this;
         }
 
         @Override
         public Builder<Text> yellow() {
-            builder.append(Text.of(TextColors.YELLOW));
+            elements.add(TextColors.YELLOW);
             return this;
         }
         @Override
         public Builder<Text> append(Object... content) {
-            builder.append(Text.of(content));
+            elements.add(Text.of(content));
             return this;
         }
 
         @Override
         public Text build() {
-            return builder.build();
+            return Text.of(elements.toArray());
         }
     }
 }

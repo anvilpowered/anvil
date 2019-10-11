@@ -22,7 +22,7 @@ import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 
-public interface Manager<T extends ObjectWithId<?>, R extends Repository<?, T, ?>> {
+public interface Manager<T extends ObjectWithId<?>, R extends Repository<?, T, ?, ?>> {
 
     /**
      * Represents the default singular identifier for a {@link ObjectWithId}

@@ -31,6 +31,8 @@ import rocks.milspecsg.msrepository.api.manager.annotation.MongoRepo;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
+import java.util.Objects;
+
 public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository<?, T, ?, ?>> implements Manager<T, R> {
 
     protected ConfigurationService configurationService;
@@ -68,22 +70,25 @@ public abstract class ApiManager<T extends ObjectWithId<?>, R extends Repository
 
     @Override
     public R getPrimaryRepository() {
-        final String ds = dataStoreName.toLowerCase();
+        String ds = "";
         try {
+            if (dataStoreName != null) {
+                ds = dataStoreName.toLowerCase();
+            }
             switch (ds) {
                 case "h2":
-                    return h2Repository;
+                    return Objects.requireNonNull(h2Repository);
                 case "json":
-                    return jsonRepository;
+                    return Objects.requireNonNull(jsonRepository);
                 case "mariadb":
-                    return mariaRepository;
+                    return Objects.requireNonNull(mariaRepository);
                 case "mongodb":
-                    return mongoRepository;
+                    return Objects.requireNonNull(mongoRepository);
                 default:
                     throw new IllegalStateException("Invalid dataStoreName");
             }
-        } catch (ProvisionException | NullPointerException e) {
-            System.err.println("MSRepository: could not find requested data store: \"" + ds + "\". Did you bind it correctly?");
+        } catch (Exception e) {
+            System.err.println("MSRepository: Could not find requested data store: \"" + ds + "\". Did you bind it correctly?");
             throw e;
         }
     }

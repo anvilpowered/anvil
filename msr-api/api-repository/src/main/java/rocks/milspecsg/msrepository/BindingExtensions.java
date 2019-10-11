@@ -35,9 +35,29 @@ public class BindingExtensions {
         this.binder = binder;
     }
 
-    public <TDbo extends ObjectWithId<?>,
+    public <T extends ObjectWithId<?>,
         From1 extends Repository<?, ?, ?, ?>,
-        From2 extends Repository<?, TDbo, ?, ?>,
+        From2 extends Repository<?, T, ?, ?>,
+        From3 extends From1,
+        Target extends From1>
+    void bind(
+        TypeToken<From1> from1,
+        TypeToken<From2> from2,
+        TypeToken<From3> from3,
+        TypeToken<Target> target,
+        Class<? extends Annotation> repoAnnotation
+    ) {
+        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType()))
+            .annotatedWith(repoAnnotation)
+            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+
+        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from3.getType()))
+            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+    }
+
+    public <T extends ObjectWithId<?>,
+        From1 extends Repository<?, ?, ?, ?>,
+        From2 extends Repository<?, T, ?, ?>,
         Target extends From1>
     void bind(
         TypeToken<From1> from1,
@@ -45,7 +65,9 @@ public class BindingExtensions {
         TypeToken<Target> target,
         Class<? extends Annotation> repoAnnotation
     ) {
-        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType())).annotatedWith(repoAnnotation).to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType()))
+            .annotatedWith(repoAnnotation)
+            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
     }
 
     public <From, Target extends From> void bind(
