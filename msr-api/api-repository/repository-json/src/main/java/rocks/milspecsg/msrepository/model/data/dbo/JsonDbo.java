@@ -19,24 +19,28 @@
 package rocks.milspecsg.msrepository.model.data.dbo;
 
 import io.jsondb.annotation.Id;
-import org.bson.types.ObjectId;
 
 import java.util.Date;
 
-public abstract class JsonDbo implements ObjectWithId<ObjectId> {
+public abstract class JsonDbo implements ObjectWithId<String> {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     private Date updatedUtc;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
         prePersist();
+    }
+
+    @Override
+    public String getIdAsString() {
+        return id;
     }
 
     public Date getUpdatedUtc() {

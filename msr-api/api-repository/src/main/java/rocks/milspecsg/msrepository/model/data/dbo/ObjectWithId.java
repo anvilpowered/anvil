@@ -25,5 +25,7 @@ public interface ObjectWithId<TKey> {
     TKey getId();
     void setId(TKey id);
 
+    String getIdAsString();
+
     Date getUpdatedUtc();
 }

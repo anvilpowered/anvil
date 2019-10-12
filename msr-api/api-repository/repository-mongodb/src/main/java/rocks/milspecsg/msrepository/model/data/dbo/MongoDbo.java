@@ -31,13 +31,17 @@ public abstract class MongoDbo implements ObjectWithId<ObjectId> {
 
     private Date updatedUtc;
 
-
     public ObjectId getId() {
         return id;
     }
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    @Override
+    public String getIdAsString() {
+        return id.toHexString();
     }
 
     public Date getUpdatedUtc() {

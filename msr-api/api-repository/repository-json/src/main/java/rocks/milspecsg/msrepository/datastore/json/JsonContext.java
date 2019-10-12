@@ -22,7 +22,6 @@ import io.jsondb.JsonDBOperations;
 import io.jsondb.JsonDBTemplate;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
-
 public abstract class JsonContext extends DataStoreContext<JsonDBOperations> {
 
     public void init(String baseScanPackage, int port, String dbFilesLocation, String username, String password, boolean useAuth) {

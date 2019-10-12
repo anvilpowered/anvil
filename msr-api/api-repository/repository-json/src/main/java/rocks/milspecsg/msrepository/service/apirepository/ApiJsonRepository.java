@@ -32,8 +32,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public interface ApiJsonRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>>
-    extends Repository<ObjectId, T, C, JsonDBOperations>, JsonRepository<T, C> {
+public interface ApiJsonRepository<T extends ObjectWithId<String>, C extends RepositoryCacheService<String, T>>
+    extends Repository<String, T, C, JsonDBOperations>, JsonRepository<T, C> {
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
@@ -43,7 +43,7 @@ public interface ApiJsonRepository<T extends ObjectWithId<ObjectId>, C extends R
                 return Optional.empty();
             }
             try {
-                item.setId(ObjectId.get());
+                item.setId(ObjectId.get().toHexString());
                 optionalDataStore.get().insert(item);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -58,7 +58,7 @@ public interface ApiJsonRepository<T extends ObjectWithId<ObjectId>, C extends R
         return applyFromDBToCache(() -> getDataStoreContext().getDataStore()
                 .map(dataStore -> list.stream().filter(item -> {
                     try {
-                        item.setId(ObjectId.get());
+                        item.setId(ObjectId.get().toHexString());
                         dataStore.insert(item);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -70,7 +70,7 @@ public interface ApiJsonRepository<T extends ObjectWithId<ObjectId>, C extends R
     }
 
     @Override
-    default CompletableFuture<Optional<T>> getOne(ObjectId id) {
+    default CompletableFuture<Optional<T>> getOne(String id) {
         return applyToBothConditionally(c -> c.getOne(id).join(), () ->
             getDataStoreContext().getDataStore()
                 .flatMap(datastore -> Optional.ofNullable(
@@ -80,15 +80,15 @@ public interface ApiJsonRepository<T extends ObjectWithId<ObjectId>, C extends R
 
     @Override
     @SuppressWarnings("unchecked")
-    default CompletableFuture<List<ObjectId>> getAllIds() {
+    default CompletableFuture<List<String>> getAllIds() {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore()
                 .map(j -> j.getCollection(getTypeTokenT().getRawType())
-                    .stream().map(t -> ((ObjectWithId<ObjectId>) t).getId()).collect(Collectors.toList())).orElse(Collections.emptyList()));
+                    .stream().map(t -> ((T) t).getId()).collect(Collectors.toList())).orElse(Collections.emptyList()));
     }
 
     @Override
-    default CompletableFuture<Boolean> deleteOne(ObjectId id) {
+    default CompletableFuture<Boolean> deleteOne(String id) {
         return applyFromDBToCache(() -> {
             try {
                 Optional<JsonDBOperations> optionalDataStore = getDataStoreContext().getDataStore();
