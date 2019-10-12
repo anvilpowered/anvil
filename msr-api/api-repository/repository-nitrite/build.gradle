@@ -9,6 +9,7 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -23,7 +24,7 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-repository')
     }
 
-    implementation 'io.jsondb:jsondb-core:1.0.85'
+    implementation 'com.github.alexstaeding:jsondb-core:master-SNAPSHOT'
     implementation 'com.google.inject:guice:4.1.0'
     
 }
