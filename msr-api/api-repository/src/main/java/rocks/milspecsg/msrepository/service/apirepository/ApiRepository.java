@@ -20,6 +20,7 @@ package rocks.milspecsg.msrepository.service.apirepository;
 
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.repository.Repository;
+import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
@@ -27,16 +28,22 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.*;
 
-public abstract class ApiRepository<TKey, T extends ObjectWithId<TKey>, C extends RepositoryCacheService<TKey, T>, TDataStore> implements Repository<TKey, T, C, TDataStore> {
+public abstract class ApiRepository<
+    TKey,
+    T extends ObjectWithId<TKey>,
+    C extends RepositoryCacheService<TKey, T>,
+    TDataStore,
+    TDataStoreConfig extends DataStoreConfig>
+    implements Repository<TKey, T, C, TDataStore, TDataStoreConfig> {
 
-    private DataStoreContext<TDataStore> dataStoreContext;
+    private DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext;
 
-    public ApiRepository(DataStoreContext<TDataStore> dataStoreContext) {
+    public ApiRepository(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext) {
         this.dataStoreContext = dataStoreContext;
     }
 
     @Override
-    public DataStoreContext<TDataStore> getDataStoreContext() {
+    public DataStoreContext<TKey, TDataStore, TDataStoreConfig> getDataStoreContext() {
         return dataStoreContext;
     }
 
@@ -86,5 +93,23 @@ public abstract class ApiRepository<TKey, T extends ObjectWithId<TKey>, C extend
             return optionalK;
         });
     }
+
+    @Override
+    public Class<TKey> getTKeyClass() {
+        return getDataStoreContext().getTKeyClass();
+    }
+
+    @Override
+    public T generateEmpty() {
+        Class<T> tClass = getTClass();
+        try {
+            return tClass.newInstance();
+        } catch (Exception e) {
+            System.err.println("There was an error creating an instance of " + tClass.getName() + "! Make sure it has an accessible no-args constructor!");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

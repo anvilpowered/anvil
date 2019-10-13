@@ -24,6 +24,7 @@ import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.repository.JsonRepository;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
+import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Collections;
@@ -33,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public interface ApiJsonRepository<T extends ObjectWithId<String>, C extends RepositoryCacheService<String, T>>
-    extends Repository<String, T, C, JsonDBOperations>, JsonRepository<T, C> {
+    extends Repository<String, T, C, JsonDBOperations, JsonConfig>, JsonRepository<T, C> {
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
@@ -73,18 +74,17 @@ public interface ApiJsonRepository<T extends ObjectWithId<String>, C extends Rep
     default CompletableFuture<Optional<T>> getOne(String id) {
         return applyToBothConditionally(c -> c.getOne(id).join(), () ->
             getDataStoreContext().getDataStore()
-                .flatMap(datastore -> Optional.ofNullable(
-                    datastore.findById(id, datastore.getCollectionName(getTypeTokenT().getRawType()))
+                .flatMap(dataStore -> Optional.ofNullable(
+                    dataStore.findById(id, dataStore.getCollectionName(getTClass()))
                 )));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     default CompletableFuture<List<String>> getAllIds() {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore()
-                .map(j -> j.getCollection(getTypeTokenT().getRawType())
-                    .stream().map(t -> ((T) t).getId()).collect(Collectors.toList())).orElse(Collections.emptyList()));
+                .map(j -> j.getCollection(getTClass())
+                    .stream().map(ObjectWithId::getId).collect(Collectors.toList())).orElse(Collections.emptyList()));
     }
 
     @Override

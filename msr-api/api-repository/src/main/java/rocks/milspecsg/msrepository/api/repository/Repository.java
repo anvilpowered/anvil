@@ -20,21 +20,27 @@ package rocks.milspecsg.msrepository.api.repository;
 
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
+import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.*;
 
-public interface Repository<TKey, T extends ObjectWithId<TKey>, C extends RepositoryCacheService<TKey, T>, TDataStore> extends DataStorageService<TKey, T> {
+public interface Repository<
+    TKey,
+    T extends ObjectWithId<TKey>,
+    C extends RepositoryCacheService<TKey, T>,
+    TDataStore,
+    TDataStoreConfig extends DataStoreConfig>
+    extends DataStorageService<TKey, T> {
 
     default Optional<C> getRepositoryCacheService() {
         return Optional.empty();
     }
 
-    DataStoreContext<TDataStore> getDataStoreContext();
+    DataStoreContext<TKey, TDataStore, TDataStoreConfig> getDataStoreContext();
 
     /**
      * <p>

@@ -44,12 +44,18 @@ public abstract class MongoDbo implements ObjectWithId<ObjectId> {
         return id.toHexString();
     }
 
+    @Override
+    public Date getCreatedUtc() {
+        return id.getDate();
+    }
+
+    @Override
     public Date getUpdatedUtc() {
         return updatedUtc;
     }
 
     @PrePersist
-    void prePersist() {
+    private void prePersist() {
         updatedUtc = new Date();
     }
 }

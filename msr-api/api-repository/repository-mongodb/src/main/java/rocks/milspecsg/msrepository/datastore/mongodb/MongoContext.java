@@ -18,39 +18,29 @@
 
 package rocks.milspecsg.msrepository.datastore.mongodb;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.mapping.DefaultCreator;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Objects;
 
-public abstract class MongoContext extends DataStoreContext<Datastore> {
+@Singleton
+public final class MongoContext extends DataStoreContext<ObjectId, Datastore, MongoConfig> {
 
-    public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
-        String client_url;
-
-        if (useAuth) {
-            String encodedPassword = password;
-            try {
-                encodedPassword = URLEncoder.encode(password, "UTF-8");
-            } catch (UnsupportedEncodingException ignored) {
-            }
-
-            client_url = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/" + dbName;
-        } else {
-            client_url = "mongodb://" + hostname + ":" + port + "/" + dbName;
-        }
-
-        MongoClientURI uri = new MongoClientURI(client_url);
-        MongoClient mongoClient = new MongoClient(uri);
-        Morphia morphia = new Morphia();
-        initMorphiaMaps(morphia);
-        Datastore dataStore = morphia.createDatastore(mongoClient, dbName);
-        dataStore.ensureIndexes();
-        setDataStore(dataStore);
+    @Inject
+    public MongoContext(MongoConfig config, Injector injector) {
+        super(config, injector);
     }
 
     @Override
@@ -58,5 +48,59 @@ public abstract class MongoContext extends DataStoreContext<Datastore> {
         dataStore.getMongo().close();
     }
 
-    protected abstract void initMorphiaMaps(Morphia morphia);
+    @Override
+    protected void configLoaded(Object plugin) {
+        if (!getConfigurationService().getConfigString(getConfig().getDataStoreNameConfigKey()).equalsIgnoreCase("mongodb")) {
+            requestCloseConnection();
+            return;
+        }
+
+        /* === Get values from config === */
+        String hostname = Objects.requireNonNull(getConfigurationService().getConfigString(getConfig().getHostNameConfigKey()));
+        int port = Objects.requireNonNull(getConfigurationService().getConfigInteger(getConfig().getPortConfigKey()));
+        String dbName = Objects.requireNonNull(getConfigurationService().getConfigString(getConfig().getDbNameConfigKey()));
+        boolean useAuth = Objects.requireNonNull(getConfigurationService().getConfigBoolean(getConfig().getUseAuthConfigKey()));
+
+        String username = getConfigurationService().getConfigString(getConfig().getUserNameConfigKey());
+        String password = getConfigurationService().getConfigString(getConfig().getPasswordConfigKey());
+
+        if (useAuth) {
+            Objects.requireNonNull(username);
+            Objects.requireNonNull(password);
+        }
+
+        /* === Determine credentials for MongoDB === */
+        String client_url;
+        if (useAuth) {
+            String encodedPassword = password;
+            try {
+                encodedPassword = URLEncoder.encode(password, "UTF-8");
+            } catch (UnsupportedEncodingException ignored) {
+            }
+            client_url = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/" + dbName;
+        } else {
+            client_url = "mongodb://" + hostname + ":" + port + "/" + dbName;
+        }
+
+        /* === Establish MongoDB connection === */
+        MongoClientURI uri = new MongoClientURI(client_url);
+        MongoClient mongoClient = new MongoClient(uri);
+        Morphia morphia = new Morphia();
+        Datastore dataStore = morphia.createDatastore(mongoClient, dbName);
+        dataStore.ensureIndexes();
+        setDataStore(dataStore);
+
+        /* === Save mapped objects and register with morphia === */
+        morphia.map(calculateEntityClasses(getConfig().getBaseScanPackage(), Entity.class, Embedded.class));
+
+        /* === Set class loader to prevent morphia from breaking === */
+        morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {
+            @Override
+            protected ClassLoader getClassLoaderForClass() {
+                return MongoContext.this.getClass().getClassLoader();
+            }
+        });
+
+        setTKeyClass(ObjectId.class);
+    }
 }

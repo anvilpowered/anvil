@@ -18,7 +18,6 @@
 
 package rocks.milspecsg.msrepository.api.storageservice;
 
-import com.google.common.reflect.TypeToken;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.List;
@@ -27,9 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface DataStorageService<TKey, T extends ObjectWithId<TKey>> extends StorageService<T> {
 
-    TypeToken<TKey> getTypeTokenTKey();
-
-    TKey assertType(Object id) throws ClassCastException;
+    Class<TKey> getTKeyClass();
 
     /**
      * @return A list of all {@link TKey} ids in the repository

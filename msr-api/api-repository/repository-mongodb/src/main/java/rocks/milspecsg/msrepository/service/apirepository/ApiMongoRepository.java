@@ -28,6 +28,7 @@ import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
+import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Collections;
@@ -37,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>>
-    extends Repository<ObjectId, T, C, Datastore>, MongoRepository<T, C> {
+    extends Repository<ObjectId, T, C, Datastore, MongoConfig>, MongoRepository<T, C> {
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
@@ -116,6 +117,11 @@ public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends 
     }
 
     @Override
+    default Optional<UpdateOperations<T>> createUpdateOperations() {
+        return getDataStoreContext().getDataStore().map(d -> d.createUpdateOperations(getTClass()));
+    }
+
+    @Override
     default Optional<UpdateOperations<T>> inc(String field, Number value) {
         return createUpdateOperations().map(u -> u.inc(field, value));
     }
@@ -126,8 +132,12 @@ public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends 
     }
 
     @Override
+    default Optional<Query<T>> asQuery() {
+        return getDataStoreContext().getDataStore().map(d -> d.createQuery(getTClass()));
+    }
+
+    @Override
     default Optional<Query<T>> asQuery(ObjectId id) {
         return asQuery().map(q -> q.field("_id").equal(id));
     }
-
 }

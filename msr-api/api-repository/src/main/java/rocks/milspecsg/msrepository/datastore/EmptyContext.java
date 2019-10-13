@@ -18,10 +18,17 @@
 
 package rocks.milspecsg.msrepository.datastore;
 
-public class EmptyContext extends DataStoreContext<Object> {
+
+import com.google.inject.Injector;
+
+public class EmptyContext extends DataStoreContext<Object, Object, DataStoreConfig> {
+
+    public EmptyContext(DataStoreConfig config, Injector injector) {
+        super(config, injector);
+    }
 
     @Override
-    public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
+    public void configLoaded(Object plugin) {
     }
 
     @Override

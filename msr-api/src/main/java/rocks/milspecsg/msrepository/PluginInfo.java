@@ -18,19 +18,7 @@
 
 package rocks.milspecsg.msrepository;
 
-public interface PluginInfo<TString> {
-
-    String getId();
-
-    String getName();
-
-    String getVersion();
-
-    String getDescription();
-
-    String getURL();
-
-    String getAuthors();
+public interface PluginInfo<TString> extends BasicPluginInfo {
 
     TString getPrefix();
 

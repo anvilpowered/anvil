@@ -18,6 +18,7 @@
 
 package rocks.milspecsg.msrepository.model.data.dbo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.jsondb.annotation.Id;
 
 import java.util.Date;
@@ -27,6 +28,7 @@ public abstract class JsonDbo implements ObjectWithId<String> {
     @Id
     private String id;
 
+    private Date createdUtc;
     private Date updatedUtc;
 
     public String getId() {
@@ -35,18 +37,27 @@ public abstract class JsonDbo implements ObjectWithId<String> {
 
     public void setId(String id) {
         this.id = id;
+        this.createdUtc = new Date();
         prePersist();
     }
 
     @Override
+    @JsonIgnore
     public String getIdAsString() {
         return id;
     }
 
+    @Override
+    public Date getCreatedUtc() {
+        return createdUtc;
+    }
+
+    @Override
     public Date getUpdatedUtc() {
         return updatedUtc;
     }
 
+    @JsonIgnore
     protected void prePersist() {
         updatedUtc = new Date();
     }

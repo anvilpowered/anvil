@@ -18,23 +18,56 @@
 
 package rocks.milspecsg.msrepository.datastore.json;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import io.jsondb.JsonDBOperations;
 import io.jsondb.JsonDBTemplate;
+import io.jsondb.annotation.Document;
+import rocks.milspecsg.msrepository.BasicPluginInfo;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
-public abstract class JsonContext extends DataStoreContext<JsonDBOperations> {
+import java.nio.file.Paths;
 
-    public void init(String baseScanPackage, int port, String dbFilesLocation, String username, String password, boolean useAuth) {
-        if (!getDataStore().isPresent()) {
-            JsonDBOperations dataStore = new JsonDBTemplate(dbFilesLocation, baseScanPackage);
-            initCollections(dataStore);
-            setDataStore(dataStore);
-        }
+@Singleton
+public class JsonContext extends DataStoreContext<String, JsonDBOperations, JsonConfig> {
+
+    @Inject
+    private BasicPluginInfo basicPluginInfo;
+
+    @Inject
+    public JsonContext(JsonConfig config, Injector injector) {
+        super(config, injector);
     }
 
     @Override
     protected void closeConnection(JsonDBOperations dataStore) {
     }
 
-    protected abstract void initCollections(JsonDBOperations dataStore);
+    @Override
+    protected void configLoaded(Object plugin) {
+        if (!getConfigurationService().getConfigString(getConfig().getDataStoreNameConfigKey()).equalsIgnoreCase("json")) {
+            requestCloseConnection();
+            return;
+        }
+
+        /* === Initialize storage location === */
+        String dbFilesLocation = Paths.get(basicPluginInfo.getId() + "/data/json").toString();
+
+        /* === Initialize JsonDB === */
+        JsonDBOperations dataStore = new JsonDBTemplate(dbFilesLocation, getConfig().getBaseScanPackage());
+        setDataStore(dataStore);
+
+        /* === Find objects to map === */
+        Class<?>[] entityClasses = calculateEntityClasses(getConfig().getBaseScanPackage(), Document.class);
+
+        /* === Create collections if not present === */
+        for (Class<?> entityClass : entityClasses) {
+            if (!dataStore.collectionExists(entityClass)) {
+                dataStore.createCollection(entityClass);
+            }
+        }
+
+        setTKeyClass(String.class);
+    }
 }

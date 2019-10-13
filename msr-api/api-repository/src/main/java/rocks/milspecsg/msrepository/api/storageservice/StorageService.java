@@ -18,8 +18,6 @@
 
 package rocks.milspecsg.msrepository.api.storageservice;
 
-import com.google.common.reflect.TypeToken;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +29,7 @@ public interface StorageService<T> {
      */
     T generateEmpty();
 
-    TypeToken<T> getTypeTokenT();
+    Class<T> getTClass();
 
     /**
      * @param item Object to insert
