@@ -24,6 +24,7 @@ import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.*;
@@ -41,6 +42,16 @@ public interface Repository<
     }
 
     DataStoreContext<TKey, TDataStore, TDataStoreConfig> getDataStoreContext();
+
+    /**
+     * @return The time of creation of this document in milliseconds since unix epoch
+     */
+    CompletableFuture<Optional<Long>> getCreatedUtcTimeStamp(TKey id);
+
+    /**
+     * @return The time of creation of this document as {@link Date}
+     */
+    CompletableFuture<Optional<Date>> getCreatedUtcDate(TKey id);
 
     /**
      * <p>

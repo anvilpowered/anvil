@@ -28,6 +28,7 @@ import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -35,6 +36,11 @@ import java.util.stream.Collectors;
 
 public interface ApiJsonRepository<T extends ObjectWithId<String>, C extends RepositoryCacheService<String, T>>
     extends Repository<String, T, C, JsonDBOperations, JsonConfig>, JsonRepository<T, C> {
+
+    @Override
+    default CompletableFuture<Optional<Date>> getCreatedUtcDate(String id) {
+        return getOne(id).thenApplyAsync(optionalT -> optionalT.map(ObjectWithId::getCreatedUtcDate));
+    }
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {

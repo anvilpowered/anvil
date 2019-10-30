@@ -32,6 +32,7 @@ import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -39,6 +40,11 @@ import java.util.stream.Collectors;
 
 public interface ApiMongoRepository<T extends ObjectWithId<ObjectId>, C extends RepositoryCacheService<ObjectId, T>>
     extends Repository<ObjectId, T, C, Datastore, MongoConfig>, MongoRepository<T, C> {
+
+    @Override
+    default CompletableFuture<Optional<Date>> getCreatedUtcDate(ObjectId id) {
+        return CompletableFuture.completedFuture(Optional.of(id.getDate()));
+    }
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {

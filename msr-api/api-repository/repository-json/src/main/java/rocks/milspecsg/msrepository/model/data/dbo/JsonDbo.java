@@ -28,8 +28,8 @@ public abstract class JsonDbo implements ObjectWithId<String> {
     @Id
     private String id;
 
-    private Date createdUtc;
-    private Date updatedUtc;
+    private long createdUtc;
+    private long updatedUtc;
 
     public String getId() {
         return id;
@@ -37,7 +37,25 @@ public abstract class JsonDbo implements ObjectWithId<String> {
 
     public void setId(String id) {
         this.id = id;
-        this.createdUtc = new Date();
+        this.createdUtc = new Date().getTime();
+        prePersist();
+    }
+
+    public long getCreatedUtc() {
+        return createdUtc;
+    }
+
+    public void setCreatedUtc(long createdUtc) {
+        this.createdUtc = createdUtc;
+        prePersist();
+    }
+
+    public long getUpdatedUtc() {
+        return updatedUtc;
+    }
+
+    public void setUpdatedUtc(long updatedUtc) {
+        this.updatedUtc = updatedUtc;
         prePersist();
     }
 
@@ -48,17 +66,31 @@ public abstract class JsonDbo implements ObjectWithId<String> {
     }
 
     @Override
-    public Date getCreatedUtc() {
+    @JsonIgnore
+    public long getCreatedUtcTimeStamp() {
         return createdUtc;
     }
 
     @Override
-    public Date getUpdatedUtc() {
+    @JsonIgnore
+    public long getUpdatedUtcTimeStamp() {
         return updatedUtc;
+    }
+
+    @Override
+    @JsonIgnore
+    public Date getCreatedUtcDate() {
+        return new Date(createdUtc);
+    }
+
+    @Override
+    @JsonIgnore
+    public Date getUpdatedUtcDate() {
+        return new Date(updatedUtc);
     }
 
     @JsonIgnore
     protected void prePersist() {
-        updatedUtc = new Date();
+        updatedUtc = new Date().getTime();
     }
 }
