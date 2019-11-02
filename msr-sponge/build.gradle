@@ -3,10 +3,6 @@ plugins {
     id 'org.spongepowered.plugin' version '0.8.1'
 }
 
-configurations {
-    extraLibs
-}
-
 group = "rocks.milspecsg"
 version = "0.1.0-dev"
 

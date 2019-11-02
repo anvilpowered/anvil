@@ -25,27 +25,24 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+// TODO: extract to interface
 public abstract class DataStoreContext<TKey, TDataStore, TDataStoreConfig extends DataStoreConfig> {
 
+    private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
     private final List<ConnectionOpenedListener<TDataStore>> connectionOpenedListeners;
     private final List<ConnectionClosedListener<TDataStore>> connectionClosedListeners;
     private final ConfigurationService configurationService;
     private final TDataStoreConfig config;
 
-
-    private TDataStore dataStore = null;
+    private TDataStore dataStore;
     private Class<?>[] entityClasses;
     private Class<TKey> tKeyClass;
 
-
-    public DataStoreContext(TDataStoreConfig config, Injector injector) {
-        this.connectionOpenedListeners = new ArrayList<>();
-        this.connectionClosedListeners = new ArrayList<>();
+    protected DataStoreContext(TDataStoreConfig config, Injector injector) {
+        connectionOpenedListeners = new ArrayList<>();
+        connectionClosedListeners = new ArrayList<>();
 
         ConfigurationService configurationService = injector.getInstance(config.getConfigurationServiceKey());
         configurationService.addConfigLoadedListener(this::configLoaded);
@@ -67,13 +64,13 @@ public abstract class DataStoreContext<TKey, TDataStore, TDataStoreConfig extend
 
     @SafeVarargs
     protected final Class<?>[] calculateEntityClasses(final String baseScanPackage, final Class<? extends Annotation>... entityAnnotations) {
-        if (entityAnnotations.length == 0) return new Class<?>[0];
+        if (entityAnnotations.length == 0) return EMPTY_CLASS_ARRAY;
         Reflections reflections = new Reflections(baseScanPackage, new TypeAnnotationsScanner(), new SubTypesScanner());
         Set<Class<?>> types = reflections.getTypesAnnotatedWith(entityAnnotations[0]);
         for (int i = 1; i < entityAnnotations.length; i++) {
             types.addAll(reflections.getTypesAnnotatedWith(entityAnnotations[i]));
         }
-        return entityClasses = types.toArray(new Class<?>[0]);
+        return entityClasses = types.toArray(EMPTY_CLASS_ARRAY);
     }
 
     public final Class<?>[] getEntityClasses() {
@@ -87,7 +84,7 @@ public abstract class DataStoreContext<TKey, TDataStore, TDataStoreConfig extend
         Class<?> clazz = null;
         try {
             clazz = getEntityClassUnsafe(name);
-        } catch (Exception ignored) {
+        } catch (RuntimeException ignored) {
         }
         return Optional.ofNullable(clazz);
     }
@@ -96,9 +93,9 @@ public abstract class DataStoreContext<TKey, TDataStore, TDataStoreConfig extend
      * @return First entityClass that contains {@param name}
      */
     public final Class<?> getEntityClassUnsafe(final String name) {
-        final String n = name.toLowerCase();
+        final String n = name.toLowerCase(Locale.ENGLISH);
         for (Class<?> entityClass : entityClasses) {
-            if (entityClass.getSimpleName().toLowerCase().contains(n)) {
+            if (entityClass.getSimpleName().toLowerCase(Locale.ENGLISH).contains(n)) {
                 return entityClass;
             }
         }
@@ -121,7 +118,7 @@ public abstract class DataStoreContext<TKey, TDataStore, TDataStoreConfig extend
         return config;
     }
 
-    abstract protected void closeConnection(TDataStore dataStore);
+    protected abstract void closeConnection(TDataStore dataStore);
 
     protected final void requestCloseConnection() {
         if (dataStore != null) {

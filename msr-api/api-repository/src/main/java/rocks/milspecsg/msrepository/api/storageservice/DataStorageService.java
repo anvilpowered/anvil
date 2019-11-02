@@ -1,5 +1,5 @@
 /*
- *     MSParties - MilSpecSG
+ *     MSRepository - MilSpecSG
  *     Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -18,15 +18,20 @@
 
 package rocks.milspecsg.msrepository.api.storageservice;
 
+import rocks.milspecsg.msrepository.api.component.Component;
+import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public interface DataStorageService<TKey, T extends ObjectWithId<TKey>> extends StorageService<T> {
-
-    Class<TKey> getTKeyClass();
+public interface DataStorageService<
+    TKey,
+    T extends ObjectWithId<TKey>,
+    TDataStore,
+    TDataStoreConfig extends DataStoreConfig>
+    extends Component<TKey, TDataStore, TDataStoreConfig>, StorageService<T> {
 
     /**
      * @return A list of all {@link TKey} ids in the repository

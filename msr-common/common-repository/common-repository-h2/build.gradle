@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group = modGroup
+version = modVersion
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api:api-config')
+        implementation project(':msr-api:api-repository')
+        implementation project(':msr-api:api-repository:api-repository-h2')
+    } else {
+        implementation project(':MSRepository:msr-api:api-config')
+        implementation project(':MSRepository:msr-api:api-repository')
+        implementation project(':MSRepository:msr-api:api-repository:api-repository-h2')
+    }
+
+    implementation 'com.google.inject:guice:4.1.0'
+}

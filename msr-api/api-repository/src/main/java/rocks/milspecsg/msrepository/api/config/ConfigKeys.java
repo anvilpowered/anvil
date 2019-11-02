@@ -18,10 +18,10 @@
 
 package rocks.milspecsg.msrepository.api.config;
 
-public abstract class ConfigKeys {
+public interface ConfigKeys {
 
-    public static final int DATA_STORE_NAME = 0;
-    public static final int CACHE_INVALIDATION_TIMOUT_SECONDS_INT = 1;
-    public static final int CACHE_INVALIDATION_INTERVAL_SECONDS_INT = 2;
+    int DATA_STORE_NAME = 0;
+    int CACHE_INVALIDATION_TIMOUT_SECONDS_INT = 1;
+    int CACHE_INVALIDATION_INTERVAL_SECONDS_INT = 2;
 
 }

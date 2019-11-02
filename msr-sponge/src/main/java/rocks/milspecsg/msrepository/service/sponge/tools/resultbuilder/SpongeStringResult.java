@@ -1,5 +1,5 @@
 /*
- *     MSParties - MilSpecSG
+ *     MSRepository - MilSpecSG
  *     Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@ import org.spongepowered.api.text.format.TextColors;
 import rocks.milspecsg.msrepository.api.tools.resultbuilder.StringResult;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class SpongeStringResult extends SpongeResult<String> implements StringResult<Text> {
@@ -34,9 +33,9 @@ public class SpongeStringResult extends SpongeResult<String> implements StringRe
         return new SpongeStringResultBuilder();
     }
 
-    private static class SpongeStringResultBuilder implements Builder<Text> {
+    private static final class SpongeStringResultBuilder implements Builder<Text> {
         
-        final List<TextElement> elements;
+        private final List<TextElement> elements;
 
         private SpongeStringResultBuilder() {
             elements = new ArrayList<>();

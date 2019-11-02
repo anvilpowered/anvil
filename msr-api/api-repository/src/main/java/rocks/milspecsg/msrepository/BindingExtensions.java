@@ -19,25 +19,34 @@
 package rocks.milspecsg.msrepository;
 
 import com.google.common.reflect.TypeToken;
-import com.google.inject.Binder;
-import com.google.inject.TypeLiteral;
-import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.api.component.Component;
 
 import java.lang.annotation.Annotation;
 
-@SuppressWarnings({"unchecked", "UnstableApiUsage"})
-public class BindingExtensions {
+@SuppressWarnings("UnstableApiUsage")
+public interface BindingExtensions {
 
-    private final Binder binder;
-
-    public BindingExtensions(Binder binder) {
-        this.binder = binder;
-    }
-
-    public <T extends ObjectWithId<?>,
-        From1 extends DataStorageService<?, ?>,
-        From2 extends DataStorageService<?, T>,
+    /**
+     * Full binding method for a component
+     * <p>
+     * A typical example of usage of this method:
+     * </p>
+     * <pre>{@code
+     * be.bind(
+     *     new TypeToken<FooRepository<?, ?, ?, ?>>(getClass()) {
+     *     },
+     *     new TypeToken<FooRepository<?, Foo<?>, ?, ?>>(getClass()) {
+     *     },
+     *     new TypeToken<FooRepository<ObjectId, BanRule<ObjectId>, Datastore, MongoConfig>>(getClass()) {
+     *     },
+     *     new TypeToken<CommonMongoFooRepository<TMongoFoo>>(getClass()) { // final implementation
+     *     },
+     *     MongoDBComponent.class
+     * );
+     * }</pre>
+     */
+    <From1 extends Component<?, ?, ?>,
+        From2 extends Component<?, ?, ?>,
         From3 extends From1,
         Target extends From1>
     void bind(
@@ -45,36 +54,21 @@ public class BindingExtensions {
         TypeToken<From2> from2,
         TypeToken<From3> from3,
         TypeToken<Target> target,
-        Class<? extends Annotation> repoAnnotation
-    ) {
-        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType()))
-            .annotatedWith(repoAnnotation)
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+        Class<? extends Annotation> componentAnnotation
+    );
 
-        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from3.getType()))
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
-    }
-
-    public <T extends ObjectWithId<?>,
-        From1 extends DataStorageService<?, ?>,
-        From2 extends DataStorageService<?, T>,
+    <From1 extends Component<?, ?, ?>,
+        From2 extends Component<?, ?, ?>,
         Target extends From1>
     void bind(
         TypeToken<From1> from1,
         TypeToken<From2> from2,
         TypeToken<Target> target,
-        Class<? extends Annotation> repoAnnotation
-    ) {
-        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType()))
-            .annotatedWith(repoAnnotation)
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
-    }
+        Class<? extends Annotation> componentAnnotation
+    );
 
-    public <From, Target extends From> void bind(
+    <From, Target extends From> void bind(
         TypeToken<From> from,
         TypeToken<Target> target
-    ) {
-        binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType()))
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
-    }
+    );
 }

@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = modGroup
+version = modVersion
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api:api-config')
+        implementation project(':msr-api:api-repository')
+
+    } else {
+        implementation project(':MSRepository:msr-api:api-config')
+        implementation project(':MSRepository:msr-api:api-repository')
+    }
+
+    implementation 'com.zaxxer:HikariCP:2.6.1'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
+    implementation 'com.google.inject:guice:4.1.0'
+}

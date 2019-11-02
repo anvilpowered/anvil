@@ -1,5 +1,5 @@
 /*
- *     MSParties - MilSpecSG
+ *     MSRepository - MilSpecSG
  *     Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ public interface StorageService<T> {
     CompletableFuture<Optional<T>> insertOne(T item);
 
     /**
-     * @param list {@link List <T>} to insert
+     * @param list {@link List<T>} to insert
      * @return {@link CompletableFuture} of {@link List<T>} containing all {@link T} that were successfully inserted
      */
     CompletableFuture<List<T>> insert(List<T> list);

@@ -21,7 +21,6 @@ package rocks.milspecsg.msrepository.api.repository;
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
-import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Date;
@@ -32,16 +31,14 @@ import java.util.function.*;
 public interface Repository<
     TKey,
     T extends ObjectWithId<TKey>,
-    C extends RepositoryCacheService<TKey, T>,
+    C extends RepositoryCacheService<TKey, T, TDataStore, TDataStoreConfig>,
     TDataStore,
     TDataStoreConfig extends DataStoreConfig>
-    extends DataStorageService<TKey, T> {
+    extends DataStorageService<TKey, T, TDataStore, TDataStoreConfig> {
 
     default Optional<C> getRepositoryCacheService() {
         return Optional.empty();
     }
-
-    DataStoreContext<TKey, TDataStore, TDataStoreConfig> getDataStoreContext();
 
     /**
      * @return The time of creation of this document in milliseconds since unix epoch
@@ -175,7 +172,6 @@ public interface Repository<
      *     <li>- Cache is present</li>
      * </ul>
      * {@param dbTransformer} will run if and only if:
-     * </p>
      * <ul>
      *     <li>- {@link Optional} result from {@param cacheTransformer} is <strong>not</strong> present</li>
      * </ul>

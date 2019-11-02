@@ -19,12 +19,18 @@
 package rocks.milspecsg.msrepository.api.cache;
 
 import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
+import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public interface RepositoryCacheService<TKey, T extends ObjectWithId<TKey>> extends CacheService<T>, DataStorageService<TKey, T> {
+public interface RepositoryCacheService<
+    TKey,
+    T extends ObjectWithId<TKey>,
+    TDataStore,
+    TDataStoreConfig extends DataStoreConfig>
+    extends CacheService<T>, DataStorageService<TKey, T, TDataStore, TDataStoreConfig> {
 
     /**
      * @param fromDB {@link Supplier<List>} that retrieves data from datastore
