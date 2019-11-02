@@ -167,7 +167,7 @@ public interface Manager<C extends Component<?, ?, ?>> {
      *     </li>
      * </ol>
      * <p>
-     * Use {@link } to bind your component implementations
+     * Use {@link BindingExtensions} to bind your component implementations
      * </p>
      *
      * @return The current {@link Component} implementation
