@@ -25,6 +25,6 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-repository:api-repository-json')
     }
 
-    implementation 'com.github.alexstaeding:jsondb-core:id-field-direct-SNAPSHOT'
+    implementation 'com.github.Jsondb:jsondb-core:-SNAPSHOT'
     implementation 'com.google.inject:guice:4.1.0'
 }

@@ -72,6 +72,17 @@ public class CommonBindingExtensions implements BindingExtensions {
     @Override
     public <From, Target extends From> void bind(
         TypeToken<From> from,
+        TypeToken<Target> target,
+        Class<? extends Annotation> annotation
+    ) {
+        binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType()))
+            .annotatedWith(annotation)
+            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+    }
+
+    @Override
+    public <From, Target extends From> void bind(
+        TypeToken<From> from,
         TypeToken<Target> target
     ) {
         binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType()))

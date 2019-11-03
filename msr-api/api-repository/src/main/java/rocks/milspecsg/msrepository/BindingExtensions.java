@@ -69,6 +69,12 @@ public interface BindingExtensions {
 
     <From, Target extends From> void bind(
         TypeToken<From> from,
+        TypeToken<Target> target,
+        Class<? extends Annotation> annotation
+    );
+
+    <From, Target extends From> void bind(
+        TypeToken<From> from,
         TypeToken<Target> target
     );
 }
