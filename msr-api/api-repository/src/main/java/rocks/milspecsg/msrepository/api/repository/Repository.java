@@ -41,9 +41,14 @@ public interface Repository<
     }
 
     /**
+     * @return The time of creation of this document in seconds since unix epoch
+     */
+    CompletableFuture<Optional<Integer>> getCreatedUtcTimeStampSeconds(TKey id);
+
+    /**
      * @return The time of creation of this document in milliseconds since unix epoch
      */
-    CompletableFuture<Optional<Long>> getCreatedUtcTimeStamp(TKey id);
+    CompletableFuture<Optional<Long>> getCreatedUtcTimeStampMillis(TKey id);
 
     /**
      * @return The time of creation of this document as {@link Date}

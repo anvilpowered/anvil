@@ -43,8 +43,13 @@ public interface CommonMongoRepository<
     extends MongoRepository<T, C> {
 
     @Override
-    default CompletableFuture<Optional<Long>> getCreatedUtcTimeStamp(ObjectId id) {
-        return CompletableFuture.completedFuture(Optional.of(id.getTimestamp() * 1000L));
+    default CompletableFuture<Optional<Integer>> getCreatedUtcTimeStampSeconds(ObjectId id) {
+        return CompletableFuture.completedFuture(Optional.of(id.getTimestamp()));
+    }
+
+    @Override
+    default CompletableFuture<Optional<Long>> getCreatedUtcTimeStampMillis(ObjectId id) {
+        return getCreatedUtcTimeStampSeconds(id).thenApplyAsync(o -> o.map(t -> t * 1000L));
     }
 
     @Override
