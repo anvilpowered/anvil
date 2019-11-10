@@ -79,11 +79,11 @@ public abstract class CommonRepository<
     }
 
     @Override
-    public <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer, Supplier<Optional<K>> dbTransformer) {
+    public <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer, Supplier<Optional<K>> dbSupplier) {
         return CompletableFuture.supplyAsync(() -> {
             Optional<K> optionalK = getRepositoryCacheService().flatMap(cacheTransformer);
             if (!optionalK.isPresent()) {
-                return dbTransformer.get();
+                return dbSupplier.get();
             }
             return optionalK;
         });
@@ -93,13 +93,11 @@ public abstract class CommonRepository<
     public T generateEmpty() {
         Class<T> tClass = getTClass();
         try {
-            return tClass.newInstance();
+            return tClass.getConstructor().newInstance();
         } catch (Exception e) {
-            System.err.println("There was an error creating an instance of " + tClass.getName() + "! Make sure it has an accessible no-args constructor!");
-            e.printStackTrace();
-            return null;
+            String message = "There was an error creating an instance of " + tClass.getName() + "! Make sure it has an accessible no-args constructor!";
+            System.err.println(message);
+            throw new IllegalStateException(message, e);
         }
     }
-
-
 }

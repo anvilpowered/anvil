@@ -85,8 +85,9 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
                     throw new IllegalStateException("Invalid DataStoreName");
             }
         } catch (IllegalStateException e) {
-            System.err.println("MSRepository: Could not find requested data store: \"" + dataStoreName + "\". Did you bind it correctly?");
-            throw e;
+            String message = "MSRepository: Could not find requested data store: \"" + dataStoreName + "\". Did you bind it correctly?";
+            System.err.println(message);
+            throw new IllegalStateException(message, e);
         }
     }
 
@@ -95,8 +96,9 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
         try {
             return Objects.requireNonNull(currentComponent);
         } catch (RuntimeException e){
-            System.err.println("MSRepository: DataStoreName has not been loaded yet!");
-            throw new IllegalStateException("CurrentComponent has not been loaded yet!", e);
+            String message = "MSRepository: DataStoreName has not been loaded yet!";
+            System.err.println(message);
+            throw new IllegalStateException(message, e);
         }
     }
 }
