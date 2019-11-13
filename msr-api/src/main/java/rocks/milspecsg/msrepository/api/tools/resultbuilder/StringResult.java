@@ -18,27 +18,38 @@
 
 package rocks.milspecsg.msrepository.api.tools.resultbuilder;
 
-public interface StringResult<TResult> extends Result<TResult, String> {
-    StringResult.Builder<TResult> builder();
-    interface Builder<TResult> {
-        Builder<TResult> aqua();
-        Builder<TResult> black();
-        Builder<TResult> blue();
-        Builder<TResult> dark_aqua();
-        Builder<TResult> dark_blue();
-        Builder<TResult> dark_gray();
-        Builder<TResult> dark_green();
-        Builder<TResult> dark_purple();
-        Builder<TResult> dark_red();
-        Builder<TResult> gold();
-        Builder<TResult> gray();
-        Builder<TResult> green();
-        Builder<TResult> light_purple();
-        Builder<TResult> red();
-        Builder<TResult> reset();
-        Builder<TResult> white();
-        Builder<TResult> yellow();
-        Builder<TResult> append(Object... content);
+import java.util.function.Consumer;
+
+public interface StringResult<TResult, TCommandSource> extends Result<TResult, String> {
+    StringResult.Builder<TResult, TCommandSource> builder();
+    void send(TResult result, TCommandSource commandSource);
+    interface Builder<TResult, TCommandSource> {
+        /* colors apply to text AFTER called (until new color is specified) */
+        Builder<TResult, TCommandSource> aqua();
+        Builder<TResult, TCommandSource> black();
+        Builder<TResult, TCommandSource> blue();
+        Builder<TResult, TCommandSource> dark_aqua();
+        Builder<TResult, TCommandSource> dark_blue();
+        Builder<TResult, TCommandSource> dark_gray();
+        Builder<TResult, TCommandSource> dark_green();
+        Builder<TResult, TCommandSource> dark_purple();
+        Builder<TResult, TCommandSource> dark_red();
+        Builder<TResult, TCommandSource> gold();
+        Builder<TResult, TCommandSource> gray();
+        Builder<TResult, TCommandSource> green();
+        Builder<TResult, TCommandSource> light_purple();
+        Builder<TResult, TCommandSource> red();
+        Builder<TResult, TCommandSource> reset();
+        Builder<TResult, TCommandSource> white();
+        Builder<TResult, TCommandSource> yellow();
+
+        Builder<TResult, TCommandSource> append(Object... content);
+        Builder<TResult, TCommandSource> onHoverShowText(TResult content);
+        Builder<TResult, TCommandSource> onHoverShowText(Builder<TResult, TCommandSource> builder);
+        Builder<TResult, TCommandSource> onClickSuggestCommand(String command);
+        Builder<TResult, TCommandSource> onClickRunCommand(String command);
+        Builder<TResult, TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback);
         TResult build();
+        void sendTo(TCommandSource commandSource);
     }
 }

@@ -18,139 +18,201 @@
 
 package rocks.milspecsg.msrepository.service.sponge.tools.resultbuilder;
 
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextElement;
+import org.spongepowered.api.text.action.ClickAction;
+import org.spongepowered.api.text.action.HoverAction;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import rocks.milspecsg.msrepository.api.tools.resultbuilder.StringResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class SpongeStringResult extends SpongeResult<String> implements StringResult<Text> {
-    
+public class SpongeStringResult extends SpongeResult<String> implements StringResult<Text, CommandSource> {
+
     @Override
-    public Builder<Text> builder() {
+    public StringResult.Builder<Text, CommandSource> builder() {
         return new SpongeStringResultBuilder();
     }
 
-    private static final class SpongeStringResultBuilder implements Builder<Text> {
-        
+    @Override
+    public void send(Text result, CommandSource commandSource) {
+        commandSource.sendMessage(result);
+    }
+
+    private static final class SpongeStringResultBuilder implements Builder<Text, CommandSource> {
+
         private final List<TextElement> elements;
+        private HoverAction<?> hoverAction;
+        private ClickAction<?> clickAction;
 
         private SpongeStringResultBuilder() {
             elements = new ArrayList<>();
         }
 
         @Override
-        public Builder<Text> aqua() {
+        public Builder<Text, CommandSource> aqua() {
             elements.add(TextColors.AQUA);
             return this;
         }
 
         @Override
-        public Builder<Text> black() {
+        public Builder<Text, CommandSource> black() {
             elements.add(TextColors.BLACK);
             return this;
         }
 
         @Override
-        public Builder<Text> blue() {
+        public Builder<Text, CommandSource> blue() {
             elements.add(TextColors.BLUE);
             return this;
         }
 
         @Override
-        public Builder<Text> dark_aqua() {
+        public Builder<Text, CommandSource> dark_aqua() {
             elements.add(TextColors.DARK_AQUA);
             return this;
         }
 
         @Override
-        public Builder<Text> dark_blue() {
+        public Builder<Text, CommandSource> dark_blue() {
             elements.add(TextColors.DARK_BLUE);
             return this;
         }
 
         @Override
-        public Builder<Text> dark_gray() {
+        public Builder<Text, CommandSource> dark_gray() {
             elements.add(TextColors.DARK_GRAY);
             return this;
         }
 
         @Override
-        public Builder<Text> dark_green() {
+        public Builder<Text, CommandSource> dark_green() {
             elements.add(TextColors.DARK_GREEN);
             return this;
         }
 
         @Override
-        public Builder<Text> dark_purple() {
+        public Builder<Text, CommandSource> dark_purple() {
             elements.add(TextColors.DARK_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<Text> dark_red() {
+        public Builder<Text, CommandSource> dark_red() {
             elements.add(TextColors.DARK_RED);
             return this;
         }
 
         @Override
-        public Builder<Text> gold() {
+        public Builder<Text, CommandSource> gold() {
             elements.add(TextColors.GOLD);
             return this;
         }
 
         @Override
-        public Builder<Text> gray() {
+        public Builder<Text, CommandSource> gray() {
             elements.add(TextColors.GRAY);
             return this;
         }
 
         @Override
-        public Builder<Text> green() {
+        public Builder<Text, CommandSource> green() {
             elements.add(TextColors.GREEN);
             return this;
         }
 
         @Override
-        public Builder<Text> light_purple() {
+        public Builder<Text, CommandSource> light_purple() {
             elements.add(TextColors.LIGHT_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<Text> red() {
+        public Builder<Text, CommandSource> red() {
             elements.add(TextColors.RED);
             return this;
         }
 
         @Override
-        public Builder<Text> reset() {
+        public Builder<Text, CommandSource> reset() {
             elements.add(TextColors.RESET);
             return this;
         }
 
         @Override
-        public Builder<Text> white() {
+        public Builder<Text, CommandSource> white() {
             elements.add(TextColors.WHITE);
             return this;
         }
 
         @Override
-        public Builder<Text> yellow() {
+        public Builder<Text, CommandSource> yellow() {
             elements.add(TextColors.YELLOW);
             return this;
         }
+
         @Override
-        public Builder<Text> append(Object... content) {
-            elements.add(Text.of(content));
+        public Builder<Text, CommandSource> append(Object... content) {
+            for (Object o : content) {
+                if (o instanceof Builder) {
+                    elements.add(((Builder<Text, CommandSource>) o).build());
+                } else if (o instanceof TextElement) {
+                    elements.add((TextElement) o);
+                } else {
+                    elements.add(Text.of(o));
+                }
+            }
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> onHoverShowText(Text content) {
+            hoverAction = TextActions.showText(content);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> onHoverShowText(Builder<Text, CommandSource> builder) {
+            return onHoverShowText(builder.build());
+        }
+
+        @Override
+        public Builder<Text, CommandSource> onClickSuggestCommand(String command) {
+            clickAction = TextActions.suggestCommand(command);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> onClickRunCommand(String command) {
+            clickAction = TextActions.runCommand(command);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> onClickExecuteCallback(Consumer<CommandSource> callback) {
+            clickAction = TextActions.executeCallback(callback);
             return this;
         }
 
         @Override
         public Text build() {
-            return Text.of(elements.toArray());
+            Text.Builder builder = Text.builder().append(Text.of(elements.toArray()));
+            if (hoverAction != null) {
+                builder.onHover(hoverAction);
+            }
+            if (clickAction != null) {
+                builder.onClick(clickAction);
+            }
+            return builder.build();
+        }
+
+        @Override
+        public void sendTo(CommandSource commandSource) {
+            commandSource.sendMessage(build());
         }
     }
 }
