@@ -29,6 +29,7 @@ import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.service.common.component.CommonMongoComponent;
 
 import java.util.Collections;
 import java.util.Date;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 public interface CommonMongoRepository<
     T extends ObjectWithId<ObjectId>,
     C extends RepositoryCacheService<ObjectId, T, Datastore, MongoConfig>>
-    extends MongoRepository<T, C> {
+    extends MongoRepository<T, C>, CommonMongoComponent {
 
     @Override
     default CompletableFuture<Optional<Integer>> getCreatedUtcTimeStampSeconds(ObjectId id) {

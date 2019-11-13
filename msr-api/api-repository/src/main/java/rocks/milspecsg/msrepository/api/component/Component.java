@@ -25,6 +25,8 @@ import rocks.milspecsg.msrepository.BindingExtensions;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
+import java.util.Optional;
+
 /**
  * Part of a module
  *
@@ -41,5 +43,15 @@ public interface Component<
     Class<TKey> getTKeyClass();
 
     DataStoreContext<TKey, TDataStore, TDataStoreConfig> getDataStoreContext();
+
+    /**
+     * Tries to convert the given object to {@link TKey}
+     *
+     * @param object To try to parse
+     * @return {@link Optional} containing (if parsing successful) the {@link TKey} representing this {@param object}
+     */
+    default Optional<TKey> parse(Object object) {
+        return Optional.empty();
+    }
 
 }
