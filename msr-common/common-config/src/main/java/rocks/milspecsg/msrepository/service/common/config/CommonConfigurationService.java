@@ -278,7 +278,9 @@ public abstract class CommonConfigurationService implements ConfigurationService
                     result.put(entry.getValue().getKey(), initConfigValue(null, entry.getValue(), subType, modified));
                 }
 
-                if (nodeKey != null) configMapMap.put(nodeKey, result);
+                Map<?, ?> map = verify(mapVerificationMap.get(nodeKey), result, node, modified);
+
+                if (nodeKey != null) configMapMap.put(nodeKey, map);
 
                 return (T) result;
 
@@ -313,7 +315,7 @@ public abstract class CommonConfigurationService implements ConfigurationService
                     return (T) value;
 
                 } else {
-                    throw new Exception("Class did not match any values");
+                    throw new Exception("Class " + typeToken.getType().getTypeName() + " did not match any values");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -325,15 +327,17 @@ public abstract class CommonConfigurationService implements ConfigurationService
 
     private <T> T verify(Map<Predicate<T>, Function<T, T>> verificationMap, T value, CommentedConfigurationNode node, boolean[] modified) {
         if (verificationMap == null) return value; // if there is no verification function defined
-        for (Map.Entry<Predicate<T>, Function<T, T>> entry : verificationMap.entrySet())
-            if (entry.getKey().test(value)) {
+        T result = value;
+        for (Map.Entry<Predicate<T>, Function<T, T>> entry : verificationMap.entrySet()) {
+            if (entry.getKey().test(result)) {
                 modified[0] = true;
-                T result = entry.getValue().apply(value);
-                // Sponge.getServer().getConsole().sendMessage(Text.of("Changing ", value, " to ", result));
-                node.setValue(result);
-                return result;
+                result = entry.getValue().apply(result);
             }
-        return value;
+        }
+        if (modified[0]) {
+            node.setValue(result);
+        }
+        return result;
     }
 
     @Override
@@ -362,7 +366,7 @@ public abstract class CommonConfigurationService implements ConfigurationService
             } else if (typeToken.isSubtypeOf(Map.class)) {
                 return Optional.ofNullable((T) getDefaultMap(key));
             } else {
-                throw new Exception("Class did not match any values");
+                throw new Exception("Class " + typeToken.getType().getTypeName() + "did not match any values");
             }
         } catch (Exception e) {
             e.printStackTrace();
