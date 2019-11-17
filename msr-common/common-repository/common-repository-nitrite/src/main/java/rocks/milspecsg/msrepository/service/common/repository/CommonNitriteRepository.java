@@ -22,24 +22,25 @@ import org.dizitart.no2.Document;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.NitriteId;
 import org.dizitart.no2.WriteResult;
+import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectFilter;
+import org.dizitart.no2.objects.ObjectRepository;
+import org.dizitart.no2.objects.filters.ObjectFilters;
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.api.repository.NitriteRepository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.nitrite.NitriteConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.service.common.component.CommonNitriteComponent;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public interface CommonNitriteRepository<
     T extends ObjectWithId<NitriteId>,
     C extends RepositoryCacheService<NitriteId, T, Nitrite, NitriteConfig>>
-    extends NitriteRepository<T, C> {
+    extends NitriteRepository<T, C>, CommonNitriteComponent {
 
     @Override
     @SuppressWarnings("unchecked")
@@ -49,8 +50,9 @@ public interface CommonNitriteRepository<
             if (!optionalDataStore.isPresent()) {
                 return Optional.empty();
             }
+            item.setId(NitriteId.newId());
             try {
-                optionalDataStore.get().getRepository(getTClass()).insert(item).forEach(item::setId);
+                optionalDataStore.get().getRepository(getTClass()).insert(item);
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return Optional.empty();
@@ -79,11 +81,10 @@ public interface CommonNitriteRepository<
     default CompletableFuture<Optional<T>> getOne(NitriteId id) {
         return applyToBothConditionally(c -> c.getOne(id).join(), () ->
             getDataStoreContext().getDataStore()
-                .flatMap(dataStore -> asFilter(id)
-                    .map(filter -> dataStore
+                .map(dataStore ->
+                    dataStore
                         .getRepository(getTClass())
-                        .find(filter).firstOrDefault()
-                    )
+                        .find(asFilter(id)).firstOrDefault()
                 )
         );
     }
@@ -122,7 +123,22 @@ public interface CommonNitriteRepository<
 
     @Override
     default CompletableFuture<Boolean> deleteOne(NitriteId id) {
-        return CompletableFuture.supplyAsync(() -> asFilter(id).filter(q -> delete(q).join().getAffectedCount() > 0).isPresent());
+        return delete(asFilter(id)).thenApplyAsync(wr -> wr.getAffectedCount() > 0);
+    }
+
+    @Override
+    default ObjectFilter asFilter(NitriteId id) {
+        return ObjectFilters.eq("_id", id);
+    }
+
+    @Override
+    default Optional<Cursor<T>> asCursor(ObjectFilter filter) {
+        return getDataStoreContext().getDataStore().map(nitrite -> nitrite.getRepository(getTClass()).find(filter));
+    }
+
+    @Override
+    default Optional<Cursor<T>> asCursor(NitriteId id) {
+        return asCursor(asFilter(id));
     }
 
     static WriteResult unacknowledged() {

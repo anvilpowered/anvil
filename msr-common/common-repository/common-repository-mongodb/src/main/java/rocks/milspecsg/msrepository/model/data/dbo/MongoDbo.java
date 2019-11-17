@@ -47,12 +47,22 @@ public abstract class MongoDbo implements ObjectWithId<ObjectId> {
     }
 
     @Override
-    public long getCreatedUtcTimeStamp() {
+    public int getCreatedUtcTimeStampSeconds() {
+        return id.getTimestamp();
+    }
+
+    @Override
+    public int getUpdatedUtcTimeStampSeconds() {
+        return (int) (updatedUtc.getTime() / 1000);
+    }
+
+    @Override
+    public long getCreatedUtcTimeStampMillis() {
         return id.getTimestamp() * 1000L;
     }
 
     @Override
-    public long getUpdatedUtcTimeStamp() {
+    public long getUpdatedUtcTimeStampMillis() {
         return updatedUtc.getTime();
     }
 

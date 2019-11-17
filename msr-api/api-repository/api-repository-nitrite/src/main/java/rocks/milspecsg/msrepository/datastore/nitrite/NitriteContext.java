@@ -21,14 +21,19 @@ package rocks.milspecsg.msrepository.datastore.nitrite;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import org.dizitart.no2.Document;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.NitriteBuilder;
 import org.dizitart.no2.NitriteId;
+import org.dizitart.no2.mapper.JacksonMapper;
 import org.dizitart.no2.mapper.Mappable;
+import org.dizitart.no2.mapper.NitriteMapper;
 import rocks.milspecsg.msrepository.BasicPluginInfo;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
-import rocks.milspecsg.msrepository.datastore.nitrite.annotation.Entity;
+import rocks.milspecsg.msrepository.datastore.nitrite.annotation.NitriteEntity;
 
+import java.io.File;
+import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.util.Objects;
 
@@ -59,11 +64,16 @@ public final class NitriteContext extends DataStoreContext<NitriteId, Nitrite, N
         // nitrite performs null checks
 
         /* === Initialize storage location === */
-        String dbFilesLocation = Paths.get(basicPluginInfo.getId() + "/data/nitrite").toString();
+        File dbFilesLocation = Paths.get(basicPluginInfo.getId() + "/data/nitrite").toFile();
+        if (!dbFilesLocation.exists()) {
+            if (!dbFilesLocation.mkdirs()) {
+                throw new IllegalStateException("Unable to create nitrite directory");
+            }
+        }
 
         /* === Initialize Nitrite === */
         NitriteBuilder dbBuilder = Nitrite.builder()
-            .filePath(dbFilesLocation + "/nitrite.db");
+            .filePath(dbFilesLocation.getPath() + "/nitrite.db");
 
         if (useCompression) {
             dbBuilder.compressed();
@@ -76,12 +86,19 @@ public final class NitriteContext extends DataStoreContext<NitriteId, Nitrite, N
         setDataStore(db);
 
         /* === Find objects to map === */
-        Class<?>[] entityClasses = calculateEntityClasses(getConfig().getBaseScanPackage(), Entity.class);
+        Class<?>[] entityClasses = calculateEntityClasses(getConfig().getBaseScanPackage(), NitriteEntity.class);
 
         /* === Create collections if not present === */
         for (Class<?> entityClass : entityClasses) {
-            if (!Mappable.class.isAssignableFrom(entityClass)) {
-                throw new IllegalStateException("Mapped class must extend org.dizitart.no2.mapper.Mappable");
+            if (Mappable.class.isAssignableFrom(entityClass)) {
+                try {
+                    entityClass.getDeclaredMethod("write", NitriteMapper.class);
+                    entityClass.getDeclaredMethod("read", NitriteMapper.class, Document.class);
+                } catch (NoSuchMethodException e) {
+                    throw new IllegalStateException("Nitrite entity class " + entityClass.getName() + " must implement Mappable#write(NitriteMapper) and Mappable#read(NitriteMapper, Document)", e);
+                }
+            } else {
+                throw new IllegalStateException("Nitrite entity class " + entityClass.getName() + " must extend org.dizitart.no2.mapper.Mappable");
             }
             db.getRepository(entityClass);
         }

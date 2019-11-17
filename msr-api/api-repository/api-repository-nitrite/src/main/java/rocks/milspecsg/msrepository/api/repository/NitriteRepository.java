@@ -21,6 +21,7 @@ package rocks.milspecsg.msrepository.api.repository;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.NitriteId;
 import org.dizitart.no2.WriteResult;
+import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectFilter;
 import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
 import rocks.milspecsg.msrepository.datastore.nitrite.NitriteConfig;
@@ -36,7 +37,9 @@ public interface NitriteRepository<
 
     CompletableFuture<WriteResult> delete(ObjectFilter filter);
 
-    default Optional<ObjectFilter> asFilter(NitriteId id) {
-        return Optional.empty();
-    }
+    ObjectFilter asFilter(NitriteId id);
+
+    Optional<Cursor<T>> asCursor(ObjectFilter filter);
+
+    Optional<Cursor<T>> asCursor(NitriteId id);
 }

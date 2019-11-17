@@ -69,13 +69,13 @@ public abstract class JsonDbo implements ObjectWithId<String> {
 
     @Override
     @JsonIgnore
-    public long getCreatedUtcTimeStamp() {
+    public long getCreatedUtcTimeStampMillis() {
         return createdUtc;
     }
 
     @Override
     @JsonIgnore
-    public long getUpdatedUtcTimeStamp() {
+    public long getUpdatedUtcTimeStampMillis() {
         return updatedUtc;
     }
 
