@@ -27,8 +27,11 @@ public interface ObjectWithId<TKey> {
 
     String getIdAsString();
 
-    long getCreatedUtcTimeStamp();
-    long getUpdatedUtcTimeStamp();
+    int getCreatedUtcTimeStampSeconds();
+    int getUpdatedUtcTimeStampSeconds();
+
+    long getCreatedUtcTimeStampMillis();
+    long getUpdatedUtcTimeStampMillis();
 
     Date getCreatedUtcDate();
     Date getUpdatedUtcDate();

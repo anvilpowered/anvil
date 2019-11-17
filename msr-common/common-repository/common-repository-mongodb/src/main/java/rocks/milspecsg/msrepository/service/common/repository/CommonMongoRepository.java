@@ -50,7 +50,7 @@ public interface CommonMongoRepository<
 
     @Override
     default CompletableFuture<Optional<Long>> getCreatedUtcTimeStampMillis(ObjectId id) {
-        return getCreatedUtcTimeStampSeconds(id).thenApplyAsync(o -> o.map(t -> t * 1000L));
+        return CompletableFuture.completedFuture(Optional.of(id.getTimestamp() * 1000L));
     }
 
     @Override
