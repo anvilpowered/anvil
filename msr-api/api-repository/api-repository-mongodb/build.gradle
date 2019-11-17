@@ -24,9 +24,9 @@ dependencies {
 
     }
 
-    implementation 'org.mongodb:mongodb-driver-sync:3.11.0'
-    implementation 'org.mongodb.morphia:morphia:1.3.2'
-    implementation 'org.reflections:reflections:0.9.10'
-    implementation 'com.google.inject:guice:4.1.0'
+    implementation mongodb_driver_sync
+    implementation morphia
+    implementation reflections
+    implementation guice
     
 }

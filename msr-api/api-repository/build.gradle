@@ -22,7 +22,7 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-config')
     }
 
-    implementation 'org.reflections:reflections:0.9.10'
-    implementation 'org.javassist:javassist:3.26.0-GA'
-    implementation 'com.google.inject:guice:4.1.0'
+    implementation reflections
+    implementation javasisst
+    implementation guice
 }

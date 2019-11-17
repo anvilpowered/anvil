@@ -24,6 +24,6 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-repository')
     }
 
-    implementation 'org.reflections:reflections:0.9.10'
-    implementation 'com.google.inject:guice:4.1.0'
+    implementation reflections
+    implementation guice
 }
