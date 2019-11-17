@@ -37,24 +37,13 @@ public interface MongoRepository<
 
     CompletableFuture<WriteResult> delete(Query<T> query);
 
-    default Optional<UpdateOperations<T>> createUpdateOperations() {
-        return Optional.empty();
-    }
+    Optional<UpdateOperations<T>> createUpdateOperations();
 
-    default Optional<UpdateOperations<T>> inc(String field, Number value) {
-        return Optional.empty();
-    }
+    Optional<UpdateOperations<T>> inc(String field, Number value);
 
-    default Optional<UpdateOperations<T>> inc(String field) {
-        return Optional.empty();
-    }
+    Optional<UpdateOperations<T>> inc(String field);
 
-    default Optional<Query<T>> asQuery() {
-        return Optional.empty();
-    }
+    Optional<Query<T>> asQuery();
 
-    default Optional<Query<T>> asQuery(ObjectId id) {
-        return Optional.empty();
-    }
-
+    Optional<Query<T>> asQuery(ObjectId id);
 }
