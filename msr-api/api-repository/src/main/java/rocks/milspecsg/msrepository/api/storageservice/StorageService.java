@@ -18,11 +18,20 @@
 
 package rocks.milspecsg.msrepository.api.storageservice;
 
+import rocks.milspecsg.msrepository.api.component.Component;
+import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
+import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public interface StorageService<T> {
+public interface StorageService<
+    TKey,
+    T extends ObjectWithId<TKey>,
+    TDataStore,
+    TDataStoreConfig extends DataStoreConfig>
+    extends Component<TKey, TDataStore, TDataStoreConfig> {
 
     /**
      * @return An empty {@link T}
@@ -43,4 +52,22 @@ public interface StorageService<T> {
      */
     CompletableFuture<List<T>> insert(List<T> list);
 
+    /**
+     * @return A list of all {@link TKey} ids in the repository
+     */
+    CompletableFuture<List<TKey>> getAllIds();
+
+    /**
+     * @param id {@link TKey} to query repository with
+     * @return The first item that satisfies {@link T#getId()} == {@param id}
+     */
+    CompletableFuture<Optional<T>> getOne(TKey id);
+
+    /**
+     * Deletes the first item that satisfies {@link T#getId()} == {@param id}
+     *
+     * @param id {@link TKey} to query repository with
+     * @return Whether or not an item was found and deleted
+     */
+    CompletableFuture<Boolean> deleteOne(TKey id);
 }

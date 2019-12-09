@@ -24,7 +24,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 
 public interface CommonMongoRepository<
     T extends ObjectWithId<ObjectId>,
-    C extends RepositoryCacheService<ObjectId, T, Datastore, MongoConfig>>
+    C extends CacheService<ObjectId, T, Datastore, MongoConfig>>
     extends MongoRepository<T, C>, CommonMongoComponent {
 
     @Override

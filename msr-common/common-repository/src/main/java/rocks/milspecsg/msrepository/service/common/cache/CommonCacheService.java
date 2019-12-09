@@ -18,27 +18,48 @@
 
 package rocks.milspecsg.msrepository.service.common.cache;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
+import rocks.milspecsg.msrepository.datastore.DataStoreContext;
+import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.service.common.component.CommonComponent;
+import rocks.milspecsg.msrepository.service.common.storageservice.CommonStorageService;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class CommonCacheService<T> implements CacheService<T> {
+public abstract class CommonCacheService<
+    TKey,
+    T extends ObjectWithId<TKey>,
+    TDataStore,
+    TDataStoreConfig extends DataStoreConfig>
+    extends CommonComponent<TKey, TDataStore, TDataStoreConfig>
+    implements CacheService<TKey, T, TDataStore, TDataStoreConfig>,
+    CommonStorageService<TKey, T, TDataStore, TDataStoreConfig> {
+
+    @Inject
+    private Injector injector;
 
     protected ConfigurationService configurationService;
 
-    protected Map<T, Long> cache;
+    protected ConcurrentMap<T, Long> cache;
 
     private Integer timeoutSeconds;
 
-    protected CommonCacheService(ConfigurationService configurationService) {
-        this.configurationService = configurationService;
+    protected CommonCacheService(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext, Key<ConfigurationService> configurationServiceKey) {
+        super(dataStoreContext);
+        configurationService = injector.getInstance(configurationServiceKey);
         configurationService.addConfigLoadedListener(this::configLoaded);
-        cache = new HashMap<>();
+        cache = new ConcurrentHashMap<>();
     }
 
     private void configLoaded(Object plugin) {
@@ -78,6 +99,21 @@ public abstract class CommonCacheService<T> implements CacheService<T> {
     @Override
     public CompletableFuture<List<T>> insert(List<T> list) {
         return CompletableFuture.supplyAsync(() -> list.stream().map(t -> insertOne(t).join().orElse(null)).filter(Objects::nonNull).collect(Collectors.toList()));
+    }
+
+    @Override
+    public CompletableFuture<Optional<T>> getOne(TKey id) {
+        return CompletableFuture.supplyAsync(() -> getOne(dbo -> dbo.getId().equals(id)));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deleteOne(TKey id) {
+        return CompletableFuture.supplyAsync(() -> deleteOne(dbo -> dbo.getId().equals(id)).isPresent());
+    }
+
+    @Override
+    public CompletableFuture<List<TKey>> getAllIds() {
+        return CompletableFuture.supplyAsync(() -> cache.keySet().stream().map(ObjectWithId::getId).collect(Collectors.toList()));
     }
 
     @Override
