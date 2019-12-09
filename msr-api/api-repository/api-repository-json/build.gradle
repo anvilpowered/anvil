@@ -25,6 +25,6 @@ dependencies {
         implementation project(':MSRepository:msr-api:api-repository')
     }
 
-    implementation 'com.github.Jsondb:jsondb-core:-SNAPSHOT'
+    implementation jsondb
     implementation guice
 }

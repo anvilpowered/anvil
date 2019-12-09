@@ -16,19 +16,29 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.repository;
+package rocks.milspecsg.msrepository.service.common.component;
 
 import io.jsondb.JsonDBOperations;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.component.Component;
 import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
+import java.util.Optional;
 import java.util.UUID;
 
-public interface JsonRepository<
-    T extends ObjectWithId<UUID>,
-    C extends RepositoryCacheService<UUID, T, JsonDBOperations, JsonConfig>>
-    extends Repository<UUID, T, C, JsonDBOperations, JsonConfig> {
+public interface CommonJsonComponent extends Component<UUID, JsonDBOperations, JsonConfig> {
 
-    String asQuery(UUID id);
+    @Override
+    default Optional<UUID> parse(Object object) {
+        if (object instanceof UUID) {
+            return Optional.of((UUID) object);
+        } else if (object instanceof Optional<?>) {
+            Optional<?> optional = (Optional<?>) object;
+            return optional.isPresent() ? parse(optional.get()) : Optional.empty();
+        }
+        try {
+            return Optional.of(UUID.fromString(object.toString()));
+        } catch (IllegalArgumentException ignored) {
+            return Optional.empty();
+        }
+    }
 }
