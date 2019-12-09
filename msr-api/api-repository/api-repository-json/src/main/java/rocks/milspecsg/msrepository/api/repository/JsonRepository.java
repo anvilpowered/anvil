@@ -19,7 +19,7 @@
 package rocks.milspecsg.msrepository.api.repository;
 
 import io.jsondb.JsonDBOperations;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public interface JsonRepository<
     T extends ObjectWithId<UUID>,
-    C extends RepositoryCacheService<UUID, T, JsonDBOperations, JsonConfig>>
+    C extends CacheService<UUID, T, JsonDBOperations, JsonConfig>>
     extends Repository<UUID, T, C, JsonDBOperations, JsonConfig> {
 
     String asQuery(UUID id);

@@ -23,7 +23,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface MongoRepository<
     T extends ObjectWithId<ObjectId>,
-    C extends RepositoryCacheService<ObjectId, T, Datastore, MongoConfig>>
+    C extends CacheService<ObjectId, T, Datastore, MongoConfig>>
     extends Repository<ObjectId, T, C, Datastore, MongoConfig> {
 
     CompletableFuture<WriteResult> delete(Query<T> query);

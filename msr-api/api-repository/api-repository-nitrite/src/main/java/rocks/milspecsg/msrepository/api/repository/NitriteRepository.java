@@ -23,7 +23,7 @@ import org.dizitart.no2.NitriteId;
 import org.dizitart.no2.WriteResult;
 import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectFilter;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.datastore.nitrite.NitriteConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface NitriteRepository<
     T extends ObjectWithId<NitriteId>,
-    C extends RepositoryCacheService<NitriteId, T, Nitrite, NitriteConfig>>
+    C extends CacheService<NitriteId, T, Nitrite, NitriteConfig>>
     extends Repository<NitriteId, T, C, Nitrite, NitriteConfig> {
 
     CompletableFuture<WriteResult> delete(ObjectFilter filter);

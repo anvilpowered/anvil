@@ -26,7 +26,7 @@ import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectFilter;
 import org.dizitart.no2.objects.ObjectRepository;
 import org.dizitart.no2.objects.filters.ObjectFilters;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.NitriteRepository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.nitrite.NitriteConfig;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 public interface CommonNitriteRepository<
     T extends ObjectWithId<NitriteId>,
-    C extends RepositoryCacheService<NitriteId, T, Nitrite, NitriteConfig>>
+    C extends CacheService<NitriteId, T, Nitrite, NitriteConfig>>
     extends NitriteRepository<T, C>, CommonNitriteComponent {
 
     @Override
@@ -154,5 +154,4 @@ public interface CommonNitriteRepository<
             }
         };
     }
-
 }
