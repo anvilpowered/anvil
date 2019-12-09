@@ -20,7 +20,7 @@ package rocks.milspecsg.msrepository.api.component;
 
 import rocks.milspecsg.msrepository.api.manager.Manager;
 import rocks.milspecsg.msrepository.api.repository.Repository;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.BindingExtensions;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
@@ -32,7 +32,7 @@ import java.util.Optional;
  *
  * @see Manager
  * @see Repository
- * @see RepositoryCacheService
+ * @see CacheService
  * @see BindingExtensions
  */
 public interface Component<
@@ -53,5 +53,4 @@ public interface Component<
     default Optional<TKey> parse(Object object) {
         return Optional.empty();
     }
-
 }

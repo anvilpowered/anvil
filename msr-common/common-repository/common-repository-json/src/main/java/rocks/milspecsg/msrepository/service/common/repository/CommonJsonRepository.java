@@ -19,7 +19,7 @@
 package rocks.milspecsg.msrepository.service.common.repository;
 
 import io.jsondb.JsonDBOperations;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.JsonRepository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public interface CommonJsonRepository<
     T extends ObjectWithId<String>,
-    C extends RepositoryCacheService<String, T, JsonDBOperations, JsonConfig>>
+    C extends CacheService<String, T, JsonDBOperations, JsonConfig>>
     extends JsonRepository<T, C> {
 
     @Override

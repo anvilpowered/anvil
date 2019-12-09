@@ -18,12 +18,13 @@
 
 package rocks.milspecsg.msrepository.service.common.repository;
 
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 import rocks.milspecsg.msrepository.service.common.component.CommonComponent;
+import rocks.milspecsg.msrepository.service.common.storageservice.CommonStorageService;
 
 import java.util.Date;
 import java.util.Optional;
@@ -33,11 +34,12 @@ import java.util.function.*;
 public abstract class CommonRepository<
     TKey,
     T extends ObjectWithId<TKey>,
-    C extends RepositoryCacheService<TKey, T, TDataStore, TDataStoreConfig>,
+    C extends CacheService<TKey, T, TDataStore, TDataStoreConfig>,
     TDataStore,
     TDataStoreConfig extends DataStoreConfig>
     extends CommonComponent<TKey, TDataStore, TDataStoreConfig>
-    implements Repository<TKey, T, C, TDataStore, TDataStoreConfig> {
+    implements Repository<TKey, T, C, TDataStore, TDataStoreConfig>,
+    CommonStorageService<TKey, T, TDataStore, TDataStoreConfig> {
 
     protected CommonRepository(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext) {
         super(dataStoreContext);
@@ -103,17 +105,5 @@ public abstract class CommonRepository<
             }
             return optionalK;
         });
-    }
-
-    @Override
-    public T generateEmpty() {
-        Class<T> tClass = getTClass();
-        try {
-            return tClass.getConstructor().newInstance();
-        } catch (Exception e) {
-            String message = "There was an error creating an instance of " + tClass.getName() + "! Make sure it has an accessible no-args constructor!";
-            System.err.println(message);
-            throw new IllegalStateException(message, e);
-        }
     }
 }

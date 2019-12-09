@@ -16,26 +16,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.cache;
+package rocks.milspecsg.msrepository.service.common.storageservice;
 
-import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
+import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-public interface RepositoryCacheService<
+public interface CommonStorageService<
     TKey,
     T extends ObjectWithId<TKey>,
     TDataStore,
     TDataStoreConfig extends DataStoreConfig>
-    extends CacheService<T>, DataStorageService<TKey, T, TDataStore, TDataStoreConfig> {
+    extends StorageService<TKey, T, TDataStore, TDataStoreConfig> {
 
-    /**
-     * @param fromDB {@link Supplier<List>} that retrieves data from datastore
-     * @return A list containing all elements that were successfully retrieved from the datastore and saved to the cache
-     */
-    Supplier<List<T>> save(Supplier<List<T>> fromDB);
-
+    @Override
+    default T generateEmpty() {
+        Class<T> tClass = getTClass();
+        try {
+            return tClass.getConstructor().newInstance();
+        } catch (Exception e) {
+            String message = "There was an error creating an instance of " + tClass.getName() + "! Make sure it has an accessible no-args constructor!";
+            System.err.println(message);
+            throw new IllegalStateException(message, e);
+        }
+    }
 }

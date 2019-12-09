@@ -19,12 +19,12 @@
 package rocks.milspecsg.msrepository.api.repository;
 
 import io.jsondb.JsonDBOperations;
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 public interface JsonRepository<
     T extends ObjectWithId<String>,
-    C extends RepositoryCacheService<String, T, JsonDBOperations, JsonConfig>>
+    C extends CacheService<String, T, JsonDBOperations, JsonConfig>>
     extends Repository<String, T, C, JsonDBOperations, JsonConfig> {
 }

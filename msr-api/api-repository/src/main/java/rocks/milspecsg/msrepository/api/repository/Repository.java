@@ -18,8 +18,8 @@
 
 package rocks.milspecsg.msrepository.api.repository;
 
-import rocks.milspecsg.msrepository.api.cache.RepositoryCacheService;
-import rocks.milspecsg.msrepository.api.storageservice.DataStorageService;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
+import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
@@ -31,10 +31,10 @@ import java.util.function.*;
 public interface Repository<
     TKey,
     T extends ObjectWithId<TKey>,
-    C extends RepositoryCacheService<TKey, T, TDataStore, TDataStoreConfig>,
+    C extends CacheService<TKey, T, TDataStore, TDataStoreConfig>,
     TDataStore,
     TDataStoreConfig extends DataStoreConfig>
-    extends DataStorageService<TKey, T, TDataStore, TDataStoreConfig> {
+    extends StorageService<TKey, T, TDataStore, TDataStoreConfig> {
 
     default Optional<C> getRepositoryCacheService() {
         return Optional.empty();
@@ -186,5 +186,4 @@ public interface Repository<
      * @return {@link K} result from cache if present, otherwise from db
      */
     <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer, Supplier<Optional<K>> dbSupplier);
-
 }
