@@ -24,18 +24,19 @@ import rocks.milspecsg.msrepository.api.repository.JsonRepository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.service.common.component.CommonJsonComponent;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public interface CommonJsonRepository<
-    T extends ObjectWithId<String>,
-    C extends CacheService<String, T, JsonDBOperations, JsonConfig>>
-    extends JsonRepository<T, C> {
+    T extends ObjectWithId<UUID>,
+    C extends CacheService<UUID, T, JsonDBOperations, JsonConfig>>
+    extends JsonRepository<T, C>, CommonJsonComponent {
 
     @Override
-    default CompletableFuture<Optional<Date>> getCreatedUtcDate(String id) {
+    default CompletableFuture<Optional<Date>> getCreatedUtcDate(UUID id) {
         return getOne(id).thenApplyAsync(optionalT -> optionalT.map(ObjectWithId::getCreatedUtcDate));
     }
 
@@ -47,7 +48,7 @@ public interface CommonJsonRepository<
                 return Optional.empty();
             }
             try {
-                item.setId(UUID.randomUUID().toString());
+                item.setId(UUID.randomUUID());
                 optionalDataStore.get().insert(item);
             } catch (RuntimeException e) {
                 e.printStackTrace();
@@ -62,7 +63,7 @@ public interface CommonJsonRepository<
         return applyFromDBToCache(() -> getDataStoreContext().getDataStore()
                 .map(dataStore -> list.stream().filter(item -> {
                     try {
-                        item.setId(UUID.randomUUID().toString());
+                        item.setId(UUID.randomUUID());
                         dataStore.insert(item);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -74,7 +75,7 @@ public interface CommonJsonRepository<
     }
 
     @Override
-    default CompletableFuture<Optional<T>> getOne(String id) {
+    default CompletableFuture<Optional<T>> getOne(UUID id) {
         return applyToBothConditionally(c -> c.getOne(id).join(), () ->
             getDataStoreContext().getDataStore()
                 .flatMap(dataStore -> Optional.ofNullable(
@@ -83,7 +84,7 @@ public interface CommonJsonRepository<
     }
 
     @Override
-    default CompletableFuture<List<String>> getAllIds() {
+    default CompletableFuture<List<UUID>> getAllIds() {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore()
                 .map(j -> j.getCollection(getTClass())
@@ -91,7 +92,7 @@ public interface CommonJsonRepository<
     }
 
     @Override
-    default CompletableFuture<Boolean> deleteOne(String id) {
+    default CompletableFuture<Boolean> deleteOne(UUID id) {
         return applyFromDBToCache(() -> {
             try {
                 Optional<JsonDBOperations> optionalDataStore = getDataStoreContext().getDataStore();
@@ -115,5 +116,10 @@ public interface CommonJsonRepository<
             } catch (RuntimeException ignored) {
             }
         });
+    }
+
+    @Override
+    default String asQuery(UUID id) {
+        return String.format("/.[id='%s']", id);
     }
 }

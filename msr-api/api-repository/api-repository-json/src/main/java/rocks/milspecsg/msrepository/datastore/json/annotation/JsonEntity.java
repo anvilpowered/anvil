@@ -16,19 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.repository;
+package rocks.milspecsg.msrepository.datastore.json.annotation;
 
-import io.jsondb.JsonDBOperations;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.datastore.json.JsonConfig;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import java.lang.annotation.*;
 
-import java.util.UUID;
-
-public interface JsonRepository<
-    T extends ObjectWithId<UUID>,
-    C extends CacheService<UUID, T, JsonDBOperations, JsonConfig>>
-    extends Repository<UUID, T, C, JsonDBOperations, JsonConfig> {
-
-    String asQuery(UUID id);
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface JsonEntity {
 }

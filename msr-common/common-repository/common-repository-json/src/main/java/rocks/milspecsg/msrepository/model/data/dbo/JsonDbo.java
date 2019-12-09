@@ -22,22 +22,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.jsondb.annotation.Id;
 
 import java.util.Date;
+import java.util.UUID;
 
-public abstract class JsonDbo implements ObjectWithId<String> {
+public abstract class JsonDbo implements ObjectWithId<UUID> {
 
     @Id
-    private String id;
+    private UUID id;
 
     private long createdUtc;
     private long updatedUtc;
 
     @Override
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
         createdUtc = new Date().getTime();
         prePersist();
@@ -64,7 +65,19 @@ public abstract class JsonDbo implements ObjectWithId<String> {
     @Override
     @JsonIgnore
     public String getIdAsString() {
-        return id;
+        return id.toString();
+    }
+
+    @Override
+    @JsonIgnore
+    public int getCreatedUtcTimeStampSeconds() {
+        return (int) (createdUtc / 1000);
+    }
+
+    @Override
+    @JsonIgnore
+    public int getUpdatedUtcTimeStampSeconds() {
+        return (int) (updatedUtc / 1000);
     }
 
     @Override

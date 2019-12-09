@@ -26,11 +26,13 @@ import io.jsondb.JsonDBTemplate;
 import io.jsondb.annotation.Document;
 import rocks.milspecsg.msrepository.BasicPluginInfo;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
+import rocks.milspecsg.msrepository.datastore.json.annotation.JsonEntity;
 
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Singleton
-public class JsonContext extends DataStoreContext<String, JsonDBOperations, JsonConfig> {
+public class JsonContext extends DataStoreContext<UUID, JsonDBOperations, JsonConfig> {
 
     @Inject
     private BasicPluginInfo basicPluginInfo;
@@ -59,15 +61,15 @@ public class JsonContext extends DataStoreContext<String, JsonDBOperations, Json
         setDataStore(dataStore);
 
         /* === Find objects to map === */
-        Class<?>[] entityClasses = calculateEntityClasses(getConfig().getBaseScanPackage(), Document.class);
+        Class<?>[] entityClasses = calculateEntityClasses(getConfig().getBaseScanPackage(), Document.class, JsonEntity.class);
 
         /* === Create collections if not present === */
         for (Class<?> entityClass : entityClasses) {
-            if (!dataStore.collectionExists(entityClass)) {
+            if (entityClass.isAnnotationPresent(Document.class) && !dataStore.collectionExists(entityClass)) {
                 dataStore.createCollection(entityClass);
             }
         }
 
-        setTKeyClass(String.class);
+        setTKeyClass(UUID.class);
     }
 }
