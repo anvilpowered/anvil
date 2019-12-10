@@ -28,22 +28,23 @@ import java.util.Optional;
 public interface CommonNitriteComponent extends Component<NitriteId, Nitrite, NitriteConfig> {
 
     @Override
-    default Optional<NitriteId> parse(Object object) {
+    default NitriteId parseUnsafe(Object object) {
         if (object instanceof NitriteId) {
-            return Optional.of((NitriteId) object);
+            return (NitriteId) object;
         } else if (object instanceof Optional<?>) {
             Optional<?> optional = (Optional<?>) object;
-            return optional.isPresent() ? parse(optional.get()) : Optional.empty();
+            if (optional.isPresent()) return parseUnsafe(optional.get());
+            throw new IllegalArgumentException("Error while parsing " + object + ". Optional not present");
         } else if (object instanceof Long) {
-            return Optional.of(NitriteId.createId((Long) object));
+            return NitriteId.createId((Long) object);
         }
         String string = object.toString();
         long value;
         try {
             value = Long.parseLong(string);
-        } catch (NumberFormatException ignored) {
-            return Optional.empty();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Error while parsing " + object + ". Not a valid NitriteId", e);
         }
-        return Optional.of(NitriteId.createId(value));
+        return NitriteId.createId(value);
     }
 }

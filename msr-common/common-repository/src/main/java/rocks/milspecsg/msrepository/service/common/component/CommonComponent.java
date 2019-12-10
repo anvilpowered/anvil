@@ -22,6 +22,8 @@ import rocks.milspecsg.msrepository.api.component.Component;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
+import java.util.Optional;
+
 public abstract class CommonComponent<
     TKey,
     TDataStore,
@@ -42,5 +44,14 @@ public abstract class CommonComponent<
     @Override
     public Class<TKey> getTKeyClass() {
         return dataStoreContext.getTKeyClass();
+    }
+
+    @Override
+    public Optional<TKey> parse(Object object) {
+        try {
+            return Optional.of(parseUnsafe(object));
+        } catch (IllegalArgumentException | UnsupportedOperationException e) {
+            return Optional.empty();
+        }
     }
 }

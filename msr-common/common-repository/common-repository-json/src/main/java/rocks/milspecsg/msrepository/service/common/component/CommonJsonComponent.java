@@ -28,17 +28,18 @@ import java.util.UUID;
 public interface CommonJsonComponent extends Component<UUID, JsonDBOperations, JsonConfig> {
 
     @Override
-    default Optional<UUID> parse(Object object) {
+    default UUID parseUnsafe(Object object) {
         if (object instanceof UUID) {
-            return Optional.of((UUID) object);
+            return (UUID) object;
         } else if (object instanceof Optional<?>) {
             Optional<?> optional = (Optional<?>) object;
-            return optional.isPresent() ? parse(optional.get()) : Optional.empty();
+            if (optional.isPresent()) return parseUnsafe(optional.get());
+            throw new IllegalArgumentException("Error while parsing " + object + ". Optional not present");
         }
         try {
-            return Optional.of(UUID.fromString(object.toString()));
-        } catch (IllegalArgumentException ignored) {
-            return Optional.empty();
+            return UUID.fromString(object.toString());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error while parsing " + object + ". Not a valid UUID", e);
         }
     }
 }

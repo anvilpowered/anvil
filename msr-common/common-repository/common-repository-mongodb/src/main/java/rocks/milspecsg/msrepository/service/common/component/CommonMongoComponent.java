@@ -28,14 +28,16 @@ import java.util.Optional;
 public interface CommonMongoComponent extends Component<ObjectId, Datastore, MongoConfig> {
 
     @Override
-    default Optional<ObjectId> parse(Object object) {
+    default ObjectId parseUnsafe(Object object) {
         if (object instanceof ObjectId) {
-            return Optional.of((ObjectId) object);
+            return (ObjectId) object;
         } else if (object instanceof Optional<?>) {
             Optional<?> optional = (Optional<?>) object;
-            return optional.isPresent() ? parse(optional.get()) : Optional.empty();
+            if (optional.isPresent()) return parseUnsafe(optional.get());
+            throw new IllegalArgumentException("Error while parsing " + object + ". Optional not present");
         }
         String string = object.toString();
-        return ObjectId.isValid(string) ? Optional.of(new ObjectId(string)) : Optional.empty();
+        if (ObjectId.isValid(string)) return new ObjectId(string);
+        throw new IllegalArgumentException("Error while parsing " + object + ". Not a valid ObjectId");
     }
 }
