@@ -130,8 +130,14 @@ public interface CommonMongoRepository<
     }
 
     @Override
+    default CompletableFuture<Boolean> delete(Optional<Query<T>> query) {
+        return query.map(q -> delete(q).thenApplyAsync(w -> w.getN() > 0).exceptionally(e -> false))
+            .orElse(CompletableFuture.completedFuture(false));
+    }
+
+    @Override
     default CompletableFuture<Boolean> deleteOne(ObjectId id) {
-        return CompletableFuture.supplyAsync(() -> asQuery(id).filter(q -> delete(q).join().getN() > 0).isPresent());
+        return delete(asQuery(id));
     }
 
     @Override

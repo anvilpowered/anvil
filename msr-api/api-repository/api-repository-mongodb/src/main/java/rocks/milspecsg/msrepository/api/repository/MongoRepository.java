@@ -37,6 +37,8 @@ public interface MongoRepository<
 
     CompletableFuture<WriteResult> delete(Query<T> query);
 
+    CompletableFuture<Boolean> delete(Optional<Query<T>> query);
+
     Optional<UpdateOperations<T>> createUpdateOperations();
 
     Optional<UpdateOperations<T>> inc(String field, Number value);
