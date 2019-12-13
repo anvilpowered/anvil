@@ -20,3 +20,5 @@ include ':msr-common:common-repository:common-repository-nitrite'
 
 include ':msr-sponge'
 include ':msr-sponge:sponge-repository'
+
+include ':msr-velocity'
