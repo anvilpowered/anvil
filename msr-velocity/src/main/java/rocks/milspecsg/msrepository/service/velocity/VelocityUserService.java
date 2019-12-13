@@ -49,7 +49,7 @@ public class VelocityUserService implements UserService<Player> {
 
     @Override
     public Optional<String> getUserName(UUID userUUID) {
-        return Optional.empty();
+        return get(userUUID).map(Player::getUsername);
     }
 
     @Override
