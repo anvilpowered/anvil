@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = modGroup
+version = modVersion
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'velocity'
+        url = 'https://repo.velocitypowered.com/snapshots/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'com.velocitypowered:velocity-api:1.0.1-SNAPSHOT'
+
+    if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api')
+    } else {
+        implementation project(':MSRepository:msr-api')
+    }
+
+    implementation guice
+}
