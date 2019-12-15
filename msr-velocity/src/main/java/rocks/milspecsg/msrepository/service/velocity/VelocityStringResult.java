@@ -27,8 +27,8 @@ import net.kyori.text.format.TextColor;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 import rocks.milspecsg.msrepository.api.tools.resultbuilder.StringResult;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.function.Consumer;
 
 public class VelocityStringResult extends VelocityResult<String> implements StringResult<TextComponent, CommandSource> {
@@ -45,125 +45,123 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
 
     private static final class VelocityStringResultBuilder implements Builder<TextComponent, CommandSource> {
 
-        private final TextComponent.Builder builder;
+        private final Deque<Object> elements;
+        private HoverEvent hoverEvent;
+        private ClickEvent clickEvent;
 
         private VelocityStringResultBuilder() {
-            builder = TextComponent.builder();
+            elements = new LinkedList<>();
         }
 
         @Override
         public Builder<TextComponent, CommandSource> aqua() {
-            builder.color(TextColor.AQUA);
+            elements.add(TextColor.AQUA);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> black() {
-            builder.color(TextColor.BLACK);
+            elements.add(TextColor.BLACK);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> blue() {
-            builder.color(TextColor.BLUE);
+            elements.add(TextColor.BLUE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_aqua() {
-            builder.color(TextColor.DARK_AQUA);
+            elements.add(TextColor.DARK_AQUA);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_blue() {
-            builder.color(TextColor.DARK_BLUE);
+            elements.add(TextColor.DARK_BLUE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_gray() {
-            builder.color(TextColor.DARK_GRAY);
+            elements.add(TextColor.DARK_GRAY);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_green() {
-            builder.color(TextColor.DARK_GREEN);
+            elements.add(TextColor.DARK_GREEN);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_purple() {
-            builder.color(TextColor.DARK_PURPLE);
+            elements.add(TextColor.DARK_PURPLE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_red() {
-            builder.color(TextColor.DARK_RED);
+            elements.add(TextColor.DARK_RED);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> gold() {
-            builder.color(TextColor.GOLD);
+            elements.add(TextColor.GOLD);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> gray() {
-            builder.color(TextColor.GRAY);
+            elements.add(TextColor.GRAY);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> green() {
-            builder.color(TextColor.GREEN);
+            elements.add(TextColor.GREEN);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> light_purple() {
-            builder.color(TextColor.LIGHT_PURPLE);
+            elements.add(TextColor.LIGHT_PURPLE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> red() {
-            builder.color(TextColor.RED);
+            elements.add(TextColor.RED);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> reset() {
-            builder.color(TextColor.WHITE);
+            elements.add(TextColor.WHITE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> white() {
-            builder.color(TextColor.WHITE);
+            elements.add(TextColor.WHITE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> yellow() {
-            builder.color(TextColor.YELLOW);
+            elements.add(TextColor.YELLOW);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> append(Object... content) {
             for (Object o : content) {
-                if (o instanceof Builder) {
-                    builder.append(((Builder<TextComponent, CommandSource>) o).build());
-                } else if (o instanceof TextComponent) {
-                    builder.append((TextComponent) o);
-                } else if (o instanceof String) {
-                    builder.append(String.valueOf(o));
+                if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
+                    elements.add(o);
                 } else {
-                    builder.append(TextComponent.of(o.toString()));
+                    elements.add(TextComponent.of(o.toString()));
                 }
             }
             return this;
@@ -171,7 +169,7 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
 
         @Override
         public Builder<TextComponent, CommandSource> onHoverShowText(TextComponent content) {
-            builder.hoverEvent(HoverEvent.showText(content));
+            hoverEvent = HoverEvent.showText(content);
             return this;
         }
 
@@ -182,13 +180,13 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
 
         @Override
         public Builder<TextComponent, CommandSource> onClickSuggestCommand(String command) {
-            builder.clickEvent(ClickEvent.suggestCommand(command));
+            clickEvent = ClickEvent.suggestCommand(command);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> onClickRunCommand(String command) {
-            builder.clickEvent(ClickEvent.runCommand(command));
+            clickEvent = ClickEvent.runCommand(command);
             return this;
         }
 
@@ -200,8 +198,52 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public TextComponent build() {
-            return builder.build();
+
+            if (elements.isEmpty()) {
+                return TextComponent.empty();
+            }
+
+            // one builder for every color
+            final Deque<Component> components = new LinkedList<>();
+
+            // create first builder
+            TextComponent.Builder currentBuilder = TextComponent.builder();
+            Object firstColor;
+            if ((firstColor = elements.peekFirst()) instanceof TextColor) {
+                currentBuilder.color((TextColor) firstColor);
+                elements.pollFirst(); // remove color because its already added to builder
+            }
+
+            for (Object o : elements) {
+                if (o instanceof Builder) {
+                    currentBuilder.append(((Builder<TextComponent, CommandSource>) o).build());
+                } else if (o instanceof Component) {
+                    currentBuilder.append((Component) o);
+                } else if (o instanceof TextColor) {
+                    // build current builder
+                    components.push(currentBuilder.build());
+                    // create new builder starting at this point until the next color
+                    currentBuilder = TextComponent.builder().color((TextColor) o);
+                } else {
+                    System.err.println("Skipping " + o + " because it does not match any of the correct types");
+                }
+            }
+
+            // build last builder
+            components.push(currentBuilder.build());
+
+            // create new builder with all previous components
+            currentBuilder = TextComponent.builder().append(components);
+
+            if (hoverEvent != null) {
+                currentBuilder.hoverEvent(hoverEvent);
+            }
+            if (clickEvent != null) {
+                currentBuilder.clickEvent(clickEvent);
+            }
+            return currentBuilder.build();
         }
 
         @Override
