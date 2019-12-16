@@ -9,10 +9,9 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven {
-        name = 'velocity'
-        url = 'https://repo.velocitypowered.com/snapshots/'
-    }
+    maven { url 'https://repo.velocitypowered.com/snapshots/' }
+    maven { url 'https://repo.spongepowered.org/maven' }
+
 }
 
 dependencies {
