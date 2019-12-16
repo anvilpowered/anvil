@@ -223,7 +223,7 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
                     currentBuilder.append((Component) o);
                 } else if (o instanceof TextColor) {
                     // build current builder
-                    components.push(currentBuilder.build());
+                    components.offer(currentBuilder.build());
                     // create new builder starting at this point until the next color
                     currentBuilder = TextComponent.builder().color((TextColor) o);
                 } else {
@@ -232,7 +232,7 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
             }
 
             // build last builder
-            components.push(currentBuilder.build());
+            components.offer(currentBuilder.build());
 
             // create new builder with all previous components
             currentBuilder = TextComponent.builder().append(components);
