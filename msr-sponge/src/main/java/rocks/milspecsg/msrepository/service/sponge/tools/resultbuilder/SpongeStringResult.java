@@ -170,6 +170,25 @@ public class SpongeStringResult extends SpongeResult<String> implements StringRe
         }
 
         @Override
+        public Builder<Text, CommandSource> appendJoining(Object delimiter, Object... content) {
+            final int indexOfLast = content.length - 1;
+            for (int i = 0; i <= indexOfLast; i++) {
+                Object o = content[i];
+                if (o instanceof Builder) {
+                    elements.add(((Builder<Text, CommandSource>) o).build());
+                } else if (o instanceof TextElement) {
+                    elements.add((TextElement) o);
+                } else {
+                    elements.add(Text.of(o));
+                }
+                if (i != indexOfLast) {
+                    elements.add(Text.of(delimiter));
+                }
+            }
+            return this;
+        }
+
+        @Override
         public Builder<Text, CommandSource> onHoverShowText(Text content) {
             hoverAction = TextActions.showText(content);
             return this;

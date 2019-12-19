@@ -44,6 +44,7 @@ public interface StringResult<TResult, TCommandSource> extends Result<TResult, S
         Builder<TResult, TCommandSource> yellow();
 
         Builder<TResult, TCommandSource> append(Object... content);
+        Builder<TResult, TCommandSource> appendJoining(Object delimiter, Object... content);
         Builder<TResult, TCommandSource> onHoverShowText(TResult content);
         Builder<TResult, TCommandSource> onHoverShowText(Builder<TResult, TCommandSource> builder);
         Builder<TResult, TCommandSource> onClickSuggestCommand(String command);

@@ -168,6 +168,27 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
         }
 
         @Override
+        public Builder<TextComponent, CommandSource> appendJoining(Object delimiter, Object... content) {
+            final int indexOfLast = content.length - 1;
+            for (int i = 0; i <= indexOfLast; i++) {
+                Object o = content[i];
+                if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
+                    elements.add(o);
+                } else {
+                    elements.add(TextComponent.of(o.toString()));
+                }
+                if (i != indexOfLast) {
+                    if (delimiter instanceof Builder || delimiter instanceof Component) {
+                        elements.add(delimiter);
+                    } else {
+                        elements.add(TextComponent.of(delimiter.toString()));
+                    }
+                }
+            }
+            return this;
+        }
+
+        @Override
         public Builder<TextComponent, CommandSource> onHoverShowText(TextComponent content) {
             hoverEvent = HoverEvent.showText(content);
             return this;
