@@ -22,6 +22,9 @@ import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
 public interface CommonStorageService<
     TKey,
     T extends ObjectWithId<TKey>,
@@ -39,5 +42,15 @@ public interface CommonStorageService<
             System.err.println(message);
             throw new IllegalStateException(message, e);
         }
+    }
+
+    @Override
+    default CompletableFuture<Optional<T>> parseAndGetOne(Object id) {
+        return parse(id).map(this::getOne).orElse(CompletableFuture.completedFuture(Optional.empty()));
+    }
+
+    @Override
+    default CompletableFuture<Boolean> parseAndDeleteOne(Object id) {
+        return parse(id).map(this::deleteOne).orElse(CompletableFuture.completedFuture(false));
     }
 }

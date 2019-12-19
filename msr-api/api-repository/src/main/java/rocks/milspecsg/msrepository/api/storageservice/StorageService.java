@@ -64,10 +64,24 @@ public interface StorageService<
     CompletableFuture<Optional<T>> getOne(TKey id);
 
     /**
+     * @param id {@link Object} to query repository with. Will attempt to parse to {@link TKey}
+     * @return The first item that satisfies {@link T#getId()} == {@param id}
+     */
+    CompletableFuture<Optional<T>> parseAndGetOne(Object id);
+
+    /**
      * Deletes the first item that satisfies {@link T#getId()} == {@param id}
      *
      * @param id {@link TKey} to query repository with
      * @return Whether or not an item was found and deleted
      */
     CompletableFuture<Boolean> deleteOne(TKey id);
+
+    /**
+     * Deletes the first item that satisfies {@link T#getId()} == {@param id}
+     *
+     * @param id {@link Object} to query repository with. Will attempt to parse to {@link TKey}
+     * @return Whether or not an item was found and deleted
+     */
+    CompletableFuture<Boolean> parseAndDeleteOne(Object id);
 }
