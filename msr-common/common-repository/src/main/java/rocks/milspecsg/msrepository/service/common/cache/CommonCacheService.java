@@ -46,19 +46,16 @@ public abstract class CommonCacheService<
     implements CacheService<TKey, T, TDataStore, TDataStoreConfig>,
     CommonStorageService<TKey, T, TDataStore, TDataStoreConfig> {
 
-    @Inject
-    private Injector injector;
-
     protected ConfigurationService configurationService;
 
     protected ConcurrentMap<T, Long> cache;
 
     private Integer timeoutSeconds;
 
-    protected CommonCacheService(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext, Key<ConfigurationService> configurationServiceKey) {
+    protected CommonCacheService(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext, ConfigurationService configurationService) {
         super(dataStoreContext);
-        configurationService = injector.getInstance(configurationServiceKey);
-        configurationService.addConfigLoadedListener(this::configLoaded);
+        this.configurationService = configurationService;
+        this.configurationService.addConfigLoadedListener(this::configLoaded);
         cache = new ConcurrentHashMap<>();
     }
 
