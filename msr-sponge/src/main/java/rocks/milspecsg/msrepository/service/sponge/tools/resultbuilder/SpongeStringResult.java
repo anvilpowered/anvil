@@ -25,6 +25,7 @@ import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import rocks.milspecsg.msrepository.api.tools.resultbuilder.StringResult;
 
 import java.util.ArrayList;
@@ -41,6 +42,16 @@ public class SpongeStringResult extends SpongeResult<String> implements StringRe
     @Override
     public void send(Text result, CommandSource commandSource) {
         commandSource.sendMessage(result);
+    }
+
+    @Override
+    public Text deserialize(String text) {
+        return TextSerializers.FORMATTING_CODE.deserialize(text);
+    }
+
+    @Override
+    public String serialize(Text text) {
+        return TextSerializers.FORMATTING_CODE.serialize(text);
     }
 
     private static final class SpongeStringResultBuilder implements Builder<Text, CommandSource> {

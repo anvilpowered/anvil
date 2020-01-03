@@ -23,6 +23,8 @@ import java.util.function.Consumer;
 public interface StringResult<TResult, TCommandSource> extends Result<TResult, String> {
     StringResult.Builder<TResult, TCommandSource> builder();
     void send(TResult result, TCommandSource commandSource);
+    TResult deserialize(String text);
+    String serialize(TResult text);
     interface Builder<TResult, TCommandSource> {
         /* colors apply to text AFTER called (until new color is specified) */
         Builder<TResult, TCommandSource> aqua();

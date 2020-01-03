@@ -43,6 +43,16 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
         commandSource.sendMessage(textComponent);
     }
 
+    @Override
+    public TextComponent deserialize(String text) {
+        return LegacyComponentSerializer.legacy().deserialize(text, '&');
+    }
+
+    @Override
+    public String serialize(TextComponent text) {
+        return LegacyComponentSerializer.legacy().serialize(text, '&');
+    }
+
     private static final class VelocityStringResultBuilder implements Builder<TextComponent, CommandSource> {
 
         private final Deque<Object> elements;
