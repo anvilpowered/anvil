@@ -56,7 +56,7 @@ public class CommonBindingExtensions implements BindingExtensions {
 
     @Override
     public <From1 extends Component<?, ?, ?>,
-        From2 extends Component<?, ?, ?>,
+        From2 extends From1,
         Target extends From1>
     void bind(
         TypeToken<From1> from1,
@@ -64,9 +64,7 @@ public class CommonBindingExtensions implements BindingExtensions {
         TypeToken<Target> target,
         Class<? extends Annotation> componentAnnotation
     ) {
-        binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType()))
-            .annotatedWith(componentAnnotation)
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+        bind(from1, from1, from2, target, componentAnnotation);
     }
 
     @Override

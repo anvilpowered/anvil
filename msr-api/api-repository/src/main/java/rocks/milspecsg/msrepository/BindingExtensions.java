@@ -58,7 +58,7 @@ public interface BindingExtensions {
     );
 
     <From1 extends Component<?, ?, ?>,
-        From2 extends Component<?, ?, ?>,
+        From2 extends From1,
         Target extends From1>
     void bind(
         TypeToken<From1> from1,
