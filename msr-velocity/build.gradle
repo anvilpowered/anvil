@@ -20,8 +20,10 @@ dependencies {
 
     if (rootProject.getName().equals("MSRepository")) {
         implementation project(':msr-api')
+        implementation project(':msr-common')
     } else {
         implementation project(':MSRepository:msr-api')
+        implementation project(':MSRepository:msr-common')
     }
 
     implementation guice
