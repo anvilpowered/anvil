@@ -18,8 +18,10 @@ dependencies {
 
     if (rootProject.getName().equals("MSRepository")) {
         implementation project(':msr-api')
+        implementation project(':msr-common')
     } else {
         implementation project(':MSRepository:msr-api')
+        implementation project(':MSRepository:msr-common')
     }
 
     compileOnly('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {

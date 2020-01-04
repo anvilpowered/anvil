@@ -18,7 +18,6 @@
 
 package rocks.milspecsg.msrepository;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.User;
@@ -30,10 +29,11 @@ import rocks.milspecsg.msrepository.service.sponge.SpongeTeleportationService;
 import rocks.milspecsg.msrepository.service.sponge.SpongeUserService;
 import rocks.milspecsg.msrepository.service.sponge.tools.resultbuilder.SpongeStringResult;
 
-public class ApiSpongeModule extends AbstractModule {
+public class ApiSpongeModule extends ApiCommonModule {
 
     @Override
     protected void configure() {
+        super.configure();
         bind(new TypeLiteral<StringResult<Text, CommandSource>>() {
         }).to(SpongeStringResult.class);
         bind(TeleportationService.class).to(SpongeTeleportationService.class);
