@@ -28,6 +28,7 @@ import rocks.milspecsg.msrepository.api.manager.annotation.JsonComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MariaDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.NitriteComponent;
+import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -64,6 +65,10 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
     @NitriteComponent
     private C nitriteComponent;
 
+    @Inject(optional = true)
+    @XodusComponent
+    private C xodusComponent;
+
     private C currentComponent;
 
     private void configLoaded(Object plugin) {
@@ -88,6 +93,9 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
                     break;
                 case "nitrite":
                     currentComponent = Objects.requireNonNull(nitriteComponent);
+                    break;
+                case "xodus":
+                    currentComponent = Objects.requireNonNull(xodusComponent);
                     break;
                 default:
                     throw new IllegalStateException("Invalid DataStoreName");
