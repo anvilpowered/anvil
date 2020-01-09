@@ -23,11 +23,8 @@ import rocks.milspecsg.msrepository.api.component.Component;
 import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.manager.Manager;
-import rocks.milspecsg.msrepository.api.manager.annotation.H2Component;
-import rocks.milspecsg.msrepository.api.manager.annotation.JsonComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MariaDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
-import rocks.milspecsg.msrepository.api.manager.annotation.NitriteComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
 
 import java.util.Locale;
@@ -46,24 +43,12 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
     private C defaultComponent;
 
     @Inject(optional = true)
-    @H2Component
-    private C h2Component;
-
-    @Inject(optional = true)
-    @JsonComponent
-    private C jsonComponent;
-
-    @Inject(optional = true)
     @MariaDBComponent
     private C mariaComponent;
 
     @Inject(optional = true)
     @MongoDBComponent
     private C mongoComponent;
-
-    @Inject(optional = true)
-    @NitriteComponent
-    private C nitriteComponent;
 
     @Inject(optional = true)
     @XodusComponent
@@ -79,20 +64,11 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
         String dataStoreName = configurationService.getConfigString(ConfigKeys.DATA_STORE_NAME);
         try {
             switch (dataStoreName.toLowerCase(Locale.ENGLISH)) {
-                case "h2":
-                    currentComponent = Objects.requireNonNull(h2Component);
-                    break;
-                case "json":
-                    currentComponent = Objects.requireNonNull(jsonComponent);
-                    break;
                 case "mariadb":
                     currentComponent = Objects.requireNonNull(mariaComponent);
                     break;
                 case "mongodb":
                     currentComponent = Objects.requireNonNull(mongoComponent);
-                    break;
-                case "nitrite":
-                    currentComponent = Objects.requireNonNull(nitriteComponent);
                     break;
                 case "xodus":
                     currentComponent = Objects.requireNonNull(xodusComponent);

@@ -19,8 +19,6 @@
 package rocks.milspecsg.msrepository.api.manager;
 
 import rocks.milspecsg.msrepository.api.component.Component;
-import rocks.milspecsg.msrepository.api.manager.annotation.H2Component;
-import rocks.milspecsg.msrepository.api.manager.annotation.JsonComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MariaDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
 import rocks.milspecsg.msrepository.api.repository.Repository;
@@ -152,8 +150,6 @@ public interface Manager<C extends Component<?, ?, ?>> {
      *     <li>
      *         Annotated with one of the following
      *         <ul>
-     *             <li>{@link H2Component}</li>
-     *             <li>{@link JsonComponent}</li>
      *             <li>{@link MariaDBComponent}</li>
      *             <li>{@link MongoDBComponent}</li>
      *         </ul>
