@@ -31,6 +31,7 @@ public class MongoConfig implements DataStoreConfig {
     private int dbNameConfigKey;
     private int userNameConfigKey;
     private int passwordConfigKey;
+    private int authDbConfigKey;
     private int useAuthConfigKey;
     private Key<ConfigurationService> configurationServiceKey;
 
@@ -42,6 +43,7 @@ public class MongoConfig implements DataStoreConfig {
      * @param dbNameConfigKey        String configKey
      * @param userNameConfigKey      String configKey
      * @param passwordConfigKey      String configKey
+     * @param authDbConfigKey        String configKey
      * @param useAuthConfigKey       Boolean configKey
      */
     public MongoConfig(
@@ -52,6 +54,7 @@ public class MongoConfig implements DataStoreConfig {
         int dbNameConfigKey,
         int userNameConfigKey,
         int passwordConfigKey,
+        int authDbConfigKey,
         int useAuthConfigKey
     ) {
         this(
@@ -62,6 +65,7 @@ public class MongoConfig implements DataStoreConfig {
             dbNameConfigKey,
             userNameConfigKey,
             passwordConfigKey,
+            authDbConfigKey,
             useAuthConfigKey,
             Key.get(ConfigurationService.class)
         );
@@ -75,6 +79,7 @@ public class MongoConfig implements DataStoreConfig {
      * @param dbNameConfigKey         String configKey
      * @param userNameConfigKey       String configKey
      * @param passwordConfigKey       String configKey
+     * @param authDbConfigKey         String configKey
      * @param useAuthConfigKey        Boolean configKey
      * @param configurationServiceKey Key for configuration service
      */
@@ -86,6 +91,7 @@ public class MongoConfig implements DataStoreConfig {
         int dbNameConfigKey,
         int userNameConfigKey,
         int passwordConfigKey,
+        int authDbConfigKey,
         int useAuthConfigKey,
         Key<ConfigurationService> configurationServiceKey
     ) {
@@ -96,6 +102,7 @@ public class MongoConfig implements DataStoreConfig {
         this.dbNameConfigKey = dbNameConfigKey;
         this.userNameConfigKey = userNameConfigKey;
         this.passwordConfigKey = passwordConfigKey;
+        this.authDbConfigKey = authDbConfigKey;
         this.useAuthConfigKey = useAuthConfigKey;
         this.configurationServiceKey = configurationServiceKey;
     }
@@ -135,9 +142,11 @@ public class MongoConfig implements DataStoreConfig {
         return passwordConfigKey;
     }
 
+    public int getAuthDbConfigKey() {
+        return authDbConfigKey;
+    }
+
     public int getUseAuthConfigKey() {
         return useAuthConfigKey;
     }
-
-
 }

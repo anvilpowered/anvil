@@ -63,10 +63,12 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore, Mo
 
         String username = getConfigurationService().getConfigString(getConfig().getUserNameConfigKey());
         String password = getConfigurationService().getConfigString(getConfig().getPasswordConfigKey());
+        String authDb = getConfigurationService().getConfigString(getConfig().getAuthDbConfigKey());
 
         if (useAuth) {
             Objects.requireNonNull(username);
             Objects.requireNonNull(password);
+            Objects.requireNonNull(authDb);
         }
 
         /* === Determine credentials for MongoDB === */
@@ -77,7 +79,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore, Mo
                 encodedPassword = URLEncoder.encode(password, "UTF-8");
             } catch (UnsupportedEncodingException ignored) {
             }
-            clientUrl = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/" + dbName;
+            clientUrl = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/" + dbName + "?authSource=" + authDb;
         } else {
             clientUrl = "mongodb://" + hostname + ":" + port + "/" + dbName;
         }
