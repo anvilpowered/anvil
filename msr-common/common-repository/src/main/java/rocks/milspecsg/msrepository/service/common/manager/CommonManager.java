@@ -19,9 +19,10 @@
 package rocks.milspecsg.msrepository.service.common.manager;
 
 import com.google.inject.Inject;
+import rocks.milspecsg.msrepository.api.MSRepository;
 import rocks.milspecsg.msrepository.api.component.Component;
-import rocks.milspecsg.msrepository.api.config.ConfigKeys;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.manager.Manager;
 import rocks.milspecsg.msrepository.api.manager.annotation.MariaDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
@@ -32,11 +33,11 @@ import java.util.Objects;
 
 public abstract class CommonManager<C extends Component<?, ?, ?>> implements Manager<C> {
 
-    protected ConfigurationService configurationService;
+    protected Registry registry;
 
-    protected CommonManager(ConfigurationService configurationService) {
-        this.configurationService = configurationService;
-        configurationService.addConfigLoadedListener(this::configLoaded);
+    protected CommonManager(Registry registry) {
+        this.registry = registry;
+        registry.addRegistryLoadedListener(this::configLoaded);
     }
 
     @Inject(optional = true)
@@ -61,7 +62,12 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
             currentComponent = defaultComponent;
             return;
         }
-        String dataStoreName = configurationService.getConfigString(ConfigKeys.DATA_STORE_NAME);
+        String dataStoreName;
+        if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
+            dataStoreName = MSRepository.getCoreEnvironment().getRegistry().getOrDefault(Keys.DATA_STORE_NAME);
+        } else {
+            dataStoreName = registry.getOrDefault(Keys.DATA_STORE_NAME);
+        }
         try {
             switch (dataStoreName.toLowerCase(Locale.ENGLISH)) {
                 case "mariadb":

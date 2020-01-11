@@ -16,17 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.config;
+package rocks.milspecsg.msrepository.api.data;
 
+import com.google.inject.Injector;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 
-public interface ConfigurationService extends Registry {
 
-    /**
-     * Updates the config with values from the registry. Will only update the file if changes were made
-     *
-     * @return {@code true} if there were updated values to save and they were saved successfully
-     * otherwise {@code false}
-     */
-    boolean save();
+public interface Environment {
+
+    String getName();
+
+    Injector getInjector();
+
+    Registry getRegistry();
 }

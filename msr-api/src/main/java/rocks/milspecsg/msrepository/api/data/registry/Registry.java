@@ -16,12 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.config;
+package rocks.milspecsg.msrepository.api.data.registry;
 
-@FunctionalInterface
-public interface ConfigLoadedListener {
-    /**
-     * Called from {@link ConfigurationService} after the config has finished loading from the file
-     */
-    void loaded(Object plugin);
+import rocks.milspecsg.msrepository.api.data.key.Key;
+
+import java.util.Optional;
+
+public interface Registry {
+
+    <T> Optional<T> get(Key<T> key);
+
+    default <T> T getDefault(Key<T> key) {
+        return key.getFallbackValue();
+    }
+
+    default <T> T getOrDefault(Key<T> key) {
+        return get(key).orElse(getDefault(key));
+    }
+
+    void load(Object plugin);
+
+    void addRegistryLoadedListener(RegistryLoadedListener registryLoadedListener);
 }
