@@ -16,17 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.config;
+package rocks.milspecsg.msrepository.api.data.registry;
 
-import rocks.milspecsg.msrepository.api.data.registry.Registry;
-
-public interface ConfigurationService extends Registry {
+@FunctionalInterface
+public interface RegistryLoadedListener {
 
     /**
-     * Updates the config with values from the registry. Will only update the file if changes were made
-     *
-     * @return {@code true} if there were updated values to save and they were saved successfully
-     * otherwise {@code false}
+     * Called from a {@link Registry} after it has been loaded
      */
-    boolean save();
+    void loaded(Object plugin);
 }
