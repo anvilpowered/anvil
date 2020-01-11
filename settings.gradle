@@ -14,6 +14,12 @@ include ':msr-common:common-repository:common-repository-mongodb'
 include ':msr-common:common-repository:common-repository-mariadb'
 include ':msr-common:common-repository:common-repository-xodus'
 
+include ':msr-core'
+include ':msr-core:core-api'
+include ':msr-core:core-common'
+include ':msr-core:core-sponge'
+include ':msr-core:core-velocity'
+
 include ':msr-sponge'
 include ':msr-sponge:sponge-repository'
 

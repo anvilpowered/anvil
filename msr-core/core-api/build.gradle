@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group modGroup
+version modVersion
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api')
+        implementation project(':msr-api:api-repository')
+        implementation project(':msr-api:api-repository:api-repository-mongodb')
+    } else {
+        implementation project(':MSRepository:msr-api')
+        implementation project(':MSRepository:msr-api:api-repository')
+        implementation project(':MSRepository:msr-api:api-repository:api-repository-mongodb')
+    }
+
+    implementation guice
+    implementation morphia
+}
