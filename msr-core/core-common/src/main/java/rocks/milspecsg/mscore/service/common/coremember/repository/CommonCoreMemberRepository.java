@@ -21,18 +21,16 @@ package rocks.milspecsg.mscore.service.common.coremember.repository;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
 import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.service.common.repository.CommonRepository;
 
 public abstract class CommonCoreMemberRepository<
     TKey,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    extends CommonRepository<TKey, CoreMember<TKey>, CacheService<TKey, CoreMember<TKey>, TDataStore, TDataStoreConfig>, TDataStore, TDataStoreConfig>
-    implements CoreMemberRepository<TKey, TDataStore, TDataStoreConfig> {
+    TDataStore>
+    extends CommonRepository<TKey, CoreMember<TKey>, CacheService<TKey, CoreMember<TKey>, TDataStore>, TDataStore>
+    implements CoreMemberRepository<TKey, TDataStore> {
 
-    protected CommonCoreMemberRepository(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext) {
+    protected CommonCoreMemberRepository(DataStoreContext<TKey, TDataStore> dataStoreContext) {
         super(dataStoreContext);
     }
 

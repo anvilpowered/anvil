@@ -28,19 +28,18 @@ import rocks.milspecsg.mscore.api.coremember.repository.MongoCoreMemberRepositor
 import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
-import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 import rocks.milspecsg.msrepository.service.common.repository.CommonMongoRepository;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class CommonMongoCoreMemberRepository
-    extends CommonCoreMemberRepository<ObjectId, Datastore, MongoConfig>
-    implements CommonMongoRepository<CoreMember<ObjectId>, CacheService<ObjectId, CoreMember<ObjectId>, Datastore, MongoConfig>>,
+    extends CommonCoreMemberRepository<ObjectId, Datastore>
+    implements CommonMongoRepository<CoreMember<ObjectId>, CacheService<ObjectId, CoreMember<ObjectId>, Datastore>>,
     MongoCoreMemberRepository {
 
     @Inject
-    public CommonMongoCoreMemberRepository(DataStoreContext<ObjectId, Datastore, MongoConfig> dataStoreContext) {
+    public CommonMongoCoreMemberRepository(DataStoreContext<ObjectId, Datastore> dataStoreContext) {
         super(dataStoreContext);
     }
 

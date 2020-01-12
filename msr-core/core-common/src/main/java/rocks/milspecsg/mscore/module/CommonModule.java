@@ -29,15 +29,15 @@ import rocks.milspecsg.mscore.service.common.coremember.CommonCoreMemberManager;
 import rocks.milspecsg.mscore.service.common.coremember.repository.CommonMongoCoreMemberRepository;
 import rocks.milspecsg.msrepository.BindingExtensions;
 import rocks.milspecsg.msrepository.CommonBindingExtensions;
-import rocks.milspecsg.msrepository.api.config.ConfigKeys;
+import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
-import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 import rocks.milspecsg.msrepository.datastore.mongodb.MongoContext;
+import rocks.milspecsg.msrepository.service.common.config.CommonConfigurationService;
+import rocks.milspecsg.msrepository.service.registry.CommonExtendedRegistry;
 
 public class CommonModule extends AbstractModule {
-
-    private static final String BASE_SCAN_PACKAGE = "rocks.milspecsg.mscore.model.core";
 
     @Override
     @SuppressWarnings("UnstableApiUsage")
@@ -46,9 +46,9 @@ public class CommonModule extends AbstractModule {
         BindingExtensions be = new CommonBindingExtensions(binder());
 
         be.bind(
-            new TypeToken<CoreMemberRepository<?, ?, ?>>() {
+            new TypeToken<CoreMemberRepository<?, ?>>() {
             },
-            new TypeToken<CoreMemberRepository<ObjectId, Datastore, MongoConfig>>() {
+            new TypeToken<CoreMemberRepository<ObjectId, Datastore>>() {
             },
             new TypeToken<CommonMongoCoreMemberRepository>() {
             },
@@ -57,7 +57,11 @@ public class CommonModule extends AbstractModule {
 
         bind(CoreMemberManager.class).to(CommonCoreMemberManager.class);
 
-        bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore, MongoConfig>>() {
+        bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
         }).to(MongoContext.class);
+
+        bind(Registry.class).to(CommonExtendedRegistry.class);
+
+        bind(ConfigurationService.class).to(CommonConfigurationService.class);
     }
 }

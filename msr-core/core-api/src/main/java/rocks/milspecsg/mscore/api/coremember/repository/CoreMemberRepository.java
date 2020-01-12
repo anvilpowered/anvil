@@ -21,7 +21,6 @@ package rocks.milspecsg.mscore.api.coremember.repository;
 import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.Repository;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -30,9 +29,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface CoreMemberRepository<
     TKey,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    extends Repository<TKey, CoreMember<TKey>, CacheService<TKey, CoreMember<TKey>, TDataStore, TDataStoreConfig>, TDataStore, TDataStoreConfig> {
+    TDataStore>
+    extends Repository<TKey, CoreMember<TKey>, CacheService<TKey, CoreMember<TKey>, TDataStore>, TDataStore> {
 
     /**
      * Ensures that a matching {@link CoreMember} exists in the database.

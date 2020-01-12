@@ -31,17 +31,14 @@ import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
 import java.util.Locale;
 import java.util.Objects;
 
-public abstract class CommonManager<C extends Component<?, ?, ?>> implements Manager<C> {
+public abstract class CommonManager<C extends Component<?, ?>> implements Manager<C> {
 
     protected Registry registry;
 
     protected CommonManager(Registry registry) {
         this.registry = registry;
-        registry.addRegistryLoadedListener(this::configLoaded);
+        registry.addRegistryLoadedListener(this::registryLoaded);
     }
-
-    @Inject(optional = true)
-    private C defaultComponent;
 
     @Inject(optional = true)
     @MariaDBComponent
@@ -57,11 +54,7 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
 
     private C currentComponent;
 
-    private void configLoaded(Object plugin) {
-        if (defaultComponent != null) {
-            currentComponent = defaultComponent;
-            return;
-        }
+    private void registryLoaded(Object plugin) {
         String dataStoreName;
         if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
             dataStoreName = MSRepository.getCoreEnvironment().getRegistry().getOrDefault(Keys.DATA_STORE_NAME);
@@ -71,13 +64,13 @@ public abstract class CommonManager<C extends Component<?, ?, ?>> implements Man
         try {
             switch (dataStoreName.toLowerCase(Locale.ENGLISH)) {
                 case "mariadb":
-                    currentComponent = Objects.requireNonNull(mariaComponent);
+                    currentComponent = Objects.requireNonNull(mariaComponent, "MariaDB component not bound for manager " + getClass().getName());
                     break;
                 case "mongodb":
-                    currentComponent = Objects.requireNonNull(mongoComponent);
+                    currentComponent = Objects.requireNonNull(mongoComponent, "MongoDB component not bound for manager " + getClass().getName());
                     break;
                 case "xodus":
-                    currentComponent = Objects.requireNonNull(xodusComponent);
+                    currentComponent = Objects.requireNonNull(xodusComponent, "Xodus component not bound for manager " + getClass().getName());
                     break;
                 default:
                     throw new IllegalStateException("Invalid DataStoreName");

@@ -1,6 +1,6 @@
 /*
- *     MSRepository - MilSpecSG
- *     Copyright (C) 2019 Cableguy20
+ *   MSRepository - MilSpecSG
+ *   Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -16,12 +16,18 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.config;
+package rocks.milspecsg.mscore.service.sponge.config;
 
-public interface ConfigKeys {
+import com.google.inject.Inject;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.spongepowered.api.config.DefaultConfig;
+import rocks.milspecsg.msrepository.service.common.config.CommonConfigurationService;
 
-    int DATA_STORE_NAME = 0;
-    int CACHE_INVALIDATION_TIMOUT_SECONDS_INT = 1;
-    int CACHE_INVALIDATION_INTERVAL_SECONDS_INT = 2;
+public class MSCoreSpongeConfigurationService extends CommonConfigurationService {
 
+    @Inject
+    public MSCoreSpongeConfigurationService(@DefaultConfig(sharedRoot = false) ConfigurationLoader<CommentedConfigurationNode> configLoader) {
+        super(configLoader);
+    }
 }

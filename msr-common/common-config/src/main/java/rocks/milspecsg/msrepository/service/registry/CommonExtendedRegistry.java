@@ -19,6 +19,7 @@
 package rocks.milspecsg.msrepository.service.registry;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.data.key.Key;
 import rocks.milspecsg.msrepository.service.common.registry.CommonRegistry;
@@ -28,6 +29,7 @@ import java.util.Optional;
 /**
  * A registry that is backed by the configuration service
  */
+@Singleton
 @SuppressWarnings("unchecked")
 public class CommonExtendedRegistry extends CommonRegistry {
 

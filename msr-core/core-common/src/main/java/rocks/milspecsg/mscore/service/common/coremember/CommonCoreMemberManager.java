@@ -21,13 +21,13 @@ package rocks.milspecsg.mscore.service.common.coremember;
 import com.google.inject.Inject;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.service.common.manager.CommonManager;
 
-public class CommonCoreMemberManager extends CommonManager<CoreMemberRepository<?, ?, ?>> implements CoreMemberManager {
+public class CommonCoreMemberManager extends CommonManager<CoreMemberRepository<?, ?>> implements CoreMemberManager {
 
     @Inject
-    public CommonCoreMemberManager(ConfigurationService configurationService) {
-        super(configurationService);
+    public CommonCoreMemberManager(Registry registry) {
+        super(registry);
     }
 }

@@ -19,25 +19,23 @@
 package rocks.milspecsg.msrepository.service.common.component;
 
 import rocks.milspecsg.msrepository.api.component.Component;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
 import java.util.Optional;
 
 public abstract class CommonComponent<
     TKey,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    implements Component<TKey, TDataStore, TDataStoreConfig> {
+    TDataStore>
+    implements Component<TKey, TDataStore> {
 
-    private DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext;
+    private DataStoreContext<TKey, TDataStore> dataStoreContext;
 
-    protected CommonComponent(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext) {
+    protected CommonComponent(DataStoreContext<TKey, TDataStore> dataStoreContext) {
         this.dataStoreContext = dataStoreContext;
     }
 
     @Override
-    public DataStoreContext<TKey, TDataStore, TDataStoreConfig> getDataStoreContext() {
+    public DataStoreContext<TKey, TDataStore> getDataStoreContext() {
         return dataStoreContext;
     }
 

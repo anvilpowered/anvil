@@ -21,8 +21,7 @@ package rocks.milspecsg.mscore.plugin;
 import com.google.inject.Injector;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
-import rocks.milspecsg.msrepository.api.config.ConfigKeys;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 
 import java.util.Objects;
 
@@ -42,15 +41,15 @@ public abstract class MSCore {
         return injector.getInstance(CoreMemberManager.class);
     }
 
-    public static CoreMemberRepository<?, ?, ?> getCoreMemberRepository() {
+    public static CoreMemberRepository<?, ?> getCoreMemberRepository() {
         return getCoreMemberManager().getPrimaryComponent();
     }
 
-    public static String getDataStoreName() {
-        return injector.getInstance(ConfigurationService.class).getConfigString(ConfigKeys.DATA_STORE_NAME);
+    public static Registry getRegistry() {
+        return injector.getInstance(Registry.class);
     }
 
     protected void load() {
-        injector.getInstance(ConfigurationService.class).load(this);
+        injector.getInstance(Registry.class).load(this);
     }
 }

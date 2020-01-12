@@ -19,7 +19,6 @@
 package rocks.milspecsg.msrepository.datastore.mongodb;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -29,18 +28,20 @@ import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.mapping.DefaultCreator;
+import rocks.milspecsg.msrepository.api.MSRepository;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Objects;
 
 @Singleton
-public final class MongoContext extends DataStoreContext<ObjectId, Datastore, MongoConfig> {
+public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
 
     @Inject
-    public MongoContext(MongoConfig config, Injector injector) {
-        super(config, injector);
+    public MongoContext(Registry registry) {
+        super(registry);
     }
 
     @Override
@@ -49,27 +50,20 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore, Mo
     }
 
     @Override
-    protected void configLoaded(Object plugin) {
-        if (!getConfigurationService().getConfigString(getConfig().getDataStoreNameConfigKey()).equalsIgnoreCase("mongodb")) {
+    protected void registryLoaded(Object plugin) {
+        if (!MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry).equalsIgnoreCase("mongodb")) {
             requestCloseConnection();
             return;
         }
 
         /* === Get values from config === */
-        String hostname = Objects.requireNonNull(getConfigurationService().getConfigString(getConfig().getHostNameConfigKey()));
-        int port = Objects.requireNonNull(getConfigurationService().getConfigInteger(getConfig().getPortConfigKey()));
-        String dbName = Objects.requireNonNull(getConfigurationService().getConfigString(getConfig().getDbNameConfigKey()));
-        boolean useAuth = Objects.requireNonNull(getConfigurationService().getConfigBoolean(getConfig().getUseAuthConfigKey()));
-
-        String username = getConfigurationService().getConfigString(getConfig().getUserNameConfigKey());
-        String password = getConfigurationService().getConfigString(getConfig().getPasswordConfigKey());
-        String authDb = getConfigurationService().getConfigString(getConfig().getAuthDbConfigKey());
-
-        if (useAuth) {
-            Objects.requireNonNull(username);
-            Objects.requireNonNull(password);
-            Objects.requireNonNull(authDb);
-        }
+        String hostname = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_HOSTNAME, registry);
+        int port = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_PORT, registry);
+        String dbName = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_DBNAME, registry);
+        String username = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_USERNAME, registry);
+        String password =MSRepository.resolveForSharedEnvironment(Keys.MONGODB_PASSWORD, registry);
+        String authDb = MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry);
+        boolean useAuth = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_USE_AUTH, registry);
 
         /* === Determine credentials for MongoDB === */
         String clientUrl;
@@ -93,7 +87,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore, Mo
         setDataStore(dataStore);
 
         /* === Save mapped objects and register with morphia === */
-        morphia.map(calculateEntityClasses(getConfig().getBaseScanPackage(), Entity.class, Embedded.class));
+        morphia.map(calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE), Entity.class, Embedded.class));
 
         /* === Set class loader to prevent morphia from breaking === */
         morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {

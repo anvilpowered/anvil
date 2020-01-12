@@ -24,14 +24,13 @@ import org.mongodb.morphia.query.Query;
 import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
-import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface MongoCoreMemberRepository
-    extends CoreMemberRepository<ObjectId, Datastore, MongoConfig>,
-    MongoRepository<CoreMember<ObjectId>, CacheService<ObjectId, CoreMember<ObjectId>, Datastore, MongoConfig>> {
+    extends CoreMemberRepository<ObjectId, Datastore>,
+    MongoRepository<CoreMember<ObjectId>, CacheService<ObjectId, CoreMember<ObjectId>, Datastore>> {
 
     Optional<Query<CoreMember<ObjectId>>> asQueryForUser(UUID userUUID);
 

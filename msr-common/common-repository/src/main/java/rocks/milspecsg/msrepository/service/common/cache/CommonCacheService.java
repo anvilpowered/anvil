@@ -18,19 +18,19 @@
 
 package rocks.milspecsg.msrepository.service.common.cache;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Key;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.api.config.ConfigKeys;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 import rocks.milspecsg.msrepository.service.common.component.CommonComponent;
 import rocks.milspecsg.msrepository.service.common.storageservice.CommonStorageService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -40,29 +40,28 @@ import java.util.stream.Collectors;
 public abstract class CommonCacheService<
     TKey,
     T extends ObjectWithId<TKey>,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    extends CommonComponent<TKey, TDataStore, TDataStoreConfig>
-    implements CacheService<TKey, T, TDataStore, TDataStoreConfig>,
-    CommonStorageService<TKey, T, TDataStore, TDataStoreConfig> {
+    TDataStore>
+    extends CommonComponent<TKey, TDataStore>
+    implements CacheService<TKey, T, TDataStore>,
+    CommonStorageService<TKey, T, TDataStore> {
 
-    protected ConfigurationService configurationService;
+    protected Registry registry;
 
     protected ConcurrentMap<T, Long> cache;
 
     private Integer timeoutSeconds;
 
-    protected CommonCacheService(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext, ConfigurationService configurationService) {
+    protected CommonCacheService(DataStoreContext<TKey, TDataStore> dataStoreContext, Registry registry) {
         super(dataStoreContext);
-        this.configurationService = configurationService;
-        this.configurationService.addConfigLoadedListener(this::configLoaded);
+        this.registry = registry;
+        registry.addRegistryLoadedListener(this::registryLoaded);
         cache = new ConcurrentHashMap<>();
     }
 
-    private void configLoaded(Object plugin) {
+    private void registryLoaded(Object plugin) {
         stopCacheInvalidationTask();
-        Integer intervalSeconds = configurationService.getConfigInteger(ConfigKeys.CACHE_INVALIDATION_INTERVAL_SECONDS_INT);
-        timeoutSeconds = configurationService.getConfigInteger(ConfigKeys.CACHE_INVALIDATION_TIMOUT_SECONDS_INT);
+        Integer intervalSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_INTERVAL_SECONDS);
+        timeoutSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_TIMOUT_SECONDS);
         startCacheInvalidationTask(intervalSeconds);
     }
 

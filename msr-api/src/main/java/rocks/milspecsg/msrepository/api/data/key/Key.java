@@ -46,6 +46,11 @@ public abstract class Key<T> extends TypeToken<T> implements Comparable<Key<T>> 
         return name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }

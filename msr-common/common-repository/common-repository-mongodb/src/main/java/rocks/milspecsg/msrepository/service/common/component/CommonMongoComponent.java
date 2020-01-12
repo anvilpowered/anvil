@@ -21,11 +21,10 @@ package rocks.milspecsg.msrepository.service.common.component;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import rocks.milspecsg.msrepository.api.component.Component;
-import rocks.milspecsg.msrepository.datastore.mongodb.MongoConfig;
 
 import java.util.Optional;
 
-public interface CommonMongoComponent extends Component<ObjectId, Datastore, MongoConfig> {
+public interface CommonMongoComponent extends Component<ObjectId, Datastore> {
 
     @Override
     default ObjectId parseUnsafe(Object object) {

@@ -66,6 +66,7 @@ shadowJar {
         include project(':msr-api:api-repository')
         include project(':msr-api:api-repository:api-repository-mongodb')
 
+        include project(':msr-common')
         include project(':msr-common:common-config')
         include project(':msr-common:common-repository')
         include project(':msr-common:common-repository:common-repository-mongodb')

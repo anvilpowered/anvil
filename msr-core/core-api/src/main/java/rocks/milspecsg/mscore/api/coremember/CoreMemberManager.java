@@ -21,7 +21,7 @@ package rocks.milspecsg.mscore.api.coremember;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
 import rocks.milspecsg.msrepository.api.manager.Manager;
 
-public interface CoreMemberManager extends Manager<CoreMemberRepository<?, ?, ?>> {
+public interface CoreMemberManager extends Manager<CoreMemberRepository<?, ?>> {
 
     @Override
     default String getDefaultIdentifierSingularUpper() {

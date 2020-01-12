@@ -16,17 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.datastore;
+package rocks.milspecsg.mscore.module;
 
-import com.google.inject.Key;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.mscore.service.sponge.config.MSCoreSpongeConfigurationService;
+import rocks.milspecsg.msrepository.service.common.config.CommonConfigurationService;
 
-public interface DataStoreConfig {
+public class SpongeModule extends CommonModule {
+    @Override
+    protected void configure() {
+        super.configure();
 
-    String getBaseScanPackage();
-
-    int getDataStoreNameConfigKey();
-
-    Key<ConfigurationService> getConfigurationServiceKey();
-
+        bind(CommonConfigurationService.class).to(MSCoreSpongeConfigurationService.class);
+    }
 }

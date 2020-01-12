@@ -19,7 +19,6 @@
 package rocks.milspecsg.msrepository.service.common.storageservice;
 
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.Optional;
@@ -28,9 +27,8 @@ import java.util.concurrent.CompletableFuture;
 public interface CommonStorageService<
     TKey,
     T extends ObjectWithId<TKey>,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    extends StorageService<TKey, T, TDataStore, TDataStoreConfig> {
+    TDataStore>
+    extends StorageService<TKey, T, TDataStore> {
 
     @Override
     default T generateEmpty() {

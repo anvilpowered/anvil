@@ -18,6 +18,7 @@
 
 package rocks.milspecsg.msrepository.service.common.registry;
 
+import com.google.inject.Singleton;
 import rocks.milspecsg.msrepository.api.data.key.Key;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.data.registry.RegistryLoadedListener;
@@ -28,6 +29,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 
+@Singleton
 @SuppressWarnings("unchecked")
 public class CommonRegistry implements Registry {
 
