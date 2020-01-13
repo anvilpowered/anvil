@@ -117,6 +117,7 @@ public class CommonConfigurationService extends CommonRegistry implements Config
     @Override
     public void load(Object plugin) {
         initConfigMaps();
+        super.load(plugin);
     }
 
     @Override

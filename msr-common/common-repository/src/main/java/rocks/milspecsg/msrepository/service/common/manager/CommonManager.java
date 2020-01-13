@@ -55,12 +55,7 @@ public abstract class CommonManager<C extends Component<?, ?>> implements Manage
     private C currentComponent;
 
     private void registryLoaded(Object plugin) {
-        String dataStoreName;
-        if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
-            dataStoreName = MSRepository.getCoreEnvironment().getRegistry().getOrDefault(Keys.DATA_STORE_NAME);
-        } else {
-            dataStoreName = registry.getOrDefault(Keys.DATA_STORE_NAME);
-        }
+        String dataStoreName = MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry);
         try {
             switch (dataStoreName.toLowerCase(Locale.ENGLISH)) {
                 case "mariadb":
@@ -86,8 +81,8 @@ public abstract class CommonManager<C extends Component<?, ?>> implements Manage
     public C getPrimaryComponent() {
         try {
             return Objects.requireNonNull(currentComponent);
-        } catch (RuntimeException e){
-            String message = "MSRepository: DataStoreName has not been loaded yet!";
+        } catch (RuntimeException e) {
+            String message = "MSRepository: DataStoreName has not been loaded yet! Make sure your Registry and ConfigurationService implementations are annotated with @Singleton!";
             System.err.println(message);
             throw new IllegalStateException(message, e);
         }

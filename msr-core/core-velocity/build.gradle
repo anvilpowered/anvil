@@ -61,20 +61,41 @@ shadowJar {
     archiveName = "MSCore-Velocity-${modVersion}.jar"
 
     dependencies {
-        include project(':msr-core:core-api')
-        include project(':msr-core:core-common')
-        include project(':msr-api')
-        include project(':msr-api:api-config')
-        include project(':msr-api:api-repository')
-        include project(':msr-api:api-repository:api-repository-mongodb')
-        include project(':msr-api:api-repository:api-repository-xodus')
+        if (rootProject.getName().equals("MSRepository")) {
+            include project(':msr-api')
+            include project(':msr-api:api-config')
+            include project(':msr-api:api-repository')
+            include project(':msr-api:api-repository:api-repository-mongodb')
+            include project(':msr-api:api-repository:api-repository-xodus')
 
-        include project(':msr-common')
-        include project(':msr-common:common-config')
-        include project(':msr-common:common-repository')
-        include project(':msr-common:common-repository:common-repository-mongodb')
-        include project(':msr-common:common-repository:common-repository-xodus')
-        include project(':msr-velocity')
+            include project(':msr-common')
+            include project(':msr-common:common-config')
+            include project(':msr-common:common-repository')
+            include project(':msr-common:common-repository:common-repository-mongodb')
+            include project(':msr-common:common-repository:common-repository-xodus')
+
+            include project(':msr-core:core-api')
+            include project(':msr-core:core-common')
+
+            include project(':msr-velocity')
+        } else {
+            include project(':MSRepository:msr-api')
+            include project(':MSRepository:msr-api:api-config')
+            include project(':MSRepository:msr-api:api-repository')
+            include project(':MSRepository:msr-api:api-repository:api-repository-mongodb')
+            include project(':MSRepository:msr-api:api-repository:api-repository-xodus')
+
+            include project(':MSRepository:msr-common')
+            include project(':MSRepository:msr-common:common-config')
+            include project(':MSRepository:msr-common:common-repository')
+            include project(':MSRepository:msr-common:common-repository:common-repository-mongodb')
+            include project(':MSRepository:msr-common:common-repository:common-repository-xodus')
+
+            include project(':MSRepository:msr-core:core-api')
+            include project(':MSRepository:msr-core:core-common')
+
+            include project(':MSRepository:msr-velocity')
+        }
 
         include dependency(bson)
         include dependency(javasisst)

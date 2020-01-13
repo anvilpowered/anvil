@@ -23,6 +23,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import rocks.milspecsg.mscore.listeners.SpongePlayerListener;
@@ -49,7 +50,7 @@ public class MSCoreSponge extends MSCore {
         return MSCorePluginInfo.id;
     }
 
-    @Listener
+    @Listener(order = Order.EARLY)
     public void onInit(GameInitializationEvent event) {
         injector = spongeRootInjector.createChildInjector(new SpongeModule(), new ApiSpongeModule());
         MSRepository.createEnvironment("mscore", injector, Key.get(Registry.class));
