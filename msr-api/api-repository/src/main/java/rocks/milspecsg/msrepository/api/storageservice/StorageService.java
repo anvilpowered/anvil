@@ -19,7 +19,6 @@
 package rocks.milspecsg.msrepository.api.storageservice;
 
 import rocks.milspecsg.msrepository.api.component.Component;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.List;
@@ -29,9 +28,8 @@ import java.util.concurrent.CompletableFuture;
 public interface StorageService<
     TKey,
     T extends ObjectWithId<TKey>,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    extends Component<TKey, TDataStore, TDataStoreConfig> {
+    TDataStore>
+    extends Component<TKey, TDataStore> {
 
     /**
      * @return An empty {@link T}

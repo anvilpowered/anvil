@@ -22,20 +22,23 @@ import jetbrains.exodus.entitystore.*;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.XodusRepository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
-import rocks.milspecsg.msrepository.datastore.xodus.XodusConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.Mappable;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 import rocks.milspecsg.msrepository.service.common.component.CommonXodusComponent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public interface CommonXodusRepository<
-    T extends ObjectWithId<EntityId> & Mappable<Entity>,
-    C extends CacheService<EntityId, T, PersistentEntityStore, XodusConfig>>
+    T extends ObjectWithId<EntityId>,
+    C extends CacheService<EntityId, T, PersistentEntityStore>>
     extends XodusRepository<T, C>, CommonXodusComponent {
 
     @Override
@@ -44,7 +47,7 @@ public interface CommonXodusRepository<
             getDataStoreContext().getDataStore().map(dataStore -> {
                 dataStore.executeInTransaction(txn -> {
                     final Entity entity = txn.newEntity(getTClass().getSimpleName());
-                    item.writeTo(entity);
+                    ((Mappable<Entity>) item).writeTo(entity);
                     item.setId(entity.getId());
                     txn.commit();
                 });
@@ -59,7 +62,7 @@ public interface CommonXodusRepository<
                 dataStore.executeInTransaction(txn -> {
                     list.forEach(item -> {
                         final Entity entity = txn.newEntity(getTClass().getSimpleName());
-                        item.writeTo(entity);
+                        ((Mappable<Entity>) item).writeTo(entity);
                         item.setId(entity.getId());
                     });
                     txn.commit();
@@ -71,13 +74,13 @@ public interface CommonXodusRepository<
     @Override
     default CompletableFuture<List<T>> getAll(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() -> getDataStoreContext().getDataStore().map(dataStore ->
-            dataStore.computeInReadonlyTransaction(txn -> {
-                return StreamSupport.stream(query.apply(txn).spliterator(), false).map(e -> {
+            dataStore.computeInReadonlyTransaction(txn ->
+                StreamSupport.stream(query.apply(txn).spliterator(), false).map(e -> {
                     T item = generateEmpty();
-                    item.readFrom(e);
+                    ((Mappable<Entity>) item).readFrom(e);
                     return item;
-                }).collect(Collectors.toList());
-            })).orElse(Collections.emptyList()));
+                }).collect(Collectors.toList())))
+            .orElse(Collections.emptyList()));
     }
 
     @Override
@@ -87,7 +90,7 @@ public interface CommonXodusRepository<
                 Iterator<Entity> iterator = query.apply(txn).iterator();
                 if (iterator.hasNext()) {
                     T item = generateEmpty();
-                    item.readFrom(iterator.next());
+                    ((Mappable<Entity>) item).readFrom(iterator.next());
                     return Optional.of(item);
                 } else {
                     return Optional.empty();
@@ -107,7 +110,7 @@ public interface CommonXodusRepository<
                         return Optional.empty();
                     }
                     T item = generateEmpty();
-                    item.readFrom(entity);
+                    ((Mappable<Entity>) item).readFrom(entity);
                     return Optional.of(item);
                 })));
     }

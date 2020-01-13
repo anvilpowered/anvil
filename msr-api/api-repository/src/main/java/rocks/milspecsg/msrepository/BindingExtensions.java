@@ -45,8 +45,8 @@ public interface BindingExtensions {
      * );
      * }</pre>
      */
-    <From1 extends Component<?, ?, ?>,
-        From2 extends Component<?, ?, ?>,
+    <From1 extends Component<?, ?>,
+        From2 extends Component<?, ?>,
         From3 extends From1,
         Target extends From1>
     void bind(
@@ -57,7 +57,7 @@ public interface BindingExtensions {
         Class<? extends Annotation> componentAnnotation
     );
 
-    <From1 extends Component<?, ?, ?>,
+    <From1 extends Component<?, ?>,
         From2 extends From1,
         Target extends From1>
     void bind(

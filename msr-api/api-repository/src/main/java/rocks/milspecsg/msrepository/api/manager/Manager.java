@@ -19,12 +19,13 @@
 package rocks.milspecsg.msrepository.api.manager;
 
 import rocks.milspecsg.msrepository.api.component.Component;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.manager.annotation.MariaDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
+import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.api.tools.resultbuilder.StringResult;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
-import rocks.milspecsg.msrepository.api.config.ConfigKeys;
 import rocks.milspecsg.msrepository.BindingExtensions;
 
 /**
@@ -83,7 +84,7 @@ import rocks.milspecsg.msrepository.BindingExtensions;
  * @see Component
  * @see StringResult
  */
-public interface Manager<C extends Component<?, ?, ?>> {
+public interface Manager<C extends Component<?, ?>> {
 
     /**
      * <p>
@@ -152,11 +153,12 @@ public interface Manager<C extends Component<?, ?, ?>> {
      *         <ul>
      *             <li>{@link MariaDBComponent}</li>
      *             <li>{@link MongoDBComponent}</li>
+     *             <li>{@link XodusComponent}</li>
      *         </ul>
      *     </li>
      *     <li>
-     *         The value for {@link ConfigKeys#DATA_STORE_NAME} found by
-     *         the the provided {@link ConfigurationService} must match (ignored case)
+     *         The value for {@link Keys#DATA_STORE_NAME} found by
+     *         the the provided {@link Registry} must match (ignored case)
      *         one of the above annotations without 'Component'.
      *         For example, 'mongodb' (or any capitalization thereof) will
      *         match {@link MongoDBComponent}
@@ -173,5 +175,4 @@ public interface Manager<C extends Component<?, ?, ?>> {
      * @see BindingExtensions
      */
     C getPrimaryComponent();
-
 }

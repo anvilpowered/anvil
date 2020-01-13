@@ -18,10 +18,11 @@
 
 package rocks.milspecsg.msrepository.api.repository;
 
-import jetbrains.exodus.entitystore.*;
+import jetbrains.exodus.entitystore.Entity;
+import jetbrains.exodus.entitystore.EntityId;
+import jetbrains.exodus.entitystore.PersistentEntityStore;
+import jetbrains.exodus.entitystore.StoreTransaction;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.datastore.xodus.XodusConfig;
-import rocks.milspecsg.msrepository.model.data.dbo.Mappable;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.List;
@@ -30,9 +31,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public interface XodusRepository<
-    T extends ObjectWithId<EntityId> & Mappable<Entity>,
-    C extends CacheService<EntityId, T, PersistentEntityStore, XodusConfig>>
-    extends Repository<EntityId, T, C, PersistentEntityStore, XodusConfig> {
+    T extends ObjectWithId<EntityId>,
+    C extends CacheService<EntityId, T, PersistentEntityStore>>
+    extends Repository<EntityId, T, C, PersistentEntityStore> {
 
     CompletableFuture<List<T>> getAll(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 

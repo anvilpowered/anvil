@@ -21,6 +21,8 @@ package rocks.milspecsg.msrepository.api;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Injector;
 import rocks.milspecsg.msrepository.api.data.Environment;
+import rocks.milspecsg.msrepository.api.data.key.Key;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 
 import java.util.HashMap;
@@ -114,5 +116,24 @@ public final class MSRepository {
                 return injector.getInstance(registryKey);
             }
         });
+    }
+
+    public static <T> T resolveForSharedEnvironment(Key<T> key, Registry registry) {
+        Registry coreRegistry = getCoreEnvironment().getRegistry();
+        if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
+            if (key.equals(Keys.DATA_STORE_NAME)
+                || key.equals(Keys.MONGODB_HOSTNAME)
+                || key.equals(Keys.MONGODB_PORT)) {
+                return coreRegistry.getOrDefault(key);
+            } else if (registry.getOrDefault(Keys.USE_SHARED_CREDENTIALS)) {
+                if (key.equals(Keys.MONGODB_USERNAME)
+                    || key.equals(Keys.MONGODB_PASSWORD)
+                    || key.equals(Keys.MONGODB_AUTH_DB)
+                    || key.equals(Keys.MONGODB_USE_AUTH)) {
+                    return coreRegistry.getOrDefault(key);
+                }
+            }
+        }
+        return coreRegistry.getOrDefault(key);
     }
 }

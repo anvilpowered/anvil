@@ -1,0 +1,59 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'java'
+    id "net.kyori.blossom" version "1.1.0"
+}
+
+group modGroup
+version modVersion
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spongepowered.org/maven' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api')
+        implementation project(':msr-api:api-config')
+        implementation project(':msr-api:api-repository')
+        implementation project(':msr-api:api-repository:api-repository-mongodb')
+        implementation project(':msr-api:api-repository:api-repository-xodus')
+        implementation project(':msr-common')
+        implementation project(':msr-common:common-config')
+        implementation project(':msr-common:common-repository')
+        implementation project(':msr-common:common-repository:common-repository-mongodb')
+        implementation project(':msr-common:common-repository:common-repository-xodus')
+        implementation project(':msr-core:core-api')
+    } else {
+        implementation project(':MSRepository:msr-api')
+        implementation project(':MSRepository:msr-api:api-config')
+        implementation project(':MSRepository:msr-api:api-repository')
+        implementation project(':MSRepository:msr-api:api-repository:api-repository-mongodb')
+        implementation project(':MSRepository:msr-api:api-repository:api-repository-xodus')
+        implementation project(':MSRepository:msr-common')
+        implementation project(':MSRepository:msr-common:common-config')
+        implementation project(':MSRepository:msr-common:common-repository')
+        implementation project(':MSRepository:msr-common:common-repository:common-repository-mongodb')
+        implementation project(':MSRepository:msr-common:common-repository:common-repository-xodus')
+        implementation project(':MSRepository:msr-core:core-api')
+    }
+
+    implementation 'org.spongepowered:configurate-core:3.6'
+    implementation guice
+    implementation morphia
+    implementation xodus_entity_store
+}
+
+blossom {
+    replaceToken '$modVersion', modVersion
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss z")
+    format.setTimeZone(TimeZone.getTimeZone("UTC"))
+    String buildDate = format.format(new Date())
+    replaceToken '$buildDate', buildDate
+}

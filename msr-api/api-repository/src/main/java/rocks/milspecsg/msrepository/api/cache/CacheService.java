@@ -20,7 +20,6 @@ package rocks.milspecsg.msrepository.api.cache;
 
 import rocks.milspecsg.msrepository.api.component.Component;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 
 import java.util.List;
@@ -31,10 +30,9 @@ import java.util.function.Predicate;
 public interface CacheService<
     TKey,
     T extends ObjectWithId<TKey>,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    extends StorageService<TKey, T, TDataStore, TDataStoreConfig>,
-    Component<TKey, TDataStore, TDataStoreConfig> {
+    TDataStore>
+    extends StorageService<TKey, T, TDataStore>,
+    Component<TKey, TDataStore> {
 
     /**
      * Starts cache invalidation task

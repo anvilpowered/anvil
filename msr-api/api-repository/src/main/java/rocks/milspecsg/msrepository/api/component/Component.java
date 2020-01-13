@@ -18,11 +18,10 @@
 
 package rocks.milspecsg.msrepository.api.component;
 
+import rocks.milspecsg.msrepository.BindingExtensions;
+import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.manager.Manager;
 import rocks.milspecsg.msrepository.api.repository.Repository;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.BindingExtensions;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 
 import java.util.Optional;
@@ -37,12 +36,11 @@ import java.util.Optional;
  */
 public interface Component<
     TKey,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig> {
+    TDataStore> {
 
     Class<TKey> getTKeyClass();
 
-    DataStoreContext<TKey, TDataStore, TDataStoreConfig> getDataStoreContext();
+    DataStoreContext<TKey, TDataStore> getDataStoreContext();
 
     /**
      * Tries to convert the given object to {@link TKey}

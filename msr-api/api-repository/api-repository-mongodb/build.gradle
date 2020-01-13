@@ -15,18 +15,16 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     if (rootProject.getName().equals("MSRepository")) {
+        implementation project(':msr-api')
         implementation project(':msr-api:api-config')
         implementation project(':msr-api:api-repository')
-
     } else {
+        implementation project(':MSRepository:msr-api')
         implementation project(':MSRepository:msr-api:api-config')
         implementation project(':MSRepository:msr-api:api-repository')
-
     }
 
-    implementation mongodb_driver_sync
+    implementation guice
     implementation morphia
     implementation reflections
-    implementation guice
-    
 }

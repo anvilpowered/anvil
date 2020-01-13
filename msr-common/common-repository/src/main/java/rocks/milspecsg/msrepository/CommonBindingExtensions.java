@@ -35,8 +35,8 @@ public class CommonBindingExtensions implements BindingExtensions {
     }
 
     @Override
-    public <From1 extends Component<?, ?, ?>,
-        From2 extends Component<?, ?, ?>,
+    public <From1 extends Component<?, ?>,
+        From2 extends Component<?, ?>,
         From3 extends From1,
         Target extends From1>
     void bind(
@@ -55,7 +55,7 @@ public class CommonBindingExtensions implements BindingExtensions {
     }
 
     @Override
-    public <From1 extends Component<?, ?, ?>,
+    public <From1 extends Component<?, ?>,
         From2 extends From1,
         Target extends From1>
     void bind(

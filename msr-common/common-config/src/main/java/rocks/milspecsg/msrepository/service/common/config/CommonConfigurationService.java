@@ -20,11 +20,14 @@ package rocks.milspecsg.msrepository.service.common.config;
 
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.data.key.Key;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
 import rocks.milspecsg.msrepository.api.data.registry.RegistryLoadedListener;
 import rocks.milspecsg.msrepository.service.common.registry.CommonRegistry;
 
@@ -41,8 +44,9 @@ import java.util.function.Predicate;
  *
  * @author Cableguy20
  */
+@Singleton
 @SuppressWarnings({"unchecked", "UnstableApiUsage"})
-public abstract class CommonConfigurationService extends CommonRegistry implements ConfigurationService {
+public class CommonConfigurationService extends CommonRegistry implements ConfigurationService {
 
     protected ConfigurationLoader<CommentedConfigurationNode> configLoader;
     protected CommentedConfigurationNode rootConfigurationNode;
@@ -64,7 +68,8 @@ public abstract class CommonConfigurationService extends CommonRegistry implemen
 
     private boolean configValuesEdited;
 
-    protected CommonConfigurationService(ConfigurationLoader<CommentedConfigurationNode> configLoader) {
+    @Inject
+    public CommonConfigurationService(ConfigurationLoader<CommentedConfigurationNode> configLoader) {
         this.configLoader = configLoader;
 
         verificationMap = new HashMap<>();
@@ -77,16 +82,41 @@ public abstract class CommonConfigurationService extends CommonRegistry implemen
         initNodeDescriptionMap();
     }
 
-    protected abstract void initVerificationMap();
+    protected void initVerificationMap() {
+    }
 
-    protected abstract void initNodeNameMap();
+    protected void initNodeNameMap() {
+        nodeNameMap.put(Keys.USE_SHARED_ENVIRONMENT, "datastore.useSharedEnvironment");
+        nodeNameMap.put(Keys.USE_SHARED_CREDENTIALS, "datastore.useSharedCredentials");
+        nodeNameMap.put(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
+        nodeNameMap.put(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
+        nodeNameMap.put(Keys.MONGODB_PORT, "datastore.mongodb.port");
+        nodeNameMap.put(Keys.MONGODB_DBNAME, "datastore.mongodb.dbname");
+        nodeNameMap.put(Keys.MONGODB_USERNAME, "datastore.mongodb.username");
+        nodeNameMap.put(Keys.MONGODB_PASSWORD, "datastore.mongodb.password");
+        nodeNameMap.put(Keys.MONGODB_AUTH_DB, "datastore.mongodb.authDb");
+        nodeNameMap.put(Keys.MONGODB_USE_AUTH, "datastore.mongodb.useAuth");
+    }
 
-    protected abstract void initNodeDescriptionMap();
+    protected void initNodeDescriptionMap() {
+        nodeDescriptionMap.put(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use MSCore shared environment." +
+            "\nThis will use hostname and port from MSCore");
+        nodeDescriptionMap.put(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use MSCore credentials. (Requires useSharedEnvironment)" +
+            "\nThis will use (additionally) username, password, authDb and useAuth from MSCore");
+        nodeDescriptionMap.put(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
+        nodeDescriptionMap.put(Keys.MONGODB_HOSTNAME, "\nMongoDB hostname");
+        nodeDescriptionMap.put(Keys.MONGODB_PORT, "\nMongoDB port");
+        nodeDescriptionMap.put(Keys.MONGODB_DBNAME, "\nMongoDB database name");
+        nodeDescriptionMap.put(Keys.MONGODB_USERNAME, "\nMongoDB username");
+        nodeDescriptionMap.put(Keys.MONGODB_PASSWORD, "\nMongoDB password");
+        nodeDescriptionMap.put(Keys.MONGODB_AUTH_DB, "\nMongoDB database to use for authentication");
+        nodeDescriptionMap.put(Keys.MONGODB_USE_AUTH, "\nWhether to use authentication (username/password) for MongoDB connection");
+
+    }
 
     @Override
     public void load(Object plugin) {
         initConfigMaps();
-        super.load(plugin);
     }
 
     @Override
@@ -154,7 +184,12 @@ public abstract class CommonConfigurationService extends CommonRegistry implemen
             }
         }
         if (updatedCount > 0) {
-            save();
+            try {
+                configLoader.save(rootConfigurationNode);
+                configValuesEdited = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

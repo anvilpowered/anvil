@@ -19,13 +19,15 @@
 package rocks.milspecsg.msrepository.datastore.xodus;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
 import rocks.milspecsg.msrepository.BasicPluginInfo;
+import rocks.milspecsg.msrepository.api.MSRepository;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.datastore.xodus.annotation.XodusEmbedded;
 import rocks.milspecsg.msrepository.datastore.xodus.annotation.XodusEntity;
@@ -35,14 +37,14 @@ import java.io.File;
 import java.nio.file.Paths;
 
 @Singleton
-public class XodusContext extends DataStoreContext<EntityId, PersistentEntityStore, XodusConfig> {
+public class XodusContext extends DataStoreContext<EntityId, PersistentEntityStore> {
 
     @Inject
     private BasicPluginInfo basicPluginInfo;
 
     @Inject
-    public XodusContext(XodusConfig config, Injector injector) {
-        super(config, injector);
+    public XodusContext(Registry registry) {
+        super(registry);
     }
 
     @Override
@@ -51,8 +53,8 @@ public class XodusContext extends DataStoreContext<EntityId, PersistentEntitySto
     }
 
     @Override
-    protected void configLoaded(Object plugin) {
-        if (!getConfigurationService().getConfigString(getConfig().getDataStoreNameConfigKey()).equalsIgnoreCase("xodus")) {
+    protected void registryLoaded(Object plugin) {
+        if (!MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry).equalsIgnoreCase("xodus")) {
             requestCloseConnection();
             return;
         }
@@ -69,7 +71,7 @@ public class XodusContext extends DataStoreContext<EntityId, PersistentEntitySto
         setDataStore(PersistentEntityStores.newInstance(dbFilesLocation.getPath()));
 
         /* === Find objects to map === */
-        Class<?>[] entityClasses = calculateEntityClasses(getConfig().getBaseScanPackage(), XodusEntity.class, XodusEmbedded.class);
+        Class<?>[] entityClasses = calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE), XodusEntity.class, XodusEmbedded.class);
 
         /* === Create collections if not present === */
         for (Class<?> entityClass : entityClasses) {

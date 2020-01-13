@@ -1,11 +1,10 @@
 plugins {
     id 'java'
-//    id 'org.spongepowered.plugin'
     id 'com.github.johnrengelman.shadow'
 }
 
-group = "rocks.milspecsg"
-version = "0.1.0-dev"
+group modGroup
+version modVersion
 
 sourceCompatibility = 1.8
 
@@ -32,31 +31,4 @@ dependencies {
         exclude(module: 'configurate-gson')
         exclude(module: 'configurate-yaml')
     }
-}
-
-shadowJar {
-
-    archiveName = "MSRepositoryTest.jar"
-
-    classifier = 'tests'
-    from sourceSets.test.output
-    from sourceSets.main.output
-    configurations = [project.configurations.testRuntime]
-
-    dependencies {
-//        include(dependency(':msrepository:msr-sponge:spo'))
-////        include(dependency('rocks.milspecsg.msrepository:.*'))
-
-        if (rootProject.getName().equals("MSRepository")) {
-            include project(':msr-api:api-config')
-        } else {
-            include project(':MSRepository:msr-api:api-config')
-        }
-
-
-    }
-}
-
-artifacts {
-    archives shadowJar
 }

@@ -18,39 +18,35 @@
 
 package rocks.milspecsg.msrepository.datastore;
 
-import com.google.inject.Injector;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import rocks.milspecsg.msrepository.api.config.ConfigurationService;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
 // TODO: extract to interface
-public abstract class DataStoreContext<TKey, TDataStore, TDataStoreConfig extends DataStoreConfig> {
+public abstract class DataStoreContext<TKey, TDataStore> {
 
     private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
     private final List<ConnectionOpenedListener<TDataStore>> connectionOpenedListeners;
     private final List<ConnectionClosedListener<TDataStore>> connectionClosedListeners;
-    private final ConfigurationService configurationService;
-    private final TDataStoreConfig config;
+    protected final Registry registry;
 
     private TDataStore dataStore;
     private Class<?>[] entityClasses;
     private Class<TKey> tKeyClass;
 
-    protected DataStoreContext(TDataStoreConfig config, Injector injector) {
+    protected DataStoreContext(Registry registry) {
         connectionOpenedListeners = new ArrayList<>();
         connectionClosedListeners = new ArrayList<>();
 
-        ConfigurationService configurationService = injector.getInstance(config.getConfigurationServiceKey());
-        configurationService.addConfigLoadedListener(this::configLoaded);
-        this.configurationService = configurationService;
-        this.config = config;
+        this.registry = registry;
+        registry.addRegistryLoadedListener(this::registryLoaded);
     }
 
-    protected abstract void configLoaded(Object plugin);
+    protected abstract void registryLoaded(Object plugin);
 
     protected final void setDataStore(TDataStore dataStore) {
         requestCloseConnection();
@@ -108,14 +104,6 @@ public abstract class DataStoreContext<TKey, TDataStore, TDataStoreConfig extend
 
     public final Class<TKey> getTKeyClass() {
         return tKeyClass;
-    }
-
-    protected final ConfigurationService getConfigurationService() {
-        return configurationService;
-    }
-
-    public final TDataStoreConfig getConfig() {
-        return config;
     }
 
     protected abstract void closeConnection(TDataStore dataStore);

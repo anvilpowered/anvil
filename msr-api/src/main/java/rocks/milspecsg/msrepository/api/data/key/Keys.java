@@ -48,6 +48,12 @@ public final class Keys {
         }
     }
 
+    public static final Key<String> BASE_SCAN_PACKAGE = new Key<String>("BASE_SCAN_PACKAGE", "rocks.milspecsg") {
+    };
+    public static final Key<Integer> CACHE_INVALIDATION_INTERVAL_SECONDS = new Key<Integer>("CACHE_INVALIDATION_INTERVAL_SECONDS", 30) {
+    };
+    public static final Key<Integer> CACHE_INVALIDATION_TIMOUT_SECONDS = new Key<Integer>("CACHE_INVALIDATION_TIMOUT_SECONDS", 300) {
+    };
     public static final Key<Boolean> USE_SHARED_ENVIRONMENT = new Key<Boolean>("USE_SHARED_ENVIRONMENT", true) {
     };
     public static final Key<Boolean> USE_SHARED_CREDENTIALS = new Key<Boolean>("USE_SHARED_CREDENTIALS", true) {
@@ -70,6 +76,9 @@ public final class Keys {
     };
 
     static {
+        registerKey(BASE_SCAN_PACKAGE);
+        registerKey(CACHE_INVALIDATION_INTERVAL_SECONDS);
+        registerKey(CACHE_INVALIDATION_TIMOUT_SECONDS);
         registerKey(USE_SHARED_ENVIRONMENT);
         registerKey(USE_SHARED_CREDENTIALS);
         registerKey(DATA_STORE_NAME);

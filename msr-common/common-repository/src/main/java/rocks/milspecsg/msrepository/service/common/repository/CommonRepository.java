@@ -20,7 +20,6 @@ package rocks.milspecsg.msrepository.service.common.repository;
 
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.Repository;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
 import rocks.milspecsg.msrepository.service.common.component.CommonComponent;
@@ -34,14 +33,13 @@ import java.util.function.*;
 public abstract class CommonRepository<
     TKey,
     T extends ObjectWithId<TKey>,
-    C extends CacheService<TKey, T, TDataStore, TDataStoreConfig>,
-    TDataStore,
-    TDataStoreConfig extends DataStoreConfig>
-    extends CommonComponent<TKey, TDataStore, TDataStoreConfig>
-    implements Repository<TKey, T, C, TDataStore, TDataStoreConfig>,
-    CommonStorageService<TKey, T, TDataStore, TDataStoreConfig> {
+    C extends CacheService<TKey, T, TDataStore>,
+    TDataStore>
+    extends CommonComponent<TKey, TDataStore>
+    implements Repository<TKey, T, C, TDataStore>,
+    CommonStorageService<TKey, T, TDataStore> {
 
-    protected CommonRepository(DataStoreContext<TKey, TDataStore, TDataStoreConfig> dataStoreContext) {
+    protected CommonRepository(DataStoreContext<TKey, TDataStore> dataStoreContext) {
         super(dataStoreContext);
     }
 
