@@ -1,6 +1,6 @@
 /*
- *     MSRepository - MilSpecSG
- *     Copyright (C) 2019 Cableguy20
+ *   MSRepository - MilSpecSG
+ *   Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -16,30 +16,26 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.repository;
+package rocks.milspecsg.mscore.api.coremember.repository;
 
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
+import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.api.repository.XodusRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import java.util.UUID;
 import java.util.function.Function;
 
-public interface XodusRepository<
-    T extends ObjectWithId<EntityId>,
-    C extends CacheService<EntityId, T, PersistentEntityStore>>
-    extends Repository<EntityId, T, C, PersistentEntityStore> {
+public interface XodusCoreMemberRepository
+        extends CoreMemberRepository<EntityId, PersistentEntityStore>,
+        XodusRepository<CoreMember<EntityId>, CacheService<EntityId, CoreMember<EntityId>, PersistentEntityStore>> {
 
-    CompletableFuture<List<T>> getAll(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(UUID userUUID);
 
-    CompletableFuture<Optional<T>> getOne(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(String userName);
 
-    CompletableFuture<Boolean> delete(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
-
-    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(EntityId id);
+    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForIpAddress(String ipAddress);
 }

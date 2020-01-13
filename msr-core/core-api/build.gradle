@@ -18,12 +18,15 @@ dependencies {
         implementation project(':msr-api')
         implementation project(':msr-api:api-repository')
         implementation project(':msr-api:api-repository:api-repository-mongodb')
+        implementation project(':msr-api:api-repository:api-repository-xodus')
     } else {
         implementation project(':MSRepository:msr-api')
         implementation project(':MSRepository:msr-api:api-repository')
         implementation project(':MSRepository:msr-api:api-repository:api-repository-mongodb')
+        implementation project(':MSRepository:msr-api:api-repository:api-repository-xodus')
     }
 
     implementation guice
     implementation morphia
+    implementation xodus_entity_store
 }

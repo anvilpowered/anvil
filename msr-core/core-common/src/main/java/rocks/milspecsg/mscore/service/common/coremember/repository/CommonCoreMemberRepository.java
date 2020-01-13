@@ -24,6 +24,10 @@ import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.service.common.repository.CommonRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
 public abstract class CommonCoreMemberRepository<
     TKey,
     TDataStore>
@@ -38,5 +42,10 @@ public abstract class CommonCoreMemberRepository<
     @SuppressWarnings("unchecked")
     public Class<CoreMember<TKey>> getTClass() {
         return (Class<CoreMember<TKey>>) getDataStoreContext().getEntityClassUnsafe("coremember");
+    }
+
+    @Override
+    public CompletableFuture<Optional<CoreMember<TKey>>> getOneOrGenerateForUser(UUID userUUID, String userName, String ipAddress) {
+        return getOneOrGenerateForUser(userUUID, userName, ipAddress, new boolean[]{false, false, false, false, false, false, false, false});
     }
 }

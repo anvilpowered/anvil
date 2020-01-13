@@ -18,10 +18,13 @@
 
 package rocks.milspecsg.mscore.module;
 
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.text.Text;
 import rocks.milspecsg.mscore.service.sponge.config.MSCoreSpongeConfigurationService;
 import rocks.milspecsg.msrepository.service.common.config.CommonConfigurationService;
 
-public class SpongeModule extends CommonModule {
+public class SpongeModule extends CommonModule<Text, CommandSource> {
+
     @Override
     protected void configure() {
         super.configure();

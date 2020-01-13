@@ -21,29 +21,45 @@ package rocks.milspecsg.mscore.module;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import jetbrains.exodus.entitystore.EntityId;
+import jetbrains.exodus.entitystore.PersistentEntityStore;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
+import rocks.milspecsg.mscore.plugin.MSCorePluginInfo;
 import rocks.milspecsg.mscore.service.common.coremember.CommonCoreMemberManager;
 import rocks.milspecsg.mscore.service.common.coremember.repository.CommonMongoCoreMemberRepository;
+import rocks.milspecsg.mscore.service.common.coremember.repository.CommonXodusCoreMemberRepository;
+import rocks.milspecsg.msrepository.BasicPluginInfo;
 import rocks.milspecsg.msrepository.BindingExtensions;
 import rocks.milspecsg.msrepository.CommonBindingExtensions;
+import rocks.milspecsg.msrepository.PluginInfo;
 import rocks.milspecsg.msrepository.api.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
+import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.datastore.mongodb.MongoContext;
+import rocks.milspecsg.msrepository.datastore.xodus.XodusContext;
 import rocks.milspecsg.msrepository.service.common.config.CommonConfigurationService;
 import rocks.milspecsg.msrepository.service.registry.CommonExtendedRegistry;
 
-public class CommonModule extends AbstractModule {
+public class CommonModule<TString, TCommandSource> extends AbstractModule {
 
     @Override
     @SuppressWarnings("UnstableApiUsage")
     protected void configure() {
 
         BindingExtensions be = new CommonBindingExtensions(binder());
+
+        be.bind(new TypeToken<PluginInfo<TString>>(getClass()) {
+        }, new TypeToken<MSCorePluginInfo<TString, TCommandSource>>(getClass()) {
+        });
+
+        be.bind(new TypeToken<BasicPluginInfo>(getClass()) {
+        }, new TypeToken<MSCorePluginInfo<TString, TCommandSource>>(getClass()) {
+        });
 
         be.bind(
             new TypeToken<CoreMemberRepository<?, ?>>() {
@@ -55,10 +71,23 @@ public class CommonModule extends AbstractModule {
             MongoDBComponent.class
         );
 
+        be.bind(
+            new TypeToken<CoreMemberRepository<?, ?>>() {
+            },
+            new TypeToken<CoreMemberRepository<EntityId, PersistentEntityStore>>() {
+            },
+            new TypeToken<CommonXodusCoreMemberRepository>() {
+            },
+            XodusComponent.class
+        );
+
         bind(CoreMemberManager.class).to(CommonCoreMemberManager.class);
 
         bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
         }).to(MongoContext.class);
+
+        bind(new TypeLiteral<DataStoreContext<EntityId, PersistentEntityStore>>() {
+        }).to(XodusContext.class);
 
         bind(Registry.class).to(CommonExtendedRegistry.class);
 

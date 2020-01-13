@@ -22,7 +22,7 @@ import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -82,7 +82,7 @@ public interface CoreMemberRepository<
     CompletableFuture<Optional<CoreMember<TKey>>> getOneForUser(String userName);
 
     /**
-     * @return A {@link Collection} of matching {@link CoreMember} if successful, otherwise {@link Optional#empty()}
+     * @return A {@link List} of matching {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      */
-    CompletableFuture<Collection<CoreMember<TKey>>> getForIpAddress(String ipAddress);
+    CompletableFuture<List<CoreMember<TKey>>> getForIpAddress(String ipAddress);
 }

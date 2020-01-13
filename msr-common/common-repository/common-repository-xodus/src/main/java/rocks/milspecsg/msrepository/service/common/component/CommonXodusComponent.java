@@ -22,11 +22,10 @@ import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import rocks.milspecsg.msrepository.api.component.Component;
-import rocks.milspecsg.msrepository.datastore.xodus.XodusConfig;
 
 import java.util.Optional;
 
-public interface CommonXodusComponent extends Component<EntityId, PersistentEntityStore, XodusConfig> {
+public interface CommonXodusComponent extends Component<EntityId, PersistentEntityStore> {
 
     @Override
     default EntityId parseUnsafe(Object object) {

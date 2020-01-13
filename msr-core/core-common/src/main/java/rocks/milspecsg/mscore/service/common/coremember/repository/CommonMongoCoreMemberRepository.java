@@ -30,7 +30,11 @@ import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.service.common.repository.CommonMongoRepository;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class CommonMongoCoreMemberRepository
@@ -98,11 +102,6 @@ public class CommonMongoCoreMemberRepository
     }
 
     @Override
-    public CompletableFuture<Optional<CoreMember<ObjectId>>> getOneOrGenerateForUser(UUID userUUID, String userName, String ipAddress) {
-        return getOneOrGenerateForUser(userUUID, userName, ipAddress, new boolean[]{false, false, false, false, false, false, false, false});
-    }
-
-    @Override
     public CompletableFuture<Optional<CoreMember<ObjectId>>> getOneForUser(UUID userUUID) {
         return CompletableFuture.supplyAsync(() -> asQueryForUser(userUUID).map(QueryResults::get));
     }
@@ -113,7 +112,7 @@ public class CommonMongoCoreMemberRepository
     }
 
     @Override
-    public CompletableFuture<Collection<CoreMember<ObjectId>>> getForIpAddress(String ipAddress) {
+    public CompletableFuture<List<CoreMember<ObjectId>>> getForIpAddress(String ipAddress) {
         return CompletableFuture.supplyAsync(() -> asQueryForIpAddress(ipAddress).map(QueryResults::asList).orElse(Collections.emptyList()));
     }
 
