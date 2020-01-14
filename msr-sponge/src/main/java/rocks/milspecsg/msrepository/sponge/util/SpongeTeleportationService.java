@@ -19,6 +19,7 @@
 package rocks.milspecsg.msrepository.sponge.util;
 
 import com.google.inject.Inject;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import rocks.milspecsg.msrepository.api.util.TeleportationService;
 import rocks.milspecsg.msrepository.api.util.UserService;
@@ -29,7 +30,7 @@ import java.util.UUID;
 public class SpongeTeleportationService implements TeleportationService {
 
     @Inject
-    UserService<User> userService;
+    UserService<User, Player> userService;
 
     @Override
     public boolean teleport(UUID teleportingUserUUID, UUID targetUserUUID) {

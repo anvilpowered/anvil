@@ -35,7 +35,7 @@ public class ApiVelocityModule extends ApiCommonModule {
         super.configure();
         bind(new TypeLiteral<StringResult<TextComponent, CommandSource>>() {
         }).to(VelocityStringResult.class);
-        bind(new TypeLiteral<UserService<Player>>() {
+        bind(new TypeLiteral<UserService<Player, Player>>() {
         }).to(VelocityUserService.class);
     }
 }

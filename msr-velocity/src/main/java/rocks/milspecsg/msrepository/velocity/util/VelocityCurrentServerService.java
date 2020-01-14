@@ -29,7 +29,7 @@ import java.util.UUID;
 public class VelocityCurrentServerService implements CurrentServerService {
 
     @Inject
-    UserService<Player> userService;
+    UserService<Player, Player> userService;
 
     @Override
     public Optional<String> getCurrentServerName(UUID userUUID) {

@@ -20,6 +20,7 @@ package rocks.milspecsg.msrepository.sponge.module;
 
 import com.google.inject.TypeLiteral;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 import rocks.milspecsg.msrepository.api.util.TeleportationService;
@@ -38,7 +39,7 @@ public class ApiSpongeModule extends ApiCommonModule {
         bind(new TypeLiteral<StringResult<Text, CommandSource>>() {
         }).to(SpongeStringResult.class);
         bind(TeleportationService.class).to(SpongeTeleportationService.class);
-        bind(new TypeLiteral<UserService<User>>() {
+        bind(new TypeLiteral<UserService<User, Player>>() {
         }).to(SpongeUserService.class);
     }
 }
