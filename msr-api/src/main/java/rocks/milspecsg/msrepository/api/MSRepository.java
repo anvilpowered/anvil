@@ -118,6 +118,10 @@ public final class MSRepository {
         });
     }
 
+    public static void createEnvironment(String name, Injector injector) {
+        createEnvironment(name, injector, com.google.inject.Key.get(Registry.class));
+    }
+
     public static <T> T resolveForSharedEnvironment(Key<T> key, Registry registry) {
         Registry coreRegistry = getCoreEnvironment().getRegistry();
         if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
@@ -134,6 +138,6 @@ public final class MSRepository {
                 }
             }
         }
-        return coreRegistry.getOrDefault(key);
+        return registry.getOrDefault(key);
     }
 }

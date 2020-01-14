@@ -24,7 +24,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;

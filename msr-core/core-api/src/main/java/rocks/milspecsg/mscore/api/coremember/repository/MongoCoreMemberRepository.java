@@ -21,7 +21,7 @@ package rocks.milspecsg.mscore.api.coremember.repository;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
-import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
+import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 

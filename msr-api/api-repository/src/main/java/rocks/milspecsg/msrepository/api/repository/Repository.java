@@ -20,7 +20,7 @@ package rocks.milspecsg.msrepository.api.repository;
 
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
 import java.util.Date;
 import java.util.Optional;

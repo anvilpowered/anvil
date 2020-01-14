@@ -20,13 +20,12 @@ package rocks.milspecsg.msrepository.api.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
 import java.util.UUID;
 
 public interface MariaRepository<
     T extends ObjectWithId<UUID>,
-    C extends CacheService<UUID, T, HikariDataSource, DataStoreConfig>>
-    extends Repository<UUID, T, C, HikariDataSource, DataStoreConfig> {
+    C extends CacheService<UUID, T, HikariDataSource>>
+    extends Repository<UUID, T, C, HikariDataSource> {
 }

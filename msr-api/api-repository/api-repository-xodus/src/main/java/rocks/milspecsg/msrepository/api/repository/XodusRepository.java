@@ -23,7 +23,7 @@ import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.model.data.dbo.ObjectWithId;
+import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
 import java.util.List;
 import java.util.Optional;

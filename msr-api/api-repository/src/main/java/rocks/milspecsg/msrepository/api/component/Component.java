@@ -18,11 +18,11 @@
 
 package rocks.milspecsg.msrepository.api.component;
 
-import rocks.milspecsg.msrepository.BindingExtensions;
+import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.manager.Manager;
 import rocks.milspecsg.msrepository.api.repository.Repository;
-import rocks.milspecsg.msrepository.datastore.DataStoreContext;
+import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 
 import java.util.Optional;
 

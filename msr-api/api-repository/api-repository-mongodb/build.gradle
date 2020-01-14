@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group = modGroup
-version = modVersion
+group modGroup
+version modVersion
 
 sourceCompatibility = 1.8
 

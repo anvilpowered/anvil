@@ -22,7 +22,7 @@ import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
-import rocks.milspecsg.mscore.model.core.coremember.CoreMember;
+import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.XodusRepository;
 
