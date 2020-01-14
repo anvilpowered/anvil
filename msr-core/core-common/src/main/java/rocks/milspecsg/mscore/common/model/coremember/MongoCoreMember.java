@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.mscore.common.model;
+package rocks.milspecsg.mscore.common.model.coremember;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
