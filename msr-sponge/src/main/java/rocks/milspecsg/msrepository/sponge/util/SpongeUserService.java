@@ -19,6 +19,7 @@
 package rocks.milspecsg.msrepository.sponge.util;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.util.Identifiable;
@@ -27,7 +28,7 @@ import rocks.milspecsg.msrepository.api.util.UserService;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpongeUserService implements UserService<User> {
+public class SpongeUserService implements UserService<User, Player> {
 
     @Override
     public Optional<User> get(String userName) {
@@ -37,6 +38,16 @@ public class SpongeUserService implements UserService<User> {
     @Override
     public Optional<User> get(UUID userUUID) {
         return Sponge.getServiceManager().provide(UserStorageService.class).flatMap(u -> u.get(userUUID));
+    }
+
+    @Override
+    public Optional<Player> getPlayer(String userName) {
+        return get(userName).flatMap(User::getPlayer);
+    }
+
+    @Override
+    public Optional<Player> getPlayer(UUID userUUID) {
+        return get(userUUID).flatMap(User::getPlayer);
     }
 
     @Override

@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
-public class VelocityUserService implements UserService<Player> {
+public class VelocityUserService implements UserService<Player, Player> {
 
     @Inject
     private ProxyServer proxyServer;
@@ -40,6 +40,16 @@ public class VelocityUserService implements UserService<Player> {
     @Override
     public Optional<Player> get(UUID userUUID) {
         return proxyServer.getPlayer(userUUID);
+    }
+
+    @Override
+    public Optional<Player> getPlayer(String userName) {
+        return get(userName);
+    }
+
+    @Override
+    public Optional<Player> getPlayer(UUID userUUID) {
+        return get(userUUID);
     }
 
     @Override
