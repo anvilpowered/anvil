@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface CommonMongoRepository<
@@ -152,6 +153,20 @@ public interface CommonMongoRepository<
     @Override
     default Optional<UpdateOperations<T>> inc(String field) {
         return inc(field, 1);
+    }
+
+    @Override
+    default CompletableFuture<Boolean> runUpdateOperations(Query<T> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations) {
+        return CompletableFuture.supplyAsync(() -> createUpdateOperations().map(updateOperations)
+            .map(u -> getDataStoreContext().getDataStore()
+                .map(dataStore -> dataStore.update(query, u).getUpdatedCount() > 0)
+                .orElse(false)
+            ).orElse(false));
+    }
+
+    @Override
+    default CompletableFuture<Boolean> runUpdateOperations(Optional<Query<T>> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations) {
+        return query.map(q -> runUpdateOperations(q, updateOperations)).orElse(CompletableFuture.completedFuture(false));
     }
 
     @Override

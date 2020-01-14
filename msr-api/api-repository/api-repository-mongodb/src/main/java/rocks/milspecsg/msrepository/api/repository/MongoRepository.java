@@ -28,6 +28,7 @@ import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public interface MongoRepository<
     T extends ObjectWithId<ObjectId>,
@@ -43,6 +44,10 @@ public interface MongoRepository<
     Optional<UpdateOperations<T>> inc(String field, Number value);
 
     Optional<UpdateOperations<T>> inc(String field);
+
+    CompletableFuture<Boolean> runUpdateOperations(Query<T> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations);
+
+    CompletableFuture<Boolean> runUpdateOperations(Optional<Query<T>> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations);
 
     Optional<Query<T>> asQuery();
 
