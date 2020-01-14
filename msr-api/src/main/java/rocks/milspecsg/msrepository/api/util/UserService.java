@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Service for translating UUIDs to UserNames or UserNames to UUIDs
  */
-public interface UserService<TUser, TPlayer extends TUser> {
+public interface UserService<TUser, TPlayer> {
 
     Optional<TUser> get(String userName);
 
