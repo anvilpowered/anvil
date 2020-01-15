@@ -111,7 +111,6 @@ public class CommonConfigurationService extends CommonRegistry implements Config
         nodeDescriptionMap.put(Keys.MONGODB_PASSWORD, "\nMongoDB password");
         nodeDescriptionMap.put(Keys.MONGODB_AUTH_DB, "\nMongoDB database to use for authentication");
         nodeDescriptionMap.put(Keys.MONGODB_USE_AUTH, "\nWhether to use authentication (username/password) for MongoDB connection");
-
     }
 
     @Override
@@ -258,8 +257,14 @@ public class CommonConfigurationService extends CommonRegistry implements Config
                 e.printStackTrace();
                 return null;
             }
+        } else {
+            try {
+                return node.getValue(typeToken);
+            } catch (ObjectMappingException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
-        return null;
     }
 
     private <T> T verify(Map<Predicate<T>, Function<T, T>> verificationMap, T value, CommentedConfigurationNode node, boolean[] modified) {
