@@ -24,7 +24,12 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 // TODO: extract to interface
 public abstract class DataStoreContext<TKey, TDataStore> {
@@ -54,8 +59,8 @@ public abstract class DataStoreContext<TKey, TDataStore> {
         notifyConnectionOpenedListeners(dataStore);
     }
 
-    public final Optional<TDataStore> getDataStore() {
-        return Optional.ofNullable(dataStore);
+    public final TDataStore getDataStore() {
+        return Objects.requireNonNull(dataStore, "DataStore not loaded!");
     }
 
     @SafeVarargs

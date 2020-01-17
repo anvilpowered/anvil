@@ -46,122 +46,116 @@ public interface CommonXodusRepository<
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().map(dataStore -> {
-                dataStore.executeInTransaction(txn -> {
-                    final Entity entity = txn.newEntity(getTClass().getSimpleName());
-                    ((Mappable<Entity>) item).writeTo(entity);
-                    item.setId(entity.getId());
-                    txn.commit();
-                });
-                return item;
-            }));
+            getDataStoreContext().getDataStore().computeInTransaction(txn -> {
+                final Entity entity = txn.newEntity(getTClass().getSimpleName());
+                ((Mappable<Entity>) item).writeTo(entity);
+                item.setId(entity.getId());
+                return txn.commit() ? Optional.of(item) : Optional.empty();
+            })
+        );
     }
 
     @Override
     default CompletableFuture<List<T>> insert(List<T> list) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().map(dataStore -> {
-                dataStore.executeInTransaction(txn -> {
-                    list.forEach(item -> {
-                        final Entity entity = txn.newEntity(getTClass().getSimpleName());
-                        ((Mappable<Entity>) item).writeTo(entity);
-                        item.setId(entity.getId());
-                    });
-                    txn.commit();
+            getDataStoreContext().getDataStore().computeInTransaction(txn -> {
+                list.forEach(item -> {
+                    final Entity entity = txn.newEntity(getTClass().getSimpleName());
+                    ((Mappable<Entity>) item).writeTo(entity);
+                    item.setId(entity.getId());
                 });
+                txn.commit();
                 return list;
-            }).orElse(Collections.emptyList()));
+            })
+        );
     }
 
     @Override
     default CompletableFuture<List<T>> getAll(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().map(dataStore ->
-                dataStore.computeInReadonlyTransaction(txn ->
-                    StreamSupport.stream(query.apply(txn).spliterator(), false).map(e -> {
-                        T item = generateEmpty();
-                        ((Mappable<Entity>) item).readFrom(e);
-                        return item;
-                    }).collect(Collectors.toList())))
-                .orElse(Collections.emptyList()));
+            getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn ->
+                StreamSupport.stream(query.apply(txn).spliterator(), false).map(e -> {
+                    T item = generateEmpty();
+                    ((Mappable<Entity>) item).readFrom(e);
+                    return item;
+                }).collect(Collectors.toList()))
+        );
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().flatMap(dataStore ->
-                dataStore.computeInReadonlyTransaction(txn -> {
-                    Iterator<Entity> iterator = query.apply(txn).iterator();
-                    if (iterator.hasNext()) {
-                        T item = generateEmpty();
-                        ((Mappable<Entity>) item).readFrom(iterator.next());
-                        return Optional.of(item);
-                    } else {
-                        return Optional.empty();
-                    }
-                })));
+            getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn -> {
+                Iterator<Entity> iterator = query.apply(txn).iterator();
+                if (iterator.hasNext()) {
+                    T item = generateEmpty();
+                    ((Mappable<Entity>) item).readFrom(iterator.next());
+                    return Optional.of(item);
+                } else {
+                    return Optional.empty();
+                }
+            })
+        );
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(EntityId id) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().flatMap(dataStore ->
-                dataStore.computeInReadonlyTransaction(txn -> {
-                    Entity entity;
-                    try {
-                        entity = txn.getEntity(id);
-                    } catch (EntityRemovedInDatabaseException ignored) {
-                        return Optional.empty();
-                    }
-                    T item = generateEmpty();
-                    ((Mappable<Entity>) item).readFrom(entity);
-                    return Optional.of(item);
-                })));
+            getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn -> {
+                Entity entity;
+                try {
+                    entity = txn.getEntity(id);
+                } catch (EntityRemovedInDatabaseException ignored) {
+                    return Optional.empty();
+                }
+                T item = generateEmpty();
+                ((Mappable<Entity>) item).readFrom(entity);
+                return Optional.of(item);
+            })
+        );
     }
 
     @Override
     default CompletableFuture<List<EntityId>> getAllIds() {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().map(dataStore ->
-                dataStore.computeInReadonlyTransaction(txn -> {
-                    final EntityIterable iterable = txn.getAll(getTClass().getSimpleName());
-                    final EntityIterator iterator = iterable.iterator();
-                    final long roughCount = iterable.getRoughCount();
-                    final int buffer = 50;
-                    int listSize = roughCount > Integer.MAX_VALUE - buffer
-                        ? Integer.MAX_VALUE - buffer // woah
-                        : (int) (roughCount + buffer);
-                    final List<EntityId> list = new ArrayList<>(listSize);
-                    while (iterator.hasNext()) {
-                        list.add(iterator.nextId());
-                    }
-                    if (iterator.shouldBeDisposed()) {
-                        iterator.dispose();
-                    }
-                    return list;
-                })).orElse(Collections.emptyList()));
+            getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn -> {
+                final EntityIterable iterable = txn.getAll(getTClass().getSimpleName());
+                final EntityIterator iterator = iterable.iterator();
+                final long roughCount = iterable.getRoughCount();
+                final int buffer = 50;
+                int listSize = roughCount > Integer.MAX_VALUE - buffer
+                    ? Integer.MAX_VALUE - buffer // woah
+                    : (int) (roughCount + buffer);
+                final List<EntityId> list = new ArrayList<>(listSize);
+                while (iterator.hasNext()) {
+                    list.add(iterator.nextId());
+                }
+                if (iterator.shouldBeDisposed()) {
+                    iterator.dispose();
+                }
+                return list;
+            })
+        );
     }
 
     @Override
     default CompletableFuture<Boolean> delete(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().map(dataStore ->
-                dataStore.computeInTransaction(txn -> {
-                    query.apply(txn).forEach(Entity::delete);
-                    return txn.commit();
-                })
-            ).orElse(false));
+            getDataStoreContext().getDataStore().computeInTransaction(txn -> {
+                query.apply(txn).forEach(Entity::delete);
+                return txn.commit();
+            })
+        );
     }
 
     @Override
     default CompletableFuture<Boolean> deleteOne(EntityId id) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().map(dataStore ->
-                dataStore.computeInTransaction(txn -> {
-                    txn.getEntity(id).delete();
-                    return txn.commit();
-                })
-            ).orElse(false));
+            getDataStoreContext().getDataStore().computeInTransaction(txn -> {
+                txn.getEntity(id).delete();
+                return txn.commit();
+            })
+        );
     }
 
     @Override

@@ -25,9 +25,7 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 public interface MongoRepository<
     T extends ObjectWithId<ObjectId>>
@@ -35,19 +33,15 @@ public interface MongoRepository<
 
     CompletableFuture<WriteResult> delete(Query<T> query);
 
-    CompletableFuture<Boolean> delete(Optional<Query<T>> query);
+    UpdateOperations<T> createUpdateOperations();
 
-    Optional<UpdateOperations<T>> createUpdateOperations();
+    UpdateOperations<T> inc(String field, Number value);
 
-    Optional<UpdateOperations<T>> inc(String field, Number value);
+    UpdateOperations<T> inc(String field);
 
-    Optional<UpdateOperations<T>> inc(String field);
+    boolean update(Query<T> query, UpdateOperations<T> updateOperations);
 
-    CompletableFuture<Boolean> runUpdateOperations(Query<T> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations);
+    Query<T> asQuery();
 
-    CompletableFuture<Boolean> runUpdateOperations(Optional<Query<T>> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations);
-
-    Optional<Query<T>> asQuery();
-
-    Optional<Query<T>> asQuery(ObjectId id);
+    Query<T> asQuery(ObjectId id);
 }

@@ -20,20 +20,16 @@ package rocks.milspecsg.msrepository.common.repository;
 
 import com.mongodb.WriteResult;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.common.component.CommonMongoComponent;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface CommonMongoRepository<
@@ -58,12 +54,8 @@ public interface CommonMongoRepository<
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
         return CompletableFuture.supplyAsync(() -> {
-            Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
-            if (!optionalDataStore.isPresent()) {
-                return Optional.empty();
-            }
             try {
-                item.setId((ObjectId) optionalDataStore.get().save(item).getId());
+                item.setId((ObjectId) getDataStoreContext().getDataStore().save(item).getId());
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return Optional.empty();
@@ -75,44 +67,37 @@ public interface CommonMongoRepository<
     @Override
     default CompletableFuture<List<T>> insert(List<T> list) {
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore()
-                .map(dataStore -> list.stream().filter(item -> {
-                    try {
-                        item.setId((ObjectId) dataStore.save(item).getId());
-                    } catch (RuntimeException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                    return true;
-                }).collect(Collectors.toList())).orElse(Collections.emptyList())
+            list.stream().filter(item -> {
+                try {
+                    item.setId((ObjectId) getDataStoreContext().getDataStore().save(item).getId());
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                return true;
+            }).collect(Collectors.toList())
         );
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
-        return CompletableFuture.supplyAsync(() -> asQuery(id).map(QueryResults::get));
+        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(asQuery(id).get()));
     }
 
     @Override
     default CompletableFuture<List<ObjectId>> getAllIds() {
         return CompletableFuture.supplyAsync(() ->
-            asQuery()
-                .map(q ->
-                    q.project("_id", true)
-                        .asList().stream().map(ObjectWithId::getId)
-                        .collect(Collectors.toList())
-                ).orElse(Collections.emptyList()));
+            asQuery().project("_id", true)
+                .asList().stream().map(ObjectWithId::getId)
+                .collect(Collectors.toList())
+        );
     }
 
     @Override
     default CompletableFuture<WriteResult> delete(Query<T> query) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
-                if (!optionalDataStore.isPresent()) {
-                    return WriteResult.unacknowledged();
-                }
-                return optionalDataStore.get().delete(query);
+                return getDataStoreContext().getDataStore().delete(query);
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return WriteResult.unacknowledged();
@@ -121,52 +106,37 @@ public interface CommonMongoRepository<
     }
 
     @Override
-    default CompletableFuture<Boolean> delete(Optional<Query<T>> query) {
-        return query.map(q -> delete(q).thenApplyAsync(w -> w.getN() > 0).exceptionally(e -> false))
-            .orElse(CompletableFuture.completedFuture(false));
-    }
-
-    @Override
     default CompletableFuture<Boolean> deleteOne(ObjectId id) {
-        return delete(asQuery(id));
+        return delete(asQuery(id)).thenApplyAsync(wr -> wr.wasAcknowledged() && wr.getN() > 0);
     }
 
     @Override
-    default Optional<UpdateOperations<T>> createUpdateOperations() {
-        return getDataStoreContext().getDataStore().map(d -> d.createUpdateOperations(getTClass()));
+    default UpdateOperations<T> createUpdateOperations() {
+        return getDataStoreContext().getDataStore().createUpdateOperations(getTClass());
     }
 
     @Override
-    default Optional<UpdateOperations<T>> inc(String field, Number value) {
-        return createUpdateOperations().map(u -> u.inc(field, value));
+    default UpdateOperations<T> inc(String field, Number value) {
+        return createUpdateOperations().inc(field, value);
     }
 
     @Override
-    default Optional<UpdateOperations<T>> inc(String field) {
+    default UpdateOperations<T> inc(String field) {
         return inc(field, 1);
     }
 
     @Override
-    default CompletableFuture<Boolean> runUpdateOperations(Query<T> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations) {
-        return CompletableFuture.supplyAsync(() -> createUpdateOperations().map(updateOperations)
-            .map(u -> getDataStoreContext().getDataStore()
-                .map(dataStore -> dataStore.update(query, u).getUpdatedCount() > 0)
-                .orElse(false)
-            ).orElse(false));
+    default boolean update(Query<T> query, UpdateOperations<T> updateOperations) {
+        return getDataStoreContext().getDataStore().update(query, updateOperations).getUpdatedCount() > 0;
     }
 
     @Override
-    default CompletableFuture<Boolean> runUpdateOperations(Optional<Query<T>> query, Function<UpdateOperations<T>, UpdateOperations<T>> updateOperations) {
-        return query.map(q -> runUpdateOperations(q, updateOperations)).orElse(CompletableFuture.completedFuture(false));
+    default Query<T> asQuery() {
+        return getDataStoreContext().getDataStore().createQuery(getTClass());
     }
 
     @Override
-    default Optional<Query<T>> asQuery() {
-        return getDataStoreContext().getDataStore().map(d -> d.createQuery(getTClass()));
-    }
-
-    @Override
-    default Optional<Query<T>> asQuery(ObjectId id) {
-        return asQuery().map(q -> q.field("_id").equal(id));
+    default Query<T> asQuery(ObjectId id) {
+        return asQuery().field("_id").equal(id);
     }
 }
