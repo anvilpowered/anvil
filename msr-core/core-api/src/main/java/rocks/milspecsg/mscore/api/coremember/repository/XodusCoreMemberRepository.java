@@ -23,15 +23,14 @@ import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.XodusRepository;
 
 import java.util.UUID;
 import java.util.function.Function;
 
 public interface XodusCoreMemberRepository
-        extends CoreMemberRepository<EntityId, PersistentEntityStore>,
-        XodusRepository<CoreMember<EntityId>, CacheService<EntityId, CoreMember<EntityId>, PersistentEntityStore>> {
+    extends CoreMemberRepository<EntityId, PersistentEntityStore>,
+    XodusRepository<CoreMember<EntityId>> {
 
     Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(UUID userUUID);
 

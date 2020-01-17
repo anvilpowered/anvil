@@ -25,7 +25,6 @@ import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
 import rocks.milspecsg.mscore.api.coremember.repository.XodusCoreMemberRepository;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.api.model.Mappable;
 import rocks.milspecsg.msrepository.common.repository.CommonXodusRepository;
@@ -40,7 +39,7 @@ import java.util.function.Function;
 
 public class CommonXodusCoreMemberRepository
     extends CommonCoreMemberRepository<EntityId, PersistentEntityStore>
-    implements CommonXodusRepository<CoreMember<EntityId>, CacheService<EntityId, CoreMember<EntityId>, PersistentEntityStore>>,
+    implements CommonXodusRepository<CoreMember<EntityId>>,
     XodusCoreMemberRepository {
 
     @Inject

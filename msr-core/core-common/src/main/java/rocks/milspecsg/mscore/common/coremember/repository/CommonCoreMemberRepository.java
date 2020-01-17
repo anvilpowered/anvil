@@ -20,7 +20,6 @@ package rocks.milspecsg.mscore.common.coremember.repository;
 
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.common.repository.CommonRepository;
 
@@ -31,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
 public abstract class CommonCoreMemberRepository<
     TKey,
     TDataStore>
-    extends CommonRepository<TKey, CoreMember<TKey>, CacheService<TKey, CoreMember<TKey>, TDataStore>, TDataStore>
+    extends CommonRepository<TKey, CoreMember<TKey>, TDataStore>
     implements CoreMemberRepository<TKey, TDataStore> {
 
     protected CommonCoreMemberRepository(DataStoreContext<TKey, TDataStore> dataStoreContext) {

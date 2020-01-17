@@ -22,7 +22,6 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 
 import java.util.Optional;
@@ -30,7 +29,7 @@ import java.util.UUID;
 
 public interface MongoCoreMemberRepository
     extends CoreMemberRepository<ObjectId, Datastore>,
-    MongoRepository<CoreMember<ObjectId>, CacheService<ObjectId, CoreMember<ObjectId>, Datastore>> {
+    MongoRepository<CoreMember<ObjectId>> {
 
     Optional<Query<CoreMember<ObjectId>>> asQueryForUser(UUID userUUID);
 

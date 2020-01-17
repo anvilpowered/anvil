@@ -26,7 +26,6 @@ import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.mscore.api.coremember.repository.MongoCoreMemberRepository;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.common.repository.CommonMongoRepository;
 
@@ -39,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class CommonMongoCoreMemberRepository
     extends CommonCoreMemberRepository<ObjectId, Datastore>
-    implements CommonMongoRepository<CoreMember<ObjectId>, CacheService<ObjectId, CoreMember<ObjectId>, Datastore>>,
+    implements CommonMongoRepository<CoreMember<ObjectId>>,
     MongoCoreMemberRepository {
 
     @Inject

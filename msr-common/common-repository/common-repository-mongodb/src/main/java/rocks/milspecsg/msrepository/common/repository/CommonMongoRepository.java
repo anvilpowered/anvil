@@ -24,10 +24,8 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
-import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.api.repository.MongoRepository;
-import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.api.model.ObjectWithId;
+import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.common.component.CommonMongoComponent;
 
 import java.util.Collections;
@@ -39,9 +37,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface CommonMongoRepository<
-    T extends ObjectWithId<ObjectId>,
-    C extends CacheService<ObjectId, T, Datastore>>
-    extends MongoRepository<T, C>, CommonMongoComponent {
+    T extends ObjectWithId<ObjectId>>
+    extends MongoRepository<T>, CommonMongoComponent {
 
     @Override
     default CompletableFuture<Optional<Integer>> getCreatedUtcTimeStampSeconds(ObjectId id) {
@@ -60,7 +57,7 @@ public interface CommonMongoRepository<
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
-        return applyFromDBToCacheConditionally(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
             if (!optionalDataStore.isPresent()) {
                 return Optional.empty();
@@ -72,12 +69,13 @@ public interface CommonMongoRepository<
                 return Optional.empty();
             }
             return Optional.of(item);
-        }, StorageService::insertOne);
+        });
     }
 
     @Override
     default CompletableFuture<List<T>> insert(List<T> list) {
-        return applyFromDBToCache(() -> getDataStoreContext().getDataStore()
+        return CompletableFuture.supplyAsync(() ->
+            getDataStoreContext().getDataStore()
                 .map(dataStore -> list.stream().filter(item -> {
                     try {
                         item.setId((ObjectId) dataStore.save(item).getId());
@@ -86,13 +84,13 @@ public interface CommonMongoRepository<
                         return false;
                     }
                     return true;
-                }).collect(Collectors.toList())).orElse(Collections.emptyList()),
-            StorageService::insert);
+                }).collect(Collectors.toList())).orElse(Collections.emptyList())
+        );
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
-        return applyToBothConditionally(c -> c.getOne(id).join(), () -> asQuery(id).map(QueryResults::get));
+        return CompletableFuture.supplyAsync(() -> asQuery(id).map(QueryResults::get));
     }
 
     @Override
@@ -108,7 +106,7 @@ public interface CommonMongoRepository<
 
     @Override
     default CompletableFuture<WriteResult> delete(Query<T> query) {
-        return applyFromDBToCache(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             try {
                 Optional<Datastore> optionalDataStore = getDataStoreContext().getDataStore();
                 if (!optionalDataStore.isPresent()) {
@@ -118,13 +116,6 @@ public interface CommonMongoRepository<
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return WriteResult.unacknowledged();
-            }
-        }, (c, w) -> {
-            try {
-                if (w.wasAcknowledged() && w.getN() > 0) {
-                    c.deleteOne((ObjectId) w.getUpsertedId());
-                }
-            } catch (RuntimeException ignored) {
             }
         });
     }
