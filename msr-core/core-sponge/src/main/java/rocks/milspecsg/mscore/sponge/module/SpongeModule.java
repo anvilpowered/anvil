@@ -20,9 +20,9 @@ package rocks.milspecsg.mscore.sponge.module;
 
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
+import rocks.milspecsg.mscore.common.data.config.MSCoreConfigurationService;
 import rocks.milspecsg.mscore.common.module.CommonModule;
 import rocks.milspecsg.mscore.sponge.data.config.MSCoreSpongeConfigurationService;
-import rocks.milspecsg.msrepository.common.data.config.CommonConfigurationService;
 
 public class SpongeModule extends CommonModule<Text, CommandSource> {
 
@@ -30,6 +30,6 @@ public class SpongeModule extends CommonModule<Text, CommandSource> {
     protected void configure() {
         super.configure();
 
-        bind(CommonConfigurationService.class).to(MSCoreSpongeConfigurationService.class);
+        bind(MSCoreConfigurationService.class).to(MSCoreSpongeConfigurationService.class);
     }
 }

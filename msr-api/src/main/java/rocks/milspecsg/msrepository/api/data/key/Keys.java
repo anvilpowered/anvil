@@ -48,15 +48,15 @@ public final class Keys {
         }
     }
 
-    public static final Key<String> BASE_SCAN_PACKAGE = new Key<String>("BASE_SCAN_PACKAGE", "rocks.milspecsg") {
+    public static final Key<String> BASE_SCAN_PACKAGE = new Key<String>("BASE_SCAN_PACKAGE", "rocks.milspecsg.mscore.common.model") {
     };
     public static final Key<Integer> CACHE_INVALIDATION_INTERVAL_SECONDS = new Key<Integer>("CACHE_INVALIDATION_INTERVAL_SECONDS", 30) {
     };
     public static final Key<Integer> CACHE_INVALIDATION_TIMOUT_SECONDS = new Key<Integer>("CACHE_INVALIDATION_TIMOUT_SECONDS", 300) {
     };
-    public static final Key<Boolean> USE_SHARED_ENVIRONMENT = new Key<Boolean>("USE_SHARED_ENVIRONMENT", true) {
+    public static final Key<Boolean> USE_SHARED_ENVIRONMENT = new Key<Boolean>("USE_SHARED_ENVIRONMENT", false) {
     };
-    public static final Key<Boolean> USE_SHARED_CREDENTIALS = new Key<Boolean>("USE_SHARED_CREDENTIALS", true) {
+    public static final Key<Boolean> USE_SHARED_CREDENTIALS = new Key<Boolean>("USE_SHARED_CREDENTIALS", false) {
     };
     public static final Key<String> DATA_STORE_NAME = new Key<String>("DATA_STORE_NAME", "xodus") {
     };

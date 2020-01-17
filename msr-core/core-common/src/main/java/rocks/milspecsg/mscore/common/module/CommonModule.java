@@ -27,6 +27,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
+import rocks.milspecsg.mscore.common.data.config.MSCoreConfigurationService;
 import rocks.milspecsg.mscore.common.plugin.MSCorePluginInfo;
 import rocks.milspecsg.mscore.common.coremember.CommonCoreMemberManager;
 import rocks.milspecsg.mscore.common.coremember.repository.CommonMongoCoreMemberRepository;
@@ -42,7 +43,6 @@ import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.api.datastore.MongoContext;
 import rocks.milspecsg.msrepository.api.datastore.XodusContext;
-import rocks.milspecsg.msrepository.common.data.config.CommonConfigurationService;
 import rocks.milspecsg.msrepository.common.data.registry.CommonExtendedRegistry;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -91,6 +91,6 @@ public class CommonModule<TString, TCommandSource> extends AbstractModule {
 
         bind(Registry.class).to(CommonExtendedRegistry.class);
 
-        bind(ConfigurationService.class).to(CommonConfigurationService.class);
+        bind(ConfigurationService.class).to(MSCoreConfigurationService.class);
     }
 }

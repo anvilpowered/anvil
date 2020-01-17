@@ -22,9 +22,9 @@ import com.google.inject.Inject;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.spongepowered.api.config.DefaultConfig;
-import rocks.milspecsg.msrepository.common.data.config.CommonConfigurationService;
+import rocks.milspecsg.mscore.common.data.config.MSCoreConfigurationService;
 
-public class MSCoreSpongeConfigurationService extends CommonConfigurationService {
+public class MSCoreSpongeConfigurationService extends MSCoreConfigurationService {
 
     @Inject
     public MSCoreSpongeConfigurationService(@DefaultConfig(sharedRoot = false) ConfigurationLoader<CommentedConfigurationNode> configLoader) {
