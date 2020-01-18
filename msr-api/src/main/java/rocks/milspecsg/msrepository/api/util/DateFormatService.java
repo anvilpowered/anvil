@@ -1,6 +1,6 @@
 /*
- *   MSRepository - MilSpecSG
- *   Copyright (C) 2019 Cableguy20
+ *     MSDataSync - MilSpecSG
+ *     Copyright (C) 2019 Cableguy20
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -16,19 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.common.module;
+package rocks.milspecsg.msrepository.api.util;
 
-import com.google.inject.AbstractModule;
-import rocks.milspecsg.msrepository.api.util.DateFormatService;
-import rocks.milspecsg.msrepository.api.util.TimeConversionService;
-import rocks.milspecsg.msrepository.common.util.CommonDateFormatService;
-import rocks.milspecsg.msrepository.common.util.CommonTimeConversionService;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Optional;
 
-public class ApiCommonModule extends AbstractModule {
+public interface DateFormatService {
 
-    @Override
-    protected void configure() {
-        bind(DateFormatService.class).to(CommonDateFormatService.class);
-        bind(TimeConversionService.class).to(CommonTimeConversionService.class);
-    }
+    String format(Date date);
+
+    String formatDiff(Date date);
+
+    Date parseUnsafe(String date) throws ParseException;
+
+    Optional<Date> parse(String date);
 }
