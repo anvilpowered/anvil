@@ -24,16 +24,15 @@ import org.mongodb.morphia.query.Query;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public interface MongoCoreMemberRepository
     extends CoreMemberRepository<ObjectId, Datastore>,
     MongoRepository<CoreMember<ObjectId>> {
 
-    Optional<Query<CoreMember<ObjectId>>> asQueryForUser(UUID userUUID);
+    Query<CoreMember<ObjectId>> asQueryForUser(UUID userUUID);
 
-    Optional<Query<CoreMember<ObjectId>>> asQueryForUser(String userName);
+    Query<CoreMember<ObjectId>> asQueryForUser(String userName);
 
-    Optional<Query<CoreMember<ObjectId>>> asQueryForIpAddress(String ipAddress);
+    Query<CoreMember<ObjectId>> asQueryForIpAddress(String ipAddress);
 }

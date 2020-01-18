@@ -55,55 +55,53 @@ public class CommonXodusCoreMemberRepository
             flags[i] = false;
         }
         return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().flatMap(dataStore ->
-                dataStore.computeInTransaction(txn -> {
-                    Iterator<Entity> iterator = asQueryForUser(userUUID).apply(txn).iterator();
-                    if (!iterator.hasNext()) {
-                        CoreMember<EntityId> member = generateEmpty();
-                        member.setUserUUID(userUUID);
-                        member.setUserName(userName);
-                        member.setIpAddress(ipAddress);
-                        member.setLastJoinedUtc(new Date());
-                        flags[0] = true;
-                        return insertOne(member).join();
-                    }
+            getDataStoreContext().getDataStore().computeInTransaction(txn -> {
+                Iterator<Entity> iterator = asQueryForUser(userUUID).apply(txn).iterator();
+                if (!iterator.hasNext()) {
+                    CoreMember<EntityId> member = generateEmpty();
+                    member.setUserUUID(userUUID);
+                    member.setUserName(userName);
+                    member.setIpAddress(ipAddress);
+                    member.setLastJoinedUtc(new Date());
+                    flags[0] = true;
+                    return insertOne(member).join();
+                }
 
-                    CoreMember<EntityId> item = generateEmpty();
-                    Entity entity = iterator.next();
-                    ((Mappable<Entity>) item).readFrom(entity);
+                CoreMember<EntityId> item = generateEmpty();
+                Entity entity = iterator.next();
+                ((Mappable<Entity>) item).readFrom(entity);
 
-                    boolean updateUsername = false;
-                    boolean updateIPAddress = false;
+                boolean updateUsername = false;
+                boolean updateIPAddress = false;
 
-                    if (!item.getUserName().equals(userName)) {
-                        entity.setProperty("userName", userName);
-                        updateUsername = true;
-                    }
+                if (!item.getUserName().equals(userName)) {
+                    entity.setProperty("userName", userName);
+                    updateUsername = true;
+                }
 
-                    if (!item.getIpAddress().equals(ipAddress)) {
-                        entity.setProperty("ipAddress", ipAddress);
-                        updateIPAddress = true;
+                if (!item.getIpAddress().equals(ipAddress)) {
+                    entity.setProperty("ipAddress", ipAddress);
+                    updateIPAddress = true;
+                }
+                Date date = new Date();
+                long time = date.getTime();
+                entity.setProperty("lastJoinedUtc", time);
+                entity.setProperty("updatedUtc", time);
+                if (txn.commit()) {
+                    if (updateUsername) {
+                        item.setUserName(userName);
+                        flags[1] = true;
                     }
-                    Date date = new Date();
-                    long time = date.getTime();
-                    entity.setProperty("lastJoinedUtc", time);
-                    entity.setProperty("updatedUtc", time);
-                    if (txn.commit()) {
-                        if (updateUsername) {
-                            item.setUserName(userName);
-                            flags[1] = true;
-                        }
-                        if (updateIPAddress) {
-                            item.setIpAddress(ipAddress);
-                            flags[2] = true;
-                        }
-                        item.setLastJoinedUtc(date);
-                        return Optional.of(item);
+                    if (updateIPAddress) {
+                        item.setIpAddress(ipAddress);
+                        flags[2] = true;
                     }
-                    System.err.println("Failed to update " + userName + " please report this on github!");
-                    return Optional.empty();
-                })
-            )
+                    item.setLastJoinedUtc(date);
+                    return Optional.of(item);
+                }
+                System.err.println("Failed to update " + userName + " please report this on github!");
+                return Optional.empty();
+            })
         );
     }
 

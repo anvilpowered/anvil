@@ -22,14 +22,12 @@ import com.google.inject.Inject;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
 import rocks.milspecsg.mscore.api.coremember.repository.MongoCoreMemberRepository;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.common.repository.CommonMongoRepository;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -55,11 +53,7 @@ public class CommonMongoCoreMemberRepository
         }
         return getOneForUser(userUUID).thenApplyAsync(optionalMember -> {
             if (optionalMember.isPresent()) {
-                Optional<UpdateOperations<CoreMember<ObjectId>>> optionalUpdateOperations = createUpdateOperations();
-                if (!optionalUpdateOperations.isPresent()) {
-                    return Optional.empty();
-                }
-                UpdateOperations<CoreMember<ObjectId>> updateOperations = optionalUpdateOperations.get();
+                UpdateOperations<CoreMember<ObjectId>> updateOperations = createUpdateOperations();
                 boolean updateName = false;
                 boolean updateIpAddress = false;
                 if (!userName.equals(optionalMember.get().getUserName())) {
@@ -71,12 +65,7 @@ public class CommonMongoCoreMemberRepository
                     updateIpAddress = true;
                 }
                 updateOperations.set("lastJoinedUtc", new Date());
-                Optional<Query<CoreMember<ObjectId>>> optionalQuery = asQuery(optionalMember.get().getId());
-                if (optionalQuery.isPresent()
-                    && getDataStoreContext().getDataStore()
-                    .map(d -> d.update(optionalQuery.get(), updateOperations).getUpdatedCount() > 0)
-                    .orElse(false)
-                ) {
+                if (update(asQuery(optionalMember.get().getId()), updateOperations)) {
                     if (updateName) {
                         optionalMember.get().setUserName(userName);
                     }
@@ -101,31 +90,31 @@ public class CommonMongoCoreMemberRepository
 
     @Override
     public CompletableFuture<Optional<CoreMember<ObjectId>>> getOneForUser(UUID userUUID) {
-        return CompletableFuture.supplyAsync(() -> asQueryForUser(userUUID).map(QueryResults::get));
+        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(asQueryForUser(userUUID).get()));
     }
 
     @Override
     public CompletableFuture<Optional<CoreMember<ObjectId>>> getOneForUser(String userName) {
-        return CompletableFuture.supplyAsync(() -> asQueryForUser(userName).map(QueryResults::get));
+        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(asQueryForUser(userName).get()));
     }
 
     @Override
     public CompletableFuture<List<CoreMember<ObjectId>>> getForIpAddress(String ipAddress) {
-        return CompletableFuture.supplyAsync(() -> asQueryForIpAddress(ipAddress).map(QueryResults::asList).orElse(Collections.emptyList()));
+        return CompletableFuture.supplyAsync(() -> asQueryForIpAddress(ipAddress).asList());
     }
 
     @Override
-    public Optional<Query<CoreMember<ObjectId>>> asQueryForUser(UUID userUUID) {
-        return asQuery().map(q -> q.field("userUUID").equal(userUUID));
+    public Query<CoreMember<ObjectId>> asQueryForUser(UUID userUUID) {
+        return asQuery().field("userUUID").equal(userUUID);
     }
 
     @Override
-    public Optional<Query<CoreMember<ObjectId>>> asQueryForUser(String userName) {
-        return asQuery().map(q -> q.field("userName").containsIgnoreCase(userName));
+    public Query<CoreMember<ObjectId>> asQueryForUser(String userName) {
+        return asQuery().field("userName").containsIgnoreCase(userName);
     }
 
     @Override
-    public Optional<Query<CoreMember<ObjectId>>> asQueryForIpAddress(String ipAddress) {
-        return asQuery().map(q -> q.field("ipAddress").equal(ipAddress));
+    public Query<CoreMember<ObjectId>> asQueryForIpAddress(String ipAddress) {
+        return asQuery().field("ipAddress").equal(ipAddress);
     }
 }

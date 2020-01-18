@@ -38,18 +38,16 @@ public interface CommonXodusCachedRepository<
 
     @Override
     default CompletableFuture<Boolean> delete(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
-        return applyFromDBToCacheConditionally(() ->
-            getDataStoreContext().getDataStore().map(dataStore ->
-                dataStore.computeInTransaction(txn -> {
-                    List<EntityId> toDelete = new ArrayList<>();
-                    query.apply(txn).forEach(entity -> {
-                        toDelete.add(entity.getId());
-                        entity.delete();
-                    });
-                    return txn.commit() ? toDelete : Collections.<EntityId>emptyList();
-                })
-            ), (c, toDelete) -> toDelete.forEach(id -> c.deleteOne(id).join()))
-            .thenApplyAsync(result -> result.filter(list -> !list.isEmpty()).isPresent());
+        return applyFromDBToCache(() ->
+            getDataStoreContext().getDataStore().computeInTransaction(txn -> {
+                List<EntityId> toDelete = new ArrayList<>();
+                query.apply(txn).forEach(entity -> {
+                    toDelete.add(entity.getId());
+                    entity.delete();
+                });
+                return txn.commit() ? toDelete : Collections.<EntityId>emptyList();
+            }), (c, toDelete) -> toDelete.forEach(id -> c.deleteOne(id).join()))
+            .thenApplyAsync(result -> !result.isEmpty());
     }
 
     @Override
