@@ -18,26 +18,31 @@
 
 package rocks.milspecsg.msrepository.api.datastore;
 
-import com.google.inject.Injector;
+import com.google.inject.Inject;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import rocks.milspecsg.msrepository.datastore.DataStoreConfig;
-import rocks.milspecsg.msrepository.datastore.DataStoreContext;
+import rocks.milspecsg.msrepository.api.MSRepository;
+import rocks.milspecsg.msrepository.api.data.key.Keys;
+import rocks.milspecsg.msrepository.api.data.registry.Registry;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Optional;
 import java.util.UUID;
 
-public abstract class MariaContext extends DataStoreContext<UUID, HikariDataSource, DataStoreConfig> {
+public final class MariaContext extends DataStoreContext<UUID, HikariDataSource> {
 
-    protected MariaContext(DataStoreConfig config, Injector injector) {
-        super(config, injector);
+    @Inject
+    public MariaContext(Registry registry) {
+        super(registry);
     }
 
-    public void init(String hostname, int port, String dbName, String username, String password, boolean useAuth) {
+    public void registryLoaded(Object plugin) {
+
+        String hostname = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_HOSTNAME"), registry);
+        int port = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_PORT"), registry);
+        String username = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_USERNAME"), registry);
+        String password = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_PASSWORD"), registry);
+        boolean useAuth = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_USE_AUTH"), registry);
 
         HikariConfig config = new HikariConfig();
         if (useAuth) {
@@ -56,24 +61,10 @@ public abstract class MariaContext extends DataStoreContext<UUID, HikariDataSour
         config.setDriverClassName("org.mariadb.jdbc.Driver");
         config.setMaximumPoolSize(20);
         HikariDataSource dataStore = new HikariDataSource(config);
-//        notifyConnectionOpenedListeners(dataStore);
         setDataStore(dataStore);
     }
 
     protected void closeConnection(HikariDataSource dataStore) {
         dataStore.close();
-    }
-
-    public Optional<Connection> getConnection()  {
-        Optional<HikariDataSource> ds = getDataStore();
-        if (ds.isPresent()) {
-            try {
-                return Optional.ofNullable(ds.get().getConnection());
-            } catch (SQLException ignored) {
-                return Optional.empty();
-            }
-        } else {
-            return Optional.empty();
-        }
     }
 }
