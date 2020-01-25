@@ -18,11 +18,11 @@
 
 package rocks.milspecsg.msrepository.api.component;
 
-import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
 import rocks.milspecsg.msrepository.api.cache.CacheService;
-import rocks.milspecsg.msrepository.api.manager.Manager;
-import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
+import rocks.milspecsg.msrepository.api.manager.Manager;
+import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
+import rocks.milspecsg.msrepository.api.repository.Repository;
 
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public interface Component<
      * @param object To try to parse
      * @return The {@link TKey} representing this {@param object}
      * @throws UnsupportedOperationException If not implemented
-     * @throws IllegalArgumentException if object was unsuccessfully parsed
+     * @throws IllegalArgumentException      if object was unsuccessfully parsed
      */
     default TKey parseUnsafe(Object object) {
         throw new UnsupportedOperationException();

@@ -24,9 +24,9 @@ import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.manager.annotation.MariaDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
 import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
+import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 import rocks.milspecsg.msrepository.api.util.StringResult;
-import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
 
 /**
  * <p>
