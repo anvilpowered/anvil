@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 
 public class CommonTimeFormatService implements TimeFormatService {
 
-    private static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
+    private static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("uuuu-MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC);
 
     private static Pattern timePattern = Pattern.compile(
         "\\s*(([1-9][0-9]*)\\s*[yY])?" +
@@ -46,6 +46,9 @@ public class CommonTimeFormatService implements TimeFormatService {
     @Override
     public long parseSecondsUnsafe(String input) {
         Matcher matcher = timePattern.matcher(input);
+        if (!matcher.matches()) {
+            throw new IllegalStateException("Input does not match");
+        }
         return Optional.ofNullable(matcher.group(2)).map(g -> Long.parseLong(g) * 31536000).orElse(0L)
             + Optional.ofNullable(matcher.group(4)).map(g -> Long.parseLong(g) * 2678400).orElse(0L)
             + Optional.ofNullable(matcher.group(8)).map(g -> Long.parseLong(g) * 864000).orElse(0L)
@@ -56,11 +59,9 @@ public class CommonTimeFormatService implements TimeFormatService {
 
     @Override
     public Optional<Long> parseSeconds(String input) {
-        System.out.println("Parsing: " + input);
         try {
             return Optional.of(parseSecondsUnsafe(input));
-        } catch (NumberFormatException | IndexOutOfBoundsException | IllegalStateException e) {
-            e.printStackTrace();
+        } catch (NumberFormatException | IndexOutOfBoundsException | IllegalStateException ignored) {
             return Optional.empty();
         }
     }
@@ -103,35 +104,34 @@ public class CommonTimeFormatService implements TimeFormatService {
     public String format(Duration duration) {
         StringBuilder s = new StringBuilder();
         long seconds = duration.getSeconds();
-        int years = (int) (seconds / 31556952);
+        long years = seconds / 31556952;
         seconds -= 31556952 * years;
-        int months = (int) (seconds / 2592000);
-        seconds -= 2592000 * months;
-        int days = (int) (seconds / 86400);
-        seconds -= 86400 * months;
-        int hours = (int) (seconds / 3600);
-        seconds -= 3600 * months;
-        int minutes = (int) (seconds / 60);
-        seconds -= 60 * months;
-        if (years > 0) {
+        long months = seconds / 2592000;
+        seconds -= 2628000 * months;
+        long days = seconds / 86400;
+        seconds -= 86400 * days;
+        long hours = seconds / 3600;
+        seconds -= 3600 * hours;
+        long minutes = seconds / 60;
+        seconds -= 60 * minutes;
+        if (years != 0) {
             s.append(years).append(years == 1 ? " year, " : " years, ");
         }
-        if (months > 0) {
+        if (months != 0) {
             s.append(months).append(months == 1 ? " month, " : " months, ");
         }
-        if (days > 0) {
+        if (days != 0) {
             s.append(days).append(days == 1 ? " day, " : " days, ");
         }
-        if (hours > 0) {
+        if (hours != 0) {
             s.append(hours).append(hours == 1 ? " hour, " : " hours, ");
         }
-        if (minutes > 0) {
+        if (minutes != 0) {
             s.append(minutes).append(minutes == 1 ? " minute, " : " minutes, ");
         }
-        if (seconds > 0) {
+        if (seconds != 0) {
             s.append(seconds).append(seconds == 1 ? " second, " : " seconds");
-        }
-        if (s.substring(s.length() - 2, s.length()).equals(", ")) {
+        } else if (s.length() > 1) {
             s.deleteCharAt(s.length() - 1);
             s.deleteCharAt(s.length() - 1);
         }
