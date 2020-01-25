@@ -22,9 +22,13 @@ import com.google.inject.TypeLiteral;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.text.TextComponent;
-import rocks.milspecsg.msrepository.api.util.UserService;
+import rocks.milspecsg.msrepository.api.util.CurrentServerService;
+import rocks.milspecsg.msrepository.api.util.KickService;
 import rocks.milspecsg.msrepository.api.util.StringResult;
+import rocks.milspecsg.msrepository.api.util.UserService;
 import rocks.milspecsg.msrepository.common.module.ApiCommonModule;
+import rocks.milspecsg.msrepository.velocity.util.VelocityCurrentServerService;
+import rocks.milspecsg.msrepository.velocity.util.VelocityKickService;
 import rocks.milspecsg.msrepository.velocity.util.VelocityStringResult;
 import rocks.milspecsg.msrepository.velocity.util.VelocityUserService;
 
@@ -33,6 +37,8 @@ public class ApiVelocityModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(CurrentServerService.class).to(VelocityCurrentServerService.class);
+        bind(KickService.class).to(VelocityKickService.class);
         bind(new TypeLiteral<StringResult<TextComponent, CommandSource>>() {
         }).to(VelocityStringResult.class);
         bind(new TypeLiteral<UserService<Player, Player>>() {

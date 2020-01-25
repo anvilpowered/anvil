@@ -23,10 +23,12 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
+import rocks.milspecsg.msrepository.api.util.KickService;
 import rocks.milspecsg.msrepository.api.util.TeleportationService;
 import rocks.milspecsg.msrepository.api.util.UserService;
 import rocks.milspecsg.msrepository.api.util.StringResult;
 import rocks.milspecsg.msrepository.common.module.ApiCommonModule;
+import rocks.milspecsg.msrepository.sponge.util.SpongeKickService;
 import rocks.milspecsg.msrepository.sponge.util.SpongeTeleportationService;
 import rocks.milspecsg.msrepository.sponge.util.SpongeUserService;
 import rocks.milspecsg.msrepository.sponge.util.SpongeStringResult;
@@ -36,6 +38,7 @@ public class ApiSpongeModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(KickService.class).to(SpongeKickService.class);
         bind(new TypeLiteral<StringResult<Text, CommandSource>>() {
         }).to(SpongeStringResult.class);
         bind(TeleportationService.class).to(SpongeTeleportationService.class);

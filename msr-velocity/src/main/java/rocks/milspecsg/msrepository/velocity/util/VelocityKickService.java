@@ -18,7 +18,17 @@ public class VelocityKickService implements KickService {
     }
 
     @Override
+    public void kick(String userName, String reason) {
+        proxyServer.getPlayer(userName).ifPresent(p -> p.disconnect(TextComponent.of(reason)));
+    }
+
+    @Override
     public void kick(UUID userUUID) {
         kick(userUUID, "You have been kicked");
+    }
+
+    @Override
+    public void kick(String userName) {
+        kick(userName, "You have been kicked");
     }
 }

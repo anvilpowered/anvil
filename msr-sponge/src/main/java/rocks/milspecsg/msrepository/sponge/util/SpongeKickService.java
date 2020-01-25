@@ -20,7 +20,17 @@ public class SpongeKickService implements KickService {
     }
 
     @Override
+    public void kick(String userName, String reason) {
+        userService.get(userName).flatMap(User::getPlayer).ifPresent(player -> player.kick(Text.of(reason)));
+    }
+
+    @Override
     public void kick(UUID userUUID) {
         kick(userUUID, "You have been kicked");
+    }
+
+    @Override
+    public void kick(String userName) {
+        kick(userName, "You have been kicked");
     }
 }
