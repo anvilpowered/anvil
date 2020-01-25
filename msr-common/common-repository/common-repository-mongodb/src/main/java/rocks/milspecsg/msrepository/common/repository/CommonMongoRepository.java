@@ -116,6 +116,11 @@ public interface CommonMongoRepository<
     }
 
     @Override
+    default UpdateOperations<T> set(String field, Object value) {
+        return createUpdateOperations().set(field, value);
+    }
+
+    @Override
     default CompletableFuture<Boolean> update(Query<T> query, UpdateOperations<T> updateOperations) {
         return CompletableFuture.supplyAsync(() -> getDataStoreContext().getDataStore().update(query, updateOperations).getUpdatedCount() > 0);
     }

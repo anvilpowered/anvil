@@ -39,6 +39,8 @@ public interface MongoRepository<
 
     UpdateOperations<T> inc(String field);
 
+    UpdateOperations<T> set(String field, Object value);
+
     CompletableFuture<Boolean> update(Query<T> query, UpdateOperations<T> updateOperations);
 
     Query<T> asQuery();
