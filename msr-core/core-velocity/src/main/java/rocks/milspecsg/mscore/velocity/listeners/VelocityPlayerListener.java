@@ -29,6 +29,9 @@ import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.mscore.api.plugin.PluginMessages;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 public class VelocityPlayerListener {
 
     @Inject
@@ -50,8 +53,10 @@ public class VelocityPlayerListener {
                 return;
             }
             CoreMember<?> member = optionalMember.get();
-            if (member.isBanned()) {
+            if (member.isBanned() && member.getBanEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
                 event.setResult(ResultedEvent.ComponentResult.denied(pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc())));
+            } else if (member.isBanned()) {
+                coreMemberManager.getPrimaryComponent().unBanUser(player.getUniqueId());
             }
         }).join();
     }
@@ -67,9 +72,11 @@ public class VelocityPlayerListener {
                 return;
             }
             CoreMember<?> member = optionalMember.get();
-            if (member.isMuted()) {
+            if (member.isMuted() && member.getMuteEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
                 event.setResult(PlayerChatEvent.ChatResult.denied());
                 player.sendMessage(pluginMessages.getMuteMessage(member.getMuteReason(), member.getMuteEndUtc()));
+            } else if (member.isMuted()){
+                coreMemberManager.getPrimaryComponent().unMuteUser(player.getUniqueId());
             }
         }).join();
     }
