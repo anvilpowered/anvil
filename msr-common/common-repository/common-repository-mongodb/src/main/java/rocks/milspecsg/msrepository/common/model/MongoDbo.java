@@ -23,14 +23,16 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.PrePersist;
 import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 public abstract class MongoDbo implements ObjectWithId<ObjectId> {
 
     @Id
     private ObjectId id;
 
-    private Date updatedUtc;
+    private Instant updatedUtc;
 
     @Override
     public ObjectId getId() {
@@ -48,38 +50,18 @@ public abstract class MongoDbo implements ObjectWithId<ObjectId> {
     }
 
     @Override
-    public int getCreatedUtcTimeStampSeconds() {
-        return id.getTimestamp();
+    public Instant getCreatedUtc() {
+        return Instant.ofEpochSecond(id.getTimestamp());
     }
 
     @Override
-    public int getUpdatedUtcTimeStampSeconds() {
-        return (int) (updatedUtc.getTime() / 1000);
-    }
-
-    @Override
-    public long getCreatedUtcTimeStampMillis() {
-        return id.getTimestamp() * 1000L;
-    }
-
-    @Override
-    public long getUpdatedUtcTimeStampMillis() {
-        return updatedUtc.getTime();
-    }
-
-    @Override
-    public Date getCreatedUtcDate() {
-        return id.getDate();
-    }
-
-    @Override
-    public Date getUpdatedUtcDate() {
+    public Instant getUpdatedUtc() {
         return updatedUtc;
     }
 
     @PrePersist
     private void prePersist() {
-        updatedUtc = new Date();
+        updatedUtc = OffsetDateTime.now(ZoneOffset.UTC).toInstant();
     }
 }
 

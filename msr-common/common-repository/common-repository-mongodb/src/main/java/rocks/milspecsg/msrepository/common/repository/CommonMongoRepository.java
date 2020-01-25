@@ -26,7 +26,7 @@ import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 import rocks.milspecsg.msrepository.common.component.CommonMongoComponent;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -37,18 +37,8 @@ public interface CommonMongoRepository<
     extends MongoRepository<T>, CommonMongoComponent {
 
     @Override
-    default CompletableFuture<Optional<Integer>> getCreatedUtcTimeStampSeconds(ObjectId id) {
-        return CompletableFuture.completedFuture(Optional.of(id.getTimestamp()));
-    }
-
-    @Override
-    default CompletableFuture<Optional<Long>> getCreatedUtcTimeStampMillis(ObjectId id) {
-        return CompletableFuture.completedFuture(Optional.of(id.getTimestamp() * 1000L));
-    }
-
-    @Override
-    default CompletableFuture<Optional<Date>> getCreatedUtcDate(ObjectId id) {
-        return CompletableFuture.completedFuture(Optional.of(id.getDate()));
+    default CompletableFuture<Optional<Instant>> getCreatedUtc(ObjectId id) {
+        return CompletableFuture.completedFuture(Optional.of(Instant.ofEpochSecond(id.getTimestamp())));
     }
 
     @Override
@@ -126,8 +116,8 @@ public interface CommonMongoRepository<
     }
 
     @Override
-    default boolean update(Query<T> query, UpdateOperations<T> updateOperations) {
-        return getDataStoreContext().getDataStore().update(query, updateOperations).getUpdatedCount() > 0;
+    default CompletableFuture<Boolean> update(Query<T> query, UpdateOperations<T> updateOperations) {
+        return CompletableFuture.supplyAsync(() -> getDataStoreContext().getDataStore().update(query, updateOperations).getUpdatedCount() > 0);
     }
 
     @Override

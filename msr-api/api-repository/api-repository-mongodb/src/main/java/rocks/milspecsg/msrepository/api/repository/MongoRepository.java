@@ -39,7 +39,7 @@ public interface MongoRepository<
 
     UpdateOperations<T> inc(String field);
 
-    boolean update(Query<T> query, UpdateOperations<T> updateOperations);
+    CompletableFuture<Boolean> update(Query<T> query, UpdateOperations<T> updateOperations);
 
     Query<T> asQuery();
 

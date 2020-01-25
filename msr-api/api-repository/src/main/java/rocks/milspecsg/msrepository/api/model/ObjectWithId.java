@@ -18,7 +18,7 @@
 
 package rocks.milspecsg.msrepository.api.model;
 
-import java.util.Date;
+import java.time.Instant;
 
 public interface ObjectWithId<TKey> {
 
@@ -27,12 +27,6 @@ public interface ObjectWithId<TKey> {
 
     String getIdAsString();
 
-    int getCreatedUtcTimeStampSeconds();
-    int getUpdatedUtcTimeStampSeconds();
-
-    long getCreatedUtcTimeStampMillis();
-    long getUpdatedUtcTimeStampMillis();
-
-    Date getCreatedUtcDate();
-    Date getUpdatedUtcDate();
+    Instant getCreatedUtc();
+    Instant getUpdatedUtc();
 }

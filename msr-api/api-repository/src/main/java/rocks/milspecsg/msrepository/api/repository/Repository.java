@@ -21,7 +21,7 @@ package rocks.milspecsg.msrepository.api.repository;
 import rocks.milspecsg.msrepository.api.storageservice.StorageService;
 import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,17 +32,7 @@ public interface Repository<
     extends StorageService<TKey, T, TDataStore> {
 
     /**
-     * @return The time of creation of this document in seconds since unix epoch
+     * @return The time of creation of this document as an {@link Instant}
      */
-    CompletableFuture<Optional<Integer>> getCreatedUtcTimeStampSeconds(TKey id);
-
-    /**
-     * @return The time of creation of this document in milliseconds since unix epoch
-     */
-    CompletableFuture<Optional<Long>> getCreatedUtcTimeStampMillis(TKey id);
-
-    /**
-     * @return The time of creation of this document as {@link Date}
-     */
-    CompletableFuture<Optional<Date>> getCreatedUtcDate(TKey id);
+    CompletableFuture<Optional<Instant>> getCreatedUtc(TKey id);
 }

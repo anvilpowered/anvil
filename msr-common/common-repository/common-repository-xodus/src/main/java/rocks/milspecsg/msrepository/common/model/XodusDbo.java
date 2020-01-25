@@ -23,17 +23,23 @@ import jetbrains.exodus.entitystore.EntityId;
 import rocks.milspecsg.msrepository.api.model.Mappable;
 import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 public abstract class XodusDbo implements ObjectWithId<EntityId>, Mappable<Entity> {
 
     private EntityId id;
 
-    private long createdUtc;
-    private long updatedUtc;
+    private long createdUtcSeconds;
+    private int createdUtcNanos;
+    private long updatedUtcSeconds;
+    private int updatedUtcNanos;
 
     protected XodusDbo() {
-        createdUtc = new Date().getTime();
+        Instant now = OffsetDateTime.now(ZoneOffset.UTC).toInstant();
+        createdUtcSeconds = now.getEpochSecond();
+        createdUtcNanos = now.getNano();
         prePersist();
     }
 
@@ -53,57 +59,49 @@ public abstract class XodusDbo implements ObjectWithId<EntityId>, Mappable<Entit
     }
 
     @Override
-    public int getCreatedUtcTimeStampSeconds() {
-        return (int) (createdUtc / 1000);
+    public Instant getCreatedUtc() {
+        return Instant.ofEpochSecond(createdUtcSeconds, createdUtcNanos);
     }
 
     @Override
-    public int getUpdatedUtcTimeStampSeconds() {
-        return (int) (updatedUtc / 1000);
-    }
-
-    @Override
-    public long getCreatedUtcTimeStampMillis() {
-        return createdUtc;
-    }
-
-    @Override
-    public long getUpdatedUtcTimeStampMillis() {
-        return updatedUtc;
-    }
-
-    @Override
-    public Date getCreatedUtcDate() {
-        return new Date(createdUtc);
-    }
-
-    @Override
-    public Date getUpdatedUtcDate() {
-        return new Date(updatedUtc);
+    public Instant getUpdatedUtc() {
+        return Instant.ofEpochSecond(updatedUtcSeconds, updatedUtcNanos);
     }
 
     protected void prePersist() {
-        updatedUtc = new Date().getTime();
+        Instant now = OffsetDateTime.now(ZoneOffset.UTC).toInstant();
+        updatedUtcSeconds = now.getEpochSecond();
+        updatedUtcNanos = now.getNano();
     }
 
     @Override
     public Entity writeTo(Entity object) {
         // id cannot be written to object
-        object.setProperty("createdUtc", createdUtc);
-        object.setProperty("updatedUtc", updatedUtc);
+        object.setProperty("createdUtcSeconds", createdUtcSeconds);
+        object.setProperty("createdUtcNanos", createdUtcNanos);
+        object.setProperty("updatedUtcSeconds", updatedUtcSeconds);
+        object.setProperty("updatedUtcNanos", updatedUtcNanos);
         return object;
     }
 
     @Override
     public void readFrom(Entity object) {
         id = object.getId();
-        Comparable<?> createdUtc = object.getProperty("createdUtc");
-        if (createdUtc instanceof Long) {
-            this.createdUtc = (Long) createdUtc;
+        Comparable<?> createdUtcSeconds = object.getProperty("createdUtcSeconds");
+        if (createdUtcSeconds instanceof Long) {
+            this.createdUtcSeconds = (Long) createdUtcSeconds;
         }
-        Comparable<?> updatedUtc = object.getProperty("updatedUtc");
-        if (updatedUtc instanceof Long) {
-            this.updatedUtc = (Long) updatedUtc;
+        Comparable<?> createdUtcNanos = object.getProperty("createdUtcNanos");
+        if (createdUtcNanos instanceof Integer) {
+            this.createdUtcNanos = (Integer) createdUtcNanos;
+        }
+        Comparable<?> updatedUtcSeconds = object.getProperty("updatedUtcSeconds");
+        if (updatedUtcSeconds instanceof Long) {
+            this.updatedUtcSeconds = (Long) updatedUtcSeconds;
+        }
+        Comparable<?> updatedUtcNanos = object.getProperty("updatedUtcNanos");
+        if (updatedUtcNanos instanceof Integer) {
+            this.updatedUtcNanos = (Integer) updatedUtcNanos;
         }
     }
 }

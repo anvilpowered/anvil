@@ -29,12 +29,15 @@ import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 import rocks.milspecsg.msrepository.api.repository.XodusRepository;
 import rocks.milspecsg.msrepository.common.component.CommonXodusComponent;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -153,6 +156,19 @@ public interface CommonXodusRepository<
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
                 txn.getEntity(id).delete();
+                return txn.commit();
+            })
+        );
+    }
+
+    @Override
+    default CompletableFuture<Boolean> update(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Consumer<? super Entity> update) {
+        return CompletableFuture.supplyAsync(() ->
+            getDataStoreContext().getDataStore().computeInTransaction(txn -> {
+                query.apply(txn).forEach(e -> {
+                    update.accept(e);
+                    e.setProperty("updatedUtc", OffsetDateTime.now(ZoneOffset.UTC).toInstant());
+                });
                 return txn.commit();
             })
         );

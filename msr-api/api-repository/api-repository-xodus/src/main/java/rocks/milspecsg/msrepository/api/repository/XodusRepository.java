@@ -27,6 +27,7 @@ import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface XodusRepository<
@@ -38,6 +39,8 @@ public interface XodusRepository<
     CompletableFuture<Optional<T>> getOne(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 
     CompletableFuture<Boolean> delete(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+
+    CompletableFuture<Boolean> update(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Consumer<? super Entity> update);
 
     Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(EntityId id);
 }

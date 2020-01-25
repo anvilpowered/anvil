@@ -24,7 +24,7 @@ import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 import rocks.milspecsg.msrepository.common.component.CommonComponent;
 import rocks.milspecsg.msrepository.common.storageservice.CommonStorageService;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -41,17 +41,7 @@ public abstract class CommonRepository<
     }
 
     @Override
-    public CompletableFuture<Optional<Integer>> getCreatedUtcTimeStampSeconds(TKey id) {
-        return getOne(id).thenApplyAsync(o -> o.map(ObjectWithId::getCreatedUtcTimeStampSeconds));
-    }
-
-    @Override
-    public CompletableFuture<Optional<Long>> getCreatedUtcTimeStampMillis(TKey id) {
-        return getOne(id).thenApplyAsync(o -> o.map(ObjectWithId::getCreatedUtcTimeStampMillis));
-    }
-
-    @Override
-    public CompletableFuture<Optional<Date>> getCreatedUtcDate(TKey id) {
-        return getOne(id).thenApplyAsync(o -> o.map(ObjectWithId::getCreatedUtcDate));
+    public CompletableFuture<Optional<Instant>> getCreatedUtc(TKey id) {
+        return getOne(id).thenApplyAsync(o -> o.map(ObjectWithId::getCreatedUtc));
     }
 }
