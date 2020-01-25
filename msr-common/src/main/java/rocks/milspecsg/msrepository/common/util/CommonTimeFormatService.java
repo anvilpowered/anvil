@@ -32,6 +32,12 @@ import java.util.regex.Pattern;
 
 public class CommonTimeFormatService implements TimeFormatService {
 
+    private static final long SECONDS_IN_YEAR = 31536000;
+    private static final long SECONDS_IN_MONTH = 2628000;
+    private static final long SECONDS_IN_DAY = 86400;
+    private static final long SECONDS_IN_HOUR = 3600;
+    private static final long SECONDS_IN_MINUTE = 60;
+
     private static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("uuuu-MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC);
 
     private static Pattern timePattern = Pattern.compile(
@@ -49,11 +55,11 @@ public class CommonTimeFormatService implements TimeFormatService {
         if (!matcher.matches()) {
             throw new IllegalStateException("Input does not match");
         }
-        return Optional.ofNullable(matcher.group(2)).map(g -> Long.parseLong(g) * 31536000).orElse(0L)
-            + Optional.ofNullable(matcher.group(4)).map(g -> Long.parseLong(g) * 2678400).orElse(0L)
-            + Optional.ofNullable(matcher.group(8)).map(g -> Long.parseLong(g) * 864000).orElse(0L)
-            + Optional.ofNullable(matcher.group(12)).map(g -> Long.parseLong(g) * 3600).orElse(0L)
-            + Optional.ofNullable(matcher.group(16)).map(g -> Long.parseLong(g) * 60).orElse(0L)
+        return Optional.ofNullable(matcher.group(2)).map(g -> Long.parseLong(g) * SECONDS_IN_YEAR).orElse(0L)
+            + Optional.ofNullable(matcher.group(4)).map(g -> Long.parseLong(g) * SECONDS_IN_MONTH).orElse(0L)
+            + Optional.ofNullable(matcher.group(8)).map(g -> Long.parseLong(g) * SECONDS_IN_DAY).orElse(0L)
+            + Optional.ofNullable(matcher.group(12)).map(g -> Long.parseLong(g) * SECONDS_IN_HOUR).orElse(0L)
+            + Optional.ofNullable(matcher.group(16)).map(g -> Long.parseLong(g) * SECONDS_IN_MINUTE).orElse(0L)
             + Optional.ofNullable(matcher.group(19)).map(Long::parseLong).orElse(0L);
     }
 
@@ -104,16 +110,16 @@ public class CommonTimeFormatService implements TimeFormatService {
     public String format(Duration duration) {
         StringBuilder s = new StringBuilder();
         long seconds = duration.getSeconds();
-        long years = seconds / 31556952;
-        seconds -= 31556952 * years;
-        long months = seconds / 2592000;
-        seconds -= 2628000 * months;
-        long days = seconds / 86400;
-        seconds -= 86400 * days;
-        long hours = seconds / 3600;
-        seconds -= 3600 * hours;
-        long minutes = seconds / 60;
-        seconds -= 60 * minutes;
+        long years = seconds / SECONDS_IN_YEAR;
+        seconds -= SECONDS_IN_YEAR * years;
+        long months = seconds / SECONDS_IN_MONTH;
+        seconds -= SECONDS_IN_MONTH * months;
+        long days = seconds / SECONDS_IN_DAY;
+        seconds -= SECONDS_IN_DAY * days;
+        long hours = seconds / SECONDS_IN_HOUR;
+        seconds -= SECONDS_IN_HOUR * hours;
+        long minutes = seconds / SECONDS_IN_MINUTE;
+        seconds -= SECONDS_IN_MINUTE * minutes;
         if (years != 0) {
             s.append(years).append(years == 1 ? " year, " : " years, ");
         }

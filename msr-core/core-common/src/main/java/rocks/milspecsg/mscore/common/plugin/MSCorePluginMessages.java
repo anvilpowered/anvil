@@ -27,6 +27,7 @@ public class MSCorePluginMessages<TString, TCommandSource> implements PluginMess
         return stringResult.builder()
             .red().append("You have been banned for: ", stringResult.deserialize(reason))
             .yellow().append("\n\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
+            .append("\n\nUntil ", timeFormatService.format(endUtc))
             .build();
     }
 
