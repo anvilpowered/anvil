@@ -55,6 +55,10 @@ public abstract class CommonManager<C extends Component<?, ?>> implements Manage
     private C currentComponent;
 
     private void registryLoaded(Object plugin) {
+        currentComponent = null;
+    }
+
+    private void loadComponent() {
         String dataStoreName = MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry);
         try {
             switch (dataStoreName.toLowerCase(Locale.ENGLISH)) {
@@ -80,7 +84,10 @@ public abstract class CommonManager<C extends Component<?, ?>> implements Manage
     @Override
     public C getPrimaryComponent() {
         try {
-            return Objects.requireNonNull(currentComponent);
+            if (currentComponent == null) {
+                loadComponent();
+            }
+            return currentComponent;
         } catch (RuntimeException e) {
             String message = "MSRepository: DataStoreName has not been loaded yet! Make sure your Registry and ConfigurationService implementations are annotated with @Singleton!";
             System.err.println(message);
