@@ -20,7 +20,6 @@ package rocks.milspecsg.mscore.velocity.plugin;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -30,9 +29,8 @@ import rocks.milspecsg.mscore.common.plugin.MSCore;
 import rocks.milspecsg.mscore.common.plugin.MSCorePluginInfo;
 import rocks.milspecsg.mscore.velocity.listeners.VelocityPlayerListener;
 import rocks.milspecsg.mscore.velocity.module.VelocityModule;
-import rocks.milspecsg.msrepository.velocity.module.ApiVelocityModule;
 import rocks.milspecsg.msrepository.api.MSRepository;
-import rocks.milspecsg.msrepository.api.data.registry.Registry;
+import rocks.milspecsg.msrepository.velocity.module.ApiVelocityModule;
 
 @Plugin(
     id = MSCorePluginInfo.id,
@@ -58,7 +56,7 @@ public class MSCoreVelocity extends MSCore {
     @Subscribe(order = PostOrder.EARLY)
     public void onInit(ProxyInitializeEvent event) {
         injector = velocityRootInjector.createChildInjector(new VelocityModule(), new ApiVelocityModule());
-        MSRepository.createEnvironment("mscore", injector, Key.get(Registry.class));
+        MSRepository.createEnvironment("mscore", injector);
         proxyServer.getEventManager().register(this, injector.getInstance(VelocityPlayerListener.class));
         load();
     }

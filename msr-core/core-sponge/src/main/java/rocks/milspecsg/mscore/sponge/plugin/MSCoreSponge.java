@@ -20,7 +20,6 @@ package rocks.milspecsg.mscore.sponge.plugin;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -30,9 +29,8 @@ import rocks.milspecsg.mscore.common.plugin.MSCore;
 import rocks.milspecsg.mscore.common.plugin.MSCorePluginInfo;
 import rocks.milspecsg.mscore.sponge.listeners.SpongePlayerListener;
 import rocks.milspecsg.mscore.sponge.module.SpongeModule;
-import rocks.milspecsg.msrepository.sponge.module.ApiSpongeModule;
 import rocks.milspecsg.msrepository.api.MSRepository;
-import rocks.milspecsg.msrepository.api.data.registry.Registry;
+import rocks.milspecsg.msrepository.sponge.module.ApiSpongeModule;
 
 @Plugin(
     id = MSCorePluginInfo.id,
@@ -55,7 +53,7 @@ public class MSCoreSponge extends MSCore {
     @Listener(order = Order.EARLY)
     public void onInit(GameInitializationEvent event) {
         injector = spongeRootInjector.createChildInjector(new SpongeModule(), new ApiSpongeModule());
-        MSRepository.createEnvironment("mscore", injector, Key.get(Registry.class));
+        MSRepository.createEnvironment("mscore", injector);
         Sponge.getEventManager().registerListeners(this, injector.getInstance(SpongePlayerListener.class));
         load();
     }

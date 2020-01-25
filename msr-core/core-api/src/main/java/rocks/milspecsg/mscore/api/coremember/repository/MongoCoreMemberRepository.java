@@ -24,7 +24,9 @@ import org.mongodb.morphia.query.Query;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.repository.MongoRepository;
 
+import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface MongoCoreMemberRepository
     extends CoreMemberRepository<ObjectId, Datastore>,
@@ -35,4 +37,14 @@ public interface MongoCoreMemberRepository
     Query<CoreMember<ObjectId>> asQueryForUser(String userName);
 
     Query<CoreMember<ObjectId>> asQueryForIpAddress(String ipAddress);
+
+    CompletableFuture<Boolean> ban(Query<CoreMember<ObjectId>> query, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> unBan(Query<CoreMember<ObjectId>> query);
+
+    CompletableFuture<Boolean> mute(Query<CoreMember<ObjectId>> query, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> unMute(Query<CoreMember<ObjectId>> query);
+
+    CompletableFuture<Boolean> setNickname(Query<CoreMember<ObjectId>> query, String nickName);
 }

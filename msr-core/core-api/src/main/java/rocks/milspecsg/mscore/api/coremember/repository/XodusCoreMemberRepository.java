@@ -25,7 +25,9 @@ import jetbrains.exodus.entitystore.StoreTransaction;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.repository.XodusRepository;
 
+import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public interface XodusCoreMemberRepository
@@ -37,4 +39,14 @@ public interface XodusCoreMemberRepository
     Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(String userName);
 
     Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForIpAddress(String ipAddress);
+
+    CompletableFuture<Boolean> ban(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> unBan(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+
+    CompletableFuture<Boolean> mute(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> unMute(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+
+    CompletableFuture<Boolean> setNickname(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName);
 }

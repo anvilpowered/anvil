@@ -23,7 +23,7 @@ import org.mongodb.morphia.annotations.Entity;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.common.model.MongoDbo;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity("coreMembers")
@@ -32,7 +32,14 @@ public class MongoCoreMember extends MongoDbo implements CoreMember<ObjectId> {
     private UUID userUUID;
     private String userName;
     private String ipAddress;
-    private Date lastJoinedUtc;
+    private Instant lastJoinedUtc;
+    private String nickName;
+    private boolean banned;
+    private boolean muted;
+    private Instant banEndUtc;
+    private Instant muteEndUtc;
+    private String banReason;
+    private String muteReason;
 
     @Override
     public UUID getUserUUID() {
@@ -65,12 +72,82 @@ public class MongoCoreMember extends MongoDbo implements CoreMember<ObjectId> {
     }
 
     @Override
-    public Date getLastJoinedUtc() {
+    public Instant getLastJoinedUtc() {
         return lastJoinedUtc;
     }
 
     @Override
-    public void setLastJoinedUtc(Date lastJoinedUtc) {
+    public void setLastJoinedUtc(Instant lastJoinedUtc) {
         this.lastJoinedUtc = lastJoinedUtc;
+    }
+
+    @Override
+    public String getNickName() {
+        return nickName;
+    }
+
+    @Override
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    @Override
+    public boolean isBanned() {
+        return banned;
+    }
+
+    @Override
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+
+    @Override
+    public boolean isMuted() {
+        return muted;
+    }
+
+    @Override
+    public void setMuted(boolean muted) {
+        this.muted = muted;
+    }
+
+    @Override
+    public Instant getBanEndUtc() {
+        return banEndUtc;
+    }
+
+    @Override
+    public void setBanEndUtc(Instant banEndUtc) {
+        this.banEndUtc = banEndUtc;
+    }
+
+    @Override
+    public Instant getMuteEndUtc() {
+        return muteEndUtc;
+    }
+
+    @Override
+    public void setMuteEndUtc(Instant muteEndUtc) {
+        this.muteEndUtc = muteEndUtc;
+    }
+
+    @Override
+    public String getBanReason() {
+        return banReason;
+    }
+
+    @Override
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
+    }
+
+    @Override
+    public String getMuteReason() {
+        return muteReason;
+    }
+
+    @Override
+    public void setMuteReason(String muteReason) {
+        this.muteReason = muteReason;
     }
 }

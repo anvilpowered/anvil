@@ -24,7 +24,7 @@ import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.datastore.annotation.XodusEntity;
 import rocks.milspecsg.msrepository.common.model.XodusDbo;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 @XodusEntity
@@ -33,7 +33,17 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
     private String userUUID;
     private String userName;
     private String ipAddress;
-    private long lastJoinedUtc;
+    private long lastJoinedUtcSeconds;
+    private int lastJoinedUtcNanos;
+    private String nickName;
+    private boolean banned;
+    private boolean muted;
+    private long banEndUtcSeconds;
+    private int banEndUtcNanos;
+    private long muteEndUtcSeconds;
+    private int muteEndUtcNanos;
+    private String banReason;
+    private String muteReason;
 
     @Override
     public UUID getUserUUID() {
@@ -66,13 +76,86 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
     }
 
     @Override
-    public Date getLastJoinedUtc() {
-        return new Date(lastJoinedUtc);
+    public Instant getLastJoinedUtc() {
+        return Instant.ofEpochSecond(lastJoinedUtcSeconds, lastJoinedUtcNanos);
     }
 
     @Override
-    public void setLastJoinedUtc(Date lastJoinedUtc) {
-        this.lastJoinedUtc = lastJoinedUtc.getTime();
+    public void setLastJoinedUtc(Instant lastJoinedUtc) {
+        lastJoinedUtcSeconds = lastJoinedUtc.getEpochSecond();
+        lastJoinedUtcNanos = lastJoinedUtc.getNano();
+    }
+
+    @Override
+    public String getNickName() {
+        return nickName;
+    }
+
+    @Override
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    @Override
+    public boolean isBanned() {
+        return banned;
+    }
+
+    @Override
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+
+    @Override
+    public boolean isMuted() {
+        return muted;
+    }
+
+    @Override
+    public void setMuted(boolean muted) {
+        this.muted = muted;
+    }
+
+    @Override
+    public Instant getBanEndUtc() {
+        return Instant.ofEpochSecond(banEndUtcSeconds, banEndUtcNanos);
+    }
+
+    @Override
+    public void setBanEndUtc(Instant banEndUtc) {
+        banEndUtcSeconds = banEndUtc.getEpochSecond();
+        banEndUtcNanos = banEndUtc.getNano();
+    }
+
+    @Override
+    public Instant getMuteEndUtc() {
+        return Instant.ofEpochSecond(muteEndUtcSeconds, muteEndUtcNanos);
+    }
+
+    @Override
+    public void setMuteEndUtc(Instant muteEndUtc) {
+        muteEndUtcSeconds = muteEndUtc.getEpochSecond();
+        muteEndUtcNanos = muteEndUtc.getNano();
+    }
+
+    @Override
+    public String getBanReason() {
+        return banReason;
+    }
+
+    @Override
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
+    }
+
+    @Override
+    public String getMuteReason() {
+        return muteReason;
+    }
+
+    @Override
+    public void setMuteReason(String muteReason) {
+        this.muteReason = muteReason;
     }
 
     @Override
@@ -87,7 +170,23 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
         if (ipAddress != null) {
             object.setProperty("ipAddress", ipAddress);
         }
-        object.setProperty("lastJoinedUtc", lastJoinedUtc);
+        object.setProperty("lastJoinedUtcSeconds", lastJoinedUtcSeconds);
+        object.setProperty("lastJoinedUtcNanos", lastJoinedUtcNanos);
+        if (nickName != null) {
+            object.setProperty("nickname", nickName);
+        }
+        object.setProperty("banned", banned);
+        object.setProperty("muted", muted);
+        object.setProperty("banEndUtcSeconds", banEndUtcSeconds);
+        object.setProperty("banEndUtcNanos", banEndUtcNanos);
+        object.setProperty("muteEndUtcSeconds", muteEndUtcSeconds);
+        object.setProperty("muteEndUtcNanos", muteEndUtcNanos);
+        if (banReason != null) {
+            object.setProperty("banReason", banReason);
+        }
+        if (muteReason != null) {
+            object.setProperty("muteReason", muteReason);
+        }
         return object;
     }
 
@@ -106,9 +205,49 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
         if (ipAddress instanceof String) {
             this.ipAddress = (String) ipAddress;
         }
-        Comparable<?> lastJoinedUtc = object.getProperty("lastJoinedUtc");
-        if (lastJoinedUtc instanceof Long) {
-            this.lastJoinedUtc = (Long) lastJoinedUtc;
+        Comparable<?> lastJoinedUtcSeconds = object.getProperty("lastJoinedUtcSeconds");
+        if (lastJoinedUtcSeconds instanceof Long) {
+            this.lastJoinedUtcSeconds = (Long) lastJoinedUtcSeconds;
+        }
+        Comparable<?> lastJoinedUtcNanos = object.getProperty("lastJoinedUtcNanos");
+        if (lastJoinedUtcNanos instanceof Integer) {
+            this.lastJoinedUtcNanos = (Integer) lastJoinedUtcNanos;
+        }
+        Comparable<?> nickName = object.getProperty("nickName");
+        if (nickName instanceof String) {
+            this.nickName = (String) nickName;
+        }
+        Comparable<?> banned = object.getProperty("banned");
+        if (banned instanceof Boolean) {
+            this.banned = (Boolean) banned;
+        }
+        Comparable<?> muted = object.getProperty("muted");
+        if (muted instanceof Boolean) {
+            this.muted = (Boolean) muted;
+        }
+        Comparable<?> banEndUtcSeconds = object.getProperty("banEndUtcSeconds");
+        if (banEndUtcSeconds instanceof Long) {
+            this.banEndUtcSeconds = (Long) banEndUtcSeconds;
+        }
+        Comparable<?> banEndUtcNanos = object.getProperty("banEndUtcNanos");
+        if (banEndUtcNanos instanceof Integer) {
+            this.banEndUtcNanos = (Integer) banEndUtcNanos;
+        }
+        Comparable<?> muteEndUtcSeconds = object.getProperty("muteEndUtcSeconds");
+        if (muteEndUtcSeconds instanceof Long) {
+            this.muteEndUtcSeconds = (Long) muteEndUtcSeconds;
+        }
+        Comparable<?> muteEndUtcNanos = object.getProperty("muteEndUtcNanos");
+        if (muteEndUtcNanos instanceof Integer) {
+            this.muteEndUtcNanos = (Integer) muteEndUtcNanos;
+        }
+        Comparable<?> banReason = object.getProperty("banReason");
+        if (banReason instanceof String) {
+            this.banReason = (String) banReason;
+        }
+        Comparable<?> muteReason = object.getProperty("muteReason");
+        if (muteReason instanceof String) {
+            this.muteReason = (String) muteReason;
         }
     }
 }

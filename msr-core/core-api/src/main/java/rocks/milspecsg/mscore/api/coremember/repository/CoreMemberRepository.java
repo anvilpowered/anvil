@@ -21,6 +21,7 @@ package rocks.milspecsg.mscore.api.coremember.repository;
 import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.repository.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -84,4 +85,24 @@ public interface CoreMemberRepository<
      * @return A {@link List} of matching {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      */
     CompletableFuture<List<CoreMember<TKey>>> getForIpAddress(String ipAddress);
+
+    CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> unBanUser(UUID userUUID);
+
+    CompletableFuture<Boolean> unBanUser(String userName);
+
+    CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> muteUser(String userName, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> unMuteUser(UUID userUUID);
+
+    CompletableFuture<Boolean> unMuteUser(String userName);
+
+    CompletableFuture<Boolean> setNickNameForUser(UUID userUUID, String nickName);
+
+    CompletableFuture<Boolean> setNickNameForUser(String userName, String nickName);
 }

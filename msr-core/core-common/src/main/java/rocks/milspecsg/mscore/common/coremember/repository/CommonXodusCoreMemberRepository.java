@@ -29,7 +29,9 @@ import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.api.model.Mappable;
 import rocks.milspecsg.msrepository.common.repository.CommonXodusRepository;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +64,7 @@ public class CommonXodusCoreMemberRepository
                     member.setUserUUID(userUUID);
                     member.setUserName(userName);
                     member.setIpAddress(ipAddress);
-                    member.setLastJoinedUtc(new Date());
+                    member.setLastJoinedUtc(OffsetDateTime.now(ZoneOffset.UTC).toInstant());
                     flags[0] = true;
                     return insertOne(member).join();
                 }
@@ -83,10 +85,9 @@ public class CommonXodusCoreMemberRepository
                     entity.setProperty("ipAddress", ipAddress);
                     updateIPAddress = true;
                 }
-                Date date = new Date();
-                long time = date.getTime();
-                entity.setProperty("lastJoinedUtc", time);
-                entity.setProperty("updatedUtc", time);
+                Instant now = OffsetDateTime.now(ZoneOffset.UTC).toInstant();
+                entity.setProperty("lastJoinedUtc", now);
+                entity.setProperty("updatedUtc", now);
                 if (txn.commit()) {
                     if (updateUsername) {
                         item.setUserName(userName);
@@ -96,7 +97,7 @@ public class CommonXodusCoreMemberRepository
                         item.setIpAddress(ipAddress);
                         flags[2] = true;
                     }
-                    item.setLastJoinedUtc(date);
+                    item.setLastJoinedUtc(now);
                     return Optional.of(item);
                 }
                 System.err.println("Failed to update " + userName + " please report this on github!");
@@ -121,6 +122,56 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason) {
+        return ban(asQueryForUser(userUUID), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason) {
+        return ban(asQueryForUser(userName), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBanUser(UUID userUUID) {
+        return unBan(asQueryForUser(userUUID));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBanUser(String userName) {
+        return unBan(asQueryForUser(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason) {
+        return mute(asQueryForUser(userUUID), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> muteUser(String userName, Instant endUtc, String reason) {
+        return mute(asQueryForUser(userName), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unMuteUser(UUID userUUID) {
+        return unMute(asQueryForUser(userUUID));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unMuteUser(String userName) {
+        return unMute(asQueryForUser(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickNameForUser(UUID userUUID, String nickName) {
+        return setNickname(asQueryForUser(userUUID), nickName);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickNameForUser(String userName, String nickName) {
+        return setNickname(asQueryForUser(userName), nickName);
+    }
+
+    @Override
     public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(UUID userUUID) {
         return txn -> txn.find(getTClass().getSimpleName(), "userUUID", userUUID.toString());
     }
@@ -133,5 +184,38 @@ public class CommonXodusCoreMemberRepository
     @Override
     public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForIpAddress(String ipAddress) {
         return txn -> txn.find(getTClass().getSimpleName(), "ipAddress", ipAddress);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> ban(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason) {
+        return update(query, e -> {
+            e.setProperty("banned", true);
+            e.setProperty("banEndUtc", endUtc);
+            e.setProperty("banReason", reason);
+        });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBan(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+        return update(query, e -> e.setProperty("banned", false));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> mute(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason) {
+        return update(query, e -> {
+            e.setProperty("muted", true);
+            e.setProperty("muteEndUtc", endUtc);
+            e.setProperty("muteReason", reason);
+        });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unMute(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+        return update(query, e -> e.setProperty("muted", false));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickname(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName) {
+        return update(query, e -> e.setProperty("nickName", nickName));
     }
 }

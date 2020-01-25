@@ -28,7 +28,9 @@ import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.common.repository.CommonMongoRepository;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,8 +66,8 @@ public class CommonMongoCoreMemberRepository
                     updateOperations.set("ipAddress", ipAddress);
                     updateIpAddress = true;
                 }
-                updateOperations.set("lastJoinedUtc", new Date());
-                if (update(asQuery(optionalMember.get().getId()), updateOperations)) {
+                updateOperations.set("lastJoinedUtc", OffsetDateTime.now(ZoneOffset.UTC).toInstant());
+                if (getDataStoreContext().getDataStore().update(asQuery(optionalMember.get().getId()), updateOperations).getUpdatedCount() > 0) {
                     if (updateName) {
                         optionalMember.get().setUserName(userName);
                     }
@@ -82,7 +84,7 @@ public class CommonMongoCoreMemberRepository
             member.setUserUUID(userUUID);
             member.setUserName(userName);
             member.setIpAddress(ipAddress);
-            member.setLastJoinedUtc(new Date());
+            member.setLastJoinedUtc(OffsetDateTime.now(ZoneOffset.UTC).toInstant());
             flags[0] = true;
             return insertOne(member).join();
         });
@@ -104,6 +106,56 @@ public class CommonMongoCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason) {
+        return ban(asQueryForUser(userUUID), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason) {
+        return ban(asQueryForUser(userName), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBanUser(UUID userUUID) {
+        return unBan(asQueryForUser(userUUID));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBanUser(String userName) {
+        return unBan(asQueryForUser(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason) {
+        return mute(asQueryForUser(userUUID), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> muteUser(String userName, Instant endUtc, String reason) {
+        return mute(asQueryForUser(userName), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unMuteUser(UUID userUUID) {
+        return unMute(asQueryForUser(userUUID));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unMuteUser(String userName) {
+        return unMute(asQueryForUser(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickNameForUser(UUID userUUID, String nickName) {
+        return setNickname(asQueryForUser(userUUID), nickName);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickNameForUser(String userName, String nickName) {
+        return setNickname(asQueryForUser(userName), nickName);
+    }
+
+    @Override
     public Query<CoreMember<ObjectId>> asQueryForUser(UUID userUUID) {
         return asQuery().field("userUUID").equal(userUUID);
     }
@@ -116,5 +168,38 @@ public class CommonMongoCoreMemberRepository
     @Override
     public Query<CoreMember<ObjectId>> asQueryForIpAddress(String ipAddress) {
         return asQuery().field("ipAddress").equal(ipAddress);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> ban(Query<CoreMember<ObjectId>> query, Instant endUtc, String reason) {
+        return update(query, createUpdateOperations()
+            .set("banned", true)
+            .set("banEndUtc", endUtc)
+            .set("banReason", reason)
+        );
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBan(Query<CoreMember<ObjectId>> query) {
+        return update(query, createUpdateOperations().set("banned", false));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> mute(Query<CoreMember<ObjectId>> query, Instant endUtc, String reason) {
+        return update(query, createUpdateOperations()
+            .set("muted", true)
+            .set("muteEndUtc", endUtc)
+            .set("muteReason", reason)
+        );
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unMute(Query<CoreMember<ObjectId>> query) {
+        return update(query, createUpdateOperations().set("muted", false));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickname(Query<CoreMember<ObjectId>> query, String nickName) {
+        return update(query, createUpdateOperations().set("muted", false));
     }
 }

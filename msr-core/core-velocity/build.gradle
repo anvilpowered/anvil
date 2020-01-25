@@ -52,6 +52,7 @@ dependencies {
 
     implementation guice
     implementation javasisst
+    implementation microutils_logging
     implementation mongo_java_driver
     implementation morphia
     implementation xodus_entity_store

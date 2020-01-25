@@ -20,7 +20,7 @@ package rocks.milspecsg.mscore.api.model.coremember;
 
 import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 public interface CoreMember<TKey> extends ObjectWithId<TKey> {
@@ -34,6 +34,27 @@ public interface CoreMember<TKey> extends ObjectWithId<TKey> {
     String getIpAddress();
     void setIpAddress(String ipAddress);
 
-    Date getLastJoinedUtc();
-    void setLastJoinedUtc(Date joinedUtc);
+    Instant getLastJoinedUtc();
+    void setLastJoinedUtc(Instant joinedUtc);
+
+    String getNickName();
+    void setNickName(String nickName);
+
+    boolean isBanned();
+    void setBanned(boolean banned);
+
+    boolean isMuted();
+    void setMuted(boolean muted);
+
+    Instant getBanEndUtc();
+    void setBanEndUtc(Instant banEndUtc);
+
+    Instant getMuteEndUtc();
+    void setMuteEndUtc(Instant muteEndUtc);
+
+    String getBanReason();
+    void setBanReason(String banReason);
+
+    String getMuteReason();
+    void setMuteReason(String muteReason);
 }

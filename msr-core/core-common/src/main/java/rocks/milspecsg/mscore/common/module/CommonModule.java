@@ -19,7 +19,6 @@
 package rocks.milspecsg.mscore.common.module;
 
 import com.google.common.reflect.TypeToken;
-import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
@@ -27,26 +26,29 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
-import rocks.milspecsg.mscore.common.data.config.MSCoreConfigurationService;
-import rocks.milspecsg.mscore.common.plugin.MSCorePluginInfo;
+import rocks.milspecsg.mscore.api.plugin.PluginMessages;
 import rocks.milspecsg.mscore.common.coremember.CommonCoreMemberManager;
 import rocks.milspecsg.mscore.common.coremember.repository.CommonMongoCoreMemberRepository;
 import rocks.milspecsg.mscore.common.coremember.repository.CommonXodusCoreMemberRepository;
-import rocks.milspecsg.msrepository.api.util.BasicPluginInfo;
-import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
-import rocks.milspecsg.msrepository.common.misc.CommonBindingExtensions;
-import rocks.milspecsg.msrepository.api.util.PluginInfo;
+import rocks.milspecsg.mscore.common.data.config.MSCoreConfigurationService;
+import rocks.milspecsg.mscore.common.plugin.MSCorePluginInfo;
+import rocks.milspecsg.mscore.common.plugin.MSCorePluginMessages;
 import rocks.milspecsg.msrepository.api.data.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
-import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
-import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
 import rocks.milspecsg.msrepository.api.datastore.DataStoreContext;
 import rocks.milspecsg.msrepository.api.datastore.MongoContext;
 import rocks.milspecsg.msrepository.api.datastore.XodusContext;
+import rocks.milspecsg.msrepository.api.manager.annotation.MongoDBComponent;
+import rocks.milspecsg.msrepository.api.manager.annotation.XodusComponent;
+import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
+import rocks.milspecsg.msrepository.api.util.BasicPluginInfo;
+import rocks.milspecsg.msrepository.api.util.PluginInfo;
 import rocks.milspecsg.msrepository.common.data.registry.CommonExtendedRegistry;
+import rocks.milspecsg.msrepository.common.misc.CommonBindingExtensions;
+import rocks.milspecsg.msrepository.common.module.ApiCommonModule;
 
 @SuppressWarnings("UnstableApiUsage")
-public class CommonModule<TString, TCommandSource> extends AbstractModule {
+public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
 
     @Override
     protected void configure() {
@@ -59,6 +61,10 @@ public class CommonModule<TString, TCommandSource> extends AbstractModule {
 
         be.bind(new TypeToken<BasicPluginInfo>(getClass()) {
         }, new TypeToken<MSCorePluginInfo<TString, TCommandSource>>(getClass()) {
+        });
+
+        be.bind(new TypeToken<PluginMessages<TString>>(getClass()) {
+        }, new TypeToken<MSCorePluginMessages<TString, TCommandSource>>(getClass()) {
         });
 
         be.bind(

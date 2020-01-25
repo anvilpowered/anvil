@@ -19,24 +19,58 @@
 package rocks.milspecsg.mscore.velocity.listeners;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.event.connection.LoginEvent;
+import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
+import net.kyori.text.TextComponent;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
+import rocks.milspecsg.mscore.api.model.coremember.CoreMember;
+import rocks.milspecsg.mscore.api.plugin.PluginMessages;
 
 public class VelocityPlayerListener {
 
     @Inject
     CoreMemberManager coreMemberManager;
 
+    @Inject
+    PluginMessages<TextComponent> pluginMessages;
+
     @Subscribe
-    public void onPlayerJoin(PostLoginEvent event) {
+    public void onPlayerJoin(LoginEvent event) {
         Player player = event.getPlayer();
         coreMemberManager.getPrimaryComponent()
             .getOneOrGenerateForUser(
                 player.getUniqueId(),
                 player.getUsername(),
                 player.getRemoteAddress().getHostString()
-            );
+            ).thenAcceptAsync(optionalMember -> {
+            if (!optionalMember.isPresent()) {
+                return;
+            }
+            CoreMember<?> member = optionalMember.get();
+            if (member.isBanned()) {
+                event.setResult(ResultedEvent.ComponentResult.denied(pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc())));
+            }
+        }).join();
+    }
+
+    @Subscribe
+    public void onPlayerChat(PlayerChatEvent event) {
+        Player player = event.getPlayer();
+        coreMemberManager.getPrimaryComponent()
+            .getOneForUser(
+                player.getUniqueId()
+            ).thenAcceptAsync(optionalMember -> {
+            if (!optionalMember.isPresent()) {
+                return;
+            }
+            CoreMember<?> member = optionalMember.get();
+            if (member.isMuted()) {
+                event.setResult(PlayerChatEvent.ChatResult.denied());
+                player.sendMessage(pluginMessages.getMuteMessage(member.getMuteReason(), member.getMuteEndUtc()));
+            }
+        }).join();
     }
 }
