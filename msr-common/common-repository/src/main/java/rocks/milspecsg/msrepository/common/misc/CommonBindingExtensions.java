@@ -49,10 +49,10 @@ public class CommonBindingExtensions implements BindingExtensions {
     ) {
         binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType()))
             .annotatedWith(componentAnnotation)
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+            .to(BindingExtensions.getTypeLiteral(target));
 
         binder.bind((TypeLiteral<From1>) TypeLiteral.get(from3.getType()))
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+            .to(BindingExtensions.getTypeLiteral(target));
     }
 
     @Override
@@ -74,9 +74,9 @@ public class CommonBindingExtensions implements BindingExtensions {
         TypeToken<Target> target,
         Class<? extends Annotation> annotation
     ) {
-        binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType()))
+        binder.bind(BindingExtensions.getTypeLiteral(from))
             .annotatedWith(annotation)
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+            .to(BindingExtensions.getTypeLiteral(target));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CommonBindingExtensions implements BindingExtensions {
         TypeToken<From> from,
         TypeToken<Target> target
     ) {
-        binder.bind((TypeLiteral<From>) TypeLiteral.get(from.getType()))
-            .to((TypeLiteral<Target>) TypeLiteral.get(target.getType()));
+        binder.bind(BindingExtensions.getTypeLiteral(from))
+            .to(BindingExtensions.getTypeLiteral(target));
     }
 }

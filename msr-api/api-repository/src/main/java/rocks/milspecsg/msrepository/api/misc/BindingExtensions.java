@@ -19,11 +19,13 @@
 package rocks.milspecsg.msrepository.api.misc;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 import rocks.milspecsg.msrepository.api.component.Component;
 
 import java.lang.annotation.Annotation;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"unchecked", "UnstableApiUsage"})
 public interface BindingExtensions {
 
     /**
@@ -77,4 +79,12 @@ public interface BindingExtensions {
         TypeToken<From> from,
         TypeToken<Target> target
     );
+
+    static <T> TypeLiteral<T> getTypeLiteral(TypeToken<T> typeToken) {
+        return (TypeLiteral<T>) TypeLiteral.get(typeToken.getType());
+    }
+
+    static <T> Key<T> getKey(TypeToken<T> typeToken) {
+        return Key.get(getTypeLiteral(typeToken));
+    }
 }
