@@ -86,21 +86,31 @@ public interface CoreMemberRepository<
      */
     CompletableFuture<List<CoreMember<TKey>>> getForIpAddress(String ipAddress);
 
+    CompletableFuture<Boolean> ban(TKey id, Instant endUtc, String reason);
+
     CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason);
 
     CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason);
+
+    CompletableFuture<Boolean> unBan(TKey id);
 
     CompletableFuture<Boolean> unBanUser(UUID userUUID);
 
     CompletableFuture<Boolean> unBanUser(String userName);
 
+    CompletableFuture<Boolean> mute(TKey id, Instant endUtc, String reason);
+
     CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason);
 
     CompletableFuture<Boolean> muteUser(String userName, Instant endUtc, String reason);
 
+    CompletableFuture<Boolean> unMute(TKey id);
+
     CompletableFuture<Boolean> unMuteUser(UUID userUUID);
 
     CompletableFuture<Boolean> unMuteUser(String userName);
+
+    CompletableFuture<Boolean> setNickName(TKey id, String nickName);
 
     CompletableFuture<Boolean> setNickNameForUser(UUID userUUID, String nickName);
 

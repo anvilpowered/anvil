@@ -106,6 +106,11 @@ public class CommonMongoCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> ban(ObjectId id, Instant endUtc, String reason) {
+        return ban(asQuery(id), endUtc, reason);
+    }
+
+    @Override
     public CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason) {
         return ban(asQueryForUser(userUUID), endUtc, reason);
     }
@@ -113,6 +118,11 @@ public class CommonMongoCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason) {
         return ban(asQueryForUser(userName), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBan(ObjectId id) {
+        return unBan(asQuery(id));
     }
 
     @Override
@@ -126,6 +136,11 @@ public class CommonMongoCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> mute(ObjectId id, Instant endUtc, String reason) {
+        return mute(asQuery(id), endUtc, reason);
+    }
+
+    @Override
     public CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason) {
         return mute(asQueryForUser(userUUID), endUtc, reason);
     }
@@ -136,6 +151,11 @@ public class CommonMongoCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> unMute(ObjectId id) {
+        return unMute(asQuery(id));
+    }
+
+    @Override
     public CompletableFuture<Boolean> unMuteUser(UUID userUUID) {
         return unMute(asQueryForUser(userUUID));
     }
@@ -143,6 +163,11 @@ public class CommonMongoCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> unMuteUser(String userName) {
         return unMute(asQueryForUser(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickName(ObjectId id, String nickName) {
+        return setNickname(asQuery(id), nickName);
     }
 
     @Override

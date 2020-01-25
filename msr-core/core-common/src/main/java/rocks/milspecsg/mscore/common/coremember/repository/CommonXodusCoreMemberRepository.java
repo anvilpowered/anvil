@@ -122,6 +122,11 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> ban(EntityId id, Instant endUtc, String reason) {
+        return ban(asQuery(id), endUtc, reason);
+    }
+
+    @Override
     public CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason) {
         return ban(asQueryForUser(userUUID), endUtc, reason);
     }
@@ -129,6 +134,11 @@ public class CommonXodusCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason) {
         return ban(asQueryForUser(userName), endUtc, reason);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBan(EntityId id) {
+        return unBan(asQuery(id));
     }
 
     @Override
@@ -142,6 +152,11 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> mute(EntityId id, Instant endUtc, String reason) {
+        return mute(asQuery(id), endUtc, reason);
+    }
+
+    @Override
     public CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason) {
         return mute(asQueryForUser(userUUID), endUtc, reason);
     }
@@ -152,6 +167,11 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> unMute(EntityId id) {
+        return unMute(asQuery(id));
+    }
+
+    @Override
     public CompletableFuture<Boolean> unMuteUser(UUID userUUID) {
         return unMute(asQueryForUser(userUUID));
     }
@@ -159,6 +179,11 @@ public class CommonXodusCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> unMuteUser(String userName) {
         return unMute(asQueryForUser(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setNickName(EntityId id, String nickName) {
+        return setNickname(asQuery(id), nickName);
     }
 
     @Override
