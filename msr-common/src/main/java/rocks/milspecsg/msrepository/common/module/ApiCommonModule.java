@@ -19,16 +19,13 @@
 package rocks.milspecsg.msrepository.common.module;
 
 import com.google.inject.AbstractModule;
-import rocks.milspecsg.msrepository.api.util.DateFormatService;
-import rocks.milspecsg.msrepository.api.util.TimeConversionService;
-import rocks.milspecsg.msrepository.common.util.CommonDateFormatService;
-import rocks.milspecsg.msrepository.common.util.CommonTimeConversionService;
+import rocks.milspecsg.msrepository.api.util.TimeFormatService;
+import rocks.milspecsg.msrepository.common.util.CommonTimeFormatService;
 
 public class ApiCommonModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(DateFormatService.class).to(CommonDateFormatService.class);
-        bind(TimeConversionService.class).to(CommonTimeConversionService.class);
+        bind(TimeFormatService.class).to(CommonTimeFormatService.class);
     }
 }

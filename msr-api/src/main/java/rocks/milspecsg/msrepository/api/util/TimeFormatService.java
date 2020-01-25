@@ -18,17 +18,37 @@
 
 package rocks.milspecsg.msrepository.api.util;
 
-import java.text.ParseException;
-import java.util.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
-public interface DateFormatService {
+public interface TimeFormatService {
 
-    String format(Date date);
+    long parseSecondsUnsafe(String input);
 
-    String formatDiff(Date date);
+    Optional<Long> parseSeconds(String input);
 
-    Date parseUnsafe(String date) throws ParseException;
+    Duration parseDurationUnsafe(String input);
 
-    Optional<Date> parse(String date);
+    Optional<Duration> parseDuration(String input);
+
+    Instant parseFutureInstantUnsafe(String input);
+
+    Optional<Instant> parseFutureInstant(String input);
+
+    Instant parseInstantUnsafe(String input);
+
+    Optional<Instant> parseInstant(String input);
+
+    String format(Duration duration);
+
+    String format(Instant instant);
+
+    String formatDurationUnsafe(String input);
+
+    Optional<String> formatDuration(String input);
+
+    String formatInstantUnsafe(String input);
+
+    Optional<String> formatInstant(String input);
 }
