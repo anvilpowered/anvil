@@ -15,12 +15,12 @@ public class SpongeKickService implements KickService {
     private UserService<User, Player> userService;
 
     @Override
-    public void kick(UUID userUUID, String reason) {
+    public void kick(UUID userUUID, Object reason) {
         userService.get(userUUID).flatMap(User::getPlayer).ifPresent(player -> player.kick(Text.of(reason)));
     }
 
     @Override
-    public void kick(String userName, String reason) {
+    public void kick(String userName, Object reason) {
         userService.get(userName).flatMap(User::getPlayer).ifPresent(player -> player.kick(Text.of(reason)));
     }
 

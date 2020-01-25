@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public interface KickService {
 
-    void kick(UUID userUUID, String reason);
+    void kick(UUID userUUID, Object reason);
 
-    void kick(String userName, String reason);
+    void kick(String userName, Object reason);
 
     void kick(UUID userUUID);
 

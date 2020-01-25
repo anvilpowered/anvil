@@ -12,14 +12,18 @@ public class VelocityKickService implements KickService {
     @Inject
     private ProxyServer proxyServer;
 
-    @Override
-    public void kick(UUID userUUID, String reason) {
-        proxyServer.getPlayer(userUUID).ifPresent(p -> p.disconnect(TextComponent.of(reason)));
+    private TextComponent getReason(Object reason) {
+        return reason instanceof TextComponent ? (TextComponent) reason : TextComponent.of(reason.toString());
     }
 
     @Override
-    public void kick(String userName, String reason) {
-        proxyServer.getPlayer(userName).ifPresent(p -> p.disconnect(TextComponent.of(reason)));
+    public void kick(UUID userUUID, Object reason) {
+        proxyServer.getPlayer(userUUID).ifPresent(p -> p.disconnect(getReason(reason)));
+    }
+
+    @Override
+    public void kick(String userName, Object reason) {
+        proxyServer.getPlayer(userName).ifPresent(p -> p.disconnect(getReason(reason)));
     }
 
     @Override
