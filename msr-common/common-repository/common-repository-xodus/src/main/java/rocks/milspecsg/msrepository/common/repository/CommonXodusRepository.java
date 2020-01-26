@@ -29,6 +29,7 @@ import rocks.milspecsg.msrepository.api.model.ObjectWithId;
 import rocks.milspecsg.msrepository.api.repository.XodusRepository;
 import rocks.milspecsg.msrepository.common.component.CommonXodusComponent;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -167,7 +168,9 @@ public interface CommonXodusRepository<
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
                 query.apply(txn).forEach(e -> {
                     update.accept(e);
-                    e.setProperty("updatedUtc", OffsetDateTime.now(ZoneOffset.UTC).toInstant());
+                    Instant now = OffsetDateTime.now(ZoneOffset.UTC).toInstant();
+                    e.setProperty("updatedUtcSeconds", now.getEpochSecond());
+                    e.setProperty("updatedUtcNanos", now.getNano());
                 });
                 return txn.commit();
             })
