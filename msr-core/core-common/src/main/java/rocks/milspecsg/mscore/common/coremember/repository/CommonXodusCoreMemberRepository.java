@@ -58,7 +58,7 @@ public class CommonXodusCoreMemberRepository
         }
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
-                Iterator<Entity> iterator = asQueryForUser(userUUID).apply(txn).iterator();
+                Iterator<Entity> iterator = asQuery(userUUID).apply(txn).iterator();
                 if (!iterator.hasNext()) {
                     CoreMember<EntityId> member = generateEmpty();
                     member.setUserUUID(userUUID);
@@ -108,12 +108,12 @@ public class CommonXodusCoreMemberRepository
 
     @Override
     public CompletableFuture<Optional<CoreMember<EntityId>>> getOneForUser(UUID userUUID) {
-        return getOne(asQueryForUser(userUUID));
+        return getOne(asQuery(userUUID));
     }
 
     @Override
     public CompletableFuture<Optional<CoreMember<EntityId>>> getOneForUser(String userName) {
-        return getOne(asQueryForUser(userName));
+        return getOne(asQuery(userName));
     }
 
     @Override
@@ -128,12 +128,12 @@ public class CommonXodusCoreMemberRepository
 
     @Override
     public CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason) {
-        return ban(asQueryForUser(userUUID), endUtc, reason);
+        return ban(asQuery(userUUID), endUtc, reason);
     }
 
     @Override
     public CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason) {
-        return ban(asQueryForUser(userName), endUtc, reason);
+        return ban(asQuery(userName), endUtc, reason);
     }
 
     @Override
@@ -143,12 +143,12 @@ public class CommonXodusCoreMemberRepository
 
     @Override
     public CompletableFuture<Boolean> unBanUser(UUID userUUID) {
-        return unBan(asQueryForUser(userUUID));
+        return unBan(asQuery(userUUID));
     }
 
     @Override
     public CompletableFuture<Boolean> unBanUser(String userName) {
-        return unBan(asQueryForUser(userName));
+        return unBan(asQuery(userName));
     }
 
     @Override
@@ -158,12 +158,12 @@ public class CommonXodusCoreMemberRepository
 
     @Override
     public CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason) {
-        return mute(asQueryForUser(userUUID), endUtc, reason);
+        return mute(asQuery(userUUID), endUtc, reason);
     }
 
     @Override
     public CompletableFuture<Boolean> muteUser(String userName, Instant endUtc, String reason) {
-        return mute(asQueryForUser(userName), endUtc, reason);
+        return mute(asQuery(userName), endUtc, reason);
     }
 
     @Override
@@ -173,36 +173,36 @@ public class CommonXodusCoreMemberRepository
 
     @Override
     public CompletableFuture<Boolean> unMuteUser(UUID userUUID) {
-        return unMute(asQueryForUser(userUUID));
+        return unMute(asQuery(userUUID));
     }
 
     @Override
     public CompletableFuture<Boolean> unMuteUser(String userName) {
-        return unMute(asQueryForUser(userName));
+        return unMute(asQuery(userName));
     }
 
     @Override
     public CompletableFuture<Boolean> setNickName(EntityId id, String nickName) {
-        return setNickname(asQuery(id), nickName);
+        return setNickName(asQuery(id), nickName);
     }
 
     @Override
     public CompletableFuture<Boolean> setNickNameForUser(UUID userUUID, String nickName) {
-        return setNickname(asQueryForUser(userUUID), nickName);
+        return setNickName(asQuery(userUUID), nickName);
     }
 
     @Override
     public CompletableFuture<Boolean> setNickNameForUser(String userName, String nickName) {
-        return setNickname(asQueryForUser(userName), nickName);
+        return setNickName(asQuery(userName), nickName);
     }
 
     @Override
-    public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(UUID userUUID) {
+    public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(UUID userUUID) {
         return txn -> txn.find(getTClass().getSimpleName(), "userUUID", userUUID.toString());
     }
 
     @Override
-    public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(String userName) {
+    public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(String userName) {
         return txn -> txn.find(getTClass().getSimpleName(), "userName", userName);
     }
 
@@ -240,7 +240,7 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
-    public CompletableFuture<Boolean> setNickname(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName) {
+    public CompletableFuture<Boolean> setNickName(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName) {
         return update(query, e -> e.setProperty("nickName", nickName));
     }
 }

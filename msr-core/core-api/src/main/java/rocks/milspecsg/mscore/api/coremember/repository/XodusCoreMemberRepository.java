@@ -34,19 +34,90 @@ public interface XodusCoreMemberRepository
     extends CoreMemberRepository<EntityId, PersistentEntityStore>,
     XodusRepository<CoreMember<EntityId>> {
 
-    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(UUID userUUID);
+    /**
+     * Creates a {@link Function} that acts as a {@code query}
+     * matching documents whose property {@code userUUID}
+     * matches the provided {@link UUID}
+     *
+     * @param userUUID {@link UUID} to create {@code query} for
+     * @return {@code query} for the provided {@link UUID}
+     */
+    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(UUID userUUID);
 
-    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForUser(String userName);
+    /**
+     * Creates a {@link Function} that acts as a {@code query}
+     * matching documents whose property {@code userName}
+     * matches the provided {@link String}
+     *
+     * @param userName {@link String} to create {@code query} for
+     * @return {@code query} for the provided {@link UUID}
+     */
+    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(String userName);
 
+    /**
+     * Creates a {@link Function} that acts as a {@code query}
+     * matching documents whose property {@code ipAddress}
+     * matches the provided {@link String}
+     *
+     * @param ipAddress {@link String} to create {@code query} for
+     * @return {@code query} for the provided {@link UUID}
+     */
     Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForIpAddress(String ipAddress);
 
+    /**
+     * Updates the properties {@code banEndUtc}, {@code banReason}
+     * and sets {@code banned} to {@code true} for documents that
+     * match the provided {@code query}
+     *
+     * @param query  {@code query} to update documents for
+     * @param endUtc {@link Instant} end of the ban
+     * @param reason {@link String} reason for the ban
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> ban(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason);
 
+    /**
+     * Sets the property {@code banned} to {@code false} for
+     * documents that match the provided {@code query}
+     *
+     * @param query {@code query} to update documents for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unBan(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 
+    /**
+     * Updates the properties {@code muteEndUtc}, {@code muteReason}
+     * and sets {@code muted} to {@code true} for documents that
+     * match the provided {@code query}
+     *
+     * @param query  {@code query} to update documents for
+     * @param endUtc {@link Instant} end of the mute
+     * @param reason {@link String} reason for the mute
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> mute(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason);
 
+    /**
+     * Sets the property {@code muted} to {@code false} for
+     * documents that match the provided {@code query}
+     *
+     * @param query {@code query} to update documents for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unMute(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 
-    CompletableFuture<Boolean> setNickname(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName);
+    /**
+     * Updates the property {@code nickName} for
+     * documents that match the provided {@code query}
+     *
+     * @param query    {@code query} to update documents for
+     * @param nickName {@link String} new nickName
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> setNickName(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName);
 }

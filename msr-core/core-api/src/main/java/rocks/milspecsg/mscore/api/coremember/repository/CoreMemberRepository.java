@@ -86,33 +86,178 @@ public interface CoreMemberRepository<
      */
     CompletableFuture<List<CoreMember<TKey>>> getForIpAddress(String ipAddress);
 
+    /**
+     * Updates the properties {@code banEndUtc}, {@code banReason}
+     * and sets {@code banned} to {@code true} for the document
+     * whose id matches the provided {@link TKey}
+     *
+     * @param id     {@link TKey} id of document to update
+     * @param endUtc {@link Instant} end of the ban
+     * @param reason {@link String} reason for the ban
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> ban(TKey id, Instant endUtc, String reason);
 
+    /**
+     * Updates the properties {@code banEndUtc}, {@code banReason}
+     * and sets {@code banned} to {@code true} for documents
+     * whose property {@code userUUID} matches the provided {@link UUID}
+     *
+     * @param userUUID {@link UUID} userUUID of documents to update
+     * @param endUtc   {@link Instant} end of the ban
+     * @param reason   {@link String} reason for the ban
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> banUser(UUID userUUID, Instant endUtc, String reason);
 
+    /**
+     * Updates the properties {@code banEndUtc}, {@code banReason}
+     * and sets {@code muted} to {@code true} for documents
+     * whose property {@code userName} matches the provided {@link String}
+     *
+     * @param userName {@link String} userName of documents to update
+     * @param endUtc   {@link Instant} end of the ban
+     * @param reason   {@link String} reason for the ban
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason);
 
+    /**
+     * Sets the property {@code banned} to {@code false} for
+     * the document whose id matches the provided {@link TKey}
+     *
+     * @param id {@link TKey} id of document to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unBan(TKey id);
 
+    /**
+     * Sets the property {@code banned} to {@code false} for
+     * documents whose property {@code userUUID} matches
+     * the provided {@link UUID}
+     *
+     * @param userUUID {@link UUID} userUUID of documents to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unBanUser(UUID userUUID);
 
+    /**
+     * Sets the property {@code banned} to {@code false} for
+     * documents whose property {@code userName} matches
+     * the provided {@link String}
+     *
+     * @param userName {@link String} userName of documents to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unBanUser(String userName);
 
+    /**
+     * Updates the properties {@code muteEndUtc}, {@code muteReason}
+     * and sets {@code muted} to {@code true} for the document
+     * whose id matches the provided {@link TKey}
+     *
+     * @param id     {@link TKey} id of document to update
+     * @param endUtc {@link Instant} end of the mute
+     * @param reason {@link String} reason for the mute
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> mute(TKey id, Instant endUtc, String reason);
 
+    /**
+     * Updates the properties {@code muteEndUtc}, {@code muteReason}
+     * and sets {@code muted} to {@code true} for documents
+     * whose property {@code userUUID} matches the provided {@link UUID}
+     *
+     * @param userUUID {@link UUID} userUUID of documents to update
+     * @param endUtc   {@link Instant} end of the mute
+     * @param reason   {@link String} reason for the mute
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> muteUser(UUID userUUID, Instant endUtc, String reason);
 
+    /**
+     * Updates the properties {@code muteEndUtc}, {@code muteReason}
+     * and sets {@code muted} to {@code true} for documents
+     * whose property {@code userName} matches the provided {@link String}
+     *
+     * @param userName {@link String} userName of documents to update
+     * @param endUtc   {@link Instant} end of the mute
+     * @param reason   {@link String} reason for the mute
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> muteUser(String userName, Instant endUtc, String reason);
 
+    /**
+     * Sets the property {@code muted} to {@code false} for
+     * the document whose id matches the provided {@link TKey}
+     *
+     * @param id {@link TKey} id of document to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unMute(TKey id);
 
+    /**
+     * Sets the property {@code muted} to {@code false} for
+     * documents whose property {@code userUUID} matches
+     * the provided {@link UUID}
+     *
+     * @param userUUID {@link UUID} userUUID of documents to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unMuteUser(UUID userUUID);
 
+    /**
+     * Sets the property {@code muted} to {@code false} for
+     * documents whose property {@code userName} matches
+     * the provided {@link String}
+     *
+     * @param userName {@link String} userName of documents to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> unMuteUser(String userName);
 
+    /**
+     * Updates the property {@code nickName} for the
+     * document whose id matches the provided {@link TKey}
+     *
+     * @param id       {@link TKey} id of document to update
+     * @param nickName {@link String} new nickName
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> setNickName(TKey id, String nickName);
 
+    /**
+     * Updates the property {@code nickName} for documents whose
+     * property {@code userUUID} matches the provided {@link UUID}
+     *
+     * @param userUUID {@link UUID} userUUID of documents to update
+     * @param nickName {@link String} new nickName
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> setNickNameForUser(UUID userUUID, String nickName);
 
+    /**
+     * Updates the property {@code nickName} for documents whose
+     * property {@code userName} matches the provided {@link String}
+     *
+     * @param userName {@link String} userName of documents to update
+     * @param nickName {@link String} new nickName
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
     CompletableFuture<Boolean> setNickNameForUser(String userName, String nickName);
 }
