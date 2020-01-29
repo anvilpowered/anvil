@@ -16,22 +16,29 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.velocity.util;
+package rocks.milspecsg.msrepository.common.util;
 
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
-import rocks.milspecsg.msrepository.api.util.Result;
+import rocks.milspecsg.msrepository.api.util.StringResult;
 
-
-public class VelocityResult<TData> implements Result<TextComponent, TData> {
+public abstract class CommonStringResult<TString, TCommandSource> implements StringResult<TString, TCommandSource> {
 
     @Override
-    public TextComponent success(TData data) {
-        return TextComponent.builder().color(TextColor.GREEN).append(TextComponent.of(data.toString())).build();
+    public TString success(String s) {
+        return builder().green().append(s).build();
     }
 
     @Override
-    public TextComponent fail(TData data) {
-        return TextComponent.builder().color(TextColor.RED).append(TextComponent.of(data.toString())).build();
+    public TString fail(String s) {
+        return builder().red().append(s).build();
+    }
+
+    @Override
+    public String removeColor(String text) {
+        return text.replaceAll("&[0-9a-fklmnor]", "");
+    }
+
+    @Override
+    public TString withoutColor(String text) {
+        return builder().append(removeColor(text)).build();
     }
 }

@@ -25,13 +25,13 @@ import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
-import rocks.milspecsg.msrepository.api.util.StringResult;
+import rocks.milspecsg.msrepository.common.util.CommonStringResult;
 
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
-public class VelocityStringResult extends VelocityResult<String> implements StringResult<TextComponent, CommandSource> {
+public class VelocityStringResult extends CommonStringResult<TextComponent, CommandSource> {
 
     @Override
     public Builder<TextComponent, CommandSource> builder() {
@@ -223,8 +223,6 @@ public class VelocityStringResult extends VelocityResult<String> implements Stri
 
         @Override
         public Builder<TextComponent, CommandSource> onClickExecuteCallback(Consumer<CommandSource> callback) {
-            //TODO Waiting for reply
-            //builder.clickEvent(ClickEvent.of(callback));
             throw new UnsupportedOperationException();
         }
 

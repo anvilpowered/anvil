@@ -26,16 +26,16 @@ import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
-import rocks.milspecsg.msrepository.api.util.StringResult;
+import rocks.milspecsg.msrepository.common.util.CommonStringResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpongeStringResult extends SpongeResult<String> implements StringResult<Text, CommandSource> {
+public class SpongeStringResult extends CommonStringResult<Text, CommandSource> {
 
     @Override
-    public StringResult.Builder<Text, CommandSource> builder() {
+    public Builder<Text, CommandSource> builder() {
         return new SpongeStringResultBuilder();
     }
 
