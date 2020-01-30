@@ -33,6 +33,7 @@ import rocks.milspecsg.msrepository.common.data.registry.CommonRegistry;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,24 @@ public class CommonConfigurationService extends CommonRegistry implements Config
         nodeDescriptionMap.put(Keys.MONGODB_PASSWORD, "\nMongoDB password");
         nodeDescriptionMap.put(Keys.MONGODB_AUTH_DB, "\nMongoDB database to use for authentication");
         nodeDescriptionMap.put(Keys.MONGODB_USE_AUTH, "\nWhether to use authentication (username/password) for MongoDB connection");
+    }
+
+    @Override
+    public <T> void set(Key<T> key, T value) {
+        super.set(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <T> void add(Key<? extends Collection<T>> key, T value) {
+        super.add(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <K, T> void put(Key<? extends Map<K, T>> key, K mapKey, T value) {
+        super.put(key, mapKey, value);
+        configValuesEdited = true;
     }
 
     @Override

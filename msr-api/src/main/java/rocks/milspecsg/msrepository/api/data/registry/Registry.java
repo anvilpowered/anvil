@@ -20,6 +20,8 @@ package rocks.milspecsg.msrepository.api.data.registry;
 
 import rocks.milspecsg.msrepository.api.data.key.Key;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 public interface Registry {
@@ -33,6 +35,12 @@ public interface Registry {
     default <T> T getOrDefault(Key<T> key) {
         return get(key).orElse(getDefault(key));
     }
+
+    <T> void set(Key<T> key, T value);
+
+    <T> void add(Key<? extends Collection<T>> key, T value);
+
+    <K, T> void put(Key<? extends Map<K, T>> key, K mapKey, T value);
 
     void load(Object plugin);
 

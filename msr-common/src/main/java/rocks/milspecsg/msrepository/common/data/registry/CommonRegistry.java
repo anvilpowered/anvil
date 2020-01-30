@@ -64,6 +64,21 @@ public class CommonRegistry implements Registry {
     }
 
     @Override
+    public <T> void set(Key<T> key, T value) {
+        valueMap.put(key, value);
+    }
+
+    @Override
+    public <T> void add(Key<? extends Collection<T>> key, T value) {
+        ((Collection<T>) valueMap.get(key)).add(value);
+    }
+
+    @Override
+    public <K, T> void put(Key<? extends Map<K, T>> key, K mapKey, T value) {
+        ((Map<K, T>) valueMap.get(key)).put(mapKey, value);
+    }
+
+    @Override
     public void load(Object plugin) {
         registryLoadedListeners.forEach(listener -> listener.loaded(plugin));
     }
