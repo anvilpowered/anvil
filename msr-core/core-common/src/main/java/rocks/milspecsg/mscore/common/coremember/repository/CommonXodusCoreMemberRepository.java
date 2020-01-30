@@ -137,6 +137,11 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> banIpAddress(String ipAddress, Instant endUtc, String reason) {
+        return ban(asQueryForIpAddress(ipAddress), endUtc, reason);
+    }
+
+    @Override
     public CompletableFuture<Boolean> unBan(EntityId id) {
         return unBan(asQuery(id));
     }
@@ -149,6 +154,11 @@ public class CommonXodusCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> unBanUser(String userName) {
         return unBan(asQuery(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unBanIpAddress(String ipAddress) {
+        return unBan(asQueryForIpAddress(ipAddress));
     }
 
     @Override
@@ -167,6 +177,11 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> muteIpAddress(String ipAddress, Instant endUtc, String reason) {
+        return mute(asQueryForIpAddress(ipAddress), endUtc, reason);
+    }
+
+    @Override
     public CompletableFuture<Boolean> unMute(EntityId id) {
         return unMute(asQuery(id));
     }
@@ -179,6 +194,11 @@ public class CommonXodusCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> unMuteUser(String userName) {
         return unMute(asQuery(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> unMuteIpAddress(String ipAddress) {
+        return unMute(asQueryForIpAddress(ipAddress));
     }
 
     @Override
@@ -202,13 +222,13 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
-    public CompletableFuture<Boolean> deleteNickNameForUser(String userName) {
-        return deleteNickName(asQuery(userName));
+    public CompletableFuture<Boolean> deleteNickNameForUser(UUID userUUID) {
+        return deleteNickName(asQuery(userUUID));
     }
 
     @Override
-    public CompletableFuture<Boolean> deleteNickNameForUser(UUID userUUID) {
-        return deleteNickName(asQuery(userUUID));
+    public CompletableFuture<Boolean> deleteNickNameForUser(String userName) {
+        return deleteNickName(asQuery(userName));
     }
 
     @Override

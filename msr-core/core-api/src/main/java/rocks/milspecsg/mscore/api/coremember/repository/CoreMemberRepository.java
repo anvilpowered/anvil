@@ -114,7 +114,7 @@ public interface CoreMemberRepository<
 
     /**
      * Updates the properties {@code banEndUtc}, {@code banReason}
-     * and sets {@code muted} to {@code true} for documents
+     * and sets {@code banned} to {@code true} for documents
      * whose property {@code userName} matches the provided {@link String}
      *
      * @param userName {@link String} userName of documents to update
@@ -124,6 +124,19 @@ public interface CoreMemberRepository<
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> banUser(String userName, Instant endUtc, String reason);
+
+    /**
+     * Updates the properties {@code banEndUtc}, {@code banReason}
+     * and sets {@code banned} to {@code true} for documents
+     * whose property {@code ipAddress} matches the provided {@link String}
+     *
+     * @param ipAddress {@link String} ipAddress of documents to update
+     * @param endUtc    {@link Instant} end of the ban
+     * @param reason    {@link String} reason for the ban
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> banIpAddress(String ipAddress, Instant endUtc, String reason);
 
     /**
      * Sets the property {@code banned} to {@code false} for
@@ -156,6 +169,17 @@ public interface CoreMemberRepository<
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> unBanUser(String userName);
+
+    /**
+     * Sets the property {@code banned} to {@code false} for
+     * documents whose property {@code ipAddress} matches
+     * the provided {@link String}
+     *
+     * @param ipAddress {@link String} ipAddress of documents to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> unBanIpAddress(String ipAddress);
 
     /**
      * Updates the properties {@code muteEndUtc}, {@code muteReason}
@@ -197,6 +221,19 @@ public interface CoreMemberRepository<
     CompletableFuture<Boolean> muteUser(String userName, Instant endUtc, String reason);
 
     /**
+     * Updates the properties {@code muteEndUtc}, {@code muteReason}
+     * and sets {@code muted} to {@code true} for documents
+     * whose property {@code ipAddress} matches the provided {@link String}
+     *
+     * @param ipAddress {@link String} ipAddress of documents to update
+     * @param endUtc    {@link Instant} end of the mute
+     * @param reason    {@link String} reason for the mute
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> muteIpAddress(String ipAddress, Instant endUtc, String reason);
+
+    /**
      * Sets the property {@code muted} to {@code false} for
      * the document whose id matches the provided {@link TKey}
      *
@@ -227,6 +264,17 @@ public interface CoreMemberRepository<
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> unMuteUser(String userName);
+
+    /**
+     * Sets the property {@code muted} to {@code false} for
+     * documents whose property {@code ipAddress} matches
+     * the provided {@link String}
+     *
+     * @param ipAddress {@link String} ipAddress of documents to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> unMuteIpAddress(String ipAddress);
 
     /**
      * Updates the property {@code nickName} for the
@@ -265,21 +313,11 @@ public interface CoreMemberRepository<
      * Deletes the property {@code nickName} for the
      * document whose id matches the provided {@link TKey}
      *
-     * @param id       {@link TKey} id of document to update
+     * @param id {@link TKey} id of document to update
      * @return {@link CompletableFuture} wrapped {@link Boolean}.
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> deleteNickName(TKey id);
-
-    /**
-     * Deletes the property {@code nickName} for documents whose
-     * property {@code userName} matches the provided {@link String}
-     *
-     * @param userName {@link String} userName of documents to update
-     * @return {@link CompletableFuture} wrapped {@link boolean}
-     * true if successful, otherwise false
-     */
-    CompletableFuture<Boolean> deleteNickNameForUser(String userName);
 
     /**
      * Deletes the property {@code nickName} for documents whose
@@ -290,4 +328,14 @@ public interface CoreMemberRepository<
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> deleteNickNameForUser(UUID userUUID);
+
+    /**
+     * Deletes the property {@code nickName} for documents whose
+     * property {@code userName} matches the provided {@link String}
+     *
+     * @param userName {@link String} userName of documents to update
+     * @return {@link CompletableFuture} wrapped {@link boolean}
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> deleteNickNameForUser(String userName);
 }
