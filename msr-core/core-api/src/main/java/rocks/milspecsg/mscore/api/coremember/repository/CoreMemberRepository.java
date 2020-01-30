@@ -260,4 +260,34 @@ public interface CoreMemberRepository<
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> setNickNameForUser(String userName, String nickName);
+
+    /**
+     * Deletes the property {@code nickName} for the
+     * document whose id matches the provided {@link TKey}
+     *
+     * @param id       {@link TKey} id of document to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> deleteNickName(TKey id);
+
+    /**
+     * Deletes the property {@code nickName} for documents whose
+     * property {@code userName} matches the provided {@link String}
+     *
+     * @param userName {@link String} userName of documents to update
+     * @return {@link CompletableFuture} wrapped {@link boolean}
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> deleteNickNameForUser(String userName);
+
+    /**
+     * Deletes the property {@code nickName} for documents whose
+     * property {@code userUUID} matches the provided {@link UUID}
+     *
+     * @param userUUID {@link UUID} userName of documents to update
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * true if successful, otherwise false
+     */
+    CompletableFuture<Boolean> deleteNickNameForUser(UUID userUUID);
 }

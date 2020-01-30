@@ -181,6 +181,21 @@ public class CommonMongoCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> deleteNickName(ObjectId id) {
+        return deleteNickName(asQuery(id));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deleteNickNameForUser(UUID userUUID) {
+        return deleteNickName(asQuery(userUUID));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deleteNickNameForUser(String userName) {
+        return deleteNickName(asQuery(userName));
+    }
+
+    @Override
     public Query<CoreMember<ObjectId>> asQuery(UUID userUUID) {
         return asQuery().field("userUUID").equal(userUUID);
     }
@@ -224,5 +239,10 @@ public class CommonMongoCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> setNickName(Query<CoreMember<ObjectId>> query, String nickName) {
         return update(query, set("nickName", nickName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deleteNickName(Query<CoreMember<ObjectId>> query) {
+        return update(query, unSet("nickName"));
     }
 }

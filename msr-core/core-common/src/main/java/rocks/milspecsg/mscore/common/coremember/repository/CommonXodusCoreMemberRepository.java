@@ -197,6 +197,21 @@ public class CommonXodusCoreMemberRepository
     }
 
     @Override
+    public CompletableFuture<Boolean> deleteNickName(EntityId id) {
+        return deleteNickName(asQuery(id));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deleteNickNameForUser(String userName) {
+        return deleteNickName(asQuery(userName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deleteNickNameForUser(UUID userUUID) {
+        return deleteNickName(asQuery(userUUID));
+    }
+
+    @Override
     public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(UUID userUUID) {
         return txn -> txn.find(getTClass().getSimpleName(), "userUUID", userUUID.toString());
     }
@@ -242,5 +257,10 @@ public class CommonXodusCoreMemberRepository
     @Override
     public CompletableFuture<Boolean> setNickName(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName) {
         return update(query, e -> e.setProperty("nickName", nickName));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deleteNickName(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+        return update(query, e -> e.deleteProperty("nickName"));
     }
 }

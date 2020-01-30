@@ -120,4 +120,6 @@ public interface XodusCoreMemberRepository
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> setNickName(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, String nickName);
+
+    CompletableFuture<Boolean> deleteNickName(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 }
