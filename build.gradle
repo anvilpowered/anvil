@@ -3,14 +3,11 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-group = modGroup
-version = modVersion
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
+subprojects {
+    if (project.hasProperty("buildNumber") && modVersion.contains("-SNAPSHOT")) {
+        modVersion = modVersion.replace("-SNAPSHOT", "-RC${buildNumber}")
+    }
+    group modGroup
+    version modVersion
+    sourceCompatibility = 1.8
 }

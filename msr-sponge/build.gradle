@@ -3,11 +3,6 @@ plugins {
     id 'org.spongepowered.plugin' version '0.8.1'
 }
 
-group = "rocks.milspecsg"
-version = "0.1.0-dev"
-
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }

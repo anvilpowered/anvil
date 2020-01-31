@@ -3,11 +3,6 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
-group modGroup
-version modVersion
-
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
     maven { url 'https://repo.spongepowered.org/maven' }

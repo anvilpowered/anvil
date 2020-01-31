@@ -3,10 +3,7 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
-group modGroup
-version modVersion
-
-sourceCompatibility = 1.8
+jar.enabled = false // we only want shadowJar
 
 repositories {
     mavenCentral()
@@ -59,7 +56,9 @@ dependencies {
 }
 
 shadowJar {
-    archiveName = "MSCore-Velocity-${modVersion}.jar"
+    String jarName = "MSCore-Velocity-${modVersion}.jar"
+    println "Building: " + jarName
+    archiveFileName = jarName
 
     dependencies {
         if (rootProject.getName().equals("MSRepository")) {
@@ -110,4 +109,8 @@ shadowJar {
         include dependency(xodus_environment)
         include dependency(xodus_utils)
     }
+}
+
+artifacts {
+    archives shadowJar
 }
