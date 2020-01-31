@@ -23,6 +23,8 @@ import rocks.milspecsg.msrepository.api.data.key.Key;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public interface Registry {
 
@@ -38,9 +40,19 @@ public interface Registry {
 
     <T> void set(Key<T> key, T value);
 
-    <T> void add(Key<? extends Collection<T>> key, T value);
+    <T> void remove(Key<T> key);
 
-    <K, T> void put(Key<? extends Map<K, T>> key, K mapKey, T value);
+    <T> void transform(Key<T> key, BiFunction<? super Key<T>, ? super T, ? extends T> transformer);
+
+    <T> void transform(Key<T> key, Function<? super T, ? extends T> transformer);
+
+    <T> void addToCollection(Key<? extends Collection<T>> key, T value);
+
+    <T> void removeFromCollection(Key<? extends Collection<T>> key, T value);
+
+    <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T value);
+
+    <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey);
 
     void load(Object plugin);
 

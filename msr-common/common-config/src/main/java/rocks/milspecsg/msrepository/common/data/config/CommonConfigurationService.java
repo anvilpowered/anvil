@@ -37,6 +37,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -121,14 +122,44 @@ public class CommonConfigurationService extends CommonRegistry implements Config
     }
 
     @Override
-    public <T> void add(Key<? extends Collection<T>> key, T value) {
-        super.add(key, value);
+    public <T> void remove(Key<T> key) {
+        super.remove(key);
         configValuesEdited = true;
     }
 
     @Override
-    public <K, T> void put(Key<? extends Map<K, T>> key, K mapKey, T value) {
-        super.put(key, mapKey, value);
+    public <T> void transform(Key<T> key, BiFunction<? super Key<T>, ? super T, ? extends T> transformer) {
+        super.transform(key, transformer);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <T> void transform(Key<T> key, Function<? super T, ? extends T> transformer) {
+        super.transform(key, transformer);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <T> void addToCollection(Key<? extends Collection<T>> key, T value) {
+        super.addToCollection(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <T> void removeFromCollection(Key<? extends Collection<T>> key, T value) {
+        super.removeFromCollection(key, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T value) {
+        super.putInMap(key, mapKey, value);
+        configValuesEdited = true;
+    }
+
+    @Override
+    public <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey) {
+        super.removeFromMap(key, mapKey);
         configValuesEdited = true;
     }
 

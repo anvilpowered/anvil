@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @Singleton
 @SuppressWarnings("unchecked")
@@ -69,13 +71,38 @@ public class CommonRegistry implements Registry {
     }
 
     @Override
-    public <T> void add(Key<? extends Collection<T>> key, T value) {
+    public <T> void remove(Key<T> key) {
+        valueMap.remove(key);
+    }
+
+    @Override
+    public <T> void transform(Key<T> key, BiFunction<? super Key<T>, ? super T, ? extends T> transformer) {
+        valueMap.compute(key, (BiFunction<? super Key<?>, ? super Object, ?>) transformer);
+    }
+
+    @Override
+    public <T> void transform(Key<T> key, Function<? super T, ? extends T> transformer) {
+        transform(key, (k, v) -> transformer.apply((T) v));
+    }
+
+    @Override
+    public <T> void addToCollection(Key<? extends Collection<T>> key, T value) {
         ((Collection<T>) valueMap.get(key)).add(value);
     }
 
     @Override
-    public <K, T> void put(Key<? extends Map<K, T>> key, K mapKey, T value) {
+    public <T> void removeFromCollection(Key<? extends Collection<T>> key, T value) {
+        ((Collection<T>) valueMap.get(key)).remove(value);
+    }
+
+    @Override
+    public <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T value) {
         ((Map<K, T>) valueMap.get(key)).put(mapKey, value);
+    }
+
+    @Override
+    public <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey) {
+        ((Map<K, T>) valueMap.get(key)).remove(mapKey);
     }
 
     @Override
