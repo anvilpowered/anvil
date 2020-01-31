@@ -47,9 +47,9 @@ jobs: # a collection of steps
             fi
       # As the JAR was only assembled in the first build container, build/libs will be empty in all the other build containers.
       - store_artifacts:
-          paths:
-            - msr-core/core-sponge/build/libs
-            - msr-core/core-velocity/build/libs
+          path: msr-core/core-sponge/build/libs
+      - store_artifacts:
+          path: msr-core/core-velocity/build/libs
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
 workflows:
   version: 2
