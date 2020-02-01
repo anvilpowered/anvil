@@ -28,6 +28,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import rocks.milspecsg.msrepository.common.util.CommonStringResult;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -225,6 +227,22 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
         @Override
         public Builder<Text, CommandSource> onClickExecuteCallback(Consumer<CommandSource> callback) {
             clickAction = TextActions.executeCallback(callback);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> onClickOpenUrl(URL url) {
+            clickAction = TextActions.openUrl(url);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> onClickOpenUrl(String url) {
+            try {
+                clickAction = TextActions.openUrl(new URL(url));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             return this;
         }
 

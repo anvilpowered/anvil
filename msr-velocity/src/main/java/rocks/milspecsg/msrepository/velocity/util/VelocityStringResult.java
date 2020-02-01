@@ -27,6 +27,7 @@ import net.kyori.text.format.TextColor;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 import rocks.milspecsg.msrepository.common.util.CommonStringResult;
 
+import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -224,6 +225,17 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         @Override
         public Builder<TextComponent, CommandSource> onClickExecuteCallback(Consumer<CommandSource> callback) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Builder<TextComponent, CommandSource> onClickOpenUrl(URL url) {
+            return onClickOpenUrl(url.toString());
+        }
+
+        @Override
+        public Builder<TextComponent, CommandSource> onClickOpenUrl(String url) {
+            clickEvent = ClickEvent.openUrl(url);
+            return this;
         }
 
         @Override

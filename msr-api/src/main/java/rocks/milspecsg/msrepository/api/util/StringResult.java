@@ -18,6 +18,7 @@
 
 package rocks.milspecsg.msrepository.api.util;
 
+import java.net.URL;
 import java.util.function.Consumer;
 
 public interface StringResult<TString, TCommandSource> extends Result<TString, String> {
@@ -54,6 +55,8 @@ public interface StringResult<TString, TCommandSource> extends Result<TString, S
         Builder<TString, TCommandSource> onClickSuggestCommand(String command);
         Builder<TString, TCommandSource> onClickRunCommand(String command);
         Builder<TString, TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback);
+        Builder<TString, TCommandSource> onClickOpenUrl(URL url);
+        Builder<TString, TCommandSource> onClickOpenUrl(String url);
         TString build();
         void sendTo(TCommandSource commandSource);
     }
