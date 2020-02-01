@@ -58,7 +58,7 @@ public abstract class CommonCacheService<
         cache = new ConcurrentHashMap<>();
     }
 
-    private void registryLoaded(Object plugin) {
+    private void registryLoaded() {
         stopCacheInvalidationTask();
         Integer intervalSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_INTERVAL_SECONDS);
         timeoutSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_TIMOUT_SECONDS);

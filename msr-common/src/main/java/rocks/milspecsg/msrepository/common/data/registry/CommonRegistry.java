@@ -106,8 +106,8 @@ public class CommonRegistry implements Registry {
     }
 
     @Override
-    public void load(Object plugin) {
-        registryLoadedListeners.forEach(listener -> listener.loaded(plugin));
+    public void load() {
+        registryLoadedListeners.forEach(RegistryLoadedListener::loaded);
     }
 
     @Override

@@ -54,7 +54,7 @@ public interface Registry {
 
     <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey);
 
-    void load(Object plugin);
+    void load();
 
     void addRegistryLoadedListener(RegistryLoadedListener registryLoadedListener);
 }

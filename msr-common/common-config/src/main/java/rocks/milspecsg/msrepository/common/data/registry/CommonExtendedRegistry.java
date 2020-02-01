@@ -53,8 +53,8 @@ public class CommonExtendedRegistry extends CommonRegistry {
     }
 
     @Override
-    public void load(Object plugin) {
-        configurationService.load(plugin);
-        super.load(plugin);
+    public void load() {
+        configurationService.load();
+        super.load();
     }
 }

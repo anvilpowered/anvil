@@ -36,7 +36,7 @@ public final class MariaContext extends DataStoreContext<UUID, HikariDataSource>
         super(registry);
     }
 
-    public void registryLoaded(Object plugin) {
+    public void registryLoaded() {
 
         String hostname = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_HOSTNAME"), registry);
         int port = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_PORT"), registry);

@@ -48,7 +48,7 @@ public final class XodusContext extends DataStoreContext<EntityId, PersistentEnt
     }
 
     @Override
-    protected void registryLoaded(Object plugin) {
+    protected void registryLoaded() {
         if (!MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry).equalsIgnoreCase("xodus")) {
             requestCloseConnection();
             return;

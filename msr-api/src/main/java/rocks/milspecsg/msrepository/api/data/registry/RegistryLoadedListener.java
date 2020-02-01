@@ -24,5 +24,5 @@ public interface RegistryLoadedListener {
     /**
      * Called from a {@link Registry} after it has been loaded
      */
-    void loaded(Object plugin);
+    void loaded();
 }

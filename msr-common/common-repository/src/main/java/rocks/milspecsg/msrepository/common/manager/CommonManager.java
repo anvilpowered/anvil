@@ -54,7 +54,7 @@ public abstract class CommonManager<C extends Component<?, ?>> implements Manage
 
     private C currentComponent;
 
-    private void registryLoaded(Object plugin) {
+    private void registryLoaded() {
         currentComponent = null;
     }
 

@@ -61,6 +61,6 @@ public abstract class MSCore {
     }
 
     protected void load() {
-        injector.getInstance(Registry.class).load(this);
+        injector.getInstance(Registry.class).load();
     }
 }

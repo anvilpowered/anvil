@@ -167,9 +167,9 @@ public class CommonConfigurationService extends CommonRegistry implements Config
     }
 
     @Override
-    public void load(Object plugin) {
+    public void load() {
         initConfigMaps();
-        super.load(plugin);
+        super.load();
     }
 
     @Override
@@ -188,15 +188,6 @@ public class CommonConfigurationService extends CommonRegistry implements Config
             }
         }
         return false;
-    }
-
-    private void notifyConfigLoadedListeners(Object plugin) {
-        registryLoadedListeners.forEach(listener -> listener.loaded(plugin));
-    }
-
-    @Override
-    public void addRegistryLoadedListener(RegistryLoadedListener registryLoadedListener) {
-        registryLoadedListeners.add(registryLoadedListener);
     }
 
     private CommentedConfigurationNode fromString(String name) {

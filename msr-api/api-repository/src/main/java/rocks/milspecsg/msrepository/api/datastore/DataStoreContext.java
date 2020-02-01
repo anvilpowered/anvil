@@ -51,7 +51,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
         registry.addRegistryLoadedListener(this::registryLoaded);
     }
 
-    protected abstract void registryLoaded(Object plugin);
+    protected abstract void registryLoaded();
 
     protected final void setDataStore(TDataStore dataStore) {
         requestCloseConnection();

@@ -49,7 +49,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
     }
 
     @Override
-    protected void registryLoaded(Object plugin) {
+    protected void registryLoaded() {
         if (!MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry).equalsIgnoreCase("mongodb")) {
             requestCloseConnection();
             return;
