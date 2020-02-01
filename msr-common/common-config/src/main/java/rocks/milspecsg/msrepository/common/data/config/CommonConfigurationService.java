@@ -28,7 +28,6 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import rocks.milspecsg.msrepository.api.data.config.ConfigurationService;
 import rocks.milspecsg.msrepository.api.data.key.Key;
 import rocks.milspecsg.msrepository.api.data.key.Keys;
-import rocks.milspecsg.msrepository.api.data.registry.RegistryLoadedListener;
 import rocks.milspecsg.msrepository.common.data.registry.CommonRegistry;
 
 import java.io.IOException;
@@ -199,6 +198,10 @@ public class CommonConfigurationService extends CommonRegistry implements Config
         return node;
     }
 
+    private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
+        node.setValue(key, getDefault(key));
+    }
+
     private void initConfigMaps() {
 
         try {
@@ -209,21 +212,25 @@ public class CommonConfigurationService extends CommonRegistry implements Config
 
         int updatedCount = 0;
         for (Map.Entry<Key<?>, String> entry : nodeNameMap.entrySet()) {
-            Key<?> nodeKey = entry.getKey();
+            Key<?> key = entry.getKey();
             CommentedConfigurationNode node = fromString(entry.getValue());
             if (node.isVirtual()) {
-                node.setValue(getDefault(nodeKey));
-                updatedCount++;
+                try {
+                    setNodeDefault(node, key);
+                    updatedCount++;
+                } catch (ObjectMappingException e) {
+                    e.printStackTrace();
+                }
             } else {
                 boolean[] modified = {false};
-                initConfigValue(nodeKey, node, modified);
+                initConfigValue(key, node, modified);
                 if (modified[0]) {
                     updatedCount++;
                 }
             }
 
             if (node.isVirtual() || !node.getComment().isPresent()) {
-                node.setComment(nodeDescriptionMap.get(nodeKey));
+                node.setComment(nodeDescriptionMap.get(key));
                 updatedCount++;
             }
         }
