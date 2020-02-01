@@ -49,7 +49,9 @@ public interface StringResult<TString, TCommandSource> extends Result<TString, S
         Builder<TString, TCommandSource> yellow();
 
         Builder<TString, TCommandSource> append(Object... content);
+        Builder<TString, TCommandSource> append(CharSequence... content);
         Builder<TString, TCommandSource> appendJoining(Object delimiter, Object... content);
+        Builder<TString, TCommandSource> appendJoining(Object delimiter, CharSequence... content);
         Builder<TString, TCommandSource> onHoverShowText(TString content);
         Builder<TString, TCommandSource> onHoverShowText(Builder<TString, TCommandSource> builder);
         Builder<TString, TCommandSource> onClickSuggestCommand(String command);

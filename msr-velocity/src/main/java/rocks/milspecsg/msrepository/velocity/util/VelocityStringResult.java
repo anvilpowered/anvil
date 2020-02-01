@@ -54,7 +54,7 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         return LegacyComponentSerializer.legacy().serialize(text, '&');
     }
 
-    private static final class VelocityStringResultBuilder implements Builder<TextComponent, CommandSource> {
+    private static final class VelocityStringResultBuilder extends CommonStringResultBuilder<TextComponent, CommandSource> {
 
         private final Deque<Object> elements;
         private HoverEvent hoverEvent;

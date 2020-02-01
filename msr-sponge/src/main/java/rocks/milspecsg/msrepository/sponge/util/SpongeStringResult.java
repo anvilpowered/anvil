@@ -56,7 +56,7 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
         return TextSerializers.FORMATTING_CODE.serialize(text);
     }
 
-    private static final class SpongeStringResultBuilder implements Builder<Text, CommandSource> {
+    private static final class SpongeStringResultBuilder extends CommonStringResultBuilder<Text, CommandSource> {
 
         private final List<TextElement> elements;
         private HoverAction<?> hoverAction;

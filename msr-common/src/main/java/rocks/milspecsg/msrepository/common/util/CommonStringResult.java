@@ -41,4 +41,17 @@ public abstract class CommonStringResult<TString, TCommandSource> implements Str
     public TString withoutColor(String text) {
         return builder().append(removeColor(text)).build();
     }
+
+    protected static abstract class CommonStringResultBuilder<TString, TCommandSource> implements Builder<TString, TCommandSource> {
+
+        @Override
+        public Builder<TString, TCommandSource> append(CharSequence... content) {
+            return append(content);
+        }
+
+        @Override
+        public Builder<TString, TCommandSource> appendJoining(Object delimiter, CharSequence... content) {
+            return append(delimiter, content);
+        }
+    }
 }
