@@ -30,16 +30,12 @@ import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.datastore.annotation.XodusEmbedded;
 import rocks.milspecsg.msrepository.api.datastore.annotation.XodusEntity;
 import rocks.milspecsg.msrepository.api.model.Mappable;
-import rocks.milspecsg.msrepository.api.util.BasicPluginInfo;
 
 import java.io.File;
 import java.nio.file.Paths;
 
 @Singleton
 public final class XodusContext extends DataStoreContext<EntityId, PersistentEntityStore> {
-
-    @Inject
-    private BasicPluginInfo basicPluginInfo;
 
     @Inject
     public XodusContext(Registry registry) {
@@ -59,7 +55,7 @@ public final class XodusContext extends DataStoreContext<EntityId, PersistentEnt
         }
 
         /* === Initialize storage location === */
-        File dbFilesLocation = Paths.get(basicPluginInfo.getId() + "/data/xodus").toFile();
+        File dbFilesLocation = Paths.get(registry.getOrDefault(Keys.DATA_DIRECTORY) + "/data/xodus").toFile();
         if (!dbFilesLocation.exists()) {
             if (!dbFilesLocation.mkdirs()) {
                 throw new IllegalStateException("Unable to create xodus directory");

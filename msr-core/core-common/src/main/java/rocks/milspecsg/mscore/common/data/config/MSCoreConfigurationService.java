@@ -17,6 +17,7 @@ public class MSCoreConfigurationService extends CommonConfigurationService {
 
     @Override
     protected void initNodeNameMap() {
+        nodeNameMap.put(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
         nodeNameMap.put(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
         nodeNameMap.put(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
         nodeNameMap.put(Keys.MONGODB_PORT, "datastore.mongodb.port");
@@ -29,6 +30,8 @@ public class MSCoreConfigurationService extends CommonConfigurationService {
 
     @Override
     protected void initNodeDescriptionMap() {
+        nodeDescriptionMap.put(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
+            "\nPlease note that it is not recommended to change this value from the original\n)");
         nodeDescriptionMap.put(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
         nodeDescriptionMap.put(Keys.MONGODB_HOSTNAME, "\nMongoDB hostname");
         nodeDescriptionMap.put(Keys.MONGODB_PORT, "\nMongoDB port");

@@ -58,6 +58,8 @@ public final class Keys {
     };
     public static final Key<Boolean> USE_SHARED_CREDENTIALS = new Key<Boolean>("USE_SHARED_CREDENTIALS", false) {
     };
+    public static final Key<String> DATA_DIRECTORY = new Key<String>("DATA_DIRECTORY", "mscore") {
+    };
     public static final Key<String> DATA_STORE_NAME = new Key<String>("DATA_STORE_NAME", "xodus") {
     };
     public static final Key<String> MONGODB_HOSTNAME = new Key<String>("MONGODB_HOSTNAME", "localhost") {
@@ -81,6 +83,7 @@ public final class Keys {
         registerKey(CACHE_INVALIDATION_TIMOUT_SECONDS);
         registerKey(USE_SHARED_ENVIRONMENT);
         registerKey(USE_SHARED_CREDENTIALS);
+        registerKey(DATA_DIRECTORY);
         registerKey(DATA_STORE_NAME);
         registerKey(MONGODB_HOSTNAME);
         registerKey(MONGODB_PORT);
