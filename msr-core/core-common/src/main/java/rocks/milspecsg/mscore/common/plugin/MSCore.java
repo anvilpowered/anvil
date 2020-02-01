@@ -24,7 +24,7 @@ import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
 import rocks.milspecsg.mscore.api.plugin.PluginMessages;
 import rocks.milspecsg.msrepository.api.MSRepository;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
-import rocks.milspecsg.msrepository.api.util.PluginInfo;
+import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 
 import java.util.Objects;
 

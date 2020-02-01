@@ -24,7 +24,7 @@ import rocks.milspecsg.msrepository.api.data.Environment;
 import rocks.milspecsg.msrepository.api.data.key.Key;
 import rocks.milspecsg.msrepository.api.data.key.Keys;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
-import rocks.milspecsg.msrepository.api.util.PluginInfo;
+import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 
 import java.util.HashMap;
 import java.util.Map;

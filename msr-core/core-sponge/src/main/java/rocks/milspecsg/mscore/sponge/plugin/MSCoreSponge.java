@@ -33,7 +33,7 @@ import rocks.milspecsg.mscore.sponge.listeners.SpongePlayerListener;
 import rocks.milspecsg.mscore.sponge.module.SpongeModule;
 import rocks.milspecsg.msrepository.api.MSRepository;
 import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
-import rocks.milspecsg.msrepository.api.util.PluginInfo;
+import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 import rocks.milspecsg.msrepository.sponge.module.ApiSpongeModule;
 
 @Plugin(

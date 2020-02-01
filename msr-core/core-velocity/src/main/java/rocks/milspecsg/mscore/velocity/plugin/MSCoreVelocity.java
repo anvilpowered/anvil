@@ -33,7 +33,7 @@ import rocks.milspecsg.mscore.velocity.listeners.VelocityPlayerListener;
 import rocks.milspecsg.mscore.velocity.module.VelocityModule;
 import rocks.milspecsg.msrepository.api.MSRepository;
 import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
-import rocks.milspecsg.msrepository.api.util.PluginInfo;
+import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 import rocks.milspecsg.msrepository.velocity.module.ApiVelocityModule;
 
 @Plugin(

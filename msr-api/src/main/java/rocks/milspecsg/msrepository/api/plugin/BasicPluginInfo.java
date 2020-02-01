@@ -16,9 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.util;
+package rocks.milspecsg.msrepository.api.plugin;
 
-public interface PluginInfo<TString> extends BasicPluginInfo {
+public interface BasicPluginInfo {
 
-    TString getPrefix();
+    String getId();
+
+    String getName();
+
+    String getVersion();
+
+    String getDescription();
+
+    String getUrl();
+
+    String[] getAuthors();
+
+    String getOrganizationName();
+
+    String getBuildDate();
 }
