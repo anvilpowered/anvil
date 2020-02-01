@@ -18,15 +18,38 @@
 
 package rocks.milspecsg.msrepository.api.data;
 
+import com.google.inject.Binding;
 import com.google.inject.Injector;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
+import rocks.milspecsg.msrepository.api.util.PluginInfo;
 
+import java.util.Objects;
 
 public interface Environment {
+
+    @SuppressWarnings("unchecked")
+    static <T> T getService(String name, Injector injector) {
+        Binding<?>[] binding = {null};
+        injector.getBindings().forEach((k, v) -> {
+            if (k.getTypeLiteral().getType().getTypeName().contains(name)) {
+                binding[0] = v;
+            }
+        });
+        return Objects.requireNonNull(
+            (Binding<T>) binding[0],
+            "Could not find binding for service: " + name + " in injector " + injector
+        ).getProvider().get();
+    }
+
+    default <T> T getService(String name) {
+        return getService(name, getInjector());
+    }
 
     String getName();
 
     Injector getInjector();
+
+    <TString> PluginInfo<TString> getPluginInfo();
 
     Registry getRegistry();
 }

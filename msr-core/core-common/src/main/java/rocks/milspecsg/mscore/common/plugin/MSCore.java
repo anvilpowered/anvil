@@ -18,12 +18,13 @@
 
 package rocks.milspecsg.mscore.common.plugin;
 
-import com.google.inject.Binding;
 import com.google.inject.Injector;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
 import rocks.milspecsg.mscore.api.plugin.PluginMessages;
+import rocks.milspecsg.msrepository.api.MSRepository;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
+import rocks.milspecsg.msrepository.api.util.PluginInfo;
 
 import java.util.Objects;
 
@@ -39,21 +40,6 @@ public abstract class MSCore {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T getService(String name, Injector injector) {
-        Binding<?>[] binding = {null};
-        injector.getBindings().forEach((k, v) -> {
-            if (k.getTypeLiteral().getType().getTypeName().contains(name)) {
-                binding[0] = v;
-            }
-        });
-        return (T) Objects.requireNonNull(binding[0].getProvider().get(), "Could not find binding for service: " + name + " in injector " + injector);
-    }
-
-    public static <T> T getService(String name) {
-        return getService(name, injector);
-    }
-
     public static CoreMemberManager getCoreMemberManager() {
         return injector.getInstance(CoreMemberManager.class);
     }
@@ -66,8 +52,12 @@ public abstract class MSCore {
         return injector.getInstance(Registry.class);
     }
 
+    public static <TString> PluginInfo<TString> getPluginInfo() {
+        return MSRepository.getCoreEnvironment().getPluginInfo();
+    }
+
     public static <TString> PluginMessages<TString> getPluginMessages() {
-        return getService("rocks.milspecsg.mscore.api.plugin.PluginMessages");
+        return MSRepository.getCoreEnvironment().getService("rocks.milspecsg.mscore.api.plugin.PluginMessages");
     }
 
     protected void load() {

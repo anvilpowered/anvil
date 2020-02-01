@@ -24,6 +24,7 @@ import rocks.milspecsg.msrepository.api.data.Environment;
 import rocks.milspecsg.msrepository.api.data.key.Key;
 import rocks.milspecsg.msrepository.api.data.key.Keys;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
+import rocks.milspecsg.msrepository.api.util.PluginInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -96,7 +97,12 @@ public final class MSRepository {
         return Optional.ofNullable(environments.get(name));
     }
 
-    public static void createEnvironment(String name, Injector injector, com.google.inject.Key<? extends Registry> registryKey) {
+    public static <TString> void registerEnvironment(
+        String name,
+        Injector injector,
+        com.google.inject.Key<? extends PluginInfo<TString>> pluginInfoKey,
+        com.google.inject.Key<? extends Registry> registryKey
+    ) {
         if (environments.containsKey(name)) {
             throw new IllegalArgumentException("Environment with name " + name + " already exists");
         }
@@ -112,14 +118,28 @@ public final class MSRepository {
             }
 
             @Override
+            public PluginInfo<TString> getPluginInfo() {
+                return injector.getInstance(pluginInfoKey);
+            }
+
+            @Override
             public Registry getRegistry() {
                 return injector.getInstance(registryKey);
             }
         });
     }
 
-    public static void createEnvironment(String name, Injector injector) {
-        createEnvironment(name, injector, com.google.inject.Key.get(Registry.class));
+    public static <TString> void registerEnvironment(
+        String name,
+        Injector injector,
+        com.google.inject.Key<? extends PluginInfo<TString>> pluginInfoKey
+    ) {
+        registerEnvironment(
+            name,
+            injector,
+            pluginInfoKey,
+            com.google.inject.Key.get(Registry.class)
+        );
     }
 
     public static <T> T resolveForSharedEnvironment(Key<T> key, Registry registry) {

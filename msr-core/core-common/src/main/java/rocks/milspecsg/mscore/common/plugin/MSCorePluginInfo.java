@@ -28,7 +28,9 @@ public class MSCorePluginInfo<TString, TCommandSource> implements PluginInfo<TSt
     public static final String version = "$modVersion";
     public static final String description = "Core plugin";
     public static final String url = "https://github.com/MilSpecSG/MSRepository";
-    public static final String authors = "Cableguy20";
+    public static final String[] authors = {"Cableguy20"};
+    public static final String organizationName = "MilSpecSG";
+    public static final String buildDate = "$buildDate";
     public TString pluginPrefix;
 
     @Inject
@@ -57,13 +59,23 @@ public class MSCorePluginInfo<TString, TCommandSource> implements PluginInfo<TSt
     }
 
     @Override
-    public String getURL() {
+    public String getUrl() {
         return url;
     }
 
     @Override
-    public String getAuthors() {
+    public String[] getAuthors() {
         return authors;
+    }
+
+    @Override
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    @Override
+    public String getBuildDate() {
+        return buildDate;
     }
 
     @Override

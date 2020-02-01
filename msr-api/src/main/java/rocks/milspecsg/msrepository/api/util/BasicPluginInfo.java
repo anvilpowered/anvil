@@ -28,7 +28,11 @@ public interface BasicPluginInfo {
 
     String getDescription();
 
-    String getURL();
+    String getUrl();
 
-    String getAuthors();
+    String[] getAuthors();
+
+    String getOrganizationName();
+
+    String getBuildDate();
 }
