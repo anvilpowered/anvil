@@ -46,12 +46,12 @@ public abstract class CommonStringResult<TString, TCommandSource> implements Str
 
         @Override
         public Builder<TString, TCommandSource> append(CharSequence... content) {
-            return append(content);
+            return append((Object[]) content);
         }
 
         @Override
         public Builder<TString, TCommandSource> appendJoining(Object delimiter, CharSequence... content) {
-            return append(delimiter, content);
+            return append(delimiter, (Object[]) content);
         }
     }
 }
