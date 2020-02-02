@@ -70,7 +70,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         /* === Determine credentials for MongoDB === */
         String clientUrl;
         String protocol = useSrv ? "mongodb+srv://" : "mongodb://";
-        String pt = useSrv ? "" : String.valueOf(port);
+        String pt = useSrv ? "" : ":" + port;
         if (useConnectionString) {
             clientUrl = connectionString;
         } else if (useAuth) {
@@ -79,9 +79,9 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
                 encodedPassword = URLEncoder.encode(password, "UTF-8");
             } catch (UnsupportedEncodingException ignored) {
             }
-            clientUrl = protocol + username + ":" + encodedPassword + "@" + hostname + ":" + pt + "/" + dbName + "?authSource=" + authDb;
+            clientUrl = protocol + username + ":" + encodedPassword + "@" + hostname + pt + "/" + dbName + "?authSource=" + authDb;
         } else {
-            clientUrl = protocol + hostname + ":" + pt + "/" + dbName;
+            clientUrl = protocol + hostname + pt + "/" + dbName;
         }
 
         /* === Establish MongoDB connection === */
