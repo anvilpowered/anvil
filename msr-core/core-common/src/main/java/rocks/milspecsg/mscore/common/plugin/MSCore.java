@@ -57,7 +57,7 @@ public abstract class MSCore {
     }
 
     public static <TString> PluginMessages<TString> getPluginMessages() {
-        return MSRepository.getCoreEnvironment().getService("rocks.milspecsg.mscore.api.plugin.PluginMessages");
+        return MSRepository.getCoreEnvironment().getInstance("rocks.milspecsg.mscore.api.plugin.PluginMessages");
     }
 
     protected void load() {

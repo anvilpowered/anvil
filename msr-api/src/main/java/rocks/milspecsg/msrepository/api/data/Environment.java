@@ -20,6 +20,8 @@ package rocks.milspecsg.msrepository.api.data;
 
 import com.google.inject.Binding;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Provider;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 
@@ -28,7 +30,7 @@ import java.util.Objects;
 public interface Environment {
 
     @SuppressWarnings("unchecked")
-    static <T> T getService(String name, Injector injector) {
+    static <T> Binding<T> getBinding(String name, Injector injector) {
         Binding<?>[] binding = {null};
         injector.getBindings().forEach((k, v) -> {
             if (k.getTypeLiteral().getType().getTypeName().contains(name)) {
@@ -38,11 +40,35 @@ public interface Environment {
         return Objects.requireNonNull(
             (Binding<T>) binding[0],
             "Could not find binding for service: " + name + " in injector " + injector
-        ).getProvider().get();
+        );
     }
 
-    default <T> T getService(String name) {
-        return getService(name, getInjector());
+    static <T> Key<T> getKey(String name, Injector injector) {
+        return Environment.<T>getBinding(name, injector).getKey();
+    }
+
+    static <T> Provider<T> getProvider(String name, Injector injector) {
+        return Environment.<T>getBinding(name, injector).getProvider();
+    }
+
+    static <T> T getInstance(String name, Injector injector) {
+        return Environment.<T>getProvider(name, injector).get();
+    }
+
+    default <T> Binding<T> getBinding(String name) {
+        return getBinding(name, getInjector());
+    }
+
+    default <T> Key<T> getKey(String name) {
+        return getKey(name, getInjector());
+    }
+
+    default <T> Provider<T> getProvider(String name) {
+        return getProvider(name, getInjector());
+    }
+
+    default <T> T getInstance(String name) {
+        return getInstance(name, getInjector());
     }
 
     String getName();
