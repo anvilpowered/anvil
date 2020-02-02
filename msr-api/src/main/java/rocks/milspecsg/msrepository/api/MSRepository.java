@@ -147,10 +147,13 @@ public final class MSRepository {
         if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
             if (key.equals(Keys.DATA_STORE_NAME)
                 || key.equals(Keys.MONGODB_HOSTNAME)
-                || key.equals(Keys.MONGODB_PORT)) {
+                || key.equals(Keys.MONGODB_PORT)
+                || key.equals(Keys.MONGODB_USE_SRV)) {
                 return coreRegistry.getOrDefault(key);
             } else if (registry.getOrDefault(Keys.USE_SHARED_CREDENTIALS)) {
-                if (key.equals(Keys.MONGODB_USERNAME)
+                if (key.equals(Keys.MONGODB_USE_CONNECTION_STRING)
+                    || key.equals(Keys.MONGODB_CONNECTION_STRING)
+                    || key.equals(Keys.MONGODB_USERNAME)
                     || key.equals(Keys.MONGODB_PASSWORD)
                     || key.equals(Keys.MONGODB_AUTH_DB)
                     || key.equals(Keys.MONGODB_USE_AUTH)) {

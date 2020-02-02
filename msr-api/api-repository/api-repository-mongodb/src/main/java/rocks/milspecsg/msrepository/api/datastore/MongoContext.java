@@ -56,6 +56,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         }
 
         /* === Get values from config === */
+        String connectionString = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_CONNECTION_STRING, registry);
         String hostname = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_HOSTNAME, registry);
         int port = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_PORT, registry);
         String dbName = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_DBNAME, registry);
@@ -63,18 +64,23 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         String password =MSRepository.resolveForSharedEnvironment(Keys.MONGODB_PASSWORD, registry);
         String authDb = MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry);
         boolean useAuth = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_USE_AUTH, registry);
+        boolean useSrv = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_USE_SRV, registry);
+        boolean useConnectionString = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_USE_CONNECTION_STRING, registry);
 
         /* === Determine credentials for MongoDB === */
         String clientUrl;
-        if (useAuth) {
+        String protocol = useSrv ? "mongodb+srv://" : "mongodb://";
+        if (useConnectionString) {
+            clientUrl = connectionString;
+        } else if (useAuth) {
             String encodedPassword = password;
             try {
                 encodedPassword = URLEncoder.encode(password, "UTF-8");
             } catch (UnsupportedEncodingException ignored) {
             }
-            clientUrl = "mongodb://" + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/" + dbName + "?authSource=" + authDb;
+            clientUrl = protocol + username + ":" + encodedPassword + "@" + hostname + ":" + port + "/" + dbName + "?authSource=" + authDb;
         } else {
-            clientUrl = "mongodb://" + hostname + ":" + port + "/" + dbName;
+            clientUrl = protocol + hostname + ":" + port + "/" + dbName;
         }
 
         /* === Establish MongoDB connection === */

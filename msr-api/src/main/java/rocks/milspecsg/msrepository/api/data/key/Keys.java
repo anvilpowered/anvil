@@ -62,6 +62,10 @@ public final class Keys {
     };
     public static final Key<String> DATA_STORE_NAME = new Key<String>("DATA_STORE_NAME", "xodus") {
     };
+    public static final Key<String> MONGODB_CONNECTION_STRING = new Key<String>(
+        "MONGODB_CONNECTION_STRING",
+        "mongodb://admin:password@localhost:27017/mscore?authSource=admin") {
+    };
     public static final Key<String> MONGODB_HOSTNAME = new Key<String>("MONGODB_HOSTNAME", "localhost") {
     };
     public static final Key<Integer> MONGODB_PORT = new Key<Integer>("MONGODB_PORT", 27017) {
@@ -75,6 +79,10 @@ public final class Keys {
     public static final Key<String> MONGODB_AUTH_DB = new Key<String>("MONGODB_AUTH_DB", "admin") {
     };
     public static final Key<Boolean> MONGODB_USE_AUTH = new Key<Boolean>("MONGODB_USEAUTH", false) {
+    };
+    public static final Key<Boolean> MONGODB_USE_SRV = new Key<Boolean>("MONGODB_USE_SRV", false) {
+    };
+    public static final Key<Boolean> MONGODB_USE_CONNECTION_STRING = new Key<Boolean>("MONGODB_USE_CONNECTION_STRING", false) {
     };
 
     static {
@@ -92,5 +100,6 @@ public final class Keys {
         registerKey(MONGODB_PASSWORD);
         registerKey(MONGODB_AUTH_DB);
         registerKey(MONGODB_USE_AUTH);
+        registerKey(MONGODB_USE_SRV);
     }
 }
