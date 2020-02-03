@@ -4,10 +4,10 @@ plugins {
 }
 
 subprojects {
-    if (project.hasProperty("buildNumber") && modVersion.contains("-SNAPSHOT")) {
-        modVersion = modVersion.replace("-SNAPSHOT", "-RC${buildNumber}")
-    }
-    group modGroup
-    version modVersion
+    group "rocks.milspecsg"
+    version "1.0.0-SNAPSHOT"
     sourceCompatibility = 1.8
+    if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
+        version = version.replace("-SNAPSHOT", "-RC${buildNumber}")
+    }
 }

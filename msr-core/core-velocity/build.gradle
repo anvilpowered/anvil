@@ -56,7 +56,7 @@ dependencies {
 }
 
 shadowJar {
-    String jarName = "MSCore-Velocity-${modVersion}.jar"
+    String jarName = "MSCore-Velocity-${project.version}.jar"
     println "Building: " + jarName
     archiveFileName = jarName
 

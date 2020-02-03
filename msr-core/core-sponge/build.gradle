@@ -59,7 +59,7 @@ dependencies {
 }
 
 shadowJar {
-    String jarName = "MSCore-Sponge-${modVersion}.jar"
+    String jarName = "MSCore-Sponge-${project.version}.jar"
     println "Building: " + jarName
     archiveFileName = jarName
 
