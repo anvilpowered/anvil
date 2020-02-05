@@ -24,6 +24,7 @@ import com.velocitypowered.api.util.UuidUtils;
 import rocks.milspecsg.msrepository.api.util.UserService;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,6 +51,11 @@ public class VelocityUserService implements UserService<Player, Player> {
     @Override
     public Optional<Player> getPlayer(UUID userUUID) {
         return get(userUUID);
+    }
+
+    @Override
+    public Collection<Player> getOnlinePlayers() {
+        return proxyServer.getAllPlayers();
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.util.Identifiable;
 import rocks.milspecsg.msrepository.api.util.UserService;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,6 +49,11 @@ public class SpongeUserService implements UserService<User, Player> {
     @Override
     public Optional<Player> getPlayer(UUID userUUID) {
         return get(userUUID).flatMap(User::getPlayer);
+    }
+
+    @Override
+    public Collection<Player> getOnlinePlayers() {
+        return Sponge.getServer().getOnlinePlayers();
     }
 
     @Override

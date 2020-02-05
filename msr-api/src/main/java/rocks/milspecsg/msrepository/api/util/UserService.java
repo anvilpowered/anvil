@@ -18,6 +18,7 @@
 
 package rocks.milspecsg.msrepository.api.util;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +34,8 @@ public interface UserService<TUser, TPlayer> {
     Optional<TPlayer> getPlayer(String userName);
 
     Optional<TPlayer> getPlayer(UUID userUUID);
+
+    Collection<TPlayer> getOnlinePlayers();
 
     Optional<UUID> getUUID(String userName);
 
