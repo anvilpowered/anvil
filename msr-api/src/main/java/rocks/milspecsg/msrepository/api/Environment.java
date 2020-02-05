@@ -16,18 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package rocks.milspecsg.msrepository.api.data;
+package rocks.milspecsg.msrepository.api;
 
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.Provider;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
+import rocks.milspecsg.msrepository.api.plugin.Plugin;
 import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
-public interface Environment {
+public interface Environment extends Comparable<Environment> {
 
     @SuppressWarnings("unchecked")
     static <T> Binding<T> getBinding(String name, Injector injector) {
@@ -71,11 +74,38 @@ public interface Environment {
         return getInstance(name, getInjector());
     }
 
+    void reload();
+
     String getName();
 
     Injector getInjector();
 
+    <TPluginContainer> Plugin<TPluginContainer> getPlugin();
+
     <TString> PluginInfo<TString> getPluginInfo();
 
     Registry getRegistry();
+
+    interface Builder {
+
+        Builder addModules(Module... modules);
+
+        Builder addModules(Iterable<Module> modules);
+
+        Builder setName(String name);
+
+        Builder setRootInjector(Injector rootInjector);
+
+        /**
+         * Called once, right after the environment is created
+         */
+        Builder whenReady(Consumer<Environment> listener);
+
+        /**
+         * Builds an {@link Environment} and registers it.
+         *
+         * @param plugin {@link Plugin} owner for this environment
+         */
+        void register(Plugin<?> plugin);
+    }
 }

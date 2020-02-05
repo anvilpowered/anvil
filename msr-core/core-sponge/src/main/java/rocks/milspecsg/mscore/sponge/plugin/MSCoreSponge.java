@@ -18,7 +18,6 @@
 
 package rocks.milspecsg.mscore.sponge.plugin;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.spongepowered.api.Sponge;
@@ -26,14 +25,12 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.text.Text;
+import org.spongepowered.api.plugin.PluginContainer;
 import rocks.milspecsg.mscore.common.plugin.MSCore;
 import rocks.milspecsg.mscore.common.plugin.MSCorePluginInfo;
 import rocks.milspecsg.mscore.sponge.listeners.SpongePlayerListener;
 import rocks.milspecsg.mscore.sponge.module.SpongeModule;
 import rocks.milspecsg.msrepository.api.MSRepository;
-import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
-import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 import rocks.milspecsg.msrepository.sponge.module.ApiSpongeModule;
 
 @Plugin(
@@ -44,22 +41,16 @@ import rocks.milspecsg.msrepository.sponge.module.ApiSpongeModule;
     url = MSCorePluginInfo.url,
     authors = "Cableguy20"
 )
-public class MSCoreSponge extends MSCore {
+public class MSCoreSponge extends MSCore<PluginContainer> {
 
     @Inject
-    Injector spongeRootInjector;
-
-    @Override
-    public String toString() {
-        return MSCorePluginInfo.id;
+    public MSCoreSponge(Injector injector) {
+        super(injector, new SpongeModule(), new ApiSpongeModule());
     }
 
     @Listener(order = Order.EARLY)
     public void onInit(GameInitializationEvent event) {
-        injector = spongeRootInjector.createChildInjector(new SpongeModule(), new ApiSpongeModule());
-        MSRepository.registerEnvironment("mscore", injector, BindingExtensions.getKey(new TypeToken<PluginInfo<Text>>() {
-        }));
-        Sponge.getEventManager().registerListeners(this, injector.getInstance(SpongePlayerListener.class));
-        load();
+        MSRepository.completeInitialization();
+        Sponge.getEventManager().registerListeners(this, environment.getInjector().getInstance(SpongePlayerListener.class));
     }
 }

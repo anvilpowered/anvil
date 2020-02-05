@@ -18,22 +18,19 @@
 
 package rocks.milspecsg.mscore.velocity.plugin;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.ProxyServer;
-import net.kyori.text.TextComponent;
 import rocks.milspecsg.mscore.common.plugin.MSCore;
 import rocks.milspecsg.mscore.common.plugin.MSCorePluginInfo;
 import rocks.milspecsg.mscore.velocity.listeners.VelocityPlayerListener;
 import rocks.milspecsg.mscore.velocity.module.VelocityModule;
 import rocks.milspecsg.msrepository.api.MSRepository;
-import rocks.milspecsg.msrepository.api.misc.BindingExtensions;
-import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 import rocks.milspecsg.msrepository.velocity.module.ApiVelocityModule;
 
 @Plugin(
@@ -44,25 +41,19 @@ import rocks.milspecsg.msrepository.velocity.module.ApiVelocityModule;
     url = MSCorePluginInfo.url,
     authors = "Cableguy20"
 )
-public class MSCoreVelocity extends MSCore {
+public class MSCoreVelocity extends MSCore<PluginContainer> {
 
     @Inject
-    Injector velocityRootInjector;
+    private ProxyServer proxyServer;
 
     @Inject
-    ProxyServer proxyServer;
-
-    @Override
-    public String toString() {
-        return MSCorePluginInfo.id;
+    public MSCoreVelocity(Injector injector) {
+        super(injector, new VelocityModule(), new ApiVelocityModule());
     }
 
     @Subscribe(order = PostOrder.EARLY)
     public void onInit(ProxyInitializeEvent event) {
-        injector = velocityRootInjector.createChildInjector(new VelocityModule(), new ApiVelocityModule());
-        MSRepository.registerEnvironment("mscore", injector, BindingExtensions.getKey(new TypeToken<PluginInfo<TextComponent>>() {
-        }));
-        proxyServer.getEventManager().register(this, injector.getInstance(VelocityPlayerListener.class));
-        load();
+        MSRepository.completeInitialization();
+        proxyServer.getEventManager().register(this, environment.getInjector().getInstance(VelocityPlayerListener.class));
     }
 }

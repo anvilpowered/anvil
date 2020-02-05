@@ -18,36 +18,42 @@
 
 package rocks.milspecsg.msrepository.api;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
-import com.google.inject.Injector;
-import rocks.milspecsg.msrepository.api.data.Environment;
 import rocks.milspecsg.msrepository.api.data.key.Key;
 import rocks.milspecsg.msrepository.api.data.key.Keys;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
-import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
+import rocks.milspecsg.msrepository.api.plugin.Plugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings({"unchecked", "unused", "UnstableApiUsage"})
 public final class MSRepository {
 
     private static final Map<TypeToken<?>, Supplier<?>> bindings = new HashMap<>();
     private static final Map<String, Environment> environments = new HashMap<>();
+    static final Map<String, Plugin<?>> plugins = new HashMap<>();
+    static final Map<Plugin<?>, Set<Environment>> pluginEnvironmentMap = new HashMap<>();
 
     private MSRepository() {
         throw new AssertionError("**boss music** No instance for you!");
     }
 
     public static <T> Supplier<T> provideSupplier(TypeToken<T> typeToken) {
-        try {
-            return (Supplier<T>) Objects.requireNonNull(typeToken);
-        } catch (NullPointerException e) {
-            throw new IllegalStateException("Could not find binding for " + typeToken.getRawType().getName(), e);
-        }
+        return (Supplier<T>) Objects.requireNonNull(
+            bindings.get(typeToken),
+            "Could not find binding for " + typeToken.getRawType().getName()
+        );
     }
 
     public static <T> Supplier<T> provideSupplier(Class<T> clazz) {
@@ -55,18 +61,14 @@ public final class MSRepository {
     }
 
     public static <T> Supplier<T> provideSupplier(String name) {
-        try {
-            Supplier<T>[] suppliers = new Supplier[1];
-            for (Map.Entry<TypeToken<?>, Supplier<?>> entry : bindings.entrySet()) {
-                if (entry.getKey().getRawType().getName().equalsIgnoreCase(name)) {
-                    suppliers[0] = (Supplier<T>) entry.getValue();
-                    break;
-                }
+        Supplier<T>[] suppliers = new Supplier[1];
+        for (Map.Entry<TypeToken<?>, Supplier<?>> entry : bindings.entrySet()) {
+            if (entry.getKey().getRawType().getName().equalsIgnoreCase(name)) {
+                suppliers[0] = (Supplier<T>) entry.getValue();
+                break;
             }
-            return Objects.requireNonNull(suppliers[0]);
-        } catch (NullPointerException e) {
-            throw new IllegalStateException("Could not find binding for " + name, e);
         }
+        return Objects.requireNonNull(suppliers[0], "Could not find binding for " + name);
     }
 
     public static <T> T provide(TypeToken<T> typeToken) {
@@ -93,53 +95,62 @@ public final class MSRepository {
         return Objects.requireNonNull(environments.get(name), "Could not find environment with name " + name);
     }
 
+    public static Map<String, Environment> getEnvironments() {
+        return ImmutableMap.copyOf(environments);
+    }
+
+    public static Stream<Environment> getEnvironmentsAsStream(Pattern pattern) {
+        return environments.entrySet().stream().filter(e ->
+            pattern.matcher(e.getKey()).matches()
+        ).map(Map.Entry::getValue);
+    }
+
+    public static List<Environment> getEnvironments(Pattern pattern) {
+        return getEnvironmentsAsStream(pattern).collect(Collectors.toList());
+    }
+
+    public static Optional<Environment> getEnvironment(Pattern pattern) {
+        return getEnvironmentsAsStream(pattern).findAny();
+    }
+
     public static Optional<Environment> getEnvironment(String name) {
         return Optional.ofNullable(environments.get(name));
     }
 
-    public static <TString> void registerEnvironment(
-        String name,
-        Injector injector,
-        com.google.inject.Key<? extends PluginInfo<TString>> pluginInfoKey,
-        com.google.inject.Key<? extends Registry> registryKey
-    ) {
+    public static Environment getEnvironment(Plugin<?> plugin) {
+        return Objects.requireNonNull(environments.get(plugin.getName()));
+    }
+
+    public static Set<Environment> getEnvironments(Plugin<?> plugin) {
+        return Objects.requireNonNull(pluginEnvironmentMap.get(plugin));
+    }
+
+    public static Environment.Builder environmentBuilder() {
+        return new EnvironmentBuilderImpl();
+    }
+
+    /**
+     * To be called by MSCore only
+     */
+    public static void completeInitialization() {
+        EnvironmentBuilderImpl.completeInitialization();
+    }
+
+    static void registerEnvironment(Environment environment, Plugin<?> plugin) {
+        final String name = environment.getName();
         if (environments.containsKey(name)) {
             throw new IllegalArgumentException("Environment with name " + name + " already exists");
         }
-        environments.put(name, new Environment() {
-            @Override
-            public String getName() {
-                return name;
-            }
-
-            @Override
-            public Injector getInjector() {
-                return injector;
-            }
-
-            @Override
-            public PluginInfo<TString> getPluginInfo() {
-                return injector.getInstance(pluginInfoKey);
-            }
-
-            @Override
-            public Registry getRegistry() {
-                return injector.getInstance(registryKey);
-            }
-        });
-    }
-
-    public static <TString> void registerEnvironment(
-        String name,
-        Injector injector,
-        com.google.inject.Key<? extends PluginInfo<TString>> pluginInfoKey
-    ) {
-        registerEnvironment(
-            name,
-            injector,
-            pluginInfoKey,
-            com.google.inject.Key.get(Registry.class)
-        );
+        environments.put(name, environment);
+        Set<Environment> envs = pluginEnvironmentMap.get(plugin);
+        if (envs == null) {
+            envs = new TreeSet<>();
+            envs.add(environment);
+            pluginEnvironmentMap.put(plugin, envs);
+            plugins.put(plugin.getName(), plugin);
+        } else {
+            envs.add(environment);
+        }
     }
 
     public static <T> T resolveForSharedEnvironment(Key<T> key, Registry registry) {

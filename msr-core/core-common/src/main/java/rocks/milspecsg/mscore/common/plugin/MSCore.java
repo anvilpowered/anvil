@@ -18,30 +18,62 @@
 
 package rocks.milspecsg.mscore.common.plugin;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import rocks.milspecsg.mscore.api.coremember.CoreMemberManager;
 import rocks.milspecsg.mscore.api.coremember.repository.CoreMemberRepository;
 import rocks.milspecsg.mscore.api.plugin.PluginMessages;
+import rocks.milspecsg.msrepository.api.Environment;
 import rocks.milspecsg.msrepository.api.MSRepository;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
+import rocks.milspecsg.msrepository.api.plugin.Plugin;
 import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
 
 import java.util.Objects;
 
-public abstract class MSCore {
+public abstract class MSCore<TPluginContainer> implements Plugin<TPluginContainer> {
 
-    protected static Injector injector;
+    @Inject
+    protected TPluginContainer pluginContainer;
 
-    public static Injector getInjector() {
-        try {
-            return Objects.requireNonNull(injector);
-        } catch (NullPointerException e) {
-            throw new IllegalStateException("Injector has not been loaded yet!", e);
-        }
+    protected static Environment environment;
+
+    public MSCore(Injector injector, Module... modules) {
+        MSRepository.environmentBuilder()
+            .setName(MSCorePluginInfo.id)
+            .setRootInjector(injector)
+            .addModules(modules)
+            .whenReady(e -> environment = e)
+            .register(this);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    @Override
+    public String getName() {
+        return MSCorePluginInfo.id;
+    }
+
+    @Override
+    public TPluginContainer getPluginContainer() {
+        return pluginContainer;
+    }
+
+    @Override
+    public Environment getPrimaryEnvironment() {
+        return getEnvironment();
+    }
+
+    public static Environment getEnvironment() {
+        return Objects.requireNonNull(environment, "Environment has not been loaded yet!");
     }
 
     public static CoreMemberManager getCoreMemberManager() {
-        return injector.getInstance(CoreMemberManager.class);
+        return environment.getInjector().getInstance(CoreMemberManager.class);
     }
 
     public static CoreMemberRepository<?, ?> getCoreMemberRepository() {
@@ -49,18 +81,14 @@ public abstract class MSCore {
     }
 
     public static Registry getRegistry() {
-        return injector.getInstance(Registry.class);
+        return environment.getInjector().getInstance(Registry.class);
     }
 
     public static <TString> PluginInfo<TString> getPluginInfo() {
-        return MSRepository.getCoreEnvironment().getPluginInfo();
+        return environment.getPluginInfo();
     }
 
     public static <TString> PluginMessages<TString> getPluginMessages() {
-        return MSRepository.getCoreEnvironment().getInstance("rocks.milspecsg.mscore.api.plugin.PluginMessages");
-    }
-
-    protected void load() {
-        injector.getInstance(Registry.class).load();
+        return environment.getInstance(PluginMessages.class.getCanonicalName());
     }
 }
