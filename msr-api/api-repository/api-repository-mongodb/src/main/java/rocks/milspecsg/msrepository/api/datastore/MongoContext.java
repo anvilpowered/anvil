@@ -49,11 +49,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
     }
 
     @Override
-    protected void registryLoaded() {
-        if (!MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry).equalsIgnoreCase("mongodb")) {
-            requestCloseConnection();
-            return;
-        }
+    protected Datastore loadDataStore() {
 
         /* === Get values from config === */
         String connectionString = MSRepository.resolveForSharedEnvironment(Keys.MONGODB_CONNECTION_STRING, registry);
@@ -90,7 +86,6 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         Morphia morphia = new Morphia();
         Datastore dataStore = morphia.createDatastore(mongoClient, dbName);
         dataStore.ensureIndexes();
-        setDataStore(dataStore);
 
         /* === Save mapped objects and register with morphia === */
         morphia.map(calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE), Entity.class, Embedded.class));
@@ -104,5 +99,6 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         });
 
         setTKeyClass(ObjectId.class);
+        return dataStore;
     }
 }

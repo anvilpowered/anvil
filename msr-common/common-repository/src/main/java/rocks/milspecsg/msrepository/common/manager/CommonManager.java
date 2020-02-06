@@ -87,7 +87,7 @@ public abstract class CommonManager<C extends Component<?, ?>> implements Manage
             if (currentComponent == null) {
                 loadComponent();
             }
-            return currentComponent;
+            return Objects.requireNonNull(currentComponent, "An error occurred while loading current component");
         } catch (RuntimeException e) {
             String message = "MSRepository: DataStoreName has not been loaded yet! Make sure your Registry and ConfigurationService implementations are annotated with @Singleton!";
             System.err.println(message);

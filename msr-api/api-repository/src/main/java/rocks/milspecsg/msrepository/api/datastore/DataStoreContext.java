@@ -51,16 +51,19 @@ public abstract class DataStoreContext<TKey, TDataStore> {
         registry.addRegistryLoadedListener(this::registryLoaded);
     }
 
-    protected abstract void registryLoaded();
-
-    protected final void setDataStore(TDataStore dataStore) {
+    protected void registryLoaded() {
         requestCloseConnection();
-        this.dataStore = dataStore;
-        notifyConnectionOpenedListeners(dataStore);
+        dataStore = null;
     }
 
-    public final TDataStore getDataStore() {
-        return Objects.requireNonNull(dataStore, "DataStore not loaded!");
+    protected abstract TDataStore loadDataStore();
+
+    public TDataStore getDataStore() {
+        if (dataStore == null) {
+            dataStore = loadDataStore();
+            notifyConnectionOpenedListeners(dataStore);
+        }
+        return Objects.requireNonNull(dataStore, "An error occurred while loading datastore");
     }
 
     @SafeVarargs

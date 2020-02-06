@@ -48,11 +48,7 @@ public final class XodusContext extends DataStoreContext<EntityId, PersistentEnt
     }
 
     @Override
-    protected void registryLoaded() {
-        if (!MSRepository.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry).equalsIgnoreCase("xodus")) {
-            requestCloseConnection();
-            return;
-        }
+    protected PersistentEntityStore loadDataStore() {
 
         /* === Initialize storage location === */
         File dbFilesLocation = Paths.get(registry.getOrDefault(Keys.DATA_DIRECTORY) + "/data/xodus").toFile();
@@ -61,9 +57,6 @@ public final class XodusContext extends DataStoreContext<EntityId, PersistentEnt
                 throw new IllegalStateException("Unable to create xodus directory");
             }
         }
-
-        /* === Initialize Xodus === */
-        setDataStore(PersistentEntityStores.newInstance(dbFilesLocation.getPath()));
 
         /* === Find objects to map === */
         Class<?>[] entityClasses = calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE), XodusEntity.class, XodusEmbedded.class);
@@ -83,5 +76,6 @@ public final class XodusContext extends DataStoreContext<EntityId, PersistentEnt
         }
 
         setTKeyClass(EntityId.class);
+        return PersistentEntityStores.newInstance(dbFilesLocation.getPath());
     }
 }
