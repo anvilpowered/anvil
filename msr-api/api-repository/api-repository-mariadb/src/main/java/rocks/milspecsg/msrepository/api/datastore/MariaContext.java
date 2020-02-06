@@ -36,7 +36,8 @@ public final class MariaContext extends DataStoreContext<UUID, HikariDataSource>
         super(registry);
     }
 
-    public void registryLoaded() {
+    @Override
+    public HikariDataSource loadDataStore() {
 
         String hostname = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_HOSTNAME"), registry);
         int port = MSRepository.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_PORT"), registry);
@@ -60,8 +61,7 @@ public final class MariaContext extends DataStoreContext<UUID, HikariDataSource>
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.setDriverClassName("org.mariadb.jdbc.Driver");
         config.setMaximumPoolSize(20);
-        HikariDataSource dataStore = new HikariDataSource(config);
-        setDataStore(dataStore);
+        return new HikariDataSource(config);
     }
 
     protected void closeConnection(HikariDataSource dataStore) {
