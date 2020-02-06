@@ -21,6 +21,7 @@ package rocks.milspecsg.msrepository.api;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class EnvironmentBuilderImpl implements Environment.Builder {
 
@@ -42,6 +44,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     private Injector rootInjector;
     private Plugin<?> plugin;
     private final Collection<Module> modules;
+    private final Collection<Key<?>> earlyServices;
     private final Collection<Consumer<Environment>> listeners;
     private static final Collection<EnvironmentBuilderImpl> builders = new ArrayList<>();
     private static boolean alreadyCompleted = false;
@@ -55,7 +58,12 @@ class EnvironmentBuilderImpl implements Environment.Builder {
         Collection<EnvironmentImpl> environments = builders.stream().map(builder -> {
             final String name = builder.name;
             listeners.put(name, builder.listeners);
-            return new EnvironmentImpl(builder.rootInjector, name, builder.plugin, builder.modules);
+            return new EnvironmentImpl(
+                builder.rootInjector,
+                name, builder.plugin,
+                builder.modules,
+                builder.earlyServices
+            );
         }).collect(Collectors.toList());
         AbstractModule commonModule = new AbstractModule() {
             @Override
@@ -90,6 +98,9 @@ class EnvironmentBuilderImpl implements Environment.Builder {
             }
             environment.setInjector(injector);
             MSRepository.registerEnvironment(environment, environment.getPlugin());
+            for (Key<?> key : environment.getEarlyServices()) {
+                injector.getInstance(key);
+            }
             injector.getInstance(Registry.class).load();
             listeners.get(environment.getName()).forEach(action -> action.accept(environment));
         }
@@ -97,6 +108,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
 
     EnvironmentBuilderImpl() {
         modules = new ArrayList<>();
+        earlyServices = new ArrayList<>();
         listeners = new ArrayList<>();
     }
 
@@ -109,6 +121,24 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     @Override
     public Environment.Builder addModules(Iterable<Module> modules) {
         modules.forEach(this.modules::add);
+        return this;
+    }
+
+    @Override
+    public Environment.Builder addEarlyServices(Key<?>... keys) {
+        earlyServices.addAll(Arrays.asList(keys));
+        return this;
+    }
+
+    @Override
+    public Environment.Builder addEarlyServices(Class<?>... classes) {
+        earlyServices.addAll(Stream.of(classes).map(Key::get).collect(Collectors.toList()));
+        return this;
+    }
+
+    @Override
+    public Environment.Builder addEarlyServices(TypeLiteral<?>... typeLiterals) {
+        earlyServices.addAll(Stream.of(typeLiterals).map(Key::get).collect(Collectors.toList()));
         return this;
     }
 

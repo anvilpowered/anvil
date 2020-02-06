@@ -19,6 +19,7 @@
 package rocks.milspecsg.msrepository.api;
 
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.plugin.Plugin;
@@ -32,12 +33,20 @@ class EnvironmentImpl implements Environment {
     private final String name;
     private final Plugin<?> plugin;
     private final Collection<Module> modules;
+    private final Collection<Key<?>> earlyServices;
 
-    EnvironmentImpl(Injector injector, String name, Plugin<?> plugin, Collection<Module> modules) {
+    EnvironmentImpl(
+        Injector injector,
+        String name,
+        Plugin<?> plugin,
+        Collection<Module> modules,
+        Collection<Key<?>> earlyServices
+    ) {
         this.injector = injector;
         this.name = name;
         this.plugin = plugin;
         this.modules = modules;
+        this.earlyServices = earlyServices;
     }
 
     void setInjector(Injector injector) {
@@ -50,6 +59,10 @@ class EnvironmentImpl implements Environment {
 
     Collection<Module> getModules() {
         return modules;
+    }
+
+    Collection<Key<?>> getEarlyServices() {
+        return earlyServices;
     }
 
     @Override

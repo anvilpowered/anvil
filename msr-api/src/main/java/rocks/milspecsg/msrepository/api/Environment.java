@@ -23,6 +23,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.Provider;
+import com.google.inject.TypeLiteral;
 import rocks.milspecsg.msrepository.api.data.registry.Registry;
 import rocks.milspecsg.msrepository.api.plugin.Plugin;
 import rocks.milspecsg.msrepository.api.plugin.PluginInfo;
@@ -91,6 +92,12 @@ public interface Environment extends Comparable<Environment> {
         Builder addModules(Module... modules);
 
         Builder addModules(Iterable<Module> modules);
+
+        Builder addEarlyServices(Key<?>... keys);
+
+        Builder addEarlyServices(Class<?>... classes);
+
+        Builder addEarlyServices(TypeLiteral<?>... typeLiterals);
 
         Builder setName(String name);
 
