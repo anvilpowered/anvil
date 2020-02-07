@@ -23,13 +23,9 @@ dependencies {
         implementation project(':anvil-core:anvil-core-api')
     } else {
         implementation project(':Anvil:anvil-api')
-        implementation project(':Anvil:anvil-api:api-config')
-        implementation project(':Anvil:anvil-api:anvil-api')
         implementation project(':Anvil:anvil-api:anvil-api-mongodb')
         implementation project(':Anvil:anvil-api:anvil-api-xodus')
         implementation project(':Anvil:anvil-common')
-        implementation project(':Anvil:anvil-common:common-config')
-        implementation project(':Anvil:anvil-common:common-repository')
         implementation project(':Anvil:anvil-common:anvil-common-mongodb')
         implementation project(':Anvil:anvil-common:anvil-common-xodus')
         implementation project(':Anvil:anvil-core:anvil-core-api')

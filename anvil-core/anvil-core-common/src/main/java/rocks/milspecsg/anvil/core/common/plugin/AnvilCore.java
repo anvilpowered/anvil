@@ -18,54 +18,24 @@
 
 package rocks.milspecsg.anvil.core.common.plugin;
 
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import rocks.milspecsg.anvil.api.Anvil;
 import rocks.milspecsg.anvil.api.Environment;
 import rocks.milspecsg.anvil.api.data.registry.Registry;
-import rocks.milspecsg.anvil.api.plugin.Plugin;
 import rocks.milspecsg.anvil.api.plugin.PluginInfo;
+import rocks.milspecsg.anvil.common.plugin.CommonPlugin;
 import rocks.milspecsg.anvil.core.api.coremember.CoreMemberManager;
 import rocks.milspecsg.anvil.core.api.coremember.repository.CoreMemberRepository;
 import rocks.milspecsg.anvil.core.api.plugin.PluginMessages;
 
 import java.util.Objects;
 
-public abstract class AnvilCore<TPluginContainer> implements Plugin<TPluginContainer> {
-
-    @Inject
-    protected TPluginContainer pluginContainer;
+public abstract class AnvilCore<TPluginContainer> extends CommonPlugin<TPluginContainer> {
 
     protected static Environment environment;
 
     public AnvilCore(Injector injector, Module... modules) {
-        Anvil.environmentBuilder()
-            .setName(AnvilCorePluginInfo.id)
-            .setRootInjector(injector)
-            .addModules(modules)
-            .whenReady(e -> environment = e)
-            .register(this);
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    @Override
-    public String getName() {
-        return AnvilCorePluginInfo.id;
-    }
-
-    @Override
-    public TPluginContainer getPluginContainer() {
-        return pluginContainer;
-    }
-
-    @Override
-    public Environment getPrimaryEnvironment() {
-        return getEnvironment();
+        super(AnvilCorePluginInfo.id, e -> AnvilCore.environment = e, injector, modules);
     }
 
     public static Environment getEnvironment() {
