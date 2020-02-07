@@ -38,7 +38,10 @@ public abstract class CommonPlugin<TPluginContainer> implements Plugin<TPluginCo
 
     protected Environment environment;
 
+    protected final String name;
+
     protected CommonPlugin(String name, Consumer<Environment> whenReady, Injector injector, Module... modules) {
+        this.name = name;
         Anvil.environmentBuilder()
             .setName(name)
             .setRootInjector(injector)
@@ -49,6 +52,7 @@ public abstract class CommonPlugin<TPluginContainer> implements Plugin<TPluginCo
     }
 
     protected CommonPlugin(String name, Injector injector, Module... modules) {
+        this.name = name;
         Anvil.environmentBuilder()
             .setName(name)
             .setRootInjector(injector)
@@ -57,7 +61,8 @@ public abstract class CommonPlugin<TPluginContainer> implements Plugin<TPluginCo
             .register(this);
     }
 
-    protected CommonPlugin() {
+    protected CommonPlugin(String name) {
+        this.name = name;
     }
 
     @Override
@@ -67,7 +72,7 @@ public abstract class CommonPlugin<TPluginContainer> implements Plugin<TPluginCo
 
     @Override
     public String getName() {
-        return environment.getName();
+        return name;
     }
 
     @Override
