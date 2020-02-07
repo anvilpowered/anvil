@@ -35,16 +35,21 @@ public interface Environment extends Comparable<Environment> {
 
     @SuppressWarnings("unchecked")
     static <T> Binding<T> getBinding(String name, Injector injector) {
-        Binding<?>[] binding = {null};
-        injector.getBindings().forEach((k, v) -> {
-            if (k.getTypeLiteral().getType().getTypeName().contains(name)) {
-                binding[0] = v;
-            }
-        });
-        return Objects.requireNonNull(
+        long hash = ((long) name.hashCode()) * ((long) injector.hashCode());
+        Binding<?>[] binding = {Anvil.bindingsCache.get(hash)};
+        if (binding[0] == null) {
+            injector.getBindings().forEach((k, v) -> {
+                if (k.getTypeLiteral().getType().getTypeName().contains(name)) {
+                    binding[0] = v;
+                }
+            });
+        }
+        Binding<T> result = Objects.requireNonNull(
             (Binding<T>) binding[0],
             "Could not find binding for service: " + name + " in injector " + injector
         );
+        Anvil.bindingsCache.put(hash, result);
+        return result;
     }
 
     static <T> Key<T> getKey(String name, Injector injector) {

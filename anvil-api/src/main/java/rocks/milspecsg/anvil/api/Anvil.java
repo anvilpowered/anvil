@@ -20,6 +20,7 @@ package rocks.milspecsg.anvil.api;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Binding;
 import rocks.milspecsg.anvil.api.data.key.Key;
 import rocks.milspecsg.anvil.api.data.key.Keys;
 import rocks.milspecsg.anvil.api.data.registry.Registry;
@@ -44,6 +45,7 @@ public final class Anvil {
     private static final Map<String, Environment> environments = new HashMap<>();
     static final Map<String, Plugin<?>> plugins = new HashMap<>();
     static final Map<Plugin<?>, Set<Environment>> pluginEnvironmentMap = new HashMap<>();
+    static final Map<Long, Binding<?>> bindingsCache = new HashMap<>();
 
     private Anvil() {
         throw new AssertionError("**boss music** No instance for you!");
