@@ -1,0 +1,50 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'java'
+    id "net.kyori.blossom" version "1.1.0"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spongepowered.org/maven' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("Anvil")) {
+        implementation project(':anvil-api')
+        implementation project(':anvil-api:anvil-api-mongodb')
+        implementation project(':anvil-api:anvil-api-xodus')
+        implementation project(':anvil-common')
+        implementation project(':anvil-common:anvil-common-mongodb')
+        implementation project(':anvil-common:anvil-common-xodus')
+        implementation project(':anvil-core:anvil-core-api')
+    } else {
+        implementation project(':Anvil:anvil-api')
+        implementation project(':Anvil:anvil-api:api-config')
+        implementation project(':Anvil:anvil-api:anvil-api')
+        implementation project(':Anvil:anvil-api:anvil-api-mongodb')
+        implementation project(':Anvil:anvil-api:anvil-api-xodus')
+        implementation project(':Anvil:anvil-common')
+        implementation project(':Anvil:anvil-common:common-config')
+        implementation project(':Anvil:anvil-common:common-repository')
+        implementation project(':Anvil:anvil-common:anvil-common-mongodb')
+        implementation project(':Anvil:anvil-common:anvil-common-xodus')
+        implementation project(':Anvil:anvil-core:anvil-core-api')
+    }
+
+    implementation configurate_core
+    implementation guice
+    implementation morphia
+    implementation xodus_entity_store
+}
+
+blossom {
+    replaceToken '$modVersion', version
+    SimpleDateFormat format = new SimpleDateFormat("uuuu-MM-dd-HH:mm:ss z")
+    format.setTimeZone(TimeZone.getTimeZone("UTC"))
+    String buildDate = format.format(new Date())
+    replaceToken '$buildDate', buildDate
+}

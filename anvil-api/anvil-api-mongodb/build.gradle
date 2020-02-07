@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("Anvil")) {
+        implementation project(':anvil-api')
+    } else {
+        implementation project(':Anvil:anvil-api')
+    }
+
+    implementation guice
+    implementation morphia
+    implementation reflections
+}

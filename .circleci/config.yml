@@ -15,7 +15,7 @@ jobs: # a collection of steps
       - restore_cache:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
-          name: Run rocks.milspecsg.msrepository.tests # See: https://circleci.com/docs/2.0/parallelism-faster-jobs/
+          name: Run rocks.milspecsg.anvil.tests # See: https://circleci.com/docs/2.0/parallelism-faster-jobs/
           # Use "./gradlew test" instead if tests are not run in parallel
           command: |
             echo "Running gradle tests"
@@ -47,9 +47,9 @@ jobs: # a collection of steps
             fi
       # As the JAR was only assembled in the first build container, build/libs will be empty in all the other build containers.
       - store_artifacts:
-          path: msr-core/core-sponge/build/libs
+          path: anvil-core/anvil-core-sponge/build/libs
       - store_artifacts:
-          path: msr-core/core-velocity/build/libs
+          path: anvil-core/anvil-core-velocity/build/libs
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
 workflows:
   version: 2
