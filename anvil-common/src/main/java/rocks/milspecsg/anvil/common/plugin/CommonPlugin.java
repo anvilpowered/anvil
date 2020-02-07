@@ -57,6 +57,9 @@ public abstract class CommonPlugin<TPluginContainer> implements Plugin<TPluginCo
             .register(this);
     }
 
+    protected CommonPlugin() {
+    }
+
     @Override
     public String toString() {
         return getName();
