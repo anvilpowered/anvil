@@ -15,7 +15,7 @@ jobs: # a collection of steps
       - restore_cache:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
-          name: Run rocks.milspecsg.anvil.tests # See: https://circleci.com/docs/2.0/parallelism-faster-jobs/
+          name: Run org.anvilpowered.anvil.tests # See: https://circleci.com/docs/2.0/parallelism-faster-jobs/
           # Use "./gradlew test" instead if tests are not run in parallel
           command: |
             echo "Running gradle tests"

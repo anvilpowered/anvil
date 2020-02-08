@@ -4,7 +4,7 @@ plugins {
 }
 
 subprojects {
-    group "rocks.milspecsg"
+    group "org.anvilpowered"
     version "1.0.0-SNAPSHOT"
     sourceCompatibility = 1.8
     if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
