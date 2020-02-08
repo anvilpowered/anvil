@@ -4,6 +4,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spongepowered.org/maven' }
 }
 
 dependencies {
@@ -11,4 +12,6 @@ dependencies {
     implementation reflections
     implementation javasisst
     implementation guice
+    implementation configurate_core
+    implementation configurate_hocon
 }
