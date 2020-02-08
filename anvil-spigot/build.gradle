@@ -4,6 +4,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
     maven { url 'https://repo.spongepowered.org/maven' }
 }
 
@@ -19,5 +20,6 @@ dependencies {
         implementation project(':Anvil:anvil-common')
     }
 
-    compileOnly('org.spongepowered:spongeapi:7.2.0-SNAPSHOT')
+    compileOnly 'org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT'
+    implementation guice
 }
