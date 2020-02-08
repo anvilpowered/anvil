@@ -14,8 +14,10 @@ include ':anvil-core'
 include ':anvil-core:anvil-core-api'
 include ':anvil-core:anvil-core-common'
 include ':anvil-core:anvil-core-sponge'
+include ':anvil-core:anvil-core-spigot'
 include ':anvil-core:anvil-core-velocity'
 
 include ':anvil-sponge'
+include ':anvil-spigot'
 
 include ':anvil-velocity'

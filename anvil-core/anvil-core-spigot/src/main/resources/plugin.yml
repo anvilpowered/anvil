@@ -1,0 +1,7 @@
+name: Anvil
+version: "1.0"
+main: com.funniray.osmpcore.OSMCCoreSpigot
+api-version: 1.13
+authors: [Birb]
+description: Anvil implementation
+website: https://anvilpowered.org
