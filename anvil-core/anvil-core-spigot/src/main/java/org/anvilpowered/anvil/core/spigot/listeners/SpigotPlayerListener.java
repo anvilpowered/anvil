@@ -25,6 +25,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.Objects;
+
 public class SpigotPlayerListener implements Listener {
 
     @Inject
@@ -37,7 +39,7 @@ public class SpigotPlayerListener implements Listener {
             .getOneOrGenerateForUser(
                 player.getUniqueId(),
                 player.getName(),
-                player.getAddress().getHostString()
+                Objects.requireNonNull(player.getAddress()).getHostString()
             );
     }
 }
