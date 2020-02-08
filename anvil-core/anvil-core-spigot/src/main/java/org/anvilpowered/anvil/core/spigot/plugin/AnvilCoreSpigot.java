@@ -18,13 +18,11 @@
 
 package org.anvilpowered.anvil.core.spigot.plugin;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.core.common.plugin.AnvilCorePluginInfo;
 import org.anvilpowered.anvil.core.spigot.listeners.SpigotPlayerListener;
-import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.core.spigot.module.SpigotModule;
 import org.anvilpowered.anvil.spigot.module.ApiSpigotModule;
 import org.bukkit.Bukkit;
@@ -34,11 +32,9 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<AnvilCoreSpigo
 
     protected Environment environment;
 
-    @Inject
-    public AnvilCoreSpigot(Injector injector) {
+    public AnvilCoreSpigot() {
         Anvil.environmentBuilder()
                 .setName(AnvilCorePluginInfo.id)
-                .setRootInjector(injector)
                 .addModules(new SpigotModule(), new ApiSpigotModule())
                 .whenReady(e -> environment = e)
                 .register(this);

@@ -19,18 +19,18 @@
 package org.anvilpowered.anvil.core.spigot.module;
 
 import com.google.inject.TypeLiteral;
+import net.md_5.bungee.api.chat.TextComponent;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.core.common.module.CommonModule;
 import org.anvilpowered.anvil.core.common.plugin.AnvilCorePluginInfo;
-import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
-import java.awt.TextComponent;
 import java.io.File;
 import java.nio.file.Paths;
 
-public class SpigotModule extends CommonModule<TextComponent, CommandExecutor> {
+public class SpigotModule extends CommonModule<TextComponent, CommandSender> {
 
     @Override
     protected void configure() {
