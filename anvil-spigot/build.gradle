@@ -4,7 +4,8 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url 'https://repo.spongepowered.org/maven' }
 }
 
 
@@ -20,4 +21,5 @@ dependencies {
     }
 
     compileOnly 'org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT'
+    implementation guice
 }
