@@ -85,7 +85,7 @@ public final class Anvil {
         return Anvil.<T>provideSupplier(name).get();
     }
 
-    protected static <T> void registerBinding(TypeToken<T> typeToken, Supplier<T> supplier) {
+    public static <T> void registerBinding(TypeToken<T> typeToken, Supplier<T> supplier) {
         bindings.put(typeToken, supplier);
     }
 
