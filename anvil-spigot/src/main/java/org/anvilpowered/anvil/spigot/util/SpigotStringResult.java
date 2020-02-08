@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class SpigotStringResult extends CommonStringResult<TextComponent, CommandSender> {
+
     @Override
     public Builder<TextComponent, CommandSender> builder() {
         return new SpigotStringResultBuilder();

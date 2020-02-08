@@ -1,5 +1,5 @@
 name: Anvil
-version: "1.0"
+version: "1.0.0-SNAPSHOT"
 main: org.anvilpowered.anvil.core.spigot.plugin.AnvilCoreSpigot
 api-version: 1.13
 authors: [Cableguy20, STG_Allen]
