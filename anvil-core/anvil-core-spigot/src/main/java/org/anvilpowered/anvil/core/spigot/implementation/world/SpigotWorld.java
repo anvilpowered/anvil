@@ -22,7 +22,7 @@ public class SpigotWorld implements World {
 
     @Override
     public Block getBlockAt(int x, int y, int z) {
-        return Anvil.getAnvilInstane;
+        return Anvil.getAnvilInstance();
     }
 
     @Override

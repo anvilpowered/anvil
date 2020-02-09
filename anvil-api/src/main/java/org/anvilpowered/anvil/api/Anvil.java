@@ -44,6 +44,7 @@ public final class Anvil {
 
     private static final Map<TypeToken<?>, Supplier<?>> bindings = new HashMap<>();
     private static final Map<String, Environment> environments = new HashMap<>();
+    private static final Map<Object, Object> implementationInstances = new HashMap<>();
     static final Map<String, Plugin<?>> plugins = new HashMap<>();
     static final Map<Plugin<?>, Set<Environment>> pluginEnvironmentMap = new HashMap<>();
     static final Map<Long, Binding<?>> bindingsCache = new HashMap<>();
@@ -87,11 +88,13 @@ public final class Anvil {
     }
 
     public static <AnvilInstance> AnvilInstance getAnvilInstance(Object instance, Class<AnvilInstance> target) {
+        if(implementationInstances.containsKey(instance)) return (AnvilInstance) implementationInstances.get(instance);
         try {
             return target.getConstructor(instance.getClass()).newInstance(instance);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static <T> void registerBinding(TypeToken<T> typeToken, Supplier<T> supplier) {
