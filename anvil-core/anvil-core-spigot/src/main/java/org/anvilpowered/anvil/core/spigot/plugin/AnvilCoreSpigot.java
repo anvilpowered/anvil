@@ -59,5 +59,6 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<AnvilCoreSpigo
     public void onEnable() {
         Anvil.completeInitialization();
         Bukkit.getPluginManager().registerEvents(environment.getInjector().getInstance(SpigotPlayerListener.class), this);
+        
     }
 }
