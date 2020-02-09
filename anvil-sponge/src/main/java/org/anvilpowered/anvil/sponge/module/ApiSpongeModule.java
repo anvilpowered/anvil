@@ -19,6 +19,10 @@
 package org.anvilpowered.anvil.sponge.module;
 
 import com.google.inject.TypeLiteral;
+import org.anvilpowered.anvil.api.util.CurrentServerService;
+import org.anvilpowered.anvil.api.util.CurrentWorldService;
+import org.anvilpowered.anvil.sponge.util.SpongeCurrentServerService;
+import org.anvilpowered.anvil.sponge.util.SpongeCurrentWorldService;
 import org.anvilpowered.anvil.sponge.util.SpongeKickService;
 import org.anvilpowered.anvil.sponge.util.SpongeUserService;
 import org.spongepowered.api.command.CommandSource;
@@ -38,6 +42,8 @@ public class ApiSpongeModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(CurrentServerService.class).to(SpongeCurrentServerService.class);
+        bind(CurrentWorldService.class).to(SpongeCurrentWorldService.class);
         bind(KickService.class).to(SpongeKickService.class);
         bind(new TypeLiteral<StringResult<Text, CommandSource>>() {
         }).to(SpongeStringResult.class);

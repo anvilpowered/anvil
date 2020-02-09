@@ -16,28 +16,37 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.util;
+package org.anvilpowered.anvil.sponge.util;
 
-import com.velocitypowered.api.proxy.Player;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
+import com.google.inject.Inject;
+import org.anvilpowered.anvil.api.util.CurrentWorldService;
 import org.anvilpowered.anvil.api.util.UserService;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.world.World;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
-public class VelocityCurrentServerService implements CurrentServerService {
+public class SpongeCurrentWorldService implements CurrentWorldService {
 
     @Inject
-    protected UserService<Player, Player> userService;
+    protected UserService<User, Player> userService;
+
+    protected Optional<String> getName(User user) {
+        return user.getWorldUniqueId()
+            .flatMap(u -> Sponge.getServer().getWorld(u))
+            .map(World::getName);
+    }
 
     @Override
     public Optional<String> getName(UUID userUUID) {
-        return userService.get(userUUID).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
+        return userService.get(userUUID).flatMap(this::getName);
     }
 
     @Override
     public Optional<String> getName(String userName) {
-        return userService.get(userName).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
+        return userService.get(userName).flatMap(this::getName);
     }
 }

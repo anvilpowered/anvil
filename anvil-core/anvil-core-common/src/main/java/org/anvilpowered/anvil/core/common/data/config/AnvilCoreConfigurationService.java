@@ -35,6 +35,7 @@ public class AnvilCoreConfigurationService extends CommonConfigurationService {
 
     @Override
     protected void initNodeNameMap() {
+        nodeNameMap.put(Keys.SERVER_NAME, "server.name");
         nodeNameMap.put(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
         nodeNameMap.put(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
         nodeNameMap.put(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
@@ -51,6 +52,7 @@ public class AnvilCoreConfigurationService extends CommonConfigurationService {
 
     @Override
     protected void initNodeDescriptionMap() {
+        nodeDescriptionMap.put(Keys.SERVER_NAME, "\nServer name");
         nodeDescriptionMap.put(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
             "\nPlease note that it is not recommended to change this value from the original");
         nodeDescriptionMap.put(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");

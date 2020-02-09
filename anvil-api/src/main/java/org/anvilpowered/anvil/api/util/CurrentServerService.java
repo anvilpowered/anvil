@@ -23,5 +23,7 @@ import java.util.UUID;
 
 public interface CurrentServerService {
 
-    Optional<String> getCurrentServerName(UUID userUUID);
+    Optional<String> getName(UUID userUUID);
+
+    Optional<String> getName(String userName);
 }

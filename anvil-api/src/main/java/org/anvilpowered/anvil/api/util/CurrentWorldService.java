@@ -16,28 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.util;
+package org.anvilpowered.anvil.api.util;
 
-import com.velocitypowered.api.proxy.Player;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
-import org.anvilpowered.anvil.api.util.UserService;
-
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
-public class VelocityCurrentServerService implements CurrentServerService {
+public interface CurrentWorldService {
 
-    @Inject
-    protected UserService<Player, Player> userService;
+    Optional<String> getName(UUID userUUID);
 
-    @Override
-    public Optional<String> getName(UUID userUUID) {
-        return userService.get(userUUID).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
-    }
-
-    @Override
-    public Optional<String> getName(String userName) {
-        return userService.get(userName).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
-    }
+    Optional<String> getName(String userName);
 }

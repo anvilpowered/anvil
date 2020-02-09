@@ -16,28 +16,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.util;
+package org.anvilpowered.anvil.sponge.util;
 
-import com.velocitypowered.api.proxy.Player;
+import com.google.inject.Inject;
+import org.anvilpowered.anvil.api.data.key.Keys;
+import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
-import org.anvilpowered.anvil.api.util.UserService;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
-public class VelocityCurrentServerService implements CurrentServerService {
+public class SpongeCurrentServerService implements CurrentServerService {
 
     @Inject
-    protected UserService<Player, Player> userService;
+    protected Registry registry;
 
     @Override
     public Optional<String> getName(UUID userUUID) {
-        return userService.get(userUUID).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
+        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
     }
 
     @Override
     public Optional<String> getName(String userName) {
-        return userService.get(userName).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
+        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
     }
 }

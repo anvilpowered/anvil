@@ -87,6 +87,7 @@ public class CommonConfigurationService extends CommonRegistry implements Config
     }
 
     protected void initNodeNameMap() {
+        nodeNameMap.put(Keys.SERVER_NAME, "server.name");
         nodeNameMap.put(Keys.USE_SHARED_ENVIRONMENT, "datastore.useSharedEnvironment");
         nodeNameMap.put(Keys.USE_SHARED_CREDENTIALS, "datastore.useSharedCredentials");
         nodeNameMap.put(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
@@ -104,6 +105,7 @@ public class CommonConfigurationService extends CommonRegistry implements Config
     }
 
     protected void initNodeDescriptionMap() {
+        nodeDescriptionMap.put(Keys.SERVER_NAME, "\nServer name");
         nodeDescriptionMap.put(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use Anvil shared environment." +
             "\nThis will use hostname and port from Anvil");
         nodeDescriptionMap.put(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use Anvil credentials. (Requires useSharedEnvironment)" +

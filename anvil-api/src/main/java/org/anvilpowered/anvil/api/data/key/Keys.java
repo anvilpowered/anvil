@@ -48,6 +48,8 @@ public final class Keys {
         }
     }
 
+    public static final Key<String> SERVER_NAME = new Key<String>("SERVER_NAME", "server") {
+    };
     public static final Key<String> BASE_SCAN_PACKAGE = new Key<String>("BASE_SCAN_PACKAGE", "org.anvilpowered.anvil.core.common.model") {
     };
     public static final Key<Integer> CACHE_INVALIDATION_INTERVAL_SECONDS = new Key<Integer>("CACHE_INVALIDATION_INTERVAL_SECONDS", 30) {
@@ -86,6 +88,7 @@ public final class Keys {
     };
 
     static {
+        registerKey(SERVER_NAME);
         registerKey(BASE_SCAN_PACKAGE);
         registerKey(CACHE_INVALIDATION_INTERVAL_SECONDS);
         registerKey(CACHE_INVALIDATION_TIMOUT_SECONDS);
