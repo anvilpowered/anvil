@@ -39,5 +39,11 @@ public class SpigotPlayerListener implements Listener {
                 player.getName(),
                 player.getAddress().getHostString()
             );
+        org.anvilpowered.anvil.api.event.events.player.PlayerJoinEvent anvilEvent = new org.anvilpowered.anvil.api.event.events.player.PlayerJoinEvent() {
+            @Override
+            public org.anvilpowered.anvil.api.Interface.entity.Player.Player getPlayer() {
+                return null;
+            }
+        };
     }
 }
