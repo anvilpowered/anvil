@@ -26,6 +26,7 @@ import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,14 @@ public final class Anvil {
 
     public static <T> T provide(String name) {
         return Anvil.<T>provideSupplier(name).get();
+    }
+
+    public static <AnvilInstance> AnvilInstance getAnvilInstance(Object instance, Class<AnvilInstance> target) {
+        try {
+            return target.getConstructor(instance.getClass()).newInstance(instance);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T> void registerBinding(TypeToken<T> typeToken, Supplier<T> supplier) {
