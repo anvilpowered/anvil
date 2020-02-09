@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.core.spigot.listeners;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
+import org.anvilpowered.anvil.common.util.PluginManager;
 import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.core.spigot.implementation.entity.player.SpigotPlayer;
 import org.bukkit.entity.Player;
@@ -41,12 +42,13 @@ public class SpigotPlayerListener implements Listener {
                 player.getName(),
                 player.getAddress().getHostString()
             );
-        org.anvilpowered.anvil.api.event.events.player.PlayerJoinEvent anvilEvent = new org.anvilpowered.anvil.api.event.events.player.PlayerJoinEvent() {
-            @Override
-            public org.anvilpowered.anvil.api.Interface.entity.Player.Player getPlayer() {
-                return Anvil.getAnvilInstance(player, SpigotPlayer.class);
-            }
-        };
-        Anvil.plug
+        PluginManager.handleEvent(
+                new org.anvilpowered.anvil.api.event.events.player.PlayerJoinEvent() {
+                    @Override
+                    public org.anvilpowered.anvil.api.Interface.entity.Player.Player getPlayer() {
+                        return Anvil.getAnvilInstance(player, SpigotPlayer.class);
+                    }
+                }
+        );
     }
 }
