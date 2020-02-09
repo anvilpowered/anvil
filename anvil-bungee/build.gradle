@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+version 'unspecified'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("Anvil")) {
+        implementation project(':anvil-api')
+        implementation project(':anvil-common')
+    } else {
+        implementation project(':Anvil:anvil-api')
+        implementation project(':Anvil:anvil-common')
+    }
+
+    compile bungee
+    implementation guice
+}
