@@ -6,6 +6,7 @@ import org.anvilpowered.anvil.api.Interface.entity.Entity;
 import org.anvilpowered.anvil.api.Interface.world.Location;
 import org.anvilpowered.anvil.api.Interface.world.Position;
 import org.anvilpowered.anvil.api.Interface.world.World;
+import org.anvilpowered.anvil.core.spigot.implementation.block.SpigotBlock;
 
 public class SpigotWorld implements World {
 
@@ -22,7 +23,7 @@ public class SpigotWorld implements World {
 
     @Override
     public Block getBlockAt(int x, int y, int z) {
-        return Anvil.getAnvilInstance();
+        return Anvil.getAnvilInstance(spigotWorld.getBlockAt(x,y,z), SpigotBlock.class);
     }
 
     @Override
