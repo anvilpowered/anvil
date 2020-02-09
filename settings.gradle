@@ -22,3 +22,10 @@ include ':anvil-spigot'
 include ':anvil-sponge'
 
 include ':anvil-velocity'
+include 'anvil-bungeecord'
+include 'anvil-bungee'
+include 'anvil-core-bungee'
+include 'anvil-core:anvil-core-bungee'
+findProject(':anvil-core:anvil-core-bungee')?.name = 'anvil-core-bungee'
+include 'anvil-core.anvil-core-bungee'
+

@@ -16,15 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.velocity.listeners;
+package org.anvilpowered.anvil.core.bungee.listeners;
 
 import com.google.inject.Inject;
-import com.velocitypowered.api.event.ResultedEvent;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.LoginEvent;
-import com.velocitypowered.api.event.player.PlayerChatEvent;
-import com.velocitypowered.api.proxy.Player;
-import net.kyori.text.TextComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
@@ -32,7 +32,7 @@ import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-public class VelocityPlayerListener {
+public class BungeePlayerListener implements Listener {
 
     @Inject
     CoreMemberManager coreMemberManager;
@@ -40,30 +40,31 @@ public class VelocityPlayerListener {
     @Inject
     PluginMessages<TextComponent> pluginMessages;
 
-    @Subscribe
-    public void onPlayerJoin(LoginEvent event) {
-        Player player = event.getPlayer();
+
+    @EventHandler
+    public void onPlayerJoin(PostLoginEvent event) {
+        ProxiedPlayer player = event.getPlayer();
         coreMemberManager.getPrimaryComponent()
             .getOneOrGenerateForUser(
                 player.getUniqueId(),
-                player.getUsername(),
-                player.getRemoteAddress().getHostString()
+                player.getDisplayName(),
+                player.getAddress().getHostName()
             ).thenAcceptAsync(optionalMember -> {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> member = optionalMember.get();
-            if (member.isBanned() && member.getBanEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
-                event.setResult(ResultedEvent.ComponentResult.denied(pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc())));
-            } else if (member.isBanned()) {
+            CoreMember<?> coreMember = optionalMember.get();
+            if (coreMember.isBanned() && coreMember.getBanEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
+                player.disconnect(pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()));
+            } else if (coreMember.isBanned()) {
                 coreMemberManager.getPrimaryComponent().unBanUser(player.getUniqueId());
             }
         }).join();
     }
 
-    @Subscribe
-    public void onPlayerChat(PlayerChatEvent event) {
-        Player player = event.getPlayer();
+    @EventHandler
+    public void onPlayerChat(ChatEvent event) {
+        ProxiedPlayer player = (ProxiedPlayer) event.getSender();
         coreMemberManager.getPrimaryComponent()
             .getOneForUser(
                 player.getUniqueId()
@@ -73,7 +74,7 @@ public class VelocityPlayerListener {
             }
             CoreMember<?> member = optionalMember.get();
             if (member.isMuted() && member.getMuteEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
-                event.setResult(PlayerChatEvent.ChatResult.denied());
+                event.setCancelled(true);
                 player.sendMessage(pluginMessages.getMuteMessage(member.getMuteReason(), member.getMuteEndUtc()));
             } else if (member.isMuted()) {
                 coreMemberManager.getPrimaryComponent().unMuteUser(player.getUniqueId());
