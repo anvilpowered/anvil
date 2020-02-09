@@ -21,8 +21,13 @@ package org.anvilpowered.anvil.bungee.module;
 import com.google.inject.TypeLiteral;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.bungee.util.BungeeKickService;
 import org.anvilpowered.anvil.bungee.util.BungeeStringResult;
+import org.anvilpowered.anvil.bungee.util.BungeeUserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
 
 public class ApiBungeeModule extends ApiCommonModule {
@@ -30,7 +35,10 @@ public class ApiBungeeModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(KickService.class).to(BungeeKickService.class);
         bind(new TypeLiteral<StringResult<TextComponent, CommandSender>>() {
         }).to(BungeeStringResult.class);
+        bind(new TypeLiteral<UserService<ProxiedPlayer, ProxiedPlayer>>() {
+        }).to(BungeeUserService.class);
     }
 }

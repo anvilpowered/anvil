@@ -18,7 +18,10 @@
 
 package org.anvilpowered.anvil.core.bungee.plugin;
 
+import com.google.inject.Inject;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginDescription;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.bungee.module.ApiBungeeModule;
@@ -26,7 +29,7 @@ import org.anvilpowered.anvil.core.bungee.listeners.BungeePlayerListener;
 import org.anvilpowered.anvil.core.bungee.module.BungeeModule;
 import org.anvilpowered.anvil.core.common.plugin.AnvilCorePluginInfo;
 
-public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.api.plugin.Plugin<AnvilCoreBungee> {
+public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.api.plugin.Plugin<PluginDescription> {
 
     protected Environment environment;
 
@@ -37,7 +40,6 @@ public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.ap
             .whenReady(e -> environment = e)
             .register(this);
     }
-
 
     @Override
     public void onEnable() {
@@ -57,7 +59,7 @@ public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.ap
     }
 
     @Override
-    public AnvilCoreBungee getPluginContainer() {
-        return this;
+    public PluginDescription getPluginContainer() {
+        return getDescription();
     }
 }
