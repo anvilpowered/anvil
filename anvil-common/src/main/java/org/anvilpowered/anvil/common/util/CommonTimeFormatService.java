@@ -110,6 +110,10 @@ public class CommonTimeFormatService implements TimeFormatService {
     public String format(Duration duration) {
         StringBuilder s = new StringBuilder();
         long seconds = duration.getSeconds();
+        long nanos = duration.getNano();
+        if (seconds == 0) {
+            return nanos > 0 ? nanos + " nanoseconds" : "0 seconds";
+        }
         long years = seconds / SECONDS_IN_YEAR;
         seconds -= SECONDS_IN_YEAR * years;
         long months = seconds / SECONDS_IN_MONTH;
@@ -136,7 +140,10 @@ public class CommonTimeFormatService implements TimeFormatService {
             s.append(minutes).append(minutes == 1 ? " minute, " : " minutes, ");
         }
         if (seconds != 0) {
-            s.append(seconds).append(seconds == 1 ? " second, " : " seconds");
+            s.append(seconds).append(seconds == 1 ? " second, " : " seconds, ");
+        }
+        if (nanos != 0) {
+            s.append(nanos).append(nanos == 1 ? " nanosecond" : " nanoseconds");
         } else if (s.length() > 1) {
             s.deleteCharAt(s.length() - 1);
             s.deleteCharAt(s.length() - 1);
