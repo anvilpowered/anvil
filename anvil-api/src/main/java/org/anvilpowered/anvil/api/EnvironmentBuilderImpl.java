@@ -131,6 +131,12 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     }
 
     @Override
+    public Environment.Builder addEarlyServices(Iterable<Key<?>> keys) {
+        keys.forEach(earlyServices::add);
+        return this;
+    }
+
+    @Override
     public Environment.Builder addEarlyServices(Class<?>... classes) {
         earlyServices.addAll(Stream.of(classes).map(Key::get).collect(Collectors.toList()));
         return this;

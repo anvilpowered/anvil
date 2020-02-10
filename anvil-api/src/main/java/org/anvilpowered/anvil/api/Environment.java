@@ -24,9 +24,10 @@ import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
-import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.Plugin;
+import org.anvilpowered.anvil.api.plugin.PluginInfo;
+import org.anvilpowered.anvil.api.util.StringResult;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -90,6 +91,8 @@ public interface Environment extends Comparable<Environment> {
 
     <TString> PluginInfo<TString> getPluginInfo();
 
+    <TString, TCommandSource> StringResult<TString, TCommandSource> getStringResult();
+
     Registry getRegistry();
 
     interface Builder {
@@ -100,6 +103,8 @@ public interface Environment extends Comparable<Environment> {
 
         Builder addEarlyServices(Key<?>... keys);
 
+        Builder addEarlyServices(Iterable<Key<?>> keys);
+
         Builder addEarlyServices(Class<?>... classes);
 
         Builder addEarlyServices(TypeLiteral<?>... typeLiterals);
@@ -109,7 +114,8 @@ public interface Environment extends Comparable<Environment> {
         Builder setRootInjector(Injector rootInjector);
 
         /**
-         * Called once, right after the environment is created
+         * Called once, right after the environment is created.
+         * Multiple can be added.
          */
         Builder whenReady(Consumer<Environment> listener);
 

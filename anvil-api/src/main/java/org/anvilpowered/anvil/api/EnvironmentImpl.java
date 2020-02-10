@@ -24,6 +24,7 @@ import com.google.inject.Module;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.Plugin;
+import org.anvilpowered.anvil.api.util.StringResult;
 
 import java.util.Collection;
 
@@ -89,6 +90,11 @@ class EnvironmentImpl implements Environment {
     @Override
     public <TString> PluginInfo<TString> getPluginInfo() {
         return getInstance(PluginInfo.class.getCanonicalName());
+    }
+
+    @Override
+    public <TString, TCommandSource> StringResult<TString, TCommandSource> getStringResult() {
+        return getInstance(StringResult.class.getCanonicalName());
     }
 
     @Override
