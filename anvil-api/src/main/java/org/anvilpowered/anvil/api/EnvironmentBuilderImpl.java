@@ -49,7 +49,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     private static final Collection<EnvironmentBuilderImpl> builders = new ArrayList<>();
     private static boolean alreadyCompleted = false;
 
-    static void completeInitialization() {
+    static void completeInitialization(Module platformModule) {
         if (alreadyCompleted) {
             throw new IllegalStateException("This method should only be called exactly once (in Anvil Core)");
         }
@@ -81,6 +81,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
             }
         };
         for (EnvironmentImpl environment : environments) {
+            environment.addModule(platformModule);
             environment.addModule(commonModule);
             environment.addModule(new AbstractModule() {
                 @Override

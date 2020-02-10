@@ -20,12 +20,15 @@ package org.anvilpowered.anvil.common.plugin;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 
-import java.util.function.Consumer;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * A simple default implementation of {@link Plugin} that only registers a
@@ -40,29 +43,74 @@ public abstract class CommonPlugin<TPluginContainer> implements Plugin<TPluginCo
 
     protected final String name;
 
-    protected CommonPlugin(String name, Consumer<Environment> whenReady, Injector injector, Module... modules) {
+    protected CommonPlugin(
+        String name,
+        Injector rootInjector,
+        Module module,
+        Key<?>... earlyServices
+    ) {
         this.name = name;
-        Anvil.environmentBuilder()
-            .setName(name)
-            .setRootInjector(injector)
-            .addModules(modules)
-            .whenReady(e -> environment = e)
-            .whenReady(whenReady)
+        createDefaultBuilder(name, rootInjector, module)
+            .addEarlyServices(earlyServices)
             .register(this);
     }
 
-    protected CommonPlugin(String name, Injector injector, Module... modules) {
+    protected CommonPlugin(
+        String name,
+        Injector rootInjector,
+        Module module,
+        Class<?>... earlyServices
+    ) {
         this.name = name;
-        Anvil.environmentBuilder()
-            .setName(name)
-            .setRootInjector(injector)
-            .addModules(modules)
-            .whenReady(e -> environment = e)
+        createDefaultBuilder(name, rootInjector, module)
+            .addEarlyServices(earlyServices)
+            .register(this);
+    }
+
+    protected CommonPlugin(
+        String name,
+        Injector rootInjector,
+        Module module,
+        TypeLiteral<?>... earlyServices
+    ) {
+        this.name = name;
+        createDefaultBuilder(name, rootInjector, module)
+            .addEarlyServices(earlyServices)
+            .register(this);
+    }
+
+    protected CommonPlugin(
+        String name,
+        Injector rootInjector,
+        Module module
+    ) {
+        this.name = name;
+        createDefaultBuilder(name, rootInjector, module)
             .register(this);
     }
 
     protected CommonPlugin(String name) {
         this.name = name;
+    }
+
+    protected Environment.Builder createDefaultBuilder(
+        String name,
+        Injector rootInjector,
+        Module module
+    ) {
+        return Anvil.environmentBuilder()
+            .setName(name)
+            .setRootInjector(rootInjector)
+            .addModules(module)
+            .whenReady(e -> environment = e)
+            .whenReady(this::whenReady);
+    }
+
+    protected void whenReady(Environment environment) {
+        environment.getStringResult().builder()
+            .append(environment.getPluginInfo())
+            .aqua().append("Loaded!")
+            .sendToConsole();
     }
 
     @Override
@@ -83,5 +131,10 @@ public abstract class CommonPlugin<TPluginContainer> implements Plugin<TPluginCo
     @Override
     public Environment getPrimaryEnvironment() {
         return environment;
+    }
+
+    @Override
+    public Set<Environment> getAllEnvironments() {
+        return Collections.singleton(environment);
     }
 }

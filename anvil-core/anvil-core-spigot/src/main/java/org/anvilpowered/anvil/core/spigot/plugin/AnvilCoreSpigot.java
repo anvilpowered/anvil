@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.core.spigot.plugin;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.Plugin;
+import org.anvilpowered.anvil.core.common.plugin.AnvilCore;
 import org.anvilpowered.anvil.core.common.plugin.AnvilCorePluginInfo;
 import org.anvilpowered.anvil.core.spigot.listeners.SpigotPlayerListener;
 import org.anvilpowered.anvil.core.spigot.module.SpigotModule;
@@ -28,21 +29,31 @@ import org.anvilpowered.anvil.spigot.module.ApiSpigotModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Set;
+
 public class AnvilCoreSpigot extends JavaPlugin implements Plugin<AnvilCoreSpigot> {
 
-    protected Environment environment;
+    protected final InnerAnvilCoreSpigot anvilCoreSpigot;
 
     public AnvilCoreSpigot() {
-        Anvil.environmentBuilder()
-                .setName(AnvilCorePluginInfo.id)
-                .addModules(new SpigotModule(), new ApiSpigotModule())
-                .whenReady(e -> environment = e)
-                .register(this);
+        anvilCoreSpigot = new InnerAnvilCoreSpigot();
+    }
+
+    private static final class InnerAnvilCoreSpigot extends AnvilCore<AnvilCoreSpigot> {
+        public InnerAnvilCoreSpigot() {
+            super(null, new SpigotModule());
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        Anvil.completeInitialization(new ApiSpigotModule());
+        Bukkit.getPluginManager().registerEvents(anvilCoreSpigot.getPrimaryEnvironment().getInjector().getInstance(SpigotPlayerListener.class), this);
     }
 
     @Override
     public String toString() {
-        return getName();
+        return AnvilCorePluginInfo.id;
     }
 
     @Override
@@ -52,12 +63,11 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<AnvilCoreSpigo
 
     @Override
     public Environment getPrimaryEnvironment() {
-        return environment;
+        return anvilCoreSpigot.getPrimaryEnvironment();
     }
 
-    @Override //Spigot
-    public void onEnable() {
-        Anvil.completeInitialization();
-        Bukkit.getPluginManager().registerEvents(environment.getInjector().getInstance(SpigotPlayerListener.class), this);
+    @Override
+    public Set<Environment> getAllEnvironments() {
+        return anvilCoreSpigot.getAllEnvironments();
     }
 }

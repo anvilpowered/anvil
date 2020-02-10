@@ -48,12 +48,12 @@ public class AnvilCoreVelocity extends AnvilCore<PluginContainer> {
 
     @Inject
     public AnvilCoreVelocity(Injector injector) {
-        super(injector, new VelocityModule(), new ApiVelocityModule());
+        super(injector, new VelocityModule());
     }
 
     @Subscribe(order = PostOrder.EARLY)
     public void onInit(ProxyInitializeEvent event) {
-        Anvil.completeInitialization();
+        Anvil.completeInitialization(new ApiVelocityModule());
         proxyServer.getEventManager().register(this, environment.getInjector().getInstance(VelocityPlayerListener.class));
     }
 }

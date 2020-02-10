@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.api;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Binding;
+import com.google.inject.Module;
 import org.anvilpowered.anvil.api.data.key.Key;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
@@ -134,8 +135,8 @@ public final class Anvil {
     /**
      * To be called by Anvil Core only
      */
-    public static void completeInitialization() {
-        EnvironmentBuilderImpl.completeInitialization();
+    public static void completeInitialization(Module platformModule) {
+        EnvironmentBuilderImpl.completeInitialization(platformModule);
     }
 
     static void registerEnvironment(Environment environment, Plugin<?> plugin) {

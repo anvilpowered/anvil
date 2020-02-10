@@ -34,8 +34,14 @@ public abstract class AnvilCore<TPluginContainer> extends CommonPlugin<TPluginCo
 
     protected static Environment environment;
 
-    public AnvilCore(Injector injector, Module... modules) {
-        super(AnvilCorePluginInfo.id, e -> AnvilCore.environment = e, injector, modules);
+    public AnvilCore(Injector injector, Module module) {
+        super(AnvilCorePluginInfo.id, injector, module);
+    }
+
+    @Override
+    protected void whenReady(Environment environment) {
+        super.whenReady(environment);
+        AnvilCore.environment = environment;
     }
 
     public static Environment getEnvironment() {

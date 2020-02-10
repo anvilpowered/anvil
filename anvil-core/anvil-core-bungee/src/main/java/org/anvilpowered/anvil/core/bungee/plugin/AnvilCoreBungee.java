@@ -18,39 +18,40 @@
 
 package org.anvilpowered.anvil.core.bungee.plugin;
 
-import com.google.inject.Inject;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.plugin.PluginDescription;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.bungee.module.ApiBungeeModule;
 import org.anvilpowered.anvil.core.bungee.listeners.BungeePlayerListener;
 import org.anvilpowered.anvil.core.bungee.module.BungeeModule;
+import org.anvilpowered.anvil.core.common.plugin.AnvilCore;
 import org.anvilpowered.anvil.core.common.plugin.AnvilCorePluginInfo;
 
-public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.api.plugin.Plugin<PluginDescription> {
+import java.util.Set;
 
-    protected Environment environment;
+public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.api.plugin.Plugin<AnvilCoreBungee> {
+
+    protected final InnerAnvilCoreBungee anvilCoreBungee;
 
     public AnvilCoreBungee() {
-        Anvil.environmentBuilder()
-            .setName(AnvilCorePluginInfo.id)
-            .addModules(new BungeeModule(), new ApiBungeeModule())
-            .whenReady(e -> environment = e)
-            .register(this);
+        anvilCoreBungee = new InnerAnvilCoreBungee();
+    }
+
+    private static final class InnerAnvilCoreBungee extends AnvilCore<AnvilCoreBungee> {
+        public InnerAnvilCoreBungee() {
+            super(null, new BungeeModule());
+        }
     }
 
     @Override
     public void onEnable() {
-        Anvil.completeInitialization();
-        getProxy().getPluginManager().registerListener(this, environment.getInjector().getInstance(BungeePlayerListener.class));
-
+        Anvil.completeInitialization(new ApiBungeeModule());
+        getProxy().getPluginManager().registerListener(this, anvilCoreBungee.getPrimaryEnvironment().getInjector().getInstance(BungeePlayerListener.class));
     }
 
     @Override
     public String toString() {
-        return getName();
+        return AnvilCorePluginInfo.id;
     }
 
     @Override
@@ -59,7 +60,17 @@ public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.ap
     }
 
     @Override
-    public PluginDescription getPluginContainer() {
-        return getDescription();
+    public AnvilCoreBungee getPluginContainer() {
+        return this;
+    }
+
+    @Override
+    public Environment getPrimaryEnvironment() {
+        return anvilCoreBungee.getPrimaryEnvironment();
+    }
+
+    @Override
+    public Set<Environment> getAllEnvironments() {
+        return anvilCoreBungee.getAllEnvironments();
     }
 }

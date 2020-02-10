@@ -45,12 +45,12 @@ public class AnvilCoreSponge extends AnvilCore<PluginContainer> {
 
     @Inject
     public AnvilCoreSponge(Injector injector) {
-        super(injector, new SpongeModule(), new ApiSpongeModule());
+        super(injector, new SpongeModule());
     }
 
     @Listener(order = Order.EARLY)
     public void onInit(GameInitializationEvent event) {
-        Anvil.completeInitialization();
+        Anvil.completeInitialization(new ApiSpongeModule());
         Sponge.getEventManager().registerListeners(this, environment.getInjector().getInstance(SpongePlayerListener.class));
     }
 }
