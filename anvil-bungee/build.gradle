@@ -22,6 +22,6 @@ dependencies {
         implementation project(':Anvil:anvil-common')
     }
 
-    compile bungee
+    implementation bungee
     implementation guice
 }

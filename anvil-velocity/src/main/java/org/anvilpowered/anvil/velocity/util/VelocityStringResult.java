@@ -70,7 +70,7 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         private HoverEvent hoverEvent;
         private ClickEvent clickEvent;
 
-        private VelocityStringResultBuilder() {
+        protected VelocityStringResultBuilder() {
             elements = new LinkedList<>();
         }
 

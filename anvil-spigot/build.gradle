@@ -14,9 +14,11 @@ dependencies {
 
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
+        implementation project(':anvil-bungee')
         implementation project(':anvil-common')
     } else {
         implementation project(':Anvil:anvil-api')
+        implementation project(':Anvil:anvil-bungee')
         implementation project(':Anvil:anvil-common')
     }
 

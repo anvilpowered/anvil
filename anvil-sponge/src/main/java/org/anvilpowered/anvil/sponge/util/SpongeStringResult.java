@@ -68,7 +68,7 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
         private HoverAction<?> hoverAction;
         private ClickAction<?> clickAction;
 
-        private SpongeStringResultBuilder() {
+        protected SpongeStringResultBuilder() {
             elements = new ArrayList<>();
         }
 

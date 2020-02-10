@@ -16,38 +16,26 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.spigot.util;
+package org.anvilpowered.anvil.bungee.util;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.common.util.CommonStringResult;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 
 import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
-public class SpigotStringResult extends CommonStringResult<TextComponent, CommandSender> {
+public abstract class MD5StringResult<TCommandSource> extends CommonStringResult<TextComponent, TCommandSource> {
 
     @Override
-    public Builder<TextComponent, CommandSender> builder() {
-        return new SpigotStringResultBuilder();
-    }
-
-    @Override
-    public void send(TextComponent result, CommandSender commandSender) {
-        commandSender.spigot().sendMessage(result);
-    }
-
-    @Override
-    public void sendToConsole(TextComponent result) {
-        Bukkit.getServer().getConsoleSender().spigot().sendMessage(result);
+    public Builder<TextComponent, TCommandSource> builder() {
+        return new MD5StringResultBuilder();
     }
 
     @Override
@@ -60,119 +48,119 @@ public class SpigotStringResult extends CommonStringResult<TextComponent, Comman
         return text.toLegacyText();
     }
 
-    protected class SpigotStringResultBuilder extends CommonStringResultBuilder {
+    protected class MD5StringResultBuilder extends CommonStringResultBuilder {
         private final Deque<Object> elements;
         private HoverEvent hoverEvent;
         private ClickEvent clickEvent;
 
-        private SpigotStringResultBuilder() {
+        protected MD5StringResultBuilder() {
             this.elements = new LinkedList<>();
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> aqua() {
+        public Builder<TextComponent, TCommandSource> aqua() {
             elements.add(ChatColor.AQUA);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> black() {
+        public Builder<TextComponent, TCommandSource> black() {
             elements.add(ChatColor.BLACK);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> blue() {
+        public Builder<TextComponent, TCommandSource> blue() {
             elements.add(ChatColor.BLUE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> dark_aqua() {
+        public Builder<TextComponent, TCommandSource> dark_aqua() {
             elements.add(ChatColor.DARK_AQUA);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> dark_blue() {
+        public Builder<TextComponent, TCommandSource> dark_blue() {
             elements.add(ChatColor.DARK_BLUE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> dark_gray() {
+        public Builder<TextComponent, TCommandSource> dark_gray() {
             elements.add(ChatColor.DARK_GRAY);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> dark_green() {
+        public Builder<TextComponent, TCommandSource> dark_green() {
             elements.add(ChatColor.DARK_GREEN);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> dark_purple() {
+        public Builder<TextComponent, TCommandSource> dark_purple() {
             elements.add(ChatColor.DARK_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> dark_red() {
+        public Builder<TextComponent, TCommandSource> dark_red() {
             elements.add(ChatColor.DARK_RED);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> gold() {
+        public Builder<TextComponent, TCommandSource> gold() {
             elements.add(ChatColor.GOLD);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> gray() {
+        public Builder<TextComponent, TCommandSource> gray() {
             elements.add(ChatColor.GRAY);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> green() {
+        public Builder<TextComponent, TCommandSource> green() {
             elements.add(ChatColor.GREEN);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> light_purple() {
+        public Builder<TextComponent, TCommandSource> light_purple() {
             elements.add(ChatColor.LIGHT_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> red() {
+        public Builder<TextComponent, TCommandSource> red() {
             elements.add(ChatColor.RED);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> reset() {
+        public Builder<TextComponent, TCommandSource> reset() {
             elements.add(ChatColor.RESET);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> white() {
+        public Builder<TextComponent, TCommandSource> white() {
             elements.add(ChatColor.WHITE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> yellow() {
+        public Builder<TextComponent, TCommandSource> yellow() {
             elements.add(ChatColor.YELLOW);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> append(Object... content) {
+        public Builder<TextComponent, TCommandSource> append(Object... content) {
             for (Object o : content) {
                 if (o instanceof Builder || o instanceof TextComponent || o instanceof ChatColor) {
                     elements.add(o);
@@ -184,7 +172,7 @@ public class SpigotStringResult extends CommonStringResult<TextComponent, Comman
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> appendJoining(Object delimiter, Object... content) {
+        public Builder<TextComponent, TCommandSource> appendJoining(Object delimiter, Object... content) {
             final int indexOfLast = content.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
                 Object o = content[i];
@@ -205,41 +193,41 @@ public class SpigotStringResult extends CommonStringResult<TextComponent, Comman
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> onHoverShowText(TextComponent content) {
+        public Builder<TextComponent, TCommandSource> onHoverShowText(TextComponent content) {
             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(content).create());
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> onHoverShowText(Builder<TextComponent, CommandSender> builder) {
+        public Builder<TextComponent, TCommandSource> onHoverShowText(Builder<TextComponent, TCommandSource> builder) {
             return onHoverShowText(builder.build());
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> onClickSuggestCommand(String command) {
+        public Builder<TextComponent, TCommandSource> onClickSuggestCommand(String command) {
             clickEvent = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> onClickRunCommand(String command) {
+        public Builder<TextComponent, TCommandSource> onClickRunCommand(String command) {
             clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> onClickExecuteCallback(Consumer<CommandSender> callback) {
+        public Builder<TextComponent, TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> onClickOpenUrl(String url) {
+        public Builder<TextComponent, TCommandSource> onClickOpenUrl(String url) {
             clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, CommandSender> onClickOpenUrl(URL url) {
+        public Builder<TextComponent, TCommandSource> onClickOpenUrl(URL url) {
             return onClickOpenUrl(url.toString());
         }
 
@@ -258,13 +246,13 @@ public class SpigotStringResult extends CommonStringResult<TextComponent, Comman
             TextComponent currentBuilder = new TextComponent();
             Object firstColor = elements.peekFirst();
             if (firstColor instanceof ChatColor) {
-                currentBuilder.setColor(((ChatColor) firstColor).asBungee());
+                currentBuilder.setColor((ChatColor) firstColor);
                 elements.pollFirst(); // remove color because its already added to builder
             }
 
             for (Object o : elements) {
                 if (o instanceof Builder) {
-                    currentBuilder.addExtra(((Builder<TextComponent, CommandSender>) o).build());
+                    currentBuilder.addExtra(((Builder<TextComponent, TCommandSource>) o).build());
                 } else if (o instanceof BaseComponent) {
                     currentBuilder.addExtra((BaseComponent) o);
                 } else if (o instanceof ChatColor) {
@@ -272,7 +260,7 @@ public class SpigotStringResult extends CommonStringResult<TextComponent, Comman
                     components.offer(currentBuilder);
                     // create new builder starting at this point until the next color
                     currentBuilder = new TextComponent();
-                    currentBuilder.setColor(((ChatColor) o).asBungee());
+                    currentBuilder.setColor((ChatColor) o);
                 } else {
                     System.err.println("Skipping " + o + " because it does not match any of the correct types");
                 }

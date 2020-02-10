@@ -5,6 +5,8 @@ include ':anvil-api:anvil-api-mariadb'
 include ':anvil-api:anvil-api-mongodb'
 include ':anvil-api:anvil-api-xodus'
 
+include ':anvil-bungee'
+
 include ':anvil-common'
 include ':anvil-common:anvil-common-mariadb'
 include ':anvil-common:anvil-common-mongodb'
@@ -12,6 +14,7 @@ include ':anvil-common:anvil-common-xodus'
 
 include ':anvil-core'
 include ':anvil-core:anvil-core-api'
+include ':anvil-core:anvil-core-bungee'
 include ':anvil-core:anvil-core-common'
 include ':anvil-core:anvil-core-spigot'
 include ':anvil-core:anvil-core-sponge'
@@ -22,10 +25,3 @@ include ':anvil-spigot'
 include ':anvil-sponge'
 
 include ':anvil-velocity'
-include 'anvil-bungeecord'
-include 'anvil-bungee'
-include 'anvil-core-bungee'
-include 'anvil-core:anvil-core-bungee'
-findProject(':anvil-core:anvil-core-bungee')?.name = 'anvil-core-bungee'
-include 'anvil-core.anvil-core-bungee'
-
