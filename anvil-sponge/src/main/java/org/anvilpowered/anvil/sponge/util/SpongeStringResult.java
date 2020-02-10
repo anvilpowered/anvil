@@ -18,6 +18,8 @@
 
 package org.anvilpowered.anvil.sponge.util;
 
+import org.anvilpowered.anvil.common.util.CommonStringResult;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextElement;
@@ -26,7 +28,6 @@ import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
-import org.anvilpowered.anvil.common.util.CommonStringResult;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,6 +48,11 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
     }
 
     @Override
+    public void sendToConsole(Text result) {
+        Sponge.getServer().getConsole().sendMessage(result);
+    }
+
+    @Override
     public Text deserialize(String text) {
         return TextSerializers.FORMATTING_CODE.deserialize(text);
     }
@@ -56,7 +62,7 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
         return TextSerializers.FORMATTING_CODE.serialize(text);
     }
 
-    private static final class SpongeStringResultBuilder extends CommonStringResultBuilder<Text, CommandSource> {
+    protected class SpongeStringResultBuilder extends CommonStringResultBuilder {
 
         private final List<TextElement> elements;
         private HoverAction<?> hoverAction;
@@ -256,11 +262,6 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
                 builder.onClick(clickAction);
             }
             return builder.build();
-        }
-
-        @Override
-        public void sendTo(CommandSource commandSource) {
-            commandSource.sendMessage(build());
         }
     }
 }

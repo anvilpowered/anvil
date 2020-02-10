@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 public interface StringResult<TString, TCommandSource> extends Result<TString, String> {
     Builder<TString, TCommandSource> builder();
     void send(TString result, TCommandSource commandSource);
+    void sendToConsole(TString result);
     TString deserialize(String text);
     String serialize(TString text);
     String removeColor(String text);
@@ -61,5 +62,6 @@ public interface StringResult<TString, TCommandSource> extends Result<TString, S
         Builder<TString, TCommandSource> onClickOpenUrl(String url);
         TString build();
         void sendTo(TCommandSource commandSource);
+        void sendToConsole();
     }
 }

@@ -18,7 +18,9 @@
 
 package org.anvilpowered.anvil.velocity.util;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.event.ClickEvent;
@@ -34,6 +36,9 @@ import java.util.function.Consumer;
 
 public class VelocityStringResult extends CommonStringResult<TextComponent, CommandSource> {
 
+    @Inject
+    protected ProxyServer proxyServer;
+
     @Override
     public Builder<TextComponent, CommandSource> builder() {
         return new VelocityStringResultBuilder();
@@ -42,6 +47,11 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
     @Override
     public void send(TextComponent textComponent, CommandSource commandSource) {
         commandSource.sendMessage(textComponent);
+    }
+
+    @Override
+    public void sendToConsole(TextComponent result) {
+        proxyServer.getConsoleCommandSource().sendMessage(result);
     }
 
     @Override
@@ -54,7 +64,7 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         return LegacyComponentSerializer.legacy().serialize(text, '&');
     }
 
-    private static final class VelocityStringResultBuilder extends CommonStringResultBuilder<TextComponent, CommandSource> {
+    protected class VelocityStringResultBuilder extends CommonStringResultBuilder {
 
         private final Deque<Object> elements;
         private HoverEvent hoverEvent;
@@ -251,8 +261,8 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
 
             // create first builder
             TextComponent.Builder currentBuilder = TextComponent.builder();
-            Object firstColor;
-            if ((firstColor = elements.peekFirst()) instanceof TextColor) {
+            Object firstColor = elements.peekFirst();
+            if (firstColor instanceof TextColor) {
                 currentBuilder.color((TextColor) firstColor);
                 elements.pollFirst(); // remove color because its already added to builder
             }
@@ -285,11 +295,6 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
                 currentBuilder.clickEvent(clickEvent);
             }
             return currentBuilder.build();
-        }
-
-        @Override
-        public void sendTo(CommandSource commandSource) {
-            commandSource.sendMessage(build());
         }
     }
 }

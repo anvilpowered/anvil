@@ -18,17 +18,19 @@
 
 package org.anvilpowered.anvil.spigot.util;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.common.util.CommonStringResult;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.function.Consumer;
 
 public class SpigotStringResult extends CommonStringResult<TextComponent, CommandSender> {
@@ -40,26 +42,31 @@ public class SpigotStringResult extends CommonStringResult<TextComponent, Comman
 
     @Override
     public void send(TextComponent result, CommandSender commandSender) {
+        commandSender.spigot().sendMessage(result);
+    }
 
+    @Override
+    public void sendToConsole(TextComponent result) {
+        Bukkit.getServer().getConsoleSender().spigot().sendMessage(result);
     }
 
     @Override
     public TextComponent deserialize(String text) {
-        return null;
+        return new TextComponent(TextComponent.fromLegacyText(text));
     }
 
     @Override
     public String serialize(TextComponent text) {
-        return null;
+        return text.toLegacyText();
     }
 
-    private static final class SpigotStringResultBuilder extends CommonStringResultBuilder<TextComponent, CommandSender> {
-        private final List<Object> elements;
+    protected class SpigotStringResultBuilder extends CommonStringResultBuilder {
+        private final Deque<Object> elements;
         private HoverEvent hoverEvent;
         private ClickEvent clickEvent;
 
         private SpigotStringResultBuilder() {
-            this.elements = new ArrayList<>();
+            this.elements = new LinkedList<>();
         }
 
         @Override
@@ -237,20 +244,53 @@ public class SpigotStringResult extends CommonStringResult<TextComponent, Comman
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public TextComponent build() {
-            TextComponent textComponent = new TextComponent();
+
+            if (elements.isEmpty()) {
+                return new TextComponent();
+            }
+
+            // one builder for every color
+            final Deque<BaseComponent> components = new LinkedList<>();
+
+            // create first builder
+            TextComponent currentBuilder = new TextComponent();
+            Object firstColor = elements.peekFirst();
+            if (firstColor instanceof ChatColor) {
+                currentBuilder.setColor(((ChatColor) firstColor).asBungee());
+                elements.pollFirst(); // remove color because its already added to builder
+            }
+
+            for (Object o : elements) {
+                if (o instanceof Builder) {
+                    currentBuilder.addExtra(((Builder<TextComponent, CommandSender>) o).build());
+                } else if (o instanceof BaseComponent) {
+                    currentBuilder.addExtra((BaseComponent) o);
+                } else if (o instanceof ChatColor) {
+                    // build current builder
+                    components.offer(currentBuilder);
+                    // create new builder starting at this point until the next color
+                    currentBuilder = new TextComponent();
+                    currentBuilder.setColor(((ChatColor) o).asBungee());
+                } else {
+                    System.err.println("Skipping " + o + " because it does not match any of the correct types");
+                }
+            }
+
+            // build last builder
+            components.offer(currentBuilder);
+
+            // create new builder with all previous components
+            currentBuilder = new TextComponent(components.toArray(new BaseComponent[0]));
+
             if (hoverEvent != null) {
-                textComponent.setHoverEvent(hoverEvent);
+                currentBuilder.setHoverEvent(hoverEvent);
             }
             if (clickEvent != null) {
-                textComponent.setClickEvent(clickEvent);
+                currentBuilder.setClickEvent(clickEvent);
             }
-            return textComponent;
-        }
-
-        @Override
-        public void sendTo(CommandSender commandSender) {
-            commandSender.sendMessage(build().getText());
+            return currentBuilder;
         }
     }
 }
