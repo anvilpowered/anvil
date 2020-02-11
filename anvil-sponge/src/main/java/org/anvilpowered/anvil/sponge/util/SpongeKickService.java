@@ -18,11 +18,11 @@
 
 package org.anvilpowered.anvil.sponge.util;
 
+import org.anvilpowered.anvil.api.util.KickService;
+import org.anvilpowered.anvil.api.util.UserService;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
-import org.anvilpowered.anvil.api.util.KickService;
-import org.anvilpowered.anvil.api.util.UserService;
 
 import javax.inject.Inject;
 import java.util.UUID;

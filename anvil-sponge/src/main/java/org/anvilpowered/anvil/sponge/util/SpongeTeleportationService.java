@@ -19,10 +19,10 @@
 package org.anvilpowered.anvil.sponge.util;
 
 import com.google.inject.Inject;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.User;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.UserService;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 
 import java.util.Optional;
 import java.util.UUID;

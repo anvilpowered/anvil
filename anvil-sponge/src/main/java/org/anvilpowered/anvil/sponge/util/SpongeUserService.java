@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.sponge.util;
 
+import org.anvilpowered.anvil.api.util.UserService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.util.Identifiable;
-import org.anvilpowered.anvil.api.util.UserService;
 
 import java.util.Collection;
 import java.util.Optional;

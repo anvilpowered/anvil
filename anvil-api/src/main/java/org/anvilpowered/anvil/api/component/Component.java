@@ -18,9 +18,9 @@
 
 package org.anvilpowered.anvil.api.component;
 
-import org.anvilpowered.anvil.api.manager.Manager;
 import org.anvilpowered.anvil.api.cache.CacheService;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
+import org.anvilpowered.anvil.api.manager.Manager;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.repository.Repository;
 

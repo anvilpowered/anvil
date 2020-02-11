@@ -19,11 +19,11 @@
 package org.anvilpowered.anvil.api.repository;
 
 import com.mongodb.WriteResult;
+import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
-import org.anvilpowered.anvil.api.model.ObjectWithId;
 
 import java.util.concurrent.CompletableFuture;
 

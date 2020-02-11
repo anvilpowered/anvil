@@ -1,8 +1,6 @@
 package org.anvilpowered.anvil.bungee.util;
 
-import com.google.inject.Inject;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ConnectedPlayer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.anvilpowered.anvil.api.util.UserService;
 
