@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.base.plugin;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -72,6 +73,17 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Injector rootInjector,
         Module module,
         TypeLiteral<?>... earlyServices
+    ) {
+        this.name = name;
+        createDefaultBuilder(name, rootInjector, module)
+            .addEarlyServices(earlyServices)
+            .register(this);
+    }
+    protected BasePlugin(
+        String name,
+        Injector rootInjector,
+        Module module,
+        TypeToken<?>... earlyServices
     ) {
         this.name = name;
         createDefaultBuilder(name, rootInjector, module)

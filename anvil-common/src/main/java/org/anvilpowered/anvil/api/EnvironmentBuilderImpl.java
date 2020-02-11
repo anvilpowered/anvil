@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -26,6 +27,7 @@ import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -140,13 +142,22 @@ class EnvironmentBuilderImpl implements Environment.Builder {
 
     @Override
     public Environment.Builder addEarlyServices(Class<?>... classes) {
-        earlyServices.addAll(Stream.of(classes).map(Key::get).collect(Collectors.toList()));
+        earlyServices.addAll(Stream.of(classes)
+            .map(Key::get).collect(Collectors.toList()));
         return this;
     }
 
     @Override
     public Environment.Builder addEarlyServices(TypeLiteral<?>... typeLiterals) {
-        earlyServices.addAll(Stream.of(typeLiterals).map(Key::get).collect(Collectors.toList()));
+        earlyServices.addAll(Stream.of(typeLiterals)
+            .map(Key::get).collect(Collectors.toList()));
+        return this;
+    }
+
+    @Override
+    public Environment.Builder addEarlyServices(TypeToken<?>... typeTokens) {
+        earlyServices.addAll(Stream.of(typeTokens)
+            .map(BindingExtensions::getKey).collect(Collectors.toList()));
         return this;
     }
 

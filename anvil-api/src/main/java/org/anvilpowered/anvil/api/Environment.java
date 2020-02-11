@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -108,6 +109,8 @@ public interface Environment extends Comparable<Environment> {
         Builder addEarlyServices(Class<?>... classes);
 
         Builder addEarlyServices(TypeLiteral<?>... typeLiterals);
+
+        Builder addEarlyServices(TypeToken<?>... typeTokens);
 
         Builder setName(String name);
 
