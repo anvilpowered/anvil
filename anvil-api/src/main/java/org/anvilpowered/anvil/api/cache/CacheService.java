@@ -19,8 +19,8 @@
 package org.anvilpowered.anvil.api.cache;
 
 import org.anvilpowered.anvil.api.component.Component;
-import org.anvilpowered.anvil.api.storageservice.StorageService;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
+import org.anvilpowered.anvil.api.storageservice.StorageService;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+version 'unspecified'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("Anvil")) {
+        implementation project(':anvil-api')
+        implementation project(':anvil-api:anvil-api-mongodb')
+        implementation project(':anvil-api:anvil-api-xodus')
+    } else {
+        implementation project(':Anvil:anvil-api')
+        implementation project(':Anvil:anvil-api:anvil-api-mongodb')
+        implementation project(':Anvil:anvil-api:anvil-api-xodus')
+    }
+
+    implementation guice
+    implementation morphia
+    implementation xodus_entity_store
+}

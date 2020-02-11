@@ -1,25 +1,90 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow'
 }
+
+jar.enabled = false // we only want shadowJar
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.velocitypowered.com/snapshots/' }
     maven { url 'https://repo.spongepowered.org/maven' }
-
+    maven { url 'https://repo.velocitypowered.com/snapshots/' }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'com.velocitypowered:velocity-api:1.1.0-SNAPSHOT'
 
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
+        implementation project(':anvil-api:anvil-api-mongodb')
+        implementation project(':anvil-api:anvil-api-xodus')
+        implementation project(':anvil-api-core')
+        implementation project(':anvil-base')
+        implementation project(':anvil-base:anvil-base-mongodb')
+        implementation project(':anvil-base:anvil-base-xodus')
         implementation project(':anvil-common')
     } else {
         implementation project(':Anvil:anvil-api')
+        implementation project(':Anvil:anvil-api:anvil-api-mongodb')
+        implementation project(':Anvil:anvil-api:anvil-api-xodus')
+        implementation project(':Anvil:anvil-api-core')
+        implementation project(':Anvil:anvil-base')
+        implementation project(':Anvil:anvil-base:anvil-base-mongodb')
+        implementation project(':Anvil:anvil-base:anvil-base-xodus')
         implementation project(':Anvil:anvil-common')
     }
 
+    implementation 'com.velocitypowered:velocity-api:1.1.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:1.1.0-SNAPSHOT'
+
     implementation guice
+    implementation javasisst
+    implementation microutils_logging
+    implementation mongo_java_driver
+    implementation morphia
+    implementation xodus_entity_store
+}
+
+shadowJar {
+    String jarName = "Anvil-Velocity-${project.version}.jar"
+    println "Building: " + jarName
+    archiveFileName = jarName
+
+    dependencies {
+        if (rootProject.getName().equals("Anvil")) {
+            include project(':anvil-api')
+            include project(':anvil-api:anvil-api-mongodb')
+            include project(':anvil-api:anvil-api-xodus')
+            include project(':anvil-api-core')
+            include project(':anvil-base')
+            include project(':anvil-base:anvil-base-mongodb')
+            include project(':anvil-base:anvil-base-xodus')
+            include project(':anvil-common')
+        } else {
+            include project(':Anvil:anvil-api')
+            include project(':Anvil:anvil-api:anvil-api-mongodb')
+            include project(':Anvil:anvil-api:anvil-api-xodus')
+            include project(':Anvil:anvil-api-core')
+            include project(':Anvil:anvil-base')
+            include project(':Anvil:anvil-base:anvil-base-mongodb')
+            include project(':Anvil:anvil-base:anvil-base-xodus')
+            include project(':Anvil:anvil-common')
+        }
+
+        include dependency(bson)
+        include dependency(javasisst)
+        include dependency(microutils_logging)
+        include dependency(mongo_java_driver)
+        include dependency(mongodb_driver_sync)
+        include dependency(morphia)
+        include dependency(reflections)
+        include dependency(xodus)
+        include dependency(xodus_entity_store)
+        include dependency(xodus_environment)
+        include dependency(xodus_utils)
+    }
+}
+
+artifacts {
+    archives shadowJar
 }

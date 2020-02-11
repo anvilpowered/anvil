@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.api;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Binding;
-import com.google.inject.Module;
 import org.anvilpowered.anvil.api.data.key.Key;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
@@ -71,7 +70,8 @@ public final class Anvil {
                 break;
             }
         }
-        return Objects.requireNonNull(suppliers[0], "Could not find binding for " + name);
+        return Objects.requireNonNull(suppliers[0],
+            "Could not find binding for " + name);
     }
 
     public static <T> T provide(TypeToken<T> typeToken) {
@@ -91,11 +91,13 @@ public final class Anvil {
     }
 
     public static Environment getCoreEnvironment() {
-        return Objects.requireNonNull(environments.get("anvil"), "Global environment not loaded");
+        return Objects.requireNonNull(environments.get("anvil"),
+            "Global environment not loaded");
     }
 
     public static Environment getEnvironmentUnsafe(String name) {
-        return Objects.requireNonNull(environments.get(name), "Could not find environment with name " + name);
+        return Objects.requireNonNull(environments.get(name),
+            "Could not find environment " + name);
     }
 
     public static Map<String, Environment> getEnvironments() {
@@ -128,21 +130,26 @@ public final class Anvil {
         return Objects.requireNonNull(pluginEnvironmentMap.get(plugin));
     }
 
-    public static Environment.Builder environmentBuilder() {
-        return new EnvironmentBuilderImpl();
-    }
+    private static Environment.Builder environmentBuilder;
 
-    /**
-     * To be called by Anvil Core only
-     */
-    public static void completeInitialization(Module platformModule) {
-        EnvironmentBuilderImpl.completeInitialization(platformModule);
+    public static Environment.Builder environmentBuilder() {
+        if (environmentBuilder != null) {
+            return environmentBuilder;
+        }
+        try {
+            return environmentBuilder = (Environment.Builder)
+                Class.forName("org.anvilpowered.anvil.api.EnvironmentBuilderImpl").newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            throw new IllegalStateException(
+                "Could not find Environment Builder implementation!", e
+            );
+        }
     }
 
     static void registerEnvironment(Environment environment, Plugin<?> plugin) {
         final String name = environment.getName();
         if (environments.containsKey(name)) {
-            throw new IllegalArgumentException("Environment with name " + name + " already exists");
+            throw new IllegalArgumentException("Environment " + name + " already exists");
         }
         environments.put(name, environment);
         Set<Environment> envs = pluginEnvironmentMap.get(plugin);

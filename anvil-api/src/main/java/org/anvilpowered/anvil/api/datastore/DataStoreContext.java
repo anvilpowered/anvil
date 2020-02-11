@@ -18,10 +18,10 @@
 
 package org.anvilpowered.anvil.api.datastore;
 
+import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.anvilpowered.anvil.api.data.registry.Registry;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

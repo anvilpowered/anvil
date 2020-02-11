@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+version 'unspecified'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spongepowered.org/maven' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    if (rootProject.getName().equals("Anvil")) {
+        implementation project(':anvil-api')
+    } else {
+        implementation project(':Anvil:anvil-api')
+    }
+
+    implementation configurate_core
+    implementation guice
+}
