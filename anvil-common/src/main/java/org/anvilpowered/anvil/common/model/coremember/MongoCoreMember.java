@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.coremember;
+package org.anvilpowered.anvil.common.model.coremember;
 
 import org.anvilpowered.anvil.base.model.MongoDbo;
 import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
