@@ -18,153 +18,52 @@
 
 package org.anvilpowered.anvil.api;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.reflect.TypeToken;
+import com.google.inject.Binder;
 import com.google.inject.Binding;
 import org.anvilpowered.anvil.api.data.key.Key;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.plugin.Plugin;
+import org.anvilpowered.anvil.api.misc.BindingExtensions;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-@SuppressWarnings({"unchecked", "unused", "UnstableApiUsage"})
+@SuppressWarnings({"unused"})
 public final class Anvil {
 
-    private static final Map<TypeToken<?>, Supplier<?>> bindings = new HashMap<>();
-    private static final Map<String, Environment> environments = new HashMap<>();
-    static final Map<String, Plugin<?>> plugins = new HashMap<>();
-    static final Map<Plugin<?>, Set<Environment>> pluginEnvironmentMap = new HashMap<>();
     static final Map<Long, Binding<?>> bindingsCache = new HashMap<>();
+    private static ServiceManager serviceManager;
 
     private Anvil() {
         throw new AssertionError("**boss music** No instance for you!");
     }
 
-    public static <T> Supplier<T> provideSupplier(TypeToken<T> typeToken) {
-        return (Supplier<T>) Objects.requireNonNull(
-            bindings.get(typeToken),
-            "Could not find binding for " + typeToken.getRawType().getName()
-        );
+    public static BindingExtensions getBindingExtensions(Binder binder) {
+        return getServiceManager().provide(BindingExtensions.class, binder);
     }
 
-    public static <T> Supplier<T> provideSupplier(Class<T> clazz) {
-        return provideSupplier(TypeToken.of(clazz));
+    public static Environment.Builder getEnvironmentBuilder() {
+        return getServiceManager().provide(Environment.Builder.class);
     }
 
-    public static <T> Supplier<T> provideSupplier(String name) {
-        Supplier<T>[] suppliers = new Supplier[1];
-        for (Map.Entry<TypeToken<?>, Supplier<?>> entry : bindings.entrySet()) {
-            if (entry.getKey().getRawType().getName().equalsIgnoreCase(name)) {
-                suppliers[0] = (Supplier<T>) entry.getValue();
-                break;
-            }
-        }
-        return Objects.requireNonNull(suppliers[0],
-            "Could not find binding for " + name);
+    public static EnvironmentManager getEnvironmentManager() {
+        return getServiceManager().provide(EnvironmentManager.class);
     }
 
-    public static <T> T provide(TypeToken<T> typeToken) {
-        return provideSupplier(typeToken).get();
-    }
-
-    public static <T> T provide(Class<T> clazz) {
-        return provideSupplier(clazz).get();
-    }
-
-    public static <T> T provide(String name) {
-        return Anvil.<T>provideSupplier(name).get();
-    }
-
-    public static <T> void registerBinding(TypeToken<T> typeToken, Supplier<T> supplier) {
-        bindings.put(typeToken, supplier);
-    }
-
-    public static Environment getCoreEnvironment() {
-        return Objects.requireNonNull(environments.get("anvil"),
-            "Global environment not loaded");
-    }
-
-    public static Environment getEnvironmentUnsafe(String name) {
-        return Objects.requireNonNull(environments.get(name),
-            "Could not find environment " + name);
-    }
-
-    public static Map<String, Environment> getEnvironments() {
-        return ImmutableMap.copyOf(environments);
-    }
-
-    public static Stream<Environment> getEnvironmentsAsStream(Pattern pattern) {
-        return environments.entrySet().stream().filter(e ->
-            pattern.matcher(e.getKey()).matches()
-        ).map(Map.Entry::getValue);
-    }
-
-    public static List<Environment> getEnvironments(Pattern pattern) {
-        return getEnvironmentsAsStream(pattern).collect(Collectors.toList());
-    }
-
-    public static Optional<Environment> getEnvironment(Pattern pattern) {
-        return getEnvironmentsAsStream(pattern).findAny();
-    }
-
-    public static Optional<Environment> getEnvironment(String name) {
-        return Optional.ofNullable(environments.get(name));
-    }
-
-    public static Environment getEnvironment(Plugin<?> plugin) {
-        return Objects.requireNonNull(environments.get(plugin.getName()));
-    }
-
-    public static Set<Environment> getEnvironments(Plugin<?> plugin) {
-        return Objects.requireNonNull(pluginEnvironmentMap.get(plugin));
-    }
-
-    private static Environment.Builder environmentBuilder;
-
-    public static Environment.Builder environmentBuilder() {
-        if (environmentBuilder != null) {
-            return environmentBuilder;
+    public static ServiceManager getServiceManager() {
+        if (serviceManager != null) {
+            return serviceManager;
         }
         try {
-            return environmentBuilder = (Environment.Builder)
-                Class.forName("org.anvilpowered.anvil.api.EnvironmentBuilderImpl").newInstance();
+            return serviceManager = (ServiceManager)
+                Class.forName("org.anvilpowered.anvil.api.ServiceManagerImpl").newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new IllegalStateException(
-                "Could not find Environment Builder implementation!", e
-            );
-        }
-    }
-
-    static void registerEnvironment(Environment environment, Plugin<?> plugin) {
-        final String name = environment.getName();
-        if (environments.containsKey(name)) {
-            throw new IllegalArgumentException("Environment " + name + " already exists");
-        }
-        environments.put(name, environment);
-        Set<Environment> envs = pluginEnvironmentMap.get(plugin);
-        if (envs == null) {
-            envs = new TreeSet<>();
-            envs.add(environment);
-            pluginEnvironmentMap.put(plugin, envs);
-            plugins.put(plugin.getName(), plugin);
-        } else {
-            envs.add(environment);
+            throw new IllegalStateException("Could not find ServiceManager implementation!", e);
         }
     }
 
     public static <T> T resolveForSharedEnvironment(Key<T> key, Registry registry) {
-        Registry coreRegistry = getCoreEnvironment().getRegistry();
+        Registry coreRegistry = getEnvironmentManager().getCoreEnvironment().getRegistry();
         if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
             if (key.equals(Keys.DATA_STORE_NAME)
                 || key.equals(Keys.MONGODB_HOSTNAME)

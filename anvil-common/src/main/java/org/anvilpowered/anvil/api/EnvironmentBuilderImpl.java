@@ -73,7 +73,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
                         .annotatedWith(Names.named(environment.getName()))
                         .toInstance(environment);
                 }
-                for (Plugin<?> plugin : Anvil.plugins.values()) {
+                for (Plugin<?> plugin : ServiceManagerImpl.environmentManager.plugins.values()) {
                     bind(new TypeLiteral<Plugin<?>>() {
                     }).annotatedWith(Names.named(plugin.getName()))
                         .toInstance(plugin);
@@ -98,7 +98,8 @@ class EnvironmentBuilderImpl implements Environment.Builder {
                 injector = Guice.createInjector(environment.getModules());
             }
             environment.setInjector(injector);
-            Anvil.registerEnvironment(environment, environment.getPlugin());
+            ServiceManagerImpl.environmentManager
+                .registerEnvironment(environment, environment.getPlugin());
             for (Key<?> key : environment.getEarlyServices()) {
                 injector.getInstance(key);
             }

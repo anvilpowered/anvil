@@ -41,13 +41,13 @@ public interface Plugin<TPluginContainer> {
      * @return The primary {@link Environment} for this {@link Plugin}
      */
     default Environment getPrimaryEnvironment() {
-        return Anvil.getEnvironment(this);
+        return Anvil.getEnvironmentManager().getEnvironment(this);
     }
 
     /**
      * @return A {@link Set} of all {@link Environment environments} registered to this {@link Plugin}
      */
     default Set<Environment> getAllEnvironments() {
-        return Anvil.getEnvironments(this);
+        return Anvil.getEnvironmentManager().getEnvironments(this);
     }
 }

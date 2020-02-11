@@ -98,7 +98,7 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Injector rootInjector,
         Module module
     ) {
-        return Anvil.environmentBuilder()
+        return Anvil.getEnvironmentBuilder()
             .setName(name)
             .setRootInjector(rootInjector)
             .addModules(module)
