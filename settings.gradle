@@ -13,13 +13,7 @@ include ':anvil-base:anvil-base-mongodb'
 include ':anvil-base:anvil-base-xodus'
 
 include ':anvil-bungee'
-
 include ':anvil-common'
-
 include ':anvil-spigot'
-
 include ':anvil-sponge'
-
 include ':anvil-velocity'
-include 'anvil-api-core'
-
