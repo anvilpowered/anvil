@@ -19,6 +19,8 @@
 package org.anvilpowered.anvil.api;
 
 import com.google.common.reflect.TypeToken;
+import org.anvilpowered.anvil.api.misc.BindingExtensions;
+import org.anvilpowered.anvil.common.misc.CommonBindingExtensions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +29,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings({"unchecked", "unused", "UnstableApiUsage"})
-class ServiceManagerImpl implements ServiceManager{
+class ServiceManagerImpl implements ServiceManager {
 
     private final Map<TypeToken<?>, Supplier<?>> supplierBindings;
     private final Map<TypeToken<?>, Function<?, ?>> functionBindings;
@@ -39,6 +41,7 @@ class ServiceManagerImpl implements ServiceManager{
         functionBindings = new HashMap<>();
         registerBinding(EnvironmentManager.class, () -> environmentManager);
         registerBinding(Environment.Builder.class, EnvironmentBuilderImpl::new);
+        registerBinding(BindingExtensions.class, CommonBindingExtensions::new);
     }
 
     @Override

@@ -57,4 +57,13 @@ public class BaseExtendedRegistry extends BaseRegistry {
         configurationService.load();
         super.load();
     }
+
+    @Override
+    public String toString() {
+        if (configurationService == null) {
+            return super.toString();
+        } else {
+            return super.toString() + "\n" + configurationService;
+        }
+    }
 }

@@ -97,6 +97,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
      * @return First entityClass that contains {@param name}
      */
     public final Class<?> getEntityClassUnsafe(final String name) {
+        getDataStore(); // ensure that entityClasses is not null
         final String n = name.toLowerCase(Locale.ENGLISH);
         for (Class<?> entityClass : entityClasses) {
             if (entityClass.getSimpleName().toLowerCase(Locale.ENGLISH).contains(n)) {

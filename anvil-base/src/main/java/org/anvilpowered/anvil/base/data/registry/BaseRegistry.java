@@ -25,11 +25,15 @@ import org.anvilpowered.anvil.api.data.registry.RegistryLoadedListener;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Singleton
 @SuppressWarnings("unchecked")
@@ -37,6 +41,7 @@ public class BaseRegistry implements Registry {
 
     protected final Map<Key<?>, Object> defaultMap, valueMap;
     protected final Collection<RegistryLoadedListener> registryLoadedListeners;
+    private String stringRepresentation;
 
     public BaseRegistry() {
         defaultMap = new HashMap<>();
@@ -68,41 +73,49 @@ public class BaseRegistry implements Registry {
     @Override
     public <T> void set(Key<T> key, T value) {
         valueMap.put(key, value);
+        stringRepresentation = null;
     }
 
     @Override
     public <T> void remove(Key<T> key) {
         valueMap.remove(key);
+        stringRepresentation = null;
     }
 
     @Override
     public <T> void transform(Key<T> key, BiFunction<? super Key<T>, ? super T, ? extends T> transformer) {
         valueMap.compute(key, (BiFunction<? super Key<?>, ? super Object, ?>) transformer);
+        stringRepresentation = null;
     }
 
     @Override
     public <T> void transform(Key<T> key, Function<? super T, ? extends T> transformer) {
         transform(key, (k, v) -> transformer.apply((T) v));
+        stringRepresentation = null;
     }
 
     @Override
     public <T> void addToCollection(Key<? extends Collection<T>> key, T value) {
         ((Collection<T>) valueMap.get(key)).add(value);
+        stringRepresentation = null;
     }
 
     @Override
     public <T> void removeFromCollection(Key<? extends Collection<T>> key, T value) {
         ((Collection<T>) valueMap.get(key)).remove(value);
+        stringRepresentation = null;
     }
 
     @Override
     public <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T value) {
         ((Map<K, T>) valueMap.get(key)).put(mapKey, value);
+        stringRepresentation = null;
     }
 
     @Override
     public <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey) {
         ((Map<K, T>) valueMap.get(key)).remove(mapKey);
+        stringRepresentation = null;
     }
 
     @Override
@@ -113,5 +126,33 @@ public class BaseRegistry implements Registry {
     @Override
     public void addRegistryLoadedListener(RegistryLoadedListener registryLoadedListener) {
         registryLoadedListeners.add(registryLoadedListener);
+    }
+
+    @Override
+    public String toString() {
+        if (stringRepresentation != null) {
+            return stringRepresentation;
+        }
+        Set<Key<?>> keys = new HashSet<>();
+        int[] width = {0, 32, 32};
+        Consumer<? super Key<?>> addToKeys = key -> {
+            final int keyLength = key.toString().length();
+            if (keyLength > width[0]) {
+                width[0] = keyLength;
+            }
+            keys.add(key);
+        };
+        valueMap.keySet().forEach(addToKeys);
+        defaultMap.keySet().forEach(addToKeys);
+        width[0] += 5;
+        return stringRepresentation = String.format("%-" + width[0] + "s", "Key")
+            + String.format("%-" + width[1] + "s", "Value")
+            + String.format("%-" + width[2] + "s", "Default")
+            + '\n'
+            + keys.stream().map(key ->
+            String.format("%-" + width[0] + "s", key.toString())
+                + String.format("%-" + width[1] + "s", valueMap.get(key))
+                + String.format("%-" + width[2] + "s", defaultMap.get(key))
+        ).collect(Collectors.joining("\n"));
     }
 }
