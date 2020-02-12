@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.spigot.util;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.bungee.util.MD5StringResult;
+import org.anvilpowered.anvil.md5.util.MD5StringResult;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 

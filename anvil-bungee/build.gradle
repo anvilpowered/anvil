@@ -23,6 +23,7 @@ dependencies {
         implementation project(':anvil-base:anvil-base-mongodb')
         implementation project(':anvil-base:anvil-base-xodus')
         implementation project(':anvil-common')
+        implementation project(':anvil-md5')
     } else {
         implementation project(':Anvil:anvil-api')
         implementation project(':Anvil:anvil-api:anvil-api-mongodb')
@@ -32,6 +33,7 @@ dependencies {
         implementation project(':Anvil:anvil-base:anvil-base-mongodb')
         implementation project(':Anvil:anvil-base:anvil-base-xodus')
         implementation project(':Anvil:anvil-common')
+        implementation project(':Anvil:anvil-md5')
     }
 
     implementation bungee
@@ -61,6 +63,7 @@ shadowJar {
             include project(':anvil-base:anvil-base-mongodb')
             include project(':anvil-base:anvil-base-xodus')
             include project(':anvil-common')
+            include project(':anvil-md5')
         } else {
             include project(':Anvil:anvil-api')
             include project(':Anvil:anvil-api:anvil-api-mongodb')
@@ -70,6 +73,7 @@ shadowJar {
             include project(':Anvil:anvil-base:anvil-base-mongodb')
             include project(':Anvil:anvil-base:anvil-base-xodus')
             include project(':Anvil:anvil-common')
+            include project(':Anvil:anvil-md5')
         }
 
         include dependency(aopalliance)
