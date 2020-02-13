@@ -31,7 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
 
-public class AnvilCoreSpigot extends JavaPlugin implements Plugin<AnvilCoreSpigot> {
+public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
 
     protected final InnerAnvilCoreSpigot anvilCoreSpigot;
 
@@ -39,7 +39,7 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<AnvilCoreSpigo
         anvilCoreSpigot = new InnerAnvilCoreSpigot();
     }
 
-    private static final class InnerAnvilCoreSpigot extends AnvilCore<AnvilCoreSpigot> {
+    private static final class InnerAnvilCoreSpigot extends AnvilCore<JavaPlugin> {
         public InnerAnvilCoreSpigot() {
             super(null, new SpigotModule());
         }
@@ -48,7 +48,11 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<AnvilCoreSpigo
     @Override
     public void onEnable() {
         AnvilImpl.completeInitialization(new ApiSpigotModule());
-        Bukkit.getPluginManager().registerEvents(anvilCoreSpigot.getPrimaryEnvironment().getInjector().getInstance(SpigotPlayerListener.class), this);
+        Bukkit.getPluginManager().registerEvents(
+            anvilCoreSpigot.getPrimaryEnvironment()
+                .getInjector().getInstance(SpigotPlayerListener.class),
+            this
+        );
     }
 
     @Override

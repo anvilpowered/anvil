@@ -29,7 +29,8 @@ import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 
 import java.util.Set;
 
-public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.api.plugin.Plugin<AnvilCoreBungee> {
+public class AnvilCoreBungee extends Plugin
+    implements org.anvilpowered.anvil.api.plugin.Plugin<Plugin> {
 
     protected final InnerAnvilCoreBungee anvilCoreBungee;
 
@@ -37,7 +38,7 @@ public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.ap
         anvilCoreBungee = new InnerAnvilCoreBungee();
     }
 
-    private static final class InnerAnvilCoreBungee extends AnvilCore<AnvilCoreBungee> {
+    private static final class InnerAnvilCoreBungee extends AnvilCore<Plugin> {
         public InnerAnvilCoreBungee() {
             super(null, new BungeeModule());
         }
@@ -46,7 +47,10 @@ public class AnvilCoreBungee extends Plugin implements org.anvilpowered.anvil.ap
     @Override
     public void onEnable() {
         AnvilImpl.completeInitialization(new ApiBungeeModule());
-        getProxy().getPluginManager().registerListener(this, anvilCoreBungee.getPrimaryEnvironment().getInjector().getInstance(BungeePlayerListener.class));
+        getProxy().getPluginManager().registerListener(this,
+            anvilCoreBungee.getPrimaryEnvironment()
+                .getInjector().getInstance(BungeePlayerListener.class)
+        );
     }
 
     @Override
