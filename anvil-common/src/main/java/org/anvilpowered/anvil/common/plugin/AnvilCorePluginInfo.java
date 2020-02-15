@@ -26,7 +26,7 @@ public class AnvilCorePluginInfo<TString, TCommandSource> implements PluginInfo<
     public static final String id = "anvil";
     public static final String name = "Anvil";
     public static final String version = "$modVersion";
-    public static final String description = "A cross platform Minecraft plugin framework";
+    public static final String description = "A cross-platform Minecraft plugin framework";
     public static final String url = "https://github.com/AnvilPowered/Anvil";
     public static final String[] authors = {"Cableguy20"};
     public static final String organizationName = "AnvilPowered";

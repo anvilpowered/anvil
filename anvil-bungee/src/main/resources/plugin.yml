@@ -1,7 +1,7 @@
 name: Anvil
 version: "1.0.0-SNAPSHOT"
-main: org.anvilpowered.anvil.core.bungee.plugin.AnvilCoreBungee
+main: org.anvilpowered.anvil.bungee.plugin.AnvilCoreBungee
 api-version: 1.13
 authors: [Cableguy20, STG_Allen]
-description: Anvil implementation
+description: A cross-platform Minecraft plugin framework
 website: https://anvilpowered.org
