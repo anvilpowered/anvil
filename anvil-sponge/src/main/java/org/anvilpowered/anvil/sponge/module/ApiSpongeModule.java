@@ -22,6 +22,7 @@ import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.CurrentWorldService;
 import org.anvilpowered.anvil.api.util.KickService;
+import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.StringResult;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.UserService;
@@ -29,12 +30,14 @@ import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.sponge.util.SpongeCurrentServerService;
 import org.anvilpowered.anvil.sponge.util.SpongeCurrentWorldService;
 import org.anvilpowered.anvil.sponge.util.SpongeKickService;
+import org.anvilpowered.anvil.sponge.util.SpongePermissionService;
 import org.anvilpowered.anvil.sponge.util.SpongeStringResult;
 import org.anvilpowered.anvil.sponge.util.SpongeTeleportationService;
 import org.anvilpowered.anvil.sponge.util.SpongeUserService;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
 
 public class ApiSpongeModule extends ApiCommonModule {
@@ -45,6 +48,8 @@ public class ApiSpongeModule extends ApiCommonModule {
         bind(CurrentServerService.class).to(SpongeCurrentServerService.class);
         bind(CurrentWorldService.class).to(SpongeCurrentWorldService.class);
         bind(KickService.class).to(SpongeKickService.class);
+        bind(new TypeLiteral<PermissionService<Subject>>() {
+        }).to(SpongePermissionService.class);
         bind(new TypeLiteral<StringResult<Text, CommandSource>>() {
         }).to(SpongeStringResult.class);
         bind(TeleportationService.class).to(SpongeTeleportationService.class);

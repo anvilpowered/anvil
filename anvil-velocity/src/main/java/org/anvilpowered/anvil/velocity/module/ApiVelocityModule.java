@@ -20,15 +20,18 @@ package org.anvilpowered.anvil.velocity.module;
 
 import com.google.inject.TypeLiteral;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.permission.PermissionSubject;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.KickService;
+import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.StringResult;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.velocity.util.VelocityCurrentServerService;
 import org.anvilpowered.anvil.velocity.util.VelocityKickService;
+import org.anvilpowered.anvil.velocity.util.VelocityPermissionService;
 import org.anvilpowered.anvil.velocity.util.VelocityStringResult;
 import org.anvilpowered.anvil.velocity.util.VelocityUserService;
 
@@ -39,6 +42,8 @@ public class ApiVelocityModule extends ApiCommonModule {
         super.configure();
         bind(CurrentServerService.class).to(VelocityCurrentServerService.class);
         bind(KickService.class).to(VelocityKickService.class);
+        bind(new TypeLiteral<PermissionService<PermissionSubject>>() {
+        }).to(VelocityPermissionService.class);
         bind(new TypeLiteral<StringResult<TextComponent, CommandSource>>() {
         }).to(VelocityStringResult.class);
         bind(new TypeLiteral<UserService<Player, Player>>() {
