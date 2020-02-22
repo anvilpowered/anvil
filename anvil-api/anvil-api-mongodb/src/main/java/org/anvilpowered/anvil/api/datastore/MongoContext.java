@@ -58,7 +58,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         String dbName = Anvil.resolveForSharedEnvironment(Keys.MONGODB_DBNAME, registry);
         String username = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USERNAME, registry);
         String password = Anvil.resolveForSharedEnvironment(Keys.MONGODB_PASSWORD, registry);
-        String authDb = Anvil.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry);
+        String authDb = Anvil.resolveForSharedEnvironment(Keys.MONGODB_AUTH_DB, registry);
         boolean useAuth = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USE_AUTH, registry);
         boolean useSrv = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USE_SRV, registry);
         boolean useConnectionString = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USE_CONNECTION_STRING, registry);

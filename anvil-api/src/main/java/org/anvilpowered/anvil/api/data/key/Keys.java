@@ -80,7 +80,7 @@ public final class Keys {
     };
     public static final Key<String> MONGODB_AUTH_DB = new Key<String>("MONGODB_AUTH_DB", "admin") {
     };
-    public static final Key<Boolean> MONGODB_USE_AUTH = new Key<Boolean>("MONGODB_USEAUTH", false) {
+    public static final Key<Boolean> MONGODB_USE_AUTH = new Key<Boolean>("MONGODB_USE_AUTH", false) {
     };
     public static final Key<Boolean> MONGODB_USE_SRV = new Key<Boolean>("MONGODB_USE_SRV", false) {
     };
