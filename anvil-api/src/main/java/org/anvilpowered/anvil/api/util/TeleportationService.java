@@ -18,9 +18,12 @@
 
 package org.anvilpowered.anvil.api.util;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TeleportationService {
 
     boolean teleport(UUID teleportingUserUUID, UUID targetUserUUID);
+
+    Optional<String> getPosition(UUID userUUID);
 }

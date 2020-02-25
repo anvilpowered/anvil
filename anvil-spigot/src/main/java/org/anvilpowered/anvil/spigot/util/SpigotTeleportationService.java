@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.spigot.util;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -36,9 +37,19 @@ public class SpigotTeleportationService implements TeleportationService {
         final Optional<Player> teleporter = userService.get(teleportingUserUUID);
         final Optional<Player> target = userService.get(targetUserUUID);
 
-        if(!teleporter.isPresent() || !target.isPresent()) {
+        if (!teleporter.isPresent() || !target.isPresent()) {
             return false;
         }
         return teleporter.get().teleport(target.get().getLocation());
+    }
+
+    @Override
+    public Optional<String> getPosition(UUID userUUID) {
+        return userService.get(userUUID).map(p -> {
+            Vector v = p.getLocation().toVector();
+            return "(" + v.getBlockX()
+                + ", " + v.getBlockY()
+                + ", " + v.getBlockZ() + ")";
+        });
     }
 }

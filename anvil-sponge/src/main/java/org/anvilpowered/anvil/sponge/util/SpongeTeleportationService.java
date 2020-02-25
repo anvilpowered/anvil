@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.sponge.util;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.UserService;
@@ -44,5 +45,15 @@ public class SpongeTeleportationService implements TeleportationService {
         return target.flatMap(User::getWorldUniqueId)
             .filter(uuid -> teleporter.get().setLocation(target.get().getPosition(), uuid))
             .isPresent();
+    }
+
+    @Override
+    public Optional<String> getPosition(UUID userUUID) {
+        return userService.get(userUUID).map(u -> {
+            Vector3d v = u.getPosition();
+            return "(" + v.getFloorX()
+                + ", " + v.getFloorY()
+                + ", " + v.getFloorZ() + ")";
+        });
     }
 }
