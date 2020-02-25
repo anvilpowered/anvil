@@ -20,13 +20,12 @@ package org.anvilpowered.anvil.api.plugin;
 
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
+import org.anvilpowered.anvil.api.misc.Named;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-public interface Plugin<TPluginContainer> {
-
-    String getName();
+public interface Plugin<TPluginContainer> extends Named, Comparable<Plugin<TPluginContainer>> {
 
     TPluginContainer getPluginContainer();
 

@@ -16,23 +16,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.plugin;
+package org.anvilpowered.anvil.api.misc;
 
-import org.anvilpowered.anvil.api.misc.Named;
+public interface Named {
 
-public interface BasicPluginInfo extends Named {
-
-    String getId();
-
-    String getVersion();
-
-    String getDescription();
-
-    String getUrl();
-
-    String[] getAuthors();
-
-    String getOrganizationName();
-
-    String getBuildDate();
+    String getName();
 }

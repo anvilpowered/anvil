@@ -35,6 +35,7 @@ import java.util.Set;
  * A simple default implementation of {@link Plugin} that only registers a
  * single {@link Environment} with the same name as this {@link Plugin}
  */
+@SuppressWarnings("UnstableApiUsage")
 public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginContainer> {
 
     @Inject
@@ -139,6 +140,16 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Plugin<TPluginContainer> o) {
+        return name.compareTo(o.getName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Plugin && name.equals(((Plugin<?>) obj).getName());
     }
 
     @Override

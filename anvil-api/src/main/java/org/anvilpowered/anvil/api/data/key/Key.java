@@ -19,9 +19,10 @@
 package org.anvilpowered.anvil.api.data.key;
 
 import com.google.common.reflect.TypeToken;
+import org.anvilpowered.anvil.api.misc.Named;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract class Key<T> extends TypeToken<T> implements Comparable<Key<T>> {
+public abstract class Key<T> extends TypeToken<T> implements Named, Comparable<Key<T>> {
 
     private final String name;
     private final T fallbackValue;
@@ -51,6 +52,7 @@ public abstract class Key<T> extends TypeToken<T> implements Comparable<Key<T>> 
         return name;
     }
 
+    @Override
     public String getName() {
         return name;
     }

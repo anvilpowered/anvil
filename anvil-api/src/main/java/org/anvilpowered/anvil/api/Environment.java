@@ -26,6 +26,7 @@ import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.misc.Named;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.StringResult;
@@ -33,9 +34,9 @@ import org.anvilpowered.anvil.api.util.StringResult;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public interface Environment extends Comparable<Environment> {
+@SuppressWarnings({"UnstableApiUsage", "unchecked"})
+public interface Environment extends Named, Comparable<Environment> {
 
-    @SuppressWarnings("unchecked")
     static <T> Binding<T> getBinding(String name, Injector injector) {
         long hash = ((long) name.hashCode()) * ((long) injector.hashCode());
         Binding<?>[] binding = {Anvil.bindingsCache.get(hash)};
@@ -83,8 +84,6 @@ public interface Environment extends Comparable<Environment> {
     }
 
     void reload();
-
-    String getName();
 
     Injector getInjector();
 
