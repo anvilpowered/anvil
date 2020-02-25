@@ -37,8 +37,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 class EnvironmentBuilderImpl implements Environment.Builder {
 
@@ -46,7 +48,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     private Injector rootInjector;
     private Plugin<?> plugin;
     private final Collection<Module> modules;
-    private final Collection<Key<?>> earlyServices;
+    private final Map<Key<?>, Consumer<?>> earlyServices;
     private final Collection<Consumer<Environment>> listeners;
     private static final Collection<EnvironmentBuilderImpl> builders = new ArrayList<>();
     private static boolean alreadyCompleted = false;
@@ -102,8 +104,10 @@ class EnvironmentBuilderImpl implements Environment.Builder {
             environment.setInjector(injector);
             ServiceManagerImpl.environmentManager
                 .registerEnvironment(environment, environment.getPlugin());
-            for (Key<?> key : environment.getEarlyServices()) {
-                injector.getInstance(key);
+            for (Map.Entry<Key<?>, Consumer<?>> entry
+                : environment.getEarlyServices().entrySet()) {
+                ((Consumer) entry.getValue())
+                    .accept(injector.getInstance(entry.getKey()));
             }
             injector.getInstance(Registry.class).load();
             listeners.get(environment.getName()).forEach(action -> action.accept(environment));
@@ -112,7 +116,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
 
     EnvironmentBuilderImpl() {
         modules = new ArrayList<>();
-        earlyServices = new ArrayList<>();
+        earlyServices = new HashMap<>();
         listeners = new ArrayList<>();
     }
 
@@ -128,36 +132,62 @@ class EnvironmentBuilderImpl implements Environment.Builder {
         return this;
     }
 
+    private <T> Environment.Builder addEarlyServices(
+        Stream<T> keys,
+        Function<T, Key<?>> keyTransformer
+    ) {
+        keys.forEach(key -> earlyServices.put(keyTransformer.apply(key), t -> {
+        }));
+        return this;
+    }
+
     @Override
     public Environment.Builder addEarlyServices(Key<?>... keys) {
-        earlyServices.addAll(Arrays.asList(keys));
-        return this;
+        return addEarlyServices(Stream.of(keys), Function.identity());
     }
 
     @Override
     public Environment.Builder addEarlyServices(Iterable<Key<?>> keys) {
-        keys.forEach(earlyServices::add);
-        return this;
+        return addEarlyServices(StreamSupport.stream(keys.spliterator(), false),
+            Function.identity());
     }
 
     @Override
     public Environment.Builder addEarlyServices(Class<?>... classes) {
-        earlyServices.addAll(Stream.of(classes)
-            .map(Key::get).collect(Collectors.toList()));
-        return this;
+        return addEarlyServices(Stream.of(classes), Key::get);
     }
 
     @Override
     public Environment.Builder addEarlyServices(TypeLiteral<?>... typeLiterals) {
-        earlyServices.addAll(Stream.of(typeLiterals)
-            .map(Key::get).collect(Collectors.toList()));
-        return this;
+        return addEarlyServices(Stream.of(typeLiterals), Key::get);
     }
 
     @Override
     public Environment.Builder addEarlyServices(TypeToken<?>... typeTokens) {
-        earlyServices.addAll(Stream.of(typeTokens)
-            .map(BindingExtensions::getKey).collect(Collectors.toList()));
+        return addEarlyServices(Stream.of(typeTokens), BindingExtensions::getKey);
+    }
+
+    @Override
+    public <T> Environment.Builder addEarlyServices(Key<T> key, Consumer<T> initializer) {
+        earlyServices.put(key, initializer);
+        return this;
+    }
+
+    @Override
+    public <T> Environment.Builder addEarlyServices(Class<T> clazz, Consumer<T> initializer) {
+        earlyServices.put(Key.get(clazz), initializer);
+        return this;
+    }
+
+    @Override
+    public <T> Environment.Builder addEarlyServices(TypeLiteral<T> typeLiteral, Consumer<T> initializer) {
+        earlyServices.put(Key.get(typeLiteral), initializer);
+        return this;
+    }
+
+    @Override
+    public <T> Environment.Builder addEarlyServices(TypeToken<T> typeToken, Consumer<T> initializer) {
+        earlyServices.put(BindingExtensions.getKey(typeToken), initializer);
         return this;
     }
 

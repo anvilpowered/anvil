@@ -79,6 +79,7 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
             .addEarlyServices(earlyServices)
             .register(this);
     }
+
     protected BasePlugin(
         String name,
         Injector rootInjector,
@@ -110,12 +111,17 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Injector rootInjector,
         Module module
     ) {
-        return Anvil.getEnvironmentBuilder()
+        Environment.Builder builder = Anvil.getEnvironmentBuilder()
             .setName(name)
             .setRootInjector(rootInjector)
             .addModules(module)
             .whenReady(e -> environment = e)
             .whenReady(this::whenReady);
+        applyToBuilder(builder);
+        return builder;
+    }
+
+    protected void applyToBuilder(Environment.Builder builder) {
     }
 
     protected void whenReady(Environment environment) {

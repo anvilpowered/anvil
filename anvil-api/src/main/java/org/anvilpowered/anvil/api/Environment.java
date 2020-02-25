@@ -112,6 +112,14 @@ public interface Environment extends Comparable<Environment> {
 
         Builder addEarlyServices(TypeToken<?>... typeTokens);
 
+        <T> Builder addEarlyServices(Key<T> key, Consumer<T> initializer);
+
+        <T> Builder addEarlyServices(Class<T> clazz, Consumer<T> initializer);
+
+        <T> Builder addEarlyServices(TypeLiteral<T> typeLiteral, Consumer<T> initializer);
+
+        <T> Builder addEarlyServices(TypeToken<T> typeToken, Consumer<T> initializer);
+
         Builder setName(String name);
 
         Builder setRootInjector(Injector rootInjector);

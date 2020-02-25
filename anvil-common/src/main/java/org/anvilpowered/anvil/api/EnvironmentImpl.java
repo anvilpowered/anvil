@@ -27,6 +27,8 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.StringResult;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.function.Consumer;
 
 class EnvironmentImpl implements Environment {
 
@@ -34,14 +36,14 @@ class EnvironmentImpl implements Environment {
     private final String name;
     private final Plugin<?> plugin;
     private final Collection<Module> modules;
-    private final Collection<Key<?>> earlyServices;
+    private final Map<Key<?>, Consumer<?>> earlyServices;
 
     EnvironmentImpl(
         Injector injector,
         String name,
         Plugin<?> plugin,
         Collection<Module> modules,
-        Collection<Key<?>> earlyServices
+        Map<Key<?>, Consumer<?>> earlyServices
     ) {
         this.injector = injector;
         this.name = name;
@@ -62,7 +64,7 @@ class EnvironmentImpl implements Environment {
         return modules;
     }
 
-    Collection<Key<?>> getEarlyServices() {
+    Map<Key<?>, Consumer<?>> getEarlyServices() {
         return earlyServices;
     }
 
