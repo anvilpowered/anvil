@@ -50,8 +50,28 @@ public abstract class CommonStringResult<TString, TCommandSource> implements Str
         }
 
         @Override
+        public Builder<TString, TCommandSource> appendIf(boolean condition, Object... content) {
+            return condition ? append(content) : this;
+        }
+
+        @Override
+        public Builder<TString, TCommandSource> appendIf(boolean condition, CharSequence... content) {
+            return condition ? append(content) : this;
+        }
+
+        @Override
         public Builder<TString, TCommandSource> appendJoining(Object delimiter, CharSequence... content) {
-            return append(delimiter, (Object[]) content);
+            return appendJoining(delimiter, (Object[]) content);
+        }
+
+        @Override
+        public Builder<TString, TCommandSource> appendJoiningIf(boolean condition, Object delimiter, Object... content) {
+            return condition ? appendJoining(delimiter, content) : this;
+        }
+
+        @Override
+        public Builder<TString, TCommandSource> appendJoiningIf(boolean condition, Object delimiter, CharSequence... content) {
+            return condition ? appendJoining(delimiter, content) : this;
         }
 
         @Override
