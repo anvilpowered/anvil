@@ -64,6 +64,16 @@ public class AnvilCoreBungee extends Plugin
     }
 
     @Override
+    public int compareTo(org.anvilpowered.anvil.api.plugin.Plugin<Plugin> o) {
+        return anvilCoreBungee.compareTo(o);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return anvilCoreBungee.equals(obj);
+    }
+
+    @Override
     public AnvilCoreBungee getPluginContainer() {
         return this;
     }

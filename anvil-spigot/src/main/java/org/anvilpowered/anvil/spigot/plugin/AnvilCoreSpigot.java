@@ -61,6 +61,11 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
     }
 
     @Override
+    public int compareTo(Plugin<JavaPlugin> o) {
+        return anvilCoreSpigot.compareTo(o);
+    }
+
+    @Override
     public AnvilCoreSpigot getPluginContainer() {
         return this;
     }
