@@ -26,6 +26,7 @@ import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.plugin.Plugin;
@@ -47,6 +48,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     private String name;
     private Injector rootInjector;
     private Plugin<?> plugin;
+    private boolean withRootCommand = false;
     private final Collection<Module> modules;
     private final Map<Key<?>, Consumer<?>> earlyServices;
     private final Collection<Consumer<Environment>> listeners;
@@ -64,7 +66,9 @@ class EnvironmentBuilderImpl implements Environment.Builder {
             listeners.put(name, builder.listeners);
             return new EnvironmentImpl(
                 builder.rootInjector,
-                name, builder.plugin,
+                name,
+                builder.plugin,
+                builder.withRootCommand,
                 builder.modules,
                 builder.earlyServices
             );
@@ -108,6 +112,9 @@ class EnvironmentBuilderImpl implements Environment.Builder {
                 : environment.getEarlyServices().entrySet()) {
                 ((Consumer) entry.getValue())
                     .accept(injector.getInstance(entry.getKey()));
+            }
+            if (environment.withRootCommand()) {
+                environment.getInstance(CommandNode.class.getCanonicalName());
             }
             injector.getInstance(Registry.class).load();
             listeners.get(environment.getName()).forEach(action -> action.accept(environment));
@@ -200,6 +207,12 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     @Override
     public Environment.Builder setRootInjector(Injector rootInjector) {
         this.rootInjector = rootInjector;
+        return this;
+    }
+
+    @Override
+    public Environment.Builder withRootCommand() {
+        withRootCommand = true;
         return this;
     }
 

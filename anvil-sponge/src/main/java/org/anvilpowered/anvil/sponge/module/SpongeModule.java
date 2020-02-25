@@ -18,10 +18,14 @@
 
 package org.anvilpowered.anvil.sponge.module;
 
+import com.google.inject.TypeLiteral;
+import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.config.AnvilCoreConfigurationService;
 import org.anvilpowered.anvil.common.module.CommonModule;
+import org.anvilpowered.anvil.sponge.command.AnvilSpongeCommandNode;
 import org.anvilpowered.anvil.sponge.config.AnvilCoreSpongeConfigurationService;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
 public class SpongeModule extends CommonModule<Text, CommandSource> {
@@ -31,5 +35,7 @@ public class SpongeModule extends CommonModule<Text, CommandSource> {
         super.configure();
 
         bind(AnvilCoreConfigurationService.class).to(AnvilCoreSpongeConfigurationService.class);
+        bind(new TypeLiteral<CommandNode<CommandSpec>>() {
+        }).to(AnvilSpongeCommandNode.class);
     }
 }

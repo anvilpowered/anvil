@@ -25,6 +25,7 @@ import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
+import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.Named;
 import org.anvilpowered.anvil.api.plugin.Plugin;
@@ -122,6 +123,12 @@ public interface Environment extends Named, Comparable<Environment> {
         Builder setName(String name);
 
         Builder setRootInjector(Injector rootInjector);
+
+        /**
+         * This will load your root {@link CommandNode} as
+         * defined by your guice module
+         */
+        Builder withRootCommand();
 
         /**
          * Called once, right after the environment is created.

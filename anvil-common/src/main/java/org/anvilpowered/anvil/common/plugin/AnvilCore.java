@@ -39,6 +39,11 @@ public abstract class AnvilCore<TPluginContainer> extends BasePlugin<TPluginCont
     }
 
     @Override
+    protected void applyToBuilder(Environment.Builder builder) {
+        builder.withRootCommand();
+    }
+
+    @Override
     protected void whenReady(Environment environment) {
         super.whenReady(environment);
         AnvilCore.environment = environment;

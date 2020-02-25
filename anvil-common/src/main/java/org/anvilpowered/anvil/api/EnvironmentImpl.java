@@ -35,6 +35,7 @@ class EnvironmentImpl implements Environment {
     private Injector injector;
     private final String name;
     private final Plugin<?> plugin;
+    private final boolean withRootCommand;
     private final Collection<Module> modules;
     private final Map<Key<?>, Consumer<?>> earlyServices;
 
@@ -42,18 +43,24 @@ class EnvironmentImpl implements Environment {
         Injector injector,
         String name,
         Plugin<?> plugin,
+        boolean withRootCommand,
         Collection<Module> modules,
         Map<Key<?>, Consumer<?>> earlyServices
     ) {
         this.injector = injector;
         this.name = name;
         this.plugin = plugin;
+        this.withRootCommand = withRootCommand;
         this.modules = modules;
         this.earlyServices = earlyServices;
     }
 
     void setInjector(Injector injector) {
         this.injector = injector;
+    }
+
+    boolean withRootCommand() {
+        return withRootCommand;
     }
 
     void addModule(Module module) {

@@ -27,6 +27,7 @@ import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.Plugin;
+import org.anvilpowered.anvil.api.plugin.PluginInfo;
 
 import java.util.Collections;
 import java.util.Set;
@@ -126,9 +127,13 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
     }
 
     protected void whenReady(Environment environment) {
+        PluginInfo<?> pluginInfo = environment.getPluginInfo();
         environment.getStringResult().builder()
-            .append(environment.getPluginInfo().getPrefix())
-            .aqua().append("Loaded!")
+            .append(pluginInfo.getPrefix())
+            .green().append(pluginInfo.getVersion())
+            .aqua().append(" by ")
+            .appendJoining(", ", pluginInfo.getAuthors())
+            .append(" - Loaded!")
             .sendToConsole();
     }
 
