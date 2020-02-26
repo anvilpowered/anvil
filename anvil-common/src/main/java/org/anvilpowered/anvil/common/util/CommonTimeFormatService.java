@@ -38,15 +38,16 @@ public class CommonTimeFormatService implements TimeFormatService {
     private static final long SECONDS_IN_HOUR = 3600;
     private static final long SECONDS_IN_MINUTE = 60;
 
-    private static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("uuuu-MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC);
+    private static DateTimeFormatter dateTimeFormat
+        = DateTimeFormatter.ofPattern("uuuu-MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC);
 
     private static Pattern timePattern = Pattern.compile(
-        "\\s*(([1-9][0-9]*)\\s*[yY])?" +
-            "\\s*(((1[0-2])|([1-9]))\\s*M)?" +
-            "\\s*(((3[01])|([12][0-9])|[1-9])\\s*[dD])?" +
-            "\\s*(((2[0-4])|(1[0-9])|[1-9])\\s*[hH])?" +
-            "\\s*((([1-5][0-9])|[1-9])\\s*m)?" +
-            "\\s*((([1-5][0-9])|[1-9])\\s*[sS])?\\s*"
+        "\\s*((?<years>-?[0-9]*)\\s*[yY])?" +
+            "\\s*((?<months>-?[0-9]*)\\s*M)?" +
+            "\\s*((?<days>-?[0-9]*)\\s*[dD])?" +
+            "\\s*((?<hours>-?[0-9]*)\\s*[hH])?" +
+            "\\s*((?<minutes>-?[0-9]*)\\s*m)?" +
+            "\\s*((?<seconds>-?[0-9]*)\\s*[sS])?\\s*"
     );
 
     @Override
@@ -55,12 +56,18 @@ public class CommonTimeFormatService implements TimeFormatService {
         if (!matcher.matches()) {
             throw new IllegalStateException("Input does not match");
         }
-        return Optional.ofNullable(matcher.group(2)).map(g -> Long.parseLong(g) * SECONDS_IN_YEAR).orElse(0L)
-            + Optional.ofNullable(matcher.group(4)).map(g -> Long.parseLong(g) * SECONDS_IN_MONTH).orElse(0L)
-            + Optional.ofNullable(matcher.group(8)).map(g -> Long.parseLong(g) * SECONDS_IN_DAY).orElse(0L)
-            + Optional.ofNullable(matcher.group(12)).map(g -> Long.parseLong(g) * SECONDS_IN_HOUR).orElse(0L)
-            + Optional.ofNullable(matcher.group(16)).map(g -> Long.parseLong(g) * SECONDS_IN_MINUTE).orElse(0L)
-            + Optional.ofNullable(matcher.group(19)).map(Long::parseLong).orElse(0L);
+        return Optional.ofNullable(matcher.group("years"))
+            .map(g -> Long.parseLong(g) * SECONDS_IN_YEAR).orElse(0L)
+            + Optional.ofNullable(matcher.group("months"))
+            .map(g -> Long.parseLong(g) * SECONDS_IN_MONTH).orElse(0L)
+            + Optional.ofNullable(matcher.group("days"))
+            .map(g -> Long.parseLong(g) * SECONDS_IN_DAY).orElse(0L)
+            + Optional.ofNullable(matcher.group("hours"))
+            .map(g -> Long.parseLong(g) * SECONDS_IN_HOUR).orElse(0L)
+            + Optional.ofNullable(matcher.group("minutes"))
+            .map(g -> Long.parseLong(g) * SECONDS_IN_MINUTE).orElse(0L)
+            + Optional.ofNullable(matcher.group("seconds"))
+            .map(Long::parseLong).orElse(0L);
     }
 
     @Override
