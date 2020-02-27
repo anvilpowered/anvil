@@ -45,6 +45,11 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
     }
 
     @Override
+    public PaginationBuilder<TextComponent, CommandSource> paginationBuilder() {
+        return new VelocityPaginationBuilder();
+    }
+
+    @Override
     public void send(TextComponent textComponent, CommandSource commandSource) {
         commandSource.sendMessage(textComponent);
     }
@@ -189,7 +194,8 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         }
 
         @Override
-        public Builder<TextComponent, CommandSource> appendJoining(Object delimiter, Object... content) {
+        public Builder<TextComponent, CommandSource> appendJoining(
+            Object delimiter, Object... content) {
             final int indexOfLast = content.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
                 Object o = content[i];
@@ -216,11 +222,6 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         }
 
         @Override
-        public Builder<TextComponent, CommandSource> onHoverShowText(Builder<TextComponent, CommandSource> builder) {
-            return onHoverShowText(builder.build());
-        }
-
-        @Override
         public Builder<TextComponent, CommandSource> onClickSuggestCommand(String command) {
             clickEvent = ClickEvent.suggestCommand(command);
             return this;
@@ -233,7 +234,8 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         }
 
         @Override
-        public Builder<TextComponent, CommandSource> onClickExecuteCallback(Consumer<CommandSource> callback) {
+        public Builder<TextComponent, CommandSource> onClickExecuteCallback(
+            Consumer<CommandSource> callback) {
             throw new UnsupportedOperationException();
         }
 
@@ -278,7 +280,8 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
                     // create new builder starting at this point until the next color
                     currentBuilder = TextComponent.builder().color((TextColor) o);
                 } else {
-                    System.err.println("Skipping " + o + " because it does not match any of the correct types");
+                    System.err.println("Skipping " + o
+                        + " because it does not match any of the correct types");
                 }
             }
 
@@ -295,6 +298,61 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
                 currentBuilder.clickEvent(clickEvent);
             }
             return currentBuilder.build();
+        }
+    }
+
+    protected class VelocityPaginationBuilder extends CommonPaginationBuilder {
+
+        @Override
+        public PaginationBuilder<TextComponent, CommandSource> contents(
+            TextComponent... content) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, CommandSource> contents(
+            Iterable<TextComponent> content) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, CommandSource> title(
+            TextComponent title) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, CommandSource> header(
+            TextComponent header) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, CommandSource> footer(
+            TextComponent footer) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, CommandSource> padding(
+            TextComponent padding) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, CommandSource> linesPerPage(
+            int linesPerPge) {
+            return this;
+        }
+
+        @Override
+        public void sendTo(CommandSource commandSource) {
+
+        }
+
+        @Override
+        public void sendToConsole() {
+
         }
     }
 }

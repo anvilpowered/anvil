@@ -21,6 +21,8 @@ package org.anvilpowered.anvil.sponge.util;
 import org.anvilpowered.anvil.common.util.CommonStringResult;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.action.ClickAction;
@@ -40,6 +42,11 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
     @Override
     public Builder<Text, CommandSource> builder() {
         return new SpongeStringResultBuilder();
+    }
+
+    @Override
+    public PaginationBuilder<Text, CommandSource> paginationBuilder() {
+        return new SpongePaginationBuilder();
     }
 
     @Override
@@ -214,11 +221,6 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
         }
 
         @Override
-        public Builder<Text, CommandSource> onHoverShowText(Builder<Text, CommandSource> builder) {
-            return onHoverShowText(builder.build());
-        }
-
-        @Override
         public Builder<Text, CommandSource> onClickSuggestCommand(String command) {
             clickAction = TextActions.suggestCommand(command);
             return this;
@@ -262,6 +264,67 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
                 builder.onClick(clickAction);
             }
             return builder.build();
+        }
+    }
+
+    protected class SpongePaginationBuilder extends CommonPaginationBuilder {
+
+        private final PaginationList.Builder builder;
+
+        public SpongePaginationBuilder() {
+            builder = Sponge.getServiceManager().provideUnchecked(PaginationService.class).builder();
+        }
+
+        @Override
+        public PaginationBuilder<Text, CommandSource> contents(Text... content) {
+            builder.contents(content);
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<Text, CommandSource> contents(Iterable<Text> content) {
+            builder.contents(content);
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<Text, CommandSource> title(Text title) {
+            builder.title(title);
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<Text, CommandSource> header(Text header) {
+            builder.header(header);
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<Text, CommandSource> footer(Text footer) {
+            builder.footer(footer);
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<Text, CommandSource> padding(Text padding) {
+            builder.padding(padding);
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<Text, CommandSource> linesPerPage(int linesPerPge) {
+            builder.linesPerPage(linesPerPge);
+            return this;
+        }
+
+        @Override
+        public void sendTo(CommandSource commandSource) {
+            builder.build().sendTo(commandSource);
+        }
+
+        @Override
+        public void sendToConsole() {
+            sendTo(Sponge.getServer().getConsole());
         }
     }
 }

@@ -20,7 +20,8 @@ package org.anvilpowered.anvil.common.util;
 
 import org.anvilpowered.anvil.api.util.StringResult;
 
-public abstract class CommonStringResult<TString, TCommandSource> implements StringResult<TString, TCommandSource> {
+public abstract class CommonStringResult<TString, TCommandSource>
+    implements StringResult<TString, TCommandSource> {
 
     @Override
     public TString success(String s) {
@@ -42,7 +43,8 @@ public abstract class CommonStringResult<TString, TCommandSource> implements Str
         return builder().append(removeColor(text)).build();
     }
 
-    protected abstract class CommonStringResultBuilder implements Builder<TString, TCommandSource> {
+    protected abstract class CommonStringResultBuilder
+        implements Builder<TString, TCommandSource> {
 
         @Override
         public Builder<TString, TCommandSource> append(CharSequence... content) {
@@ -50,28 +52,39 @@ public abstract class CommonStringResult<TString, TCommandSource> implements Str
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendIf(boolean condition, Object... content) {
+        public Builder<TString, TCommandSource> appendIf(
+            boolean condition, Object... content) {
             return condition ? append(content) : this;
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendIf(boolean condition, CharSequence... content) {
+        public Builder<TString, TCommandSource> appendIf(
+            boolean condition, CharSequence... content) {
             return condition ? append(content) : this;
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendJoining(Object delimiter, CharSequence... content) {
+        public Builder<TString, TCommandSource> appendJoining(
+            Object delimiter, CharSequence... content) {
             return appendJoining(delimiter, (Object[]) content);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendJoiningIf(boolean condition, Object delimiter, Object... content) {
+        public Builder<TString, TCommandSource> appendJoiningIf(
+            boolean condition, Object delimiter, Object... content) {
             return condition ? appendJoining(delimiter, content) : this;
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendJoiningIf(boolean condition, Object delimiter, CharSequence... content) {
+        public Builder<TString, TCommandSource> appendJoiningIf(
+            boolean condition, Object delimiter, CharSequence... content) {
             return condition ? appendJoining(delimiter, content) : this;
+        }
+
+        @Override
+        public Builder<TString, TCommandSource> onHoverShowText(
+            Builder<TString, TCommandSource> builder) {
+            return onHoverShowText(builder.build());
         }
 
         @Override
@@ -82,6 +95,34 @@ public abstract class CommonStringResult<TString, TCommandSource> implements Str
         @Override
         public void sendToConsole() {
             CommonStringResult.this.sendToConsole(build());
+        }
+    }
+
+    protected abstract class CommonPaginationBuilder
+        implements PaginationBuilder<TString, TCommandSource> {
+
+        @Override
+        public PaginationBuilder<TString, TCommandSource> title(
+            Builder<TString, TCommandSource> title) {
+            return title(title.build());
+        }
+
+        @Override
+        public PaginationBuilder<TString, TCommandSource> header(
+            Builder<TString, TCommandSource> header) {
+            return header(header.build());
+        }
+
+        @Override
+        public PaginationBuilder<TString, TCommandSource> footer(
+            Builder<TString, TCommandSource> footer) {
+            return footer(footer.build());
+        }
+
+        @Override
+        public PaginationBuilder<TString, TCommandSource> padding(
+            Builder<TString, TCommandSource> padding) {
+            return padding(padding.build());
         }
     }
 }

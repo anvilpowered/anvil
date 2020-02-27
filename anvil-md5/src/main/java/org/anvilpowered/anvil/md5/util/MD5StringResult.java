@@ -31,11 +31,17 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
-public abstract class MD5StringResult<TCommandSource> extends CommonStringResult<TextComponent, TCommandSource> {
+public abstract class MD5StringResult<TCommandSource>
+    extends CommonStringResult<TextComponent, TCommandSource> {
 
     @Override
     public Builder<TextComponent, TCommandSource> builder() {
         return new MD5StringResultBuilder();
+    }
+
+    @Override
+    public PaginationBuilder<TextComponent, TCommandSource> paginationBuilder() {
+        return new MD5PaginationBuilder();
     }
 
     @Override
@@ -49,6 +55,7 @@ public abstract class MD5StringResult<TCommandSource> extends CommonStringResult
     }
 
     protected class MD5StringResultBuilder extends CommonStringResultBuilder {
+
         private final Deque<Object> elements;
         private HoverEvent hoverEvent;
         private ClickEvent clickEvent;
@@ -172,7 +179,8 @@ public abstract class MD5StringResult<TCommandSource> extends CommonStringResult
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> appendJoining(Object delimiter, Object... content) {
+        public Builder<TextComponent, TCommandSource> appendJoining(
+            Object delimiter, Object... content) {
             final int indexOfLast = content.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
                 Object o = content[i];
@@ -194,13 +202,9 @@ public abstract class MD5StringResult<TCommandSource> extends CommonStringResult
 
         @Override
         public Builder<TextComponent, TCommandSource> onHoverShowText(TextComponent content) {
-            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(content).create());
+            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(content).create());
             return this;
-        }
-
-        @Override
-        public Builder<TextComponent, TCommandSource> onHoverShowText(Builder<TextComponent, TCommandSource> builder) {
-            return onHoverShowText(builder.build());
         }
 
         @Override
@@ -216,7 +220,8 @@ public abstract class MD5StringResult<TCommandSource> extends CommonStringResult
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback) {
+        public Builder<TextComponent, TCommandSource> onClickExecuteCallback(
+            Consumer<TCommandSource> callback) {
             throw new UnsupportedOperationException();
         }
 
@@ -262,7 +267,8 @@ public abstract class MD5StringResult<TCommandSource> extends CommonStringResult
                     currentBuilder = new TextComponent();
                     currentBuilder.setColor((ChatColor) o);
                 } else {
-                    System.err.println("Skipping " + o + " because it does not match any of the correct types");
+                    System.err.println("Skipping " + o
+                        + " because it does not match any of the correct types");
                 }
             }
 
@@ -279,6 +285,61 @@ public abstract class MD5StringResult<TCommandSource> extends CommonStringResult
                 currentBuilder.setClickEvent(clickEvent);
             }
             return currentBuilder;
+        }
+    }
+
+    protected class MD5PaginationBuilder extends CommonPaginationBuilder {
+
+        @Override
+        public PaginationBuilder<TextComponent, TCommandSource> contents(
+            TextComponent... content) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, TCommandSource> contents(
+            Iterable<TextComponent> content) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, TCommandSource> title(
+            TextComponent title) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, TCommandSource> header(
+            TextComponent header) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, TCommandSource> footer(
+            TextComponent footer) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, TCommandSource> padding(
+            TextComponent padding) {
+            return this;
+        }
+
+        @Override
+        public PaginationBuilder<TextComponent, TCommandSource> linesPerPage(
+            int linesPerPge) {
+            return this;
+        }
+
+        @Override
+        public void sendTo(TCommandSource commandSource) {
+
+        }
+
+        @Override
+        public void sendToConsole() {
+
         }
     }
 }

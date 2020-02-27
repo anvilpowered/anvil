@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 
 public interface StringResult<TString, TCommandSource> extends Result<TString, String> {
     Builder<TString, TCommandSource> builder();
+    PaginationBuilder<TString, TCommandSource> paginationBuilder();
     void send(TString result, TCommandSource commandSource);
     void sendToConsole(TString result);
     TString deserialize(String text);
@@ -49,22 +50,63 @@ public interface StringResult<TString, TCommandSource> extends Result<TString, S
         Builder<TString, TCommandSource> white();
         Builder<TString, TCommandSource> yellow();
 
-        Builder<TString, TCommandSource> append(Object... content);
-        Builder<TString, TCommandSource> append(CharSequence... content);
-        Builder<TString, TCommandSource> appendIf(boolean condition, Object... content);
-        Builder<TString, TCommandSource> appendIf(boolean condition, CharSequence... content);
-        Builder<TString, TCommandSource> appendJoining(Object delimiter, Object... content);
-        Builder<TString, TCommandSource> appendJoining(Object delimiter, CharSequence... content);
-        Builder<TString, TCommandSource> appendJoiningIf(boolean condition, Object delimiter, Object... content);
-        Builder<TString, TCommandSource> appendJoiningIf(boolean condition, Object delimiter, CharSequence... content);
-        Builder<TString, TCommandSource> onHoverShowText(TString content);
-        Builder<TString, TCommandSource> onHoverShowText(Builder<TString, TCommandSource> builder);
-        Builder<TString, TCommandSource> onClickSuggestCommand(String command);
-        Builder<TString, TCommandSource> onClickRunCommand(String command);
-        Builder<TString, TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback);
-        Builder<TString, TCommandSource> onClickOpenUrl(URL url);
-        Builder<TString, TCommandSource> onClickOpenUrl(String url);
+        Builder<TString, TCommandSource> append(
+            Object... content);
+        Builder<TString, TCommandSource> append(
+            CharSequence... content);
+        Builder<TString, TCommandSource> appendIf(
+            boolean condition, Object... content);
+        Builder<TString, TCommandSource> appendIf(
+            boolean condition, CharSequence... content);
+        Builder<TString, TCommandSource> appendJoining(
+            Object delimiter, Object... content);
+        Builder<TString, TCommandSource> appendJoining(
+            Object delimiter, CharSequence... content);
+        Builder<TString, TCommandSource> appendJoiningIf(
+            boolean condition, Object delimiter, Object... content);
+        Builder<TString, TCommandSource> appendJoiningIf(
+            boolean condition, Object delimiter, CharSequence... content);
+        Builder<TString, TCommandSource> onHoverShowText(
+            TString content);
+        Builder<TString, TCommandSource> onHoverShowText(
+            Builder<TString, TCommandSource> builder);
+        Builder<TString, TCommandSource> onClickSuggestCommand(
+            String command);
+        Builder<TString, TCommandSource> onClickRunCommand(
+            String command);
+        Builder<TString, TCommandSource> onClickExecuteCallback(
+            Consumer<TCommandSource> callback);
+        Builder<TString, TCommandSource> onClickOpenUrl(
+            URL url);
+        Builder<TString, TCommandSource> onClickOpenUrl(
+            String url);
         TString build();
+        void sendTo(TCommandSource commandSource);
+        void sendToConsole();
+    }
+    interface PaginationBuilder<TString, TCommandSource> {
+        PaginationBuilder<TString, TCommandSource> contents(
+            TString... content);
+        PaginationBuilder<TString, TCommandSource> contents(
+            Iterable<TString> content);
+        PaginationBuilder<TString, TCommandSource> title(
+            TString title);
+        PaginationBuilder<TString, TCommandSource> title(
+            Builder<TString, TCommandSource> title);
+        PaginationBuilder<TString, TCommandSource> header(
+            TString header);
+        PaginationBuilder<TString, TCommandSource> header(
+            Builder<TString, TCommandSource> header);
+        PaginationBuilder<TString, TCommandSource> footer(
+            TString footer);
+        PaginationBuilder<TString, TCommandSource> footer(
+            Builder<TString, TCommandSource> footer);
+        PaginationBuilder<TString, TCommandSource> padding(
+            TString padding);
+        PaginationBuilder<TString, TCommandSource> padding(
+            Builder<TString, TCommandSource> padding);
+        PaginationBuilder<TString, TCommandSource> linesPerPage(
+            int linesPerPge);
         void sendTo(TCommandSource commandSource);
         void sendToConsole();
     }
