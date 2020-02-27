@@ -53,7 +53,7 @@ public interface CacheService<
     /**
      * @return A set containing all parties in the cache
      */
-    Set<T> getAll();
+    Set<T> getAllAsSet();
 
     /**
      * Deletes a {@link T} from the cache
@@ -82,5 +82,4 @@ public interface CacheService<
     List<T> getAll(Predicate<? super T> predicate);
 
     Optional<T> getOne(Predicate<? super T> predicate);
-
 }

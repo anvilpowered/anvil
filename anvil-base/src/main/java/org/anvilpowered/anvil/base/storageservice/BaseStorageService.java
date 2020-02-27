@@ -18,8 +18,10 @@
 
 package org.anvilpowered.anvil.base.storageservice;
 
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.storageservice.StorageService;
+import org.anvilpowered.anvil.api.util.TimeFormatService;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -43,12 +45,18 @@ public interface BaseStorageService<
     }
 
     @Override
-    default CompletableFuture<Optional<T>> parseAndGetOne(Object id) {
-        return parse(id).map(this::getOne).orElse(CompletableFuture.completedFuture(Optional.empty()));
+    default CompletableFuture<Optional<T>> parseAndGetOne(Object idOrTime) {
+        return parse(idOrTime).map(this::getOne).orElseGet(() ->
+            Anvil.getEnvironmentManager().getCoreEnvironment().getInjector()
+                .getInstance(TimeFormatService.class).parseInstant(idOrTime.toString())
+                .map(this::getOne).orElse(CompletableFuture.completedFuture(Optional.empty())));
     }
 
     @Override
-    default CompletableFuture<Boolean> parseAndDeleteOne(Object id) {
-        return parse(id).map(this::deleteOne).orElse(CompletableFuture.completedFuture(false));
+    default CompletableFuture<Boolean> parseAndDeleteOne(Object idOrTime) {
+        return parse(idOrTime).map(this::deleteOne).orElseGet(() ->
+            Anvil.getEnvironmentManager().getCoreEnvironment().getInjector()
+                .getInstance(TimeFormatService.class).parseInstant(idOrTime.toString())
+                .map(this::deleteOne).orElse(CompletableFuture.completedFuture(false)));
     }
 }

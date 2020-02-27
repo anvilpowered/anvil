@@ -24,9 +24,11 @@ import jetbrains.exodus.entitystore.EntityIterable;
 import jetbrains.exodus.entitystore.EntityIterator;
 import jetbrains.exodus.entitystore.EntityRemovedInDatabaseException;
 import jetbrains.exodus.entitystore.StoreTransaction;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.model.Mappable;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.repository.XodusRepository;
+import org.anvilpowered.anvil.api.util.TimeFormatService;
 import org.anvilpowered.anvil.base.component.BaseXodusComponent;
 
 import java.time.Instant;
@@ -75,7 +77,8 @@ public interface BaseXodusRepository<
     }
 
     @Override
-    default CompletableFuture<List<T>> getAll(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+    default CompletableFuture<List<T>> getAll(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn ->
                 StreamSupport.stream(query.apply(txn).spliterator(), false).map(e -> {
@@ -87,7 +90,13 @@ public interface BaseXodusRepository<
     }
 
     @Override
-    default CompletableFuture<Optional<T>> getOne(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+    default CompletableFuture<List<T>> getAll() {
+        return getAll(txn -> txn.getAll(getTClass().getSimpleName()));
+    }
+
+    @Override
+    default CompletableFuture<Optional<T>> getOne(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn -> {
                 Iterator<Entity> iterator = query.apply(txn).iterator();
@@ -109,6 +118,27 @@ public interface BaseXodusRepository<
                 Entity entity;
                 try {
                     entity = txn.getEntity(id);
+                } catch (EntityRemovedInDatabaseException ignored) {
+                    return Optional.empty();
+                }
+                T item = generateEmpty();
+                ((Mappable<Entity>) item).readFrom(entity);
+                return Optional.of(item);
+            })
+        );
+    }
+
+    @Override
+    default CompletableFuture<Optional<T>> getOne(Instant createdUtc) {
+        return CompletableFuture.supplyAsync(() ->
+            getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn -> {
+                Entity entity;
+                try {
+                    Iterator<Entity> it = asQuery(createdUtc).apply(txn).iterator();
+                    if (!it.hasNext()) {
+                        return Optional.empty();
+                    }
+                    entity = it.next();
                 } catch (EntityRemovedInDatabaseException ignored) {
                     return Optional.empty();
                 }
@@ -143,7 +173,8 @@ public interface BaseXodusRepository<
     }
 
     @Override
-    default CompletableFuture<Boolean> delete(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+    default CompletableFuture<Boolean> delete(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
                 query.apply(txn).forEach(Entity::delete);
@@ -155,15 +186,25 @@ public interface BaseXodusRepository<
     @Override
     default CompletableFuture<Boolean> deleteOne(EntityId id) {
         return CompletableFuture.supplyAsync(() ->
+            getDataStoreContext().getDataStore().computeInTransaction(txn ->
+                txn.getEntity(id).delete() && txn.commit())
+        );
+    }
+
+    @Override
+    default CompletableFuture<Boolean> deleteOne(Instant createdUtc) {
+        return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
-                txn.getEntity(id).delete();
-                return txn.commit();
+                Iterator<Entity> it = asQuery(createdUtc).apply(txn).iterator();
+                return it.hasNext() && it.next().delete() && txn.commit();
             })
         );
     }
 
     @Override
-    default CompletableFuture<Boolean> update(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Consumer<? super Entity> update) {
+    default CompletableFuture<Boolean> update(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query,
+        Consumer<? super Entity> update) {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
                 query.apply(txn).forEach(e -> {
@@ -178,7 +219,36 @@ public interface BaseXodusRepository<
     }
 
     @Override
-    default Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(EntityId id) {
+    default CompletableFuture<Boolean> update(
+        Optional<Function<? super StoreTransaction, ? extends Iterable<Entity>>> optionalQuery,
+        Consumer<? super Entity> update) {
+        return optionalQuery.map(q -> update(q, update))
+            .orElse(CompletableFuture.completedFuture(false));
+    }
+
+    @Override
+    default Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(
+        EntityId id) {
         return txn -> Collections.singletonList(txn.getEntity(id));
+    }
+
+    @Override
+    default Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(
+        Instant createdUtc) {
+        return txn -> txn.find(getTClass().getSimpleName(),
+            "createdUtcSeconds", createdUtc.getEpochSecond())
+            .union(txn.find(getTClass().getSimpleName(),
+                "createdUtcNanos", createdUtc.getNano()));
+    }
+
+    @Override
+    default Optional<Function<? super StoreTransaction, ? extends Iterable<Entity>>>
+    asQueryForIdOrTime(String idOrTime) {
+        return parse(idOrTime).<Optional<Function<? super StoreTransaction, ? extends Iterable<Entity>>>>
+            map(entityId -> Optional.of(asQuery(entityId)))
+            .orElseGet(() -> Anvil.getEnvironmentManager().getCoreEnvironment()
+                .getInjector().getInstance(TimeFormatService.class).parseInstant(idOrTime)
+                .map(Instant::getEpochSecond)
+                .map(s -> txn -> txn.find(getTClass().getSimpleName(), "createdUtcSeconds", s)));
     }
 }

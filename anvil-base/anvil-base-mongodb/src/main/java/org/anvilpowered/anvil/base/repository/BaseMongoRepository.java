@@ -19,8 +19,10 @@
 package org.anvilpowered.anvil.base.repository;
 
 import com.mongodb.WriteResult;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.repository.MongoRepository;
+import org.anvilpowered.anvil.api.util.TimeFormatService;
 import org.anvilpowered.anvil.base.component.BaseMongoComponent;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
@@ -38,14 +40,16 @@ public interface BaseMongoRepository<
 
     @Override
     default CompletableFuture<Optional<Instant>> getCreatedUtc(ObjectId id) {
-        return CompletableFuture.completedFuture(Optional.of(Instant.ofEpochSecond(id.getTimestamp())));
+        return CompletableFuture.completedFuture(
+            Optional.of(Instant.ofEpochSecond(id.getTimestamp())));
     }
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                item.setId((ObjectId) getDataStoreContext().getDataStore().save(item).getId());
+                item.setId((ObjectId) getDataStoreContext()
+                    .getDataStore().save(item).getId());
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return Optional.empty();
@@ -59,7 +63,8 @@ public interface BaseMongoRepository<
         return CompletableFuture.supplyAsync(() ->
             list.stream().filter(item -> {
                 try {
-                    item.setId((ObjectId) getDataStoreContext().getDataStore().save(item).getId());
+                    item.setId((ObjectId) getDataStoreContext()
+                        .getDataStore().save(item).getId());
                 } catch (RuntimeException e) {
                     e.printStackTrace();
                     return false;
@@ -71,7 +76,14 @@ public interface BaseMongoRepository<
 
     @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
-        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(asQuery(id).get()));
+        return CompletableFuture.supplyAsync(() ->
+            Optional.ofNullable(asQuery(id).get()));
+    }
+
+    @Override
+    default CompletableFuture<Optional<T>> getOne(Instant createdUtc) {
+        return CompletableFuture.supplyAsync(() ->
+            Optional.ofNullable(asQuery(createdUtc).get()));
     }
 
     @Override
@@ -97,7 +109,14 @@ public interface BaseMongoRepository<
 
     @Override
     default CompletableFuture<Boolean> deleteOne(ObjectId id) {
-        return delete(asQuery(id)).thenApplyAsync(wr -> wr.wasAcknowledged() && wr.getN() > 0);
+        return delete(asQuery(id))
+            .thenApplyAsync(wr -> wr.wasAcknowledged() && wr.getN() > 0);
+    }
+
+    @Override
+    default CompletableFuture<Boolean> deleteOne(Instant createdUtc) {
+        return delete(asQuery(createdUtc))
+            .thenApplyAsync(wr -> wr.wasAcknowledged() && wr.getN() > 0);
     }
 
     @Override
@@ -126,8 +145,23 @@ public interface BaseMongoRepository<
     }
 
     @Override
-    default CompletableFuture<Boolean> update(Query<T> query, UpdateOperations<T> updateOperations) {
-        return CompletableFuture.supplyAsync(() -> getDataStoreContext().getDataStore().update(query, updateOperations).getUpdatedCount() > 0);
+    default CompletableFuture<Boolean> update(Query<T> query,
+                                              UpdateOperations<T> updateOperations) {
+        return CompletableFuture.supplyAsync(() ->
+            getDataStoreContext().getDataStore()
+                .update(query, updateOperations).getUpdatedCount() > 0);
+    }
+
+    @Override
+    default CompletableFuture<Boolean> update(Optional<Query<T>> optionalQuery,
+                                              UpdateOperations<T> updateOperations) {
+        return optionalQuery.map(q -> update(q, updateOperations))
+            .orElse(CompletableFuture.completedFuture(false));
+    }
+
+    @Override
+    default CompletableFuture<List<T>> getAll() {
+        return CompletableFuture.supplyAsync(() -> asQuery().asList());
     }
 
     @Override
@@ -138,5 +172,21 @@ public interface BaseMongoRepository<
     @Override
     default Query<T> asQuery(ObjectId id) {
         return asQuery().field("_id").equal(id);
+    }
+
+    @Override
+    default Query<T> asQuery(Instant createdUtc) {
+        String time = Integer.toHexString((int) createdUtc.getEpochSecond());
+        return asQuery()
+            .field("_id").greaterThan(new ObjectId(time + "0000000000000000"))
+            .field("_id").lessThan(new ObjectId(time + "ffffffffffffffff"));
+    }
+
+    @Override
+    default Optional<Query<T>> asQueryForIdOrTime(String idOrTime) {
+        return parse(idOrTime).map(id -> Optional.of(asQuery(id)))
+            .orElseGet(() -> Anvil.getEnvironmentManager().getCoreEnvironment()
+                .getInjector().getInstance(TimeFormatService.class).parseInstant(idOrTime)
+                .map(this::asQuery));
     }
 }

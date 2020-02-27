@@ -69,7 +69,7 @@ public abstract class BaseCacheService<
     public Runnable getCacheInvalidationTask() {
         return () -> {
             List<T> toRemove = new ArrayList<>();
-            for (T t : getAll()) {
+            for (T t : getAllAsSet()) {
                 if (System.currentTimeMillis() - cache.get(t) > timeoutSeconds * 1000L) {
                     toRemove.add(t);
                 }
@@ -79,7 +79,7 @@ public abstract class BaseCacheService<
     }
 
     @Override
-    public Set<T> getAll() {
+    public Set<T> getAllAsSet() {
         return cache.keySet();
     }
 
@@ -129,7 +129,7 @@ public abstract class BaseCacheService<
 
     @Override
     public List<T> getAll(Predicate<? super T> predicate) {
-        return getAll().stream().filter(predicate).collect(Collectors.toList());
+        return getAllAsSet().stream().filter(predicate).collect(Collectors.toList());
     }
 
     @Override

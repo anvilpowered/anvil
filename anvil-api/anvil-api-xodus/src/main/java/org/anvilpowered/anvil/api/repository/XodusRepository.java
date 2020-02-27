@@ -24,6 +24,7 @@ import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -34,13 +35,29 @@ public interface XodusRepository<
     T extends ObjectWithId<EntityId>>
     extends Repository<EntityId, T, PersistentEntityStore> {
 
-    CompletableFuture<List<T>> getAll(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+    CompletableFuture<List<T>> getAll(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 
-    CompletableFuture<Optional<T>> getOne(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+    CompletableFuture<Optional<T>> getOne(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 
-    CompletableFuture<Boolean> delete(Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
+    CompletableFuture<Boolean> delete(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 
-    CompletableFuture<Boolean> update(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Consumer<? super Entity> update);
+    CompletableFuture<Boolean> update(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query,
+        Consumer<? super Entity> update);
 
-    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(EntityId id);
+    CompletableFuture<Boolean> update(
+        Optional<Function<? super StoreTransaction, ? extends Iterable<Entity>>> optionalQuery,
+        Consumer<? super Entity> update);
+
+    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(
+        EntityId id);
+
+    Function<? super StoreTransaction, ? extends Iterable<Entity>> asQuery(
+        Instant createdUtc);
+
+    Optional<Function<? super StoreTransaction, ? extends Iterable<Entity>>> asQueryForIdOrTime(
+        String idOrTime);
 }

@@ -25,6 +25,8 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
+import java.time.Instant;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public interface MongoRepository<
@@ -45,7 +47,14 @@ public interface MongoRepository<
 
     CompletableFuture<Boolean> update(Query<T> query, UpdateOperations<T> updateOperations);
 
+    CompletableFuture<Boolean> update(Optional<Query<T>> optionalQuery,
+                                      UpdateOperations<T> updateOperations);
+
     Query<T> asQuery();
 
     Query<T> asQuery(ObjectId id);
+
+    Query<T> asQuery(Instant createdUtc);
+
+    Optional<Query<T>> asQueryForIdOrTime(String idOrTime);
 }
