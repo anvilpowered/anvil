@@ -27,21 +27,21 @@ import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
-import org.anvilpowered.anvil.common.util.CommonStringResult;
+import org.anvilpowered.anvil.common.util.CommonTextService;
 
 import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
-public class VelocityStringResult extends CommonStringResult<TextComponent, CommandSource> {
+public class VelocityTextService extends CommonTextService<TextComponent, CommandSource> {
 
     @Inject
     protected ProxyServer proxyServer;
 
     @Override
     public Builder<TextComponent, CommandSource> builder() {
-        return new VelocityStringResultBuilder();
+        return new VelocityTextBuilder();
     }
 
     @Override
@@ -69,13 +69,13 @@ public class VelocityStringResult extends CommonStringResult<TextComponent, Comm
         return LegacyComponentSerializer.legacy().serialize(text, '&');
     }
 
-    protected class VelocityStringResultBuilder extends CommonStringResultBuilder {
+    protected class VelocityTextBuilder extends CommonTextBuilder {
 
         private final Deque<Object> elements;
         private HoverEvent hoverEvent;
         private ClickEvent clickEvent;
 
-        protected VelocityStringResultBuilder() {
+        protected VelocityTextBuilder() {
             elements = new LinkedList<>();
         }
 

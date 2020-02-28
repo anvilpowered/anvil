@@ -26,13 +26,13 @@ import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.velocity.util.VelocityCurrentServerService;
 import org.anvilpowered.anvil.velocity.util.VelocityKickService;
 import org.anvilpowered.anvil.velocity.util.VelocityPermissionService;
-import org.anvilpowered.anvil.velocity.util.VelocityStringResult;
+import org.anvilpowered.anvil.velocity.util.VelocityTextService;
 import org.anvilpowered.anvil.velocity.util.VelocityUserService;
 
 public class ApiVelocityModule extends ApiCommonModule {
@@ -44,8 +44,8 @@ public class ApiVelocityModule extends ApiCommonModule {
         bind(KickService.class).to(VelocityKickService.class);
         bind(new TypeLiteral<PermissionService<PermissionSubject>>() {
         }).to(VelocityPermissionService.class);
-        bind(new TypeLiteral<StringResult<TextComponent, CommandSource>>() {
-        }).to(VelocityStringResult.class);
+        bind(new TypeLiteral<TextService<TextComponent, CommandSource>>() {
+        }).to(VelocityTextService.class);
         bind(new TypeLiteral<UserService<Player, Player>>() {
         }).to(VelocityUserService.class);
     }

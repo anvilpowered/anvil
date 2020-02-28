@@ -19,11 +19,11 @@
 package org.anvilpowered.anvil.spigot.util;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.md5.util.MD5StringResult;
+import org.anvilpowered.anvil.md5.util.MD5TextService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-public class SpigotStringResult extends MD5StringResult<CommandSender> {
+public class SpigotTextService extends MD5TextService<CommandSender> {
 
     @Override
     public void send(TextComponent result, CommandSender commandSender) {

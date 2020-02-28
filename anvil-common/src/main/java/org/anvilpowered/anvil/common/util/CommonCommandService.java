@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.CommandService;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 
 public abstract class CommonCommandService<
     TCommand,
@@ -35,38 +35,38 @@ public abstract class CommonCommandService<
     protected PluginInfo<TString> pluginInfo;
 
     @Inject
-    protected StringResult<TString, TCommandSource> stringResult;
+    protected TextService<TString, TCommandSource> textService;
 
     protected void sendRoot(TCommandSource source, String helpCommandName, boolean extended) {
-        stringResult.builder()
+        textService.builder()
             .append().append(pluginInfo.getPrefix())
             .aqua().append("Running version ")
             .green().append(pluginInfo.getVersion())
             .aqua().append(" by ")
             .appendJoining(", ", pluginInfo.getAuthors())
             .append("\n")
-            .appendIf(extended, stringResult.builder()
+            .appendIf(extended, textService.builder()
                 .green().append("Use ")
                 .gold().append(helpCommandName)
                 .green().append(" for help")
             )
-            .appendIf(!extended, stringResult.builder()
+            .appendIf(!extended, textService.builder()
                 .red().append("You do not have permission for any sub-commands")
             )
             .sendTo(source);
     }
 
     protected void sendVersion(TCommandSource source, String helpCommandName, boolean extended) {
-        stringResult.builder()
+        textService.builder()
             .append().append(pluginInfo.getPrefix())
             .aqua().append("Running version ", pluginInfo.getVersion(), " by ",
             String.join(", ", pluginInfo.getAuthors()))
-            .appendIf(extended, stringResult.builder()
+            .appendIf(extended, textService.builder()
                 .green().append("Use ")
                 .gold().append(helpCommandName)
                 .green().append(" for help")
             )
-            .appendIf(!extended, stringResult.builder()
+            .appendIf(!extended, textService.builder()
                 .red().append("You do not have permission for any sub-commands")
             )
             .append("Build date")

@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.common.plugin;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 
 public class AnvilCorePluginInfo<TString, TCommandSource> implements PluginInfo<TString> {
     public static final String id = "anvil";
@@ -34,8 +34,8 @@ public class AnvilCorePluginInfo<TString, TCommandSource> implements PluginInfo<
     public TString pluginPrefix;
 
     @Inject
-    public void setPluginPrefix(StringResult<TString, TCommandSource> stringResult) {
-        pluginPrefix = stringResult.builder().blue().append("[").aqua().append(name).blue().append("] ").build();
+    public void setPluginPrefix(TextService<TString, TCommandSource> textService) {
+        pluginPrefix = textService.builder().blue().append("[").aqua().append(name).blue().append("] ").build();
     }
 
     @Override

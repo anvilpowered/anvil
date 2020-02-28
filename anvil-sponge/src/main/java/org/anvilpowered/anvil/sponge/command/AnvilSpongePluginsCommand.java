@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.sponge.command;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -34,7 +34,7 @@ public class AnvilSpongePluginsCommand implements CommandExecutor {
     private PluginInfo<Text> pluginInfo;
 
     @Inject
-    private StringResult<Text, CommandSource> stringResult;
+    private TextService<Text, CommandSource> textService;
 
     @Override
     public CommandResult execute(CommandSource source, CommandContext context) {
@@ -43,7 +43,7 @@ public class AnvilSpongePluginsCommand implements CommandExecutor {
             .stream()
             .map(e -> e.getPluginInfo().getName())
             .sorted().toArray(String[]::new);
-        stringResult.builder()
+        textService.builder()
             .append(pluginInfo.getPrefix())
             .green().append("Plugins (", names.length, "): ")
             .appendJoining(", ", names)

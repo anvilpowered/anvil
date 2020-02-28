@@ -128,7 +128,7 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
 
     protected void whenReady(Environment environment) {
         PluginInfo<?> pluginInfo = environment.getPluginInfo();
-        environment.getStringResult().builder()
+        environment.getTextService().builder()
             .append(pluginInfo.getPrefix())
             .green().append(pluginInfo.getVersion())
             .aqua().append(" by ")

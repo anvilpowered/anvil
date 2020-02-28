@@ -21,7 +21,8 @@ package org.anvilpowered.anvil.api.util;
 import java.net.URL;
 import java.util.function.Consumer;
 
-public interface StringResult<TString, TCommandSource> extends Result<TString, String> {
+public interface TextService<TString, TCommandSource>
+    extends Result<TString, String> {
     Builder<TString, TCommandSource> builder();
     PaginationBuilder<TString, TCommandSource> paginationBuilder();
     void send(TString result, TCommandSource commandSource);

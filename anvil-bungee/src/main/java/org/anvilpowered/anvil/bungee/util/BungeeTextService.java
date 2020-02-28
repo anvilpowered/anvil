@@ -21,9 +21,9 @@ package org.anvilpowered.anvil.bungee.util;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.md5.util.MD5StringResult;
+import org.anvilpowered.anvil.md5.util.MD5TextService;
 
-public class BungeeStringResult extends MD5StringResult<CommandSender> {
+public class BungeeTextService extends MD5TextService<CommandSender> {
 
     @Override
     public void send(TextComponent result, CommandSender commandSender) {

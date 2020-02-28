@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.common.plugin;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
 import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
 
@@ -35,15 +35,15 @@ public class AnvilCorePluginMessges<TString, TCommandSource> implements PluginMe
     protected PluginInfo<TString> pluginInfo;
 
     @Inject
-    protected StringResult<TString, TCommandSource> stringResult;
+    protected TextService<TString, TCommandSource> textService;
 
     @Inject
     protected TimeFormatService timeFormatService;
 
     @Override
     public TString getBanMessage(String reason, Instant endUtc) {
-        return stringResult.builder()
-            .red().append("You have been banned for: ", stringResult.deserialize(reason))
+        return textService.builder()
+            .red().append("You have been banned for: ", textService.deserialize(reason))
             .yellow().append("\n\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
             .append("\n\nUntil ", timeFormatService.format(endUtc))
             .build();
@@ -51,9 +51,9 @@ public class AnvilCorePluginMessges<TString, TCommandSource> implements PluginMe
 
     @Override
     public TString getMuteMessage(String reason, Instant endUtc) {
-        return stringResult.builder()
+        return textService.builder()
             .append(pluginInfo.getPrefix())
-            .red().append("You have been muted for: ", stringResult.deserialize(reason))
+            .red().append("You have been muted for: ", textService.deserialize(reason))
             .yellow().append("\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
             .build();
     }

@@ -26,7 +26,7 @@ import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
 import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.repository.Repository;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 
 /**
  * <p>
@@ -58,7 +58,7 @@ import org.anvilpowered.anvil.api.util.StringResult;
  * </ul>
  * <p>
  * {@code TString} is the base return type for the methods in a {@link Manager}.
- * To build these results use {@link StringResult.Builder}.
+ * To build these results use {@link TextService.Builder}.
  * </p>
  * <p>
  * All methods (with some exceptions) in {@link Manager} should return a form of {@code TString}
@@ -82,7 +82,7 @@ import org.anvilpowered.anvil.api.util.StringResult;
  *            Must be implemented by all components in this module
  * @see Repository
  * @see Component
- * @see StringResult
+ * @see TextService
  */
 public interface Manager<C extends Component<?, ?>> {
 

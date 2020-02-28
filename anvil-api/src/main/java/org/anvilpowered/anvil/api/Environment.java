@@ -30,7 +30,7 @@ import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.Named;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -92,7 +92,7 @@ public interface Environment extends Named, Comparable<Environment> {
 
     <TString> PluginInfo<TString> getPluginInfo();
 
-    <TString, TCommandSource> StringResult<TString, TCommandSource> getStringResult();
+    <TString, TCommandSource> TextService<TString, TCommandSource> getTextService();
 
     Registry getRegistry();
 

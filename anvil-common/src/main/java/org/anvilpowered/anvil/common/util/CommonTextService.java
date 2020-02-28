@@ -18,10 +18,10 @@
 
 package org.anvilpowered.anvil.common.util;
 
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 
-public abstract class CommonStringResult<TString, TCommandSource>
-    implements StringResult<TString, TCommandSource> {
+public abstract class CommonTextService<TString, TCommandSource>
+    implements TextService<TString, TCommandSource> {
 
     @Override
     public TString success(String s) {
@@ -43,7 +43,7 @@ public abstract class CommonStringResult<TString, TCommandSource>
         return builder().append(removeColor(text)).build();
     }
 
-    protected abstract class CommonStringResultBuilder
+    protected abstract class CommonTextBuilder
         implements Builder<TString, TCommandSource> {
 
         @Override
@@ -94,7 +94,7 @@ public abstract class CommonStringResult<TString, TCommandSource>
 
         @Override
         public void sendToConsole() {
-            CommonStringResult.this.sendToConsole(build());
+            CommonTextService.this.sendToConsole(build());
         }
     }
 

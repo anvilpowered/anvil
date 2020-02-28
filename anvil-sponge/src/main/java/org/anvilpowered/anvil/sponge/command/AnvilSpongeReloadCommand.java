@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -46,7 +46,7 @@ public class AnvilSpongeReloadCommand implements CommandExecutor {
     private PluginInfo<Text> pluginInfo;
 
     @Inject
-    private StringResult<Text, CommandSource> stringResult;
+    private TextService<Text, CommandSource> textService;
 
     @Override
     public CommandResult execute(CommandSource source, CommandContext context) {
@@ -58,7 +58,7 @@ public class AnvilSpongeReloadCommand implements CommandExecutor {
                 .map(reloadEnvironment)
                 .collect(Collectors.joining(", "));
         } else if (!optionalPlugin.isPresent()) {
-            stringResult.builder()
+            textService.builder()
                 .append(pluginInfo.getPrefix())
                 .red().append("Plugin is required if '--all' is not set")
                 .sendTo(source);
@@ -71,7 +71,7 @@ public class AnvilSpongeReloadCommand implements CommandExecutor {
                     .map(reloadEnvironment)
                     .collect(Collectors.joining(", "));
                 if (reloadedResult.length() == 0) {
-                    stringResult.builder()
+                    textService.builder()
                         .append(pluginInfo.getPrefix())
                         .red().append("Regex ")
                         .gold().append(regex)
@@ -80,7 +80,7 @@ public class AnvilSpongeReloadCommand implements CommandExecutor {
                     return CommandResult.empty();
                 }
             } catch (PatternSyntaxException e) {
-                stringResult.builder()
+                textService.builder()
                     .append(pluginInfo.getPrefix())
                     .red().append("Failed to parse ")
                     .gold().append(regex)
@@ -93,7 +93,7 @@ public class AnvilSpongeReloadCommand implements CommandExecutor {
                 .getEnvironment(optionalPlugin.get())
                 .map(reloadEnvironment);
             if (!optionalReloaded.isPresent()) {
-                stringResult.builder()
+                textService.builder()
                     .append(pluginInfo.getPrefix())
                     .red().append("Could not find plugin ")
                     .gold().append(plugin)
@@ -102,7 +102,7 @@ public class AnvilSpongeReloadCommand implements CommandExecutor {
             }
             reloadedResult = optionalReloaded.get();
         }
-        stringResult.builder()
+        textService.builder()
             .append(pluginInfo.getPrefix())
             .green().append("Successfully reloaded ")
             .gold().append(reloadedResult)

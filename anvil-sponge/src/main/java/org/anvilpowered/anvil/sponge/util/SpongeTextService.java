@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.sponge.util;
 
-import org.anvilpowered.anvil.common.util.CommonStringResult;
+import org.anvilpowered.anvil.common.util.CommonTextService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.service.pagination.PaginationList;
@@ -37,11 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpongeStringResult extends CommonStringResult<Text, CommandSource> {
+public class SpongeTextService extends CommonTextService<Text, CommandSource> {
 
     @Override
     public Builder<Text, CommandSource> builder() {
-        return new SpongeStringResultBuilder();
+        return new SpongeTextBuilder();
     }
 
     @Override
@@ -69,13 +69,13 @@ public class SpongeStringResult extends CommonStringResult<Text, CommandSource> 
         return TextSerializers.FORMATTING_CODE.serialize(text);
     }
 
-    protected class SpongeStringResultBuilder extends CommonStringResultBuilder {
+    protected class SpongeTextBuilder extends CommonTextBuilder {
 
         private final List<TextElement> elements;
         private HoverAction<?> hoverAction;
         private ClickAction<?> clickAction;
 
-        protected SpongeStringResultBuilder() {
+        protected SpongeTextBuilder() {
             elements = new ArrayList<>();
         }
 

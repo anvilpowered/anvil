@@ -24,19 +24,19 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.common.util.CommonStringResult;
+import org.anvilpowered.anvil.common.util.CommonTextService;
 
 import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
-public abstract class MD5StringResult<TCommandSource>
-    extends CommonStringResult<TextComponent, TCommandSource> {
+public abstract class MD5TextService<TCommandSource>
+    extends CommonTextService<TextComponent, TCommandSource> {
 
     @Override
     public Builder<TextComponent, TCommandSource> builder() {
-        return new MD5StringResultBuilder();
+        return new MD5TextBuilder();
     }
 
     @Override
@@ -54,13 +54,13 @@ public abstract class MD5StringResult<TCommandSource>
         return text.toLegacyText();
     }
 
-    protected class MD5StringResultBuilder extends CommonStringResultBuilder {
+    protected class MD5TextBuilder extends CommonTextBuilder {
 
         private final Deque<Object> elements;
         private HoverEvent hoverEvent;
         private ClickEvent clickEvent;
 
-        protected MD5StringResultBuilder() {
+        protected MD5TextBuilder() {
             this.elements = new LinkedList<>();
         }
 

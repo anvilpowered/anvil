@@ -24,7 +24,7 @@ import com.google.inject.Module;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.StringResult;
+import org.anvilpowered.anvil.api.util.TextService;
 
 import java.util.Collection;
 import java.util.Map;
@@ -102,8 +102,8 @@ class EnvironmentImpl implements Environment {
     }
 
     @Override
-    public <TString, TCommandSource> StringResult<TString, TCommandSource> getStringResult() {
-        return getInstance(StringResult.class.getCanonicalName());
+    public <TString, TCommandSource> TextService<TString, TCommandSource> getTextService() {
+        return getInstance(TextService.class.getCanonicalName());
     }
 
     @Override
