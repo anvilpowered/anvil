@@ -26,6 +26,7 @@ import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.CurrentWorldService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
+import org.anvilpowered.anvil.api.util.TaskService;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
@@ -35,6 +36,7 @@ import org.anvilpowered.anvil.sponge.util.SpongeCurrentServerService;
 import org.anvilpowered.anvil.sponge.util.SpongeCurrentWorldService;
 import org.anvilpowered.anvil.sponge.util.SpongeKickService;
 import org.anvilpowered.anvil.sponge.util.SpongePermissionService;
+import org.anvilpowered.anvil.sponge.util.SpongeTaskService;
 import org.anvilpowered.anvil.sponge.util.SpongeTeleportationService;
 import org.anvilpowered.anvil.sponge.util.SpongeTextService;
 import org.anvilpowered.anvil.sponge.util.SpongeUserService;
@@ -58,9 +60,10 @@ public class ApiSpongeModule extends ApiCommonModule {
         bind(new TypeLiteral<PermissionService<Subject>>() {
         }).to(SpongePermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(false, "sponge"));
+        bind(TaskService.class).to(SpongeTaskService.class);
+        bind(TeleportationService.class).to(SpongeTeleportationService.class);
         bind(new TypeLiteral<TextService<Text, CommandSource>>() {
         }).to(SpongeTextService.class);
-        bind(TeleportationService.class).to(SpongeTeleportationService.class);
         bind(new TypeLiteral<UserService<User, Player>>() {
         }).to(SpongeUserService.class);
     }
