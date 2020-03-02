@@ -44,7 +44,7 @@ public interface CachedRepository<
      * Usually used when (updated) data from DB needs to be applied to cache
      * </p>
      * <p>
-     * {@param toCache} will run if and only if:
+     * {@code toCache} will run if and only if:
      * </p>
      * <ul>
      *     <li>- Cache is present</li>
@@ -61,11 +61,11 @@ public interface CachedRepository<
      * Usually used when (updated) data from DB needs to be applied to cache
      * </p>
      * <p>
-     * {@param toCache} will run if and only if:
+     * {@code toCache} will run if and only if:
      * </p>
      * <ul>
      *     <li>- Cache is present</li>
-     *     <li>- {@link Optional} result from {@param fromDB} is present</li>
+     *     <li>- {@link Optional} result from {@code fromDB} is present</li>
      * </ul>
      *
      * @param fromDB  {@link Supplier} retrieving data from DB
@@ -79,7 +79,7 @@ public interface CachedRepository<
      * Usually used for editing model data
      * </p>
      * <p>
-     * {@param cacheTransformer} will run if and only if:
+     * {@code cacheTransformer} will run if and only if:
      * </p>
      * <ul>
      *     <li>- Cache is present</li>
@@ -96,15 +96,15 @@ public interface CachedRepository<
      * Usually used for editing model data
      * </p>
      * <p>
-     * {@param cacheTransformer} will run if and only if:
+     * {@code cacheTransformer} will run if and only if:
      * </p>
      * <ul>
      *     <li>- Cache is present</li>
-     *     <li>- {@link Optional} result from {@param fromDB} is present</li>
+     *     <li>- {@link Optional} result from {@code fromDB} is present</li>
      * </ul>
      *
      * @param fromDB           {@link Supplier} retrieving data from DB
-     * @param cacheTransformer {@link BiFunction} applying DB data to cache. Will only be run if {@link Optional<K>} is present
+     * @param cacheTransformer {@link BiFunction} applying DB data to cache. Will only be run if {@link Optional} is present
      * @return Result from cache if result and cache are present, otherwise from DB
      */
     <K> CompletableFuture<Optional<K>> applyFromDBThroughCacheConditionally(Supplier<Optional<K>> fromDB, BiFunction<C, K, Optional<K>> cacheTransformer);
@@ -114,7 +114,7 @@ public interface CachedRepository<
      * Usually used for editing model data
      * </p>
      * <p>
-     * {@param cacheTransformer} will run if and only if:
+     * {@code cacheTransformer} will run if and only if:
      * </p>
      * <ul>
      *     <li>- Cache is present</li>
@@ -122,7 +122,7 @@ public interface CachedRepository<
      *
      * @param cacheTransformer {@link Function} applying transformation to data in cache and returning new data
      * @param dbTransformer    {@link Function} retrieving data from db.
-     *                         {@link Optional<K>} is the result of the cache function (will be empty if the cache or the result is not present)
+     *                         {@link Optional} is the result of the cache function (will be empty if the cache or the result is not present)
      * @return Result from DB
      */
     <K> CompletableFuture<K> applyThroughBoth(Function<C, K> cacheTransformer, Function<Optional<K>, K> dbTransformer);
@@ -132,16 +132,16 @@ public interface CachedRepository<
      * Usually used for retrieving or editing model data
      * </p>
      * <p>
-     * {@param cacheTransformer} will run if and only if:
+     * {@code cacheTransformer} will run if and only if:
      * </p>
      * <ul>
      *     <li>- Cache is present</li>
      * </ul>
      * <p>
-     * {@param dbTransformer} will run if and only if:
+     * {@code dbTransformer} will run if and only if:
      * </p>
      * <ul>
-     *     <li>- {@link Optional} result from {@param cacheTransformer} is present</li>
+     *     <li>- {@link Optional} result from {@code cacheTransformer} is present</li>
      * </ul>
      *
      * @param cacheTransformer {@link Function} applying transformation to data in cache and returning new data
@@ -155,18 +155,18 @@ public interface CachedRepository<
      * Usually used for retrieving or editing model data
      * </p>
      * <p>
-     * {@param cacheTransformer} will run if and only if:
+     * {@code cacheTransformer} will run if and only if:
      * </p>
      * <ul>
      *     <li>- Cache is present</li>
      * </ul>
-     * {@param dbTransformer} will run if and only if:
+     * {@code dbTransformer} will run if and only if:
      * <ul>
-     *     <li>- {@link Optional} result from {@param cacheTransformer} is <strong>not</strong> present</li>
+     *     <li>- {@link Optional} result from {@code cacheTransformer} is <strong>not</strong> present</li>
      * </ul>
      *
      * @param cacheTransformer {@link Function} applying transformation to data in cache and returning new data
-     * @param dbSupplier       {@link Supplier} retrieving data from db. Will only be run if {@link Optional<K>} is not present
+     * @param dbSupplier       {@link Supplier} retrieving data from db. Will only be run if {@link Optional} is not present
      * @return {@link K} result from cache if present, otherwise from db
      */
     <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer, Supplier<Optional<K>> dbSupplier);

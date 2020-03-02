@@ -82,7 +82,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     }
 
     /**
-     * @return First entityClass that contains {@param name}
+     * @return First entityClass that contains {@code name}
      */
     public final Optional<Class<?>> getEntityClass(final String name) {
         Class<?> clazz = null;
@@ -94,7 +94,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     }
 
     /**
-     * @return First entityClass that contains {@param name}
+     * @return First entityClass that contains (ignored case) the provided name
      */
     public final Class<?> getEntityClassUnsafe(final String name) {
         getDataStore(); // ensure that entityClasses is not null

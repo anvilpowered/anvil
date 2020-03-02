@@ -93,13 +93,13 @@ public interface StorageService<
      * <p>
      * Will first attempt to parse the provided {@link Object}
      * as an id. If parsing is successful, will return the
-     * result of {@link StorageService#getOne(TKey)}.
+     * result of {@link #getOne(Object)}.
      * </p>
      *
      * <p>
      * If parsing as an id is unsuccessful, will attempt to parse
      * the provided {@link Object} as createdUtc. If parsing is successful,
-     * will return the result of {@link StorageService#getOne(Instant)}
+     * will return the result of {@link #getOne(Instant)}
      * </p>
      *
      * <p>
@@ -147,13 +147,13 @@ public interface StorageService<
      * <p>
      * Will first attempt to parse the provided {@link Object}
      * as an id. If parsing is successful, will return the
-     * result of {@link StorageService#deleteOne(TKey)}.
+     * result of {@link #deleteOne(Object)}.
      * </p>
      *
      * <p>
      * If parsing as an id is unsuccessful, will attempt to parse
      * the provided {@link Object} as createdUtc. If parsing is successful,
-     * will return the result of {@link StorageService#deleteOne(Instant)}
+     * will return the result of {@link #deleteOne(Instant)}
      * </p>
      *
      * <p>

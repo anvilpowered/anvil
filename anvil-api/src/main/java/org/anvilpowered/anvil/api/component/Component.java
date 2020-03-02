@@ -46,7 +46,7 @@ public interface Component<
      * Tries to convert the given object to {@link TKey}
      *
      * @param object To try to parse
-     * @return The {@link TKey} representing this {@param object}
+     * @return The {@link TKey} representing this {@code object}
      * @throws UnsupportedOperationException If not implemented
      * @throws IllegalArgumentException      if object was unsuccessfully parsed
      */
@@ -58,7 +58,7 @@ public interface Component<
      * Tries to convert the given object to {@link TKey}
      *
      * @param object To try to parse
-     * @return {@link Optional} containing (if parsing successful) the {@link TKey} representing this {@param object}
+     * @return {@link Optional} containing (if parsing successful) the {@link TKey} representing this {@code object}
      */
     default Optional<TKey> parse(Object object) {
         return Optional.empty();
