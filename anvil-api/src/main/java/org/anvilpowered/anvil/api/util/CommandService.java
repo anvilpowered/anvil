@@ -46,4 +46,6 @@ public interface CommandService<TCommand, TCommandExecutor, TCommandSource> {
      * Generates a help command for the provided {@link CommandNode}.
      */
     TCommandExecutor generateHelpCommand(CommandNode<TCommand> node);
+
+    TCommandExecutor generateReloadCommand();
 }

@@ -117,6 +117,15 @@ public class SpongeCommandService extends CommonCommandService<CommandSpec, Comm
         }
     }
 
+    private class ReloadCommand implements CommandExecutor {
+
+        @Override
+        public CommandResult execute(CommandSource source, CommandContext context) {
+            sendReload(source);
+            return CommandResult.success();
+        }
+    }
+
     @Override
     public CommandExecutor generateRootCommand(String helpCommandName, Predicate<CommandSource> extended) {
         return new RootCommand(helpCommandName, extended);
@@ -130,5 +139,10 @@ public class SpongeCommandService extends CommonCommandService<CommandSpec, Comm
     @Override
     public CommandExecutor generateHelpCommand(CommandNode<CommandSpec> node) {
         return new HelpCommand(node);
+    }
+
+    @Override
+    public CommandExecutor generateReloadCommand() {
+        return new ReloadCommand();
     }
 }

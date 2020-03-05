@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.util;
 
 import com.google.inject.Inject;
+import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.CommandService;
@@ -32,6 +33,9 @@ public abstract class CommonCommandService<
     implements CommandService<TCommand, TCommandExecutor, TCommandSource> {
 
     @Inject
+    protected Environment environment;
+
+    @Inject
     protected PluginInfo<TString> pluginInfo;
 
     @Inject
@@ -39,7 +43,7 @@ public abstract class CommonCommandService<
 
     protected void sendRoot(TCommandSource source, String helpCommandName, boolean extended) {
         textService.builder()
-            .append().append(pluginInfo.getPrefix())
+            .append(pluginInfo.getPrefix())
             .aqua().append("Running version ")
             .green().append(pluginInfo.getVersion())
             .aqua().append(" by ")
@@ -58,9 +62,13 @@ public abstract class CommonCommandService<
 
     protected void sendVersion(TCommandSource source, String helpCommandName, boolean extended) {
         textService.builder()
-            .append().append(pluginInfo.getPrefix())
-            .aqua().append("Running version ", pluginInfo.getVersion(), " by ",
-            String.join(", ", pluginInfo.getAuthors()))
+            .append(pluginInfo.getPrefix())
+            .aqua().append("Running version ")
+            .green().append(pluginInfo.getVersion())
+            .aqua().append(" by ")
+            .appendJoining(", ", pluginInfo.getAuthors())
+            .gray().append("\nBuild date: ")
+            .aqua().append(pluginInfo.getBuildDate(), "\n")
             .appendIf(extended, textService.builder()
                 .green().append("Use ")
                 .gold().append(helpCommandName)
@@ -69,8 +77,15 @@ public abstract class CommonCommandService<
             .appendIf(!extended, textService.builder()
                 .red().append("You do not have permission for any sub-commands")
             )
-            .append("Build date")
             .sendTo(source);
+    }
+
+    protected void sendReload(TCommandSource source) {
+        environment.reload();
+        textService.builder()
+            .append(pluginInfo.getPrefix())
+            .green().append("Successfully reloaded!")
+        .sendTo(source);
     }
 
     protected String getFullPath(CommandNode<TCommand> node) {
