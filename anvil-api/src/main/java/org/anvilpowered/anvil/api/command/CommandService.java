@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.util;
+package org.anvilpowered.anvil.api.command;
 
 import org.anvilpowered.anvil.api.command.CommandNode;
 
@@ -41,6 +41,7 @@ public interface CommandService<TCommand, TCommandExecutor, TCommandSource> {
     default TCommandExecutor generateVersionCommand(String helpCommandName) {
         return generateVersionCommand(helpCommandName, e -> true);
     }
+
 
     /**
      * Generates a help command for the provided {@link CommandNode}.

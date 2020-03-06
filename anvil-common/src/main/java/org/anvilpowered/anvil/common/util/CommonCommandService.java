@@ -21,9 +21,12 @@ package org.anvilpowered.anvil.common.util;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.command.CommandNode;
+import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.CommandService;
 import org.anvilpowered.anvil.api.util.TextService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CommonCommandService<
     TCommand,
@@ -85,7 +88,7 @@ public abstract class CommonCommandService<
         textService.builder()
             .append(pluginInfo.getPrefix())
             .green().append("Successfully reloaded!")
-        .sendTo(source);
+            .sendTo(source);
     }
 
     protected String getFullPath(CommandNode<TCommand> node) {
@@ -96,5 +99,29 @@ public abstract class CommonCommandService<
         }
         s.append(node.getName()).append(" ");
         return s.toString();
+    }
+
+    protected void sendHelp(TCommandSource commandSource, CommandNode<TCommand> node) {
+        List<TString> helpList = new ArrayList<>();
+        String fullPath = getFullPath(node);
+
+        node.getCommands().forEach((aliases, command) -> {
+
+            if (!node.getDescription().containsKey(aliases)
+                || !node.getPermissionsCheck().get(aliases).test(commandSource)) return;
+
+            String subCommand = aliases.toString().replace("[", "").replace("]", "");
+            helpList.add(textService.builder()
+                .gold().append(fullPath, subCommand)
+                .gold().append(" - " + node.getDescription().get(aliases) + "\n")
+                .gray().append("Usage: ", fullPath, " ", node.getUsage().get(aliases).apply(commandSource))
+                .build());
+        });
+        textService.paginationBuilder()
+            .title(textService.builder().gold().append(pluginInfo.getName(), " - ", pluginInfo.getOrganizationName()).build())
+            .padding(textService.builder().dark_green().append("-").build())
+            .contents(helpList)
+            .build()
+            .sendTo(commandSource);
     }
 }

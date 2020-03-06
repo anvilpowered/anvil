@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.sponge.module;
 
 import com.google.inject.TypeLiteral;
-import org.anvilpowered.anvil.api.util.CommandService;
+import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.CurrentWorldService;
 import org.anvilpowered.anvil.api.util.KickService;
@@ -28,7 +28,7 @@ import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
-import org.anvilpowered.anvil.sponge.util.SpongeCommandService;
+import org.anvilpowered.anvil.sponge.command.SpongeCommandService;
 import org.anvilpowered.anvil.sponge.util.SpongeCurrentServerService;
 import org.anvilpowered.anvil.sponge.util.SpongeCurrentWorldService;
 import org.anvilpowered.anvil.sponge.util.SpongeKickService;

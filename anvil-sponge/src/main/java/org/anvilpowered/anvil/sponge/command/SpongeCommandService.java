@@ -16,23 +16,18 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.util;
+package org.anvilpowered.anvil.sponge.command;
 
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.util.CommonCommandService;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
-import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class SpongeCommandService extends CommonCommandService<CommandSpec, CommandExecutor, Text, CommandSource> {
@@ -84,38 +79,11 @@ public class SpongeCommandService extends CommonCommandService<CommandSpec, Comm
 
         @Override
         public CommandResult execute(CommandSource source, CommandContext context) throws CommandException {
-            List<Text> helpList = new ArrayList<>();
-            String fullPath = getFullPath(node);
-            node.getCommands().forEach((aliases, commandSpec) -> {
-                if (!commandSpec.getShortDescription(source).isPresent()
-                    || !commandSpec.testPermission(source)) return;
-                String subCommand = aliases.toString().replace("[", "").replace("]", "");
-                Text commandHelp = Text.builder()
-                    .append(Text.builder()
-                        .append(Text.of(TextColors.GREEN, fullPath, subCommand))
-                        .build())
-                    .append(Text.builder()
-                        .append(Text.of(TextColors.GOLD, " - " + commandSpec.getShortDescription(source).get().toPlain() + "\n"))
-                        .build())
-                    .append(Text.builder()
-                        .append(Text.of(TextColors.GRAY, "Usage: ", fullPath, subCommand, " ", commandSpec.getUsage(source).toPlain()))
-                        .build())
-                    .build();
-                helpList.add(commandHelp);
-            });
-            helpList.sort(Text::compareTo);
-            Sponge.getServiceManager().provide(PaginationService.class)
-                .orElseThrow(() -> new CommandException(Text.of("Missing pagination service")))
-                .builder()
-                .title(Text.of(TextColors.GOLD, pluginInfo.getName(), " - ", pluginInfo.getOrganizationName()))
-                .padding(Text.of(TextColors.DARK_GREEN, "-"))
-                .contents(helpList)
-                .linesPerPage(20)
-                .build()
-                .sendTo(source);
+            sendHelp(source, node);
             return CommandResult.success();
         }
     }
+
 
     private class ReloadCommand implements CommandExecutor {
 

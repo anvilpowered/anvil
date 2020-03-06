@@ -21,14 +21,19 @@ package org.anvilpowered.anvil.api.command;
 import org.anvilpowered.anvil.api.misc.Named;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface CommandNode<TCommand> extends Named {
 
-    default List<CommandNode<TCommand>> getChildren() {
-        return Collections.emptyList();
-    }
+    Map<List<String>, String> getDescription();
+
+    Map<List<String>, Predicate<Object>> getPermissionsCheck();
+
+    Map<List<String>, Function<Object, String>> getUsage();
 
     Map<List<String>, TCommand> getCommands();
 
