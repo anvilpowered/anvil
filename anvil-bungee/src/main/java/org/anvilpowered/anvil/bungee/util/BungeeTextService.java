@@ -26,12 +26,12 @@ import org.anvilpowered.anvil.md5.util.MD5TextService;
 public class BungeeTextService extends MD5TextService<CommandSender> {
 
     @Override
-    public void send(TextComponent result, CommandSender commandSender) {
-        commandSender.sendMessage(result);
+    public void send(TextComponent text, CommandSender commandSender) {
+        commandSender.sendMessage(text);
     }
 
     @Override
-    public void sendToConsole(TextComponent result) {
-        ProxyServer.getInstance().getConsole().sendMessage(result);
+    public CommandSender getConsole() {
+        return ProxyServer.getInstance().getConsole();
     }
 }

@@ -27,6 +27,7 @@ import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.common.util.CommonTextService;
 
 import java.net.URL;
@@ -45,18 +46,13 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
     }
 
     @Override
-    public PaginationBuilder<TextComponent, CommandSource> paginationBuilder() {
-        return new VelocityPaginationBuilder();
+    public void send(TextComponent text, CommandSource commandSource) {
+        commandSource.sendMessage(text);
     }
 
     @Override
-    public void send(TextComponent textComponent, CommandSource commandSource) {
-        commandSource.sendMessage(textComponent);
-    }
-
-    @Override
-    public void sendToConsole(TextComponent result) {
-        proxyServer.getConsoleCommandSource().sendMessage(result);
+    public CommandSource getConsole() {
+        return proxyServer.getConsoleCommandSource();
     }
 
     @Override
@@ -67,6 +63,11 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
     @Override
     public String serialize(TextComponent text) {
         return LegacyComponentSerializer.legacy().serialize(text, '&');
+    }
+
+    @Override
+    public String serializePlain(TextComponent text) {
+        return PlainComponentSerializer.INSTANCE.serialize(text);
     }
 
     protected class VelocityTextBuilder extends CommonTextBuilder {
@@ -182,8 +183,8 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
         }
 
         @Override
-        public Builder<TextComponent, CommandSource> append(Object... content) {
-            for (Object o : content) {
+        public Builder<TextComponent, CommandSource> append(Object... contents) {
+            for (Object o : contents) {
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
                 } else {
@@ -195,10 +196,10 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
         @Override
         public Builder<TextComponent, CommandSource> appendJoining(
-            Object delimiter, Object... content) {
-            final int indexOfLast = content.length - 1;
+            Object delimiter, Object... contents) {
+            final int indexOfLast = contents.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
-                Object o = content[i];
+                Object o = contents[i];
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
                 } else {
@@ -216,8 +217,8 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
         }
 
         @Override
-        public Builder<TextComponent, CommandSource> onHoverShowText(TextComponent content) {
-            hoverEvent = HoverEvent.showText(content);
+        public Builder<TextComponent, CommandSource> onHoverShowText(TextComponent text) {
+            hoverEvent = HoverEvent.showText(text);
             return this;
         }
 
@@ -256,6 +257,13 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
             if (elements.isEmpty()) {
                 return TextComponent.empty();
+            } else if (elements.size() == 1) {
+                Object o = elements.getFirst();
+                if (o instanceof Builder) {
+                    return ((Builder<TextComponent, CommandSource>) o).build();
+                } else if (o instanceof TextComponent) {
+                    return (TextComponent) o;
+                }
             }
 
             // one builder for every color
@@ -298,61 +306,6 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                 currentBuilder.clickEvent(clickEvent);
             }
             return currentBuilder.build();
-        }
-    }
-
-    protected class VelocityPaginationBuilder extends CommonPaginationBuilder {
-
-        @Override
-        public PaginationBuilder<TextComponent, CommandSource> contents(
-            TextComponent... content) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, CommandSource> contents(
-            Iterable<TextComponent> content) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, CommandSource> title(
-            TextComponent title) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, CommandSource> header(
-            TextComponent header) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, CommandSource> footer(
-            TextComponent footer) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, CommandSource> padding(
-            TextComponent padding) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, CommandSource> linesPerPage(
-            int linesPerPge) {
-            return this;
-        }
-
-        @Override
-        public void sendTo(CommandSource commandSource) {
-
-        }
-
-        @Override
-        public void sendToConsole() {
-
         }
     }
 }

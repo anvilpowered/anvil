@@ -31,12 +31,15 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unchecked")
 public class SpongeTextService extends CommonTextService<Text, CommandSource> {
 
     @Override
@@ -50,13 +53,13 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
     }
 
     @Override
-    public void send(Text result, CommandSource commandSource) {
-        commandSource.sendMessage(result);
+    public void send(Text text, CommandSource commandSource) {
+        commandSource.sendMessage(text);
     }
 
     @Override
-    public void sendToConsole(Text result) {
-        Sponge.getServer().getConsole().sendMessage(result);
+    public CommandSource getConsole() {
+        return Sponge.getServer().getConsole();
     }
 
     @Override
@@ -67,6 +70,11 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
     @Override
     public String serialize(Text text) {
         return TextSerializers.FORMATTING_CODE.serialize(text);
+    }
+
+    @Override
+    public String serializePlain(Text text) {
+        return text.toPlain();
     }
 
     protected class SpongeTextBuilder extends CommonTextBuilder {
@@ -182,8 +190,8 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
         }
 
         @Override
-        public Builder<Text, CommandSource> append(Object... content) {
-            for (Object o : content) {
+        public Builder<Text, CommandSource> append(Object... contents) {
+            for (Object o : contents) {
                 if (o instanceof Builder) {
                     elements.add(((Builder<Text, CommandSource>) o).build());
                 } else if (o instanceof TextElement) {
@@ -196,10 +204,10 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
         }
 
         @Override
-        public Builder<Text, CommandSource> appendJoining(Object delimiter, Object... content) {
-            final int indexOfLast = content.length - 1;
+        public Builder<Text, CommandSource> appendJoining(Object delimiter, Object... contents) {
+            final int indexOfLast = contents.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
-                Object o = content[i];
+                Object o = contents[i];
                 if (o instanceof Builder) {
                     elements.add(((Builder<Text, CommandSource>) o).build());
                 } else if (o instanceof TextElement) {
@@ -233,7 +241,8 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
         }
 
         @Override
-        public Builder<Text, CommandSource> onClickExecuteCallback(Consumer<CommandSource> callback) {
+        public Builder<Text, CommandSource> onClickExecuteCallback(
+            Consumer<CommandSource> callback) {
             clickAction = TextActions.executeCallback(callback);
             return this;
         }
@@ -256,6 +265,13 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
 
         @Override
         public Text build() {
+            if (elements.size() == 1) {
+                TextElement o = elements.get(0);
+                if (o instanceof Builder) {
+                    return ((Builder<Text, CommandSource>) o).build();
+                }
+                return Text.of(o);
+            }
             Text.Builder builder = Text.builder().append(Text.of(elements.toArray()));
             if (hoverAction != null) {
                 builder.onHover(hoverAction);
@@ -272,54 +288,109 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
         private final PaginationList.Builder builder;
 
         public SpongePaginationBuilder() {
-            builder = Sponge.getServiceManager().provideUnchecked(PaginationService.class).builder();
+            builder = Sponge.getServiceManager()
+                .provideUnchecked(PaginationService.class).builder();
         }
 
         @Override
-        public PaginationBuilder<Text, CommandSource> contents(Text... content) {
-            builder.contents(content);
+        public PaginationBuilder<Text, CommandSource> contents(
+            Text... contents) {
+            builder.contents(contents);
             return this;
         }
 
         @Override
-        public PaginationBuilder<Text, CommandSource> contents(Iterable<Text> content) {
-            builder.contents(content);
+        public PaginationBuilder<Text, CommandSource> contents(
+            Iterable<Text> contents) {
+            builder.contents(contents);
             return this;
         }
 
         @Override
-        public PaginationBuilder<Text, CommandSource> title(Text title) {
+        public PaginationBuilder<Text, CommandSource> title(
+            @Nullable Text title) {
             builder.title(title);
             return this;
         }
 
         @Override
-        public PaginationBuilder<Text, CommandSource> header(Text header) {
+        public PaginationBuilder<Text, CommandSource> header(
+            @Nullable Text header) {
             builder.header(header);
             return this;
         }
 
         @Override
-        public PaginationBuilder<Text, CommandSource> footer(Text footer) {
+        public PaginationBuilder<Text, CommandSource> footer(
+            @Nullable Text footer) {
             builder.footer(footer);
             return this;
         }
 
         @Override
-        public PaginationBuilder<Text, CommandSource> padding(Text padding) {
+        public PaginationBuilder<Text, CommandSource> padding(
+            Text padding) {
             builder.padding(padding);
             return this;
         }
 
         @Override
-        public PaginationBuilder<Text, CommandSource> linesPerPage(int linesPerPge) {
-            builder.linesPerPage(linesPerPge);
+        public PaginationBuilder<Text, CommandSource> linesPerPage(
+            int linesPerPage) {
+            if (linesPerPage < 1) {
+                throw new IllegalArgumentException("Lines per page must be at least 1");
+            }
+            builder.linesPerPage(linesPerPage);
             return this;
         }
 
         @Override
+        public Pagination<Text, CommandSource> build() {
+            return new SpongePagination(builder.build());
+        }
+    }
+
+    protected static class SpongePagination implements Pagination<Text, CommandSource> {
+
+        private final PaginationList paginationList;
+
+        public SpongePagination(PaginationList paginationList) {
+            this.paginationList = paginationList;
+        }
+
+        @Override
+        public Iterable<Text> getContents() {
+            return paginationList.getContents();
+        }
+
+        @Override
+        public Optional<Text> getTitle() {
+            return paginationList.getTitle();
+        }
+
+        @Override
+        public Optional<Text> getHeader() {
+            return paginationList.getHeader();
+        }
+
+        @Override
+        public Optional<Text> getFooter() {
+            return paginationList.getFooter();
+        }
+
+        @Override
+        public Text getPadding() {
+            return paginationList.getPadding();
+        }
+
+        @Override
+        public int getLinesPerPage() {
+            return paginationList.getLinesPerPage();
+        }
+
+        @Override
         public void sendTo(CommandSource commandSource) {
-            builder.build().sendTo(commandSource);
+            paginationList.sendTo(commandSource);
         }
 
         @Override

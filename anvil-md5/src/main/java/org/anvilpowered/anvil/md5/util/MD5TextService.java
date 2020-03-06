@@ -40,11 +40,6 @@ public abstract class MD5TextService<TCommandSource>
     }
 
     @Override
-    public PaginationBuilder<TextComponent, TCommandSource> paginationBuilder() {
-        return new MD5PaginationBuilder();
-    }
-
-    @Override
     public TextComponent deserialize(String text) {
         return new TextComponent(TextComponent.fromLegacyText(text));
     }
@@ -52,6 +47,11 @@ public abstract class MD5TextService<TCommandSource>
     @Override
     public String serialize(TextComponent text) {
         return text.toLegacyText();
+    }
+
+    @Override
+    public String serializePlain(TextComponent text) {
+        return text.toPlainText();
     }
 
     protected class MD5TextBuilder extends CommonTextBuilder {
@@ -167,8 +167,8 @@ public abstract class MD5TextService<TCommandSource>
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> append(Object... content) {
-            for (Object o : content) {
+        public Builder<TextComponent, TCommandSource> append(Object... contents) {
+            for (Object o : contents) {
                 if (o instanceof Builder || o instanceof TextComponent || o instanceof ChatColor) {
                     elements.add(o);
                 } else {
@@ -180,10 +180,10 @@ public abstract class MD5TextService<TCommandSource>
 
         @Override
         public Builder<TextComponent, TCommandSource> appendJoining(
-            Object delimiter, Object... content) {
-            final int indexOfLast = content.length - 1;
+            Object delimiter, Object... contents) {
+            final int indexOfLast = contents.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
-                Object o = content[i];
+                Object o = contents[i];
                 if (o instanceof Builder || o instanceof TextComponent || o instanceof ChatColor) {
                     elements.add(o);
                 } else {
@@ -242,6 +242,13 @@ public abstract class MD5TextService<TCommandSource>
 
             if (elements.isEmpty()) {
                 return new TextComponent();
+            } else if (elements.size() == 1) {
+                Object o = elements.getFirst();
+                if (o instanceof Builder) {
+                    return ((Builder<TextComponent, TCommandSource>) o).build();
+                } else if (o instanceof TextComponent) {
+                    return (TextComponent) o;
+                }
             }
 
             // one builder for every color
@@ -285,61 +292,6 @@ public abstract class MD5TextService<TCommandSource>
                 currentBuilder.setClickEvent(clickEvent);
             }
             return currentBuilder;
-        }
-    }
-
-    protected class MD5PaginationBuilder extends CommonPaginationBuilder {
-
-        @Override
-        public PaginationBuilder<TextComponent, TCommandSource> contents(
-            TextComponent... content) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, TCommandSource> contents(
-            Iterable<TextComponent> content) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, TCommandSource> title(
-            TextComponent title) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, TCommandSource> header(
-            TextComponent header) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, TCommandSource> footer(
-            TextComponent footer) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, TCommandSource> padding(
-            TextComponent padding) {
-            return this;
-        }
-
-        @Override
-        public PaginationBuilder<TextComponent, TCommandSource> linesPerPage(
-            int linesPerPge) {
-            return this;
-        }
-
-        @Override
-        public void sendTo(TCommandSource commandSource) {
-
-        }
-
-        @Override
-        public void sendToConsole() {
-
         }
     }
 }

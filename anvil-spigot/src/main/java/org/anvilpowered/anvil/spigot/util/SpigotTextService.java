@@ -26,12 +26,12 @@ import org.bukkit.command.CommandSender;
 public class SpigotTextService extends MD5TextService<CommandSender> {
 
     @Override
-    public void send(TextComponent result, CommandSender commandSender) {
-        commandSender.spigot().sendMessage(result);
+    public void send(TextComponent text, CommandSender commandSender) {
+        commandSender.spigot().sendMessage(text);
     }
 
     @Override
-    public void sendToConsole(TextComponent result) {
-        Bukkit.getConsoleSender().spigot().sendMessage(result);
+    public CommandSender getConsole() {
+        return Bukkit.getConsoleSender();
     }
 }
