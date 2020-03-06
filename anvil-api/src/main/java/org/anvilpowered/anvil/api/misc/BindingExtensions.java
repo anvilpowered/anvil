@@ -22,6 +22,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.component.Component;
+import org.anvilpowered.anvil.api.datastore.DataStoreContext;
+import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
+import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 
 import java.lang.annotation.Annotation;
 
@@ -79,6 +82,108 @@ public interface BindingExtensions {
         TypeToken<From> from,
         TypeToken<Target> target
     );
+
+    /**
+     * Binds the {@link DataStoreContext} matching the provided annotation
+     * <p>
+     * Passing {@link MongoDBComponent} to this method is the same as invoking:
+     * </p>
+     * <pre>{@code
+     * bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
+     * }).to(MongoContext.class);
+     * }</pre>
+     * <p>
+     * Annotations may be of the following types:
+     * - {@link MongoDBComponent}
+     * - {@link XodusComponent}
+     * </p>
+     *
+     * @param componentAnnotations Annotations matching a {@link DataStoreContext}.
+     * @throws IllegalArgumentException If any of the provided annotations do not
+     *                                  match a {@link DataStoreContext}
+     */
+    void withContexts(Class<? extends Annotation>... componentAnnotations);
+
+    /**
+     * Binds the {@link DataStoreContext} matching the provided annotation
+     * <p>
+     * Passing {@link MongoDBComponent} to this method is the same as invoking:
+     * </p>
+     * <pre>{@code
+     * bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
+     * }).to(MongoContext.class);
+     * }</pre>
+     * <p>
+     * Annotations may be of the following types:
+     * - {@link MongoDBComponent}
+     * - {@link XodusComponent}
+     * </p>
+     *
+     * @param a1 Annotation matching a {@link DataStoreContext}.
+     * @throws IllegalArgumentException If any of the provided annotations do not
+     *                                  match a {@link DataStoreContext}
+     */
+    default void withContexts(
+        Class<? extends Annotation> a1
+    ) {
+        withContexts((Class<? extends Annotation>[]) new Class<?>[]{a1});
+    }
+
+    /**
+     * Binds the {@link DataStoreContext} matching the provided annotation
+     * <p>
+     * Passing {@link MongoDBComponent} to this method is the same as invoking:
+     * </p>
+     * <pre>{@code
+     * bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
+     * }).to(MongoContext.class);
+     * }</pre>
+     * <p>
+     * Annotations may be of the following types:
+     * - {@link MongoDBComponent}
+     * - {@link XodusComponent}
+     * </p>
+     *
+     * @param a1 Annotation matching a {@link DataStoreContext}.
+     * @param a2 Annotation matching a {@link DataStoreContext}.
+     * @throws IllegalArgumentException If any of the provided annotations do not
+     *                                  match a {@link DataStoreContext}
+     */
+    default void withContexts(
+        Class<? extends Annotation> a1,
+        Class<? extends Annotation> a2
+    ) {
+        withContexts((Class<? extends Annotation>[]) new Class<?>[]{a1, a2});
+    }
+
+    /**
+     * Binds the {@link DataStoreContext} matching the provided annotation
+     * <p>
+     * Passing {@link MongoDBComponent} to this method is the same as invoking:
+     * </p>
+     * <pre>{@code
+     * bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
+     * }).to(MongoContext.class);
+     * }</pre>
+     * <p>
+     * Annotations may be of the following types:
+     * - {@link MongoDBComponent}
+     * - {@link XodusComponent}
+     * </p>
+     *
+     * @param a1 Annotation matching a {@link DataStoreContext}.
+     * @param a2 Annotation matching a {@link DataStoreContext}.
+     * @param a3 Annotation matching a {@link DataStoreContext}.
+     * @throws IllegalArgumentException If any of the provided annotations do not
+     *                                  match a {@link DataStoreContext}
+     */
+    default void withContexts(
+        Class<? extends Annotation> a1,
+        Class<? extends Annotation> a2,
+        Class<? extends Annotation> a3
+    ) {
+        withContexts((Class<? extends Annotation>[]) new Class<?>[]{a1, a2, a3});
+    }
 
     static <T> TypeLiteral<T> getTypeLiteral(TypeToken<T> typeToken) {
         return (TypeLiteral<T>) TypeLiteral.get(typeToken.getType());

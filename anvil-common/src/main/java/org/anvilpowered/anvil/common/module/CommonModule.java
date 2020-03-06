@@ -19,14 +19,10 @@
 package org.anvilpowered.anvil.common.module;
 
 import com.google.common.reflect.TypeToken;
-import com.google.inject.TypeLiteral;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import org.anvilpowered.anvil.api.data.config.ConfigurationService;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.datastore.DataStoreContext;
-import org.anvilpowered.anvil.api.datastore.MongoContext;
-import org.anvilpowered.anvil.api.datastore.XodusContext;
 import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
 import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
@@ -88,11 +84,7 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
 
         bind(CoreMemberManager.class).to(CommonCoreMemberManager.class);
 
-        bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
-        }).to(MongoContext.class);
-
-        bind(new TypeLiteral<DataStoreContext<EntityId, PersistentEntityStore>>() {
-        }).to(XodusContext.class);
+        be.withContexts(MongoDBComponent.class, XodusComponent.class);
 
         bind(Registry.class).to(BaseExtendedRegistry.class);
 

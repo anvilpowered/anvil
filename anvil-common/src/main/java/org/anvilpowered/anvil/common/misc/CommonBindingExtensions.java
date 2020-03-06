@@ -21,10 +21,21 @@ package org.anvilpowered.anvil.common.misc;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
+import jetbrains.exodus.entitystore.EntityId;
+import jetbrains.exodus.entitystore.PersistentEntityStore;
 import org.anvilpowered.anvil.api.component.Component;
+import org.anvilpowered.anvil.api.datastore.DataStoreContext;
+import org.anvilpowered.anvil.api.datastore.MongoContext;
+import org.anvilpowered.anvil.api.datastore.XodusContext;
+import org.anvilpowered.anvil.api.manager.annotation.MariaDBComponent;
+import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
+import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 
 import java.lang.annotation.Annotation;
+import java.util.Objects;
 
 @SuppressWarnings({"unchecked", "UnstableApiUsage"})
 public class CommonBindingExtensions implements BindingExtensions {
@@ -87,4 +98,23 @@ public class CommonBindingExtensions implements BindingExtensions {
         binder.bind(BindingExtensions.getTypeLiteral(from))
             .to(BindingExtensions.getTypeLiteral(target));
     }
+
+    @Override
+    @SafeVarargs
+    public final void withContexts(Class<? extends Annotation>... componentAnnotations) {
+        for (Class<? extends Annotation> annotation : componentAnnotations) {
+            if (annotation.equals(MongoDBComponent.class)) {
+                binder.bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
+                }).to(MongoContext.class);
+                continue;
+            } else if (annotation.equals(XodusComponent.class)) {
+                binder.bind(new TypeLiteral<DataStoreContext<EntityId, PersistentEntityStore>>() {
+                }).to(XodusContext.class);
+                continue;
+            }
+            throw new IllegalArgumentException("Provided componentAnnotation "
+                + annotation.getCanonicalName() + " does not match any DataStoreContext");
+        }
+    }
+
 }
