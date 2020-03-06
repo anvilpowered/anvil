@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+version = rootProject.apiVersion
+
 repositories {
     mavenCentral()
     maven { url 'https://repo.spongepowered.org/maven' }
@@ -18,4 +20,8 @@ dependencies {
 
     implementation configurate_core
     implementation guice
+}
+
+artifacts {
+    archives jar, sourcesJar
 }

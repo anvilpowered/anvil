@@ -2,13 +2,18 @@ plugins {
     id 'java'
 }
 
+version = rootProject.apiVersion
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation reflections
     implementation javasisst
     implementation guice
+}
+
+artifacts {
+    archives jar, sourcesJar
 }

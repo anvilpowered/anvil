@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+version = rootProject.apiVersion
+
 repositories {
     mavenCentral()
 }
@@ -20,4 +22,8 @@ dependencies {
     implementation mongodb_driver_sync
     implementation morphia
     implementation guice
+}
+
+artifacts {
+    archives jar, sourcesJar
 }

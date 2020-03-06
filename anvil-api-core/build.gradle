@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+version = rootProject.apiVersion
+
 repositories {
     mavenCentral()
 }
@@ -22,4 +24,8 @@ dependencies {
     implementation guice
     implementation morphia
     implementation xodus_entity_store
+}
+
+artifacts {
+    archives jar, sourcesJar
 }
