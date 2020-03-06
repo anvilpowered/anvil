@@ -26,8 +26,8 @@ import jetbrains.exodus.entitystore.StoreTransaction;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.Mappable;
 import org.anvilpowered.anvil.base.repository.BaseXodusRepository;
-import org.anvilpowered.anvil.core.api.coremember.repository.XodusCoreMemberRepository;
-import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.core.coremember.repository.XodusCoreMemberRepository;
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;

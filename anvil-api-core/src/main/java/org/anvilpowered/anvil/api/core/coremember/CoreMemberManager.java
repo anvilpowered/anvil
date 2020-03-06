@@ -16,24 +16,30 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.api.data.key;
+package org.anvilpowered.anvil.api.core.coremember;
 
-import org.anvilpowered.anvil.api.data.key.Key;
-import org.anvilpowered.anvil.api.data.key.Keys;
+import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
+import org.anvilpowered.anvil.api.manager.Manager;
 
-public final class AnvilCoreKeys {
+public interface CoreMemberManager extends Manager<CoreMemberRepository<?, ?>> {
 
-    private AnvilCoreKeys() {
-        throw new AssertionError("**boss music** No instance for you!");
+    @Override
+    default String getDefaultIdentifierSingularUpper() {
+        return "Core member";
     }
 
-    public static final Key<String> PLUGINS_PERMISSION = new Key<String>("PLUGINS_PERMISSION", "anvil.admin.plugins") {
-    };
-    public static final Key<String> RELOAD_PERMISSION = new Key<String>("RELOAD_PERMISSION", "anvil.admin.reload") {
-    };
+    @Override
+    default String getDefaultIdentifierPluralUpper() {
+        return "Core members";
+    }
 
-    static {
-        Keys.registerKey(PLUGINS_PERMISSION);
-        Keys.registerKey(RELOAD_PERMISSION);
+    @Override
+    default String getDefaultIdentifierSingularLower() {
+        return "core member";
+    }
+
+    @Override
+    default String getDefaultIdentifierPluralLower() {
+        return "core members";
     }
 }

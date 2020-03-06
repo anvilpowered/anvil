@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
-import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 
 import java.time.Duration;
 import java.time.Instant;

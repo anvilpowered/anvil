@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.spigot.listeners;
 
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

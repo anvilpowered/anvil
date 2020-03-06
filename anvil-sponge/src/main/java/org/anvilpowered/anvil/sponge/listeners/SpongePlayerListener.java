@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.sponge.listeners;
 
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;

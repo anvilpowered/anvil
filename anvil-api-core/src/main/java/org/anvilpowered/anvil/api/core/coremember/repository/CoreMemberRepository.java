@@ -16,10 +16,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.api.coremember.repository;
+package org.anvilpowered.anvil.api.core.coremember.repository;
 
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.repository.Repository;
-import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
 
 import java.time.Instant;
 import java.util.List;

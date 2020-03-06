@@ -25,7 +25,7 @@ import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.util.CommandService;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
-import org.anvilpowered.anvil.core.api.data.key.AnvilCoreKeys;
+import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.GenericArguments;

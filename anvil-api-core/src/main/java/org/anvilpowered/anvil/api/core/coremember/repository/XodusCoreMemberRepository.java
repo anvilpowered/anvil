@@ -16,14 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.api.coremember.repository;
+package org.anvilpowered.anvil.api.core.coremember.repository;
 
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.repository.XodusRepository;
-import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
 
 import java.time.Instant;
 import java.util.UUID;

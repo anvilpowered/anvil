@@ -24,9 +24,9 @@ import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.base.plugin.BasePlugin;
-import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.core.api.coremember.repository.CoreMemberRepository;
-import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
+import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 
 import java.util.Objects;
 

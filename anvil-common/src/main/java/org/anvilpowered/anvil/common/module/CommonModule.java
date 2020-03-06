@@ -36,9 +36,9 @@ import org.anvilpowered.anvil.common.coremember.repository.CommonXodusCoreMember
 import org.anvilpowered.anvil.common.misc.CommonBindingExtensions;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginMessges;
-import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.core.api.coremember.repository.CoreMemberRepository;
-import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
+import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 

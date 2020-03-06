@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.common.model.coremember;
 
 import org.anvilpowered.anvil.base.model.MongoDbo;
-import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 

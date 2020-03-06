@@ -25,9 +25,9 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
-import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

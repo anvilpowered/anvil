@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.api.model.coremember;
+package org.anvilpowered.anvil.api.core.model.coremember;
 
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 

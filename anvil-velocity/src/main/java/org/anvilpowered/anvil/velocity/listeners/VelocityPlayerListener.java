@@ -25,9 +25,9 @@ import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.text.TextComponent;
-import org.anvilpowered.anvil.core.api.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.core.api.model.coremember.CoreMember;
-import org.anvilpowered.anvil.core.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
