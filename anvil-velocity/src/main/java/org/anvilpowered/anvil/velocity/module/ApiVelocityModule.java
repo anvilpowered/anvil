@@ -19,16 +19,19 @@
 package org.anvilpowered.anvil.velocity.module;
 
 import com.google.inject.TypeLiteral;
+import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.permission.PermissionSubject;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.text.TextComponent;
+import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
+import org.anvilpowered.anvil.velocity.command.VelocityCommandService;
 import org.anvilpowered.anvil.velocity.util.VelocityCurrentServerService;
 import org.anvilpowered.anvil.velocity.util.VelocityKickService;
 import org.anvilpowered.anvil.velocity.util.VelocityPermissionService;
@@ -40,6 +43,8 @@ public class ApiVelocityModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(new TypeLiteral<CommandService<Command, Command, CommandSource>>() {
+        }).to(VelocityCommandService.class);
         bind(CurrentServerService.class).to(VelocityCurrentServerService.class);
         bind(KickService.class).to(VelocityKickService.class);
         bind(new TypeLiteral<PermissionService<PermissionSubject>>() {

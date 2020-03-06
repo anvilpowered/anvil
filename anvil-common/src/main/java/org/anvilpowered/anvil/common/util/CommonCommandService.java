@@ -107,14 +107,14 @@ public abstract class CommonCommandService<
 
         node.getCommands().forEach((aliases, command) -> {
 
-            if (!node.getDescription().containsKey(aliases)
-                || !node.getPermissionsCheck().get(aliases).test(commandSource)) return;
+            if (!node.getDescriptions().containsKey(aliases)
+                || !node.getPermissions().get(aliases).test(commandSource)) return;
 
             String subCommand = aliases.toString().replace("[", "").replace("]", "");
             helpList.add(textService.builder()
                 .gold().append(fullPath, subCommand)
-                .gold().append(" - " + node.getDescription().get(aliases) + "\n")
-                .gray().append("Usage: ", fullPath, " ", node.getUsage().get(aliases).apply(commandSource))
+                .gold().append(" - " + node.getDescriptions().get(aliases) + "\n")
+                .gray().append("Usage: ", fullPath, " ", node.getUsages().get(aliases).apply(commandSource))
                 .build());
         });
         textService.paginationBuilder()

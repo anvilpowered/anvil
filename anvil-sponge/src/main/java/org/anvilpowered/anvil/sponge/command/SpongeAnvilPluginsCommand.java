@@ -28,7 +28,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
-public class AnvilSpongePluginsCommand implements CommandExecutor {
+public class SpongeAnvilPluginsCommand implements CommandExecutor {
 
     @Inject
     private PluginInfo<Text> pluginInfo;

@@ -18,11 +18,12 @@
 
 package org.anvilpowered.anvil.api.command;
 
-import org.anvilpowered.anvil.api.command.CommandNode;
-
+import java.util.List;
 import java.util.function.Predicate;
 
 public interface CommandService<TCommand, TCommandExecutor, TCommandSource> {
+
+    void registerCommand(List<String> aliases, TCommand command, CommandNode<TCommand> node);
 
     TCommandExecutor generateRootCommand(
         String helpCommandName,
@@ -41,7 +42,6 @@ public interface CommandService<TCommand, TCommandExecutor, TCommandSource> {
     default TCommandExecutor generateVersionCommand(String helpCommandName) {
         return generateVersionCommand(helpCommandName, e -> true);
     }
-
 
     /**
      * Generates a help command for the provided {@link CommandNode}.

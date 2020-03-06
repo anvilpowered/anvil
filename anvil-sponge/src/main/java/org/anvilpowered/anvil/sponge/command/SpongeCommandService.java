@@ -28,6 +28,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class SpongeCommandService extends CommonCommandService<CommandSpec, CommandExecutor, Text, CommandSource> {
@@ -92,6 +93,25 @@ public class SpongeCommandService extends CommonCommandService<CommandSpec, Comm
             sendReload(source);
             return CommandResult.success();
         }
+    }
+
+    @Override
+    public void registerCommand(List<String> aliases, CommandSpec commandSpec, CommandNode<CommandSpec> node) {
+        node.getCommands().put(aliases, commandSpec);
+        node.getDescriptions().put(aliases,
+            c -> c instanceof CommandSource
+                ? commandSpec.getShortDescription((CommandSource) c)
+                .map(Text::toPlain).orElse("null")
+                : "null"
+        );
+        node.getPermissions().put(aliases,
+            c -> c instanceof CommandSource && commandSpec.testPermission((CommandSource) c)
+        );
+        node.getUsages().put(aliases,
+            c -> c instanceof CommandSource
+                ? commandSpec.getUsage((CommandSource) c).toPlain()
+                : "null"
+        );
     }
 
     @Override

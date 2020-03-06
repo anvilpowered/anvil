@@ -20,8 +20,6 @@ package org.anvilpowered.anvil.api.command;
 
 import org.anvilpowered.anvil.api.misc.Named;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -29,18 +27,18 @@ import java.util.function.Predicate;
 
 public interface CommandNode<TCommand> extends Named {
 
-    Map<List<String>, String> getDescription();
-
-    Map<List<String>, Predicate<Object>> getPermissionsCheck();
-
-    Map<List<String>, Function<Object, String>> getUsage();
-
-    Map<List<String>, TCommand> getCommands();
-
     /**
      * @return The root command of this node
      */
     TCommand getCommand();
+
+    Map<List<String>, TCommand> getCommands();
+
+    Map<List<String>, Function<Object, String>> getDescriptions();
+
+    Map<List<String>, Predicate<Object>> getPermissions();
+
+    Map<List<String>, Function<Object, String>> getUsages();
 
     /**
      * @return An array containing (in order) the names

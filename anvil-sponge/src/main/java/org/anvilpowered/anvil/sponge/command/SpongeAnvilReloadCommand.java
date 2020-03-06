@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
-public class AnvilSpongeReloadCommand implements CommandExecutor {
+public class SpongeAnvilReloadCommand implements CommandExecutor {
 
     private static final Function<Environment, String> reloadEnvironment = e -> {
         e.reload();
