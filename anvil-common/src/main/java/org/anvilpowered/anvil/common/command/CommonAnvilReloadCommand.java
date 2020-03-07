@@ -104,4 +104,12 @@ public class CommonAnvilReloadCommand<TString, TCommandSource> {
         reloadedResult[0] = optionalReloaded.get();
         return true;
     }
+
+    protected void sendSuccess(TCommandSource source, String[] reloadedResult) {
+        textService.builder()
+            .append(pluginInfo.getPrefix())
+            .green().append("Successfully reloaded ")
+            .gold().append(reloadedResult[0])
+            .sendTo(source);
+    }
 }

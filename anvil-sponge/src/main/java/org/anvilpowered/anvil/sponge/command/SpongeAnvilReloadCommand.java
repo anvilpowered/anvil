@@ -46,11 +46,7 @@ public class SpongeAnvilReloadCommand
         } else if (!doDirect(source, optionalPlugin.get(), reloadedResult)) {
             return CommandResult.empty();
         }
-        textService.builder()
-            .append(pluginInfo.getPrefix())
-            .green().append("Successfully reloaded ")
-            .gold().append(reloadedResult[0])
-            .sendTo(source);
+        sendSuccess(source, reloadedResult);
         return CommandResult.success();
     }
 }
