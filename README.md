@@ -1,6 +1,6 @@
 # Anvil
 
-[![Build Status](http://ci.anvilpowered.org/app/rest/builds/buildType:(id:Anvil_Build)/statusIcon)](http://ci.anvilpowered.org/viewType.html?buildTypeId=Anvil_Build&guest=1) ![GitHub](https://img.shields.io/github/license/AnvilPowered/Anvil)
+[![Discord](https://img.shields.io/discord/675484700357296138)](https://discord.gg/6gR2YH3) [![TeamCity Full Build Status](https://img.shields.io/teamcity/build/e/Anvil_Build?server=http%3A%2F%2Fci.anvilpowered.org)](http://ci.anvilpowered.org/viewType.html?buildTypeId=Anvil_Build&guest=1) ![GitHub](https://img.shields.io/github/license/AnvilPowered/Anvil)
 
 [CI](http://ci.anvilpowered.org) (Release candidate jars)
 
