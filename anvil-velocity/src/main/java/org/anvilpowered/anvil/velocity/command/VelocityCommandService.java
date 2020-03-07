@@ -6,6 +6,7 @@ import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.util.CommonCommandService;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class VelocityCommandService extends CommonCommandService<Command, Command, TextComponent, CommandSource> {
@@ -64,6 +65,11 @@ public class VelocityCommandService extends CommonCommandService<Command, Comman
         public void execute(CommandSource source, String[] args) {
             sendReload(source);
         }
+    }
+
+    @Override
+    public void registerCommand(List<String> aliases, Command command, CommandNode<Command> node) {
+
     }
 
     @Override

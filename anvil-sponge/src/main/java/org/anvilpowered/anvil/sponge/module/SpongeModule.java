@@ -22,7 +22,7 @@ import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.config.AnvilCoreConfigurationService;
 import org.anvilpowered.anvil.common.module.CommonModule;
-import org.anvilpowered.anvil.sponge.command.AnvilSpongeCommandNode;
+import org.anvilpowered.anvil.sponge.command.SpongeAnvilCommandNode;
 import org.anvilpowered.anvil.sponge.config.AnvilCoreSpongeConfigurationService;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -36,6 +36,6 @@ public class SpongeModule extends CommonModule<Text, CommandSource> {
 
         bind(AnvilCoreConfigurationService.class).to(AnvilCoreSpongeConfigurationService.class);
         bind(new TypeLiteral<CommandNode<CommandSpec>>() {
-        }).to(AnvilSpongeCommandNode.class);
+        }).to(SpongeAnvilCommandNode.class);
     }
 }

@@ -42,7 +42,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @Singleton
-public class AnvilSpongeCommandNode implements CommandNode<CommandSpec> {
+public class SpongeAnvilCommandNode implements CommandNode<CommandSpec> {
 
     private boolean alreadyLoaded;
     private CommandSpec command;
@@ -64,7 +64,7 @@ public class AnvilSpongeCommandNode implements CommandNode<CommandSpec> {
     private Environment environment;
 
     @Inject
-    public AnvilSpongeCommandNode(Registry registry) {
+    public SpongeAnvilCommandNode(Registry registry) {
         registry.addRegistryLoadedListener(this::registryLoaded);
         alreadyLoaded = false;
     }

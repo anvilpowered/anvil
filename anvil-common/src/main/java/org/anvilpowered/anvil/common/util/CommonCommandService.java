@@ -101,20 +101,22 @@ public abstract class CommonCommandService<
         return s.toString();
     }
 
-    protected void sendHelp(TCommandSource commandSource, CommandNode<TCommand> node) {
+    protected void sendHelp(TCommandSource source, CommandNode<TCommand> node) {
         List<TString> helpList = new ArrayList<>();
         String fullPath = getFullPath(node);
 
         node.getCommands().forEach((aliases, command) -> {
 
             if (!node.getDescriptions().containsKey(aliases)
-                || !node.getPermissions().get(aliases).test(commandSource)) return;
+                || !node.getPermissions().get(aliases).test(source)) return;
 
             String subCommand = aliases.toString().replace("[", "").replace("]", "");
             helpList.add(textService.builder()
                 .gold().append(fullPath, subCommand)
-                .gold().append(" - " + node.getDescriptions().get(aliases) + "\n")
-                .gray().append("Usage: ", fullPath, " ", node.getUsages().get(aliases).apply(commandSource))
+                .gold().append(" - " + node.getDescriptions().get(aliases).apply(source) + "\n")
+                .gray().append("Usage: ", fullPath)
+                .appendJoining(", ", aliases.toArray())
+                .append(" ", node.getUsages().get(aliases).apply(source))
                 .build());
         });
         textService.paginationBuilder()
@@ -122,6 +124,6 @@ public abstract class CommonCommandService<
             .padding(textService.builder().dark_green().append("-").build())
             .contents(helpList)
             .build()
-            .sendTo(commandSource);
+            .sendTo(source);
     }
 }

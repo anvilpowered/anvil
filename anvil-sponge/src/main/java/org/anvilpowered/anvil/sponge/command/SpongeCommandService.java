@@ -79,7 +79,7 @@ public class SpongeCommandService extends CommonCommandService<CommandSpec, Comm
         }
 
         @Override
-        public CommandResult execute(CommandSource source, CommandContext context) throws CommandException {
+        public CommandResult execute(CommandSource source, CommandContext context) {
             sendHelp(source, node);
             return CommandResult.success();
         }
