@@ -35,39 +35,39 @@ public class AnvilCoreConfigurationService extends BaseConfigurationService {
 
     @Override
     protected void initNodeNameMap() {
-        nodeNameMap.put(Keys.SERVER_NAME, "server.name");
-        nodeNameMap.put(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
-        nodeNameMap.put(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
-        nodeNameMap.put(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
-        nodeNameMap.put(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
-        nodeNameMap.put(Keys.MONGODB_PORT, "datastore.mongodb.port");
-        nodeNameMap.put(Keys.MONGODB_DBNAME, "datastore.mongodb.dbname");
-        nodeNameMap.put(Keys.MONGODB_USERNAME, "datastore.mongodb.username");
-        nodeNameMap.put(Keys.MONGODB_PASSWORD, "datastore.mongodb.password");
-        nodeNameMap.put(Keys.MONGODB_AUTH_DB, "datastore.mongodb.authDb");
-        nodeNameMap.put(Keys.MONGODB_USE_AUTH, "datastore.mongodb.useAuth");
-        nodeNameMap.put(Keys.MONGODB_USE_SRV, "datastore.mongodb.useSrv");
-        nodeNameMap.put(Keys.MONGODB_USE_CONNECTION_STRING, "datastore.mongodb.useConnectionString");
+        setName(Keys.SERVER_NAME, "server.name");
+        setName(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
+        setName(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
+        setName(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
+        setName(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
+        setName(Keys.MONGODB_PORT, "datastore.mongodb.port");
+        setName(Keys.MONGODB_DBNAME, "datastore.mongodb.dbname");
+        setName(Keys.MONGODB_USERNAME, "datastore.mongodb.username");
+        setName(Keys.MONGODB_PASSWORD, "datastore.mongodb.password");
+        setName(Keys.MONGODB_AUTH_DB, "datastore.mongodb.authDb");
+        setName(Keys.MONGODB_USE_AUTH, "datastore.mongodb.useAuth");
+        setName(Keys.MONGODB_USE_SRV, "datastore.mongodb.useSrv");
+        setName(Keys.MONGODB_USE_CONNECTION_STRING, "datastore.mongodb.useConnectionString");
     }
 
     @Override
     protected void initNodeDescriptionMap() {
-        nodeDescriptionMap.put(Keys.SERVER_NAME, "\nServer name");
-        nodeDescriptionMap.put(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
+        setDescription(Keys.SERVER_NAME, "\nServer name");
+        setDescription(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
             "\nPlease note that it is not recommended to change this value from the original");
-        nodeDescriptionMap.put(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
-        nodeDescriptionMap.put(Keys.MONGODB_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
+        setDescription(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
+        setDescription(Keys.MONGODB_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
             "\nCustom MongoDB connection string that will used instead of the connection info and credentials below" +
             "\nWill only be used if useConnectionString=true");
-        nodeDescriptionMap.put(Keys.MONGODB_HOSTNAME, "\nMongoDB hostname");
-        nodeDescriptionMap.put(Keys.MONGODB_PORT, "\nMongoDB port");
-        nodeDescriptionMap.put(Keys.MONGODB_DBNAME, "\nMongoDB database name");
-        nodeDescriptionMap.put(Keys.MONGODB_USERNAME, "\nMongoDB username");
-        nodeDescriptionMap.put(Keys.MONGODB_PASSWORD, "\nMongoDB password");
-        nodeDescriptionMap.put(Keys.MONGODB_AUTH_DB, "\nMongoDB database to use for authentication");
-        nodeDescriptionMap.put(Keys.MONGODB_USE_AUTH, "\nWhether to use authentication (username/password) for MongoDB connection");
-        nodeDescriptionMap.put(Keys.MONGODB_USE_SRV, "\nWhether to interpret the MongoDB hostname as an SRV record");
-        nodeDescriptionMap.put(Keys.MONGODB_USE_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
+        setDescription(Keys.MONGODB_HOSTNAME, "\nMongoDB hostname");
+        setDescription(Keys.MONGODB_PORT, "\nMongoDB port");
+        setDescription(Keys.MONGODB_DBNAME, "\nMongoDB database name");
+        setDescription(Keys.MONGODB_USERNAME, "\nMongoDB username");
+        setDescription(Keys.MONGODB_PASSWORD, "\nMongoDB password");
+        setDescription(Keys.MONGODB_AUTH_DB, "\nMongoDB database to use for authentication");
+        setDescription(Keys.MONGODB_USE_AUTH, "\nWhether to use authentication (username/password) for MongoDB connection");
+        setDescription(Keys.MONGODB_USE_SRV, "\nWhether to interpret the MongoDB hostname as an SRV record");
+        setDescription(Keys.MONGODB_USE_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
             "\nWhether to use the connection string provided instead of the normal connection info and credentials" +
             "\nOnly use this if you know what you are doing!" +
             "\nPlease note that plugins using Anvil will inherit both useConnectionString and connectionString from" +

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -39,14 +40,28 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public class BaseRegistry implements Registry {
 
-    protected final Map<Key<?>, Object> defaultMap, valueMap;
-    protected final Collection<RegistryLoadedListener> registryLoadedListeners;
+    private final Map<Key<?>, Object> defaultMap, valueMap;
+    private final Collection<RegistryLoadedListener> registryLoadedListeners;
     private String stringRepresentation;
 
     public BaseRegistry() {
         defaultMap = new HashMap<>();
         valueMap = new HashMap<>();
         registryLoadedListeners = new LinkedList<>();
+    }
+
+    @Override
+    public <T> T getUnsafe(Key<T> key) {
+        T t;
+        try {
+            t = (T) valueMap.get(key);
+        } catch (ClassCastException e) {
+            throw new NoSuchElementException("Value for key " + key + " is of the wrong type!");
+        }
+        if (t == null) {
+            throw new NoSuchElementException("Could not find value for key " + key);
+        }
+        return t;
     }
 
     @Override
@@ -73,6 +88,11 @@ public class BaseRegistry implements Registry {
     @Override
     public <T> void set(Key<T> key, T value) {
         valueMap.put(key, value);
+        stringRepresentation = null;
+    }
+
+    protected <T> void setDefault(Key<T> key, T value) {
+        defaultMap.put(key, value);
         stringRepresentation = null;
     }
 
@@ -107,8 +127,8 @@ public class BaseRegistry implements Registry {
     }
 
     @Override
-    public <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T value) {
-        ((Map<K, T>) valueMap.get(key)).put(mapKey, value);
+    public <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T mapValue) {
+        ((Map<K, T>) valueMap.get(key)).put(mapKey, mapValue);
         stringRepresentation = null;
     }
 

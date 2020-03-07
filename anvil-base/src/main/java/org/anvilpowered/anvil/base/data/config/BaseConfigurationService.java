@@ -50,22 +50,22 @@ import java.util.function.Predicate;
 public class BaseConfigurationService extends BaseRegistry implements ConfigurationService {
 
     protected ConfigurationLoader<CommentedConfigurationNode> configLoader;
-    protected CommentedConfigurationNode rootConfigurationNode;
+    private CommentedConfigurationNode rootConfigurationNode;
 
     /**
      * Maps Keys to their verification function
      */
-    protected Map<Key<?>, Map<Predicate<Object>, Function<Object, Object>>> verificationMap;
+    private final Map<Key<?>, Map<Predicate<Object>, Function<Object, Object>>> verificationMap;
 
     /**
      * Maps ConfigKeys to configuration node names
      */
-    protected Map<Key<?>, String> nodeNameMap;
+    private final Map<Key<?>, String> nodeNameMap;
 
     /**
      * Maps ConfigKeys to configuration node descriptions
      */
-    protected Map<Key<?>, String> nodeDescriptionMap;
+    private final Map<Key<?>, String> nodeDescriptionMap;
 
     private boolean configValuesEdited;
 
@@ -87,48 +87,62 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     }
 
     protected void initNodeNameMap() {
-        nodeNameMap.put(Keys.SERVER_NAME, "server.name");
-        nodeNameMap.put(Keys.USE_SHARED_ENVIRONMENT, "datastore.useSharedEnvironment");
-        nodeNameMap.put(Keys.USE_SHARED_CREDENTIALS, "datastore.useSharedCredentials");
-        nodeNameMap.put(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
-        nodeNameMap.put(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
-        nodeNameMap.put(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
-        nodeNameMap.put(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
-        nodeNameMap.put(Keys.MONGODB_PORT, "datastore.mongodb.port");
-        nodeNameMap.put(Keys.MONGODB_DBNAME, "datastore.mongodb.dbname");
-        nodeNameMap.put(Keys.MONGODB_USERNAME, "datastore.mongodb.username");
-        nodeNameMap.put(Keys.MONGODB_PASSWORD, "datastore.mongodb.password");
-        nodeNameMap.put(Keys.MONGODB_AUTH_DB, "datastore.mongodb.authDb");
-        nodeNameMap.put(Keys.MONGODB_USE_AUTH, "datastore.mongodb.useAuth");
-        nodeNameMap.put(Keys.MONGODB_USE_SRV, "datastore.mongodb.useSrv");
-        nodeNameMap.put(Keys.MONGODB_USE_CONNECTION_STRING, "datastore.mongodb.useConnectionString");
+        setName(Keys.SERVER_NAME, "server.name");
+        setName(Keys.USE_SHARED_ENVIRONMENT, "datastore.useSharedEnvironment");
+        setName(Keys.USE_SHARED_CREDENTIALS, "datastore.useSharedCredentials");
+        setName(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
+        setName(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
+        setName(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
+        setName(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
+        setName(Keys.MONGODB_PORT, "datastore.mongodb.port");
+        setName(Keys.MONGODB_DBNAME, "datastore.mongodb.dbname");
+        setName(Keys.MONGODB_USERNAME, "datastore.mongodb.username");
+        setName(Keys.MONGODB_PASSWORD, "datastore.mongodb.password");
+        setName(Keys.MONGODB_AUTH_DB, "datastore.mongodb.authDb");
+        setName(Keys.MONGODB_USE_AUTH, "datastore.mongodb.useAuth");
+        setName(Keys.MONGODB_USE_SRV, "datastore.mongodb.useSrv");
+        setName(Keys.MONGODB_USE_CONNECTION_STRING, "datastore.mongodb.useConnectionString");
     }
 
     protected void initNodeDescriptionMap() {
-        nodeDescriptionMap.put(Keys.SERVER_NAME, "\nServer name");
-        nodeDescriptionMap.put(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use Anvil shared environment." +
+        setDescription(Keys.SERVER_NAME, "\nServer name");
+        setDescription(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use Anvil shared environment." +
             "\nThis will use hostname and port from Anvil");
-        nodeDescriptionMap.put(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use Anvil credentials. (Requires useSharedEnvironment)" +
+        setDescription(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use Anvil credentials. (Requires useSharedEnvironment)" +
             "\nThis will use (additionally) username, password, authDb and useAuth from Anvil");
-        nodeDescriptionMap.put(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
+        setDescription(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
             "\nPlease note that it is not recommended to change this value from the original");
-        nodeDescriptionMap.put(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
-        nodeDescriptionMap.put(Keys.MONGODB_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
+        setDescription(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
+        setDescription(Keys.MONGODB_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
             "\nCustom MongoDB connection string that will used instead of the connection info and credentials below" +
             "\nWill only be used if useConnectionString=true");
-        nodeDescriptionMap.put(Keys.MONGODB_HOSTNAME, "\nMongoDB hostname");
-        nodeDescriptionMap.put(Keys.MONGODB_PORT, "\nMongoDB port");
-        nodeDescriptionMap.put(Keys.MONGODB_DBNAME, "\nMongoDB database name");
-        nodeDescriptionMap.put(Keys.MONGODB_USERNAME, "\nMongoDB username");
-        nodeDescriptionMap.put(Keys.MONGODB_PASSWORD, "\nMongoDB password");
-        nodeDescriptionMap.put(Keys.MONGODB_AUTH_DB, "\nMongoDB database to use for authentication");
-        nodeDescriptionMap.put(Keys.MONGODB_USE_AUTH, "\nWhether to use authentication (username/password) for MongoDB connection");
-        nodeDescriptionMap.put(Keys.MONGODB_USE_SRV, "\nWhether to interpret the MongoDB hostname as an SRV record");
-        nodeDescriptionMap.put(Keys.MONGODB_USE_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
+        setDescription(Keys.MONGODB_HOSTNAME, "\nMongoDB hostname");
+        setDescription(Keys.MONGODB_PORT, "\nMongoDB port");
+        setDescription(Keys.MONGODB_DBNAME, "\nMongoDB database name");
+        setDescription(Keys.MONGODB_USERNAME, "\nMongoDB username");
+        setDescription(Keys.MONGODB_PASSWORD, "\nMongoDB password");
+        setDescription(Keys.MONGODB_AUTH_DB, "\nMongoDB database to use for authentication");
+        setDescription(Keys.MONGODB_USE_AUTH, "\nWhether to use authentication (username/password) for MongoDB connection");
+        setDescription(Keys.MONGODB_USE_SRV, "\nWhether to interpret the MongoDB hostname as an SRV record");
+        setDescription(Keys.MONGODB_USE_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
             "\nWhether to use the connection string provided instead of the normal connection info and credentials" +
             "\nOnly use this if you know what you are doing!" +
             "\nPlease note that this plugin will inherit both useConnectionString and connectionString from" +
             "\nAnvil if and only if useSharedEnvironment and useSharedCredentials are both true");
+    }
+
+    protected <T> void setVerification(Key<T> key,
+                                       Map<Predicate<T>, Function<T, T>> verification) {
+        verificationMap.put(key,
+            (Map<Predicate<Object>, Function<Object, Object>>) (Object) verification);
+    }
+
+    protected void setName(Key<?> key, String name) {
+        nodeNameMap.put(key, name);
+    }
+
+    protected void setDescription(Key<?> key, String description) {
+        nodeDescriptionMap.put(key, description);
     }
 
     @Override
@@ -168,8 +182,8 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     }
 
     @Override
-    public <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T value) {
-        super.putInMap(key, mapKey, value);
+    public <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T mapValue) {
+        super.putInMap(key, mapKey, mapValue);
         configValuesEdited = true;
     }
 
@@ -190,7 +204,7 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         if (configValuesEdited) {
             for (Map.Entry<Key<?>, String> entry : nodeNameMap.entrySet()) {
                 CommentedConfigurationNode node = fromString(entry.getValue());
-                node.setValue(valueMap.get(entry.getKey()));
+                node.setValue(getUnsafe(entry.getKey()));
             }
             try {
                 configLoader.save(rootConfigurationNode);
@@ -212,7 +226,8 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         return node;
     }
 
-    private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
+    private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key)
+        throws ObjectMappingException {
         node.setValue(key, getDefault(key));
     }
 
@@ -273,11 +288,11 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
                 Method getMethod = List.class.getMethod("get", int.class);
                 Invokable<? extends T, ?> invokable = typeToken.method(getMethod);
-                List<?> list = (List<?>) verify(verificationMap.get(typeToken), node.getList(invokable.getReturnType()), node, modified);
+                T list = (T) verify(verificationMap.get(typeToken), node.getList(invokable.getReturnType()), node, modified);
 
-                valueMap.put((Key<T>) typeToken, list);
+                set((Key<T>) typeToken, list);
 
-                return (T) list;
+                return list;
 
             } catch (NoSuchMethodException | IllegalArgumentException | ObjectMappingException e) {
                 e.printStackTrace();
@@ -302,8 +317,8 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
                 if (typeToken instanceof Key) {
                     Key<T> key = (Key<T>) typeToken;
-                    Map<?, ?> map = (Map<?, ?>) verify(verificationMap.get(key), result, node, modified);
-                    valueMap.put(key, map);
+                    T map = (T) verify(verificationMap.get(key), result, node, modified);
+                    set(key, map);
                 }
 
                 return (T) result;
@@ -314,11 +329,11 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
             }
         } else if (typeToken instanceof Key) {
             try {
-                Object value = node.getValue();
+                T value = node.getValue(typeToken);
                 Key<T> key = (Key<T>) typeToken;
-                valueMap.put(key, verify(verificationMap.get(key), value, node, modified));
-                return (T) value;
-            } catch (ClassCastException e) {
+                set(key, (T) verify(verificationMap.get(key), value, node, modified));
+                return value;
+            } catch (ClassCastException | ObjectMappingException e) {
                 e.printStackTrace();
                 return null;
             }
