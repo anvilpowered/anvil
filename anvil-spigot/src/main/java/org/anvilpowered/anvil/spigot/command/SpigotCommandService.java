@@ -12,18 +12,18 @@ import java.util.function.Predicate;
 
 public class SpigotCommandService extends CommonCommandService<Command, Command, TextComponent, CommandSender> {
 
-    private static abstract class sCommand extends Command {
+    private static abstract class SCommand extends Command {
         protected final String helpCommandName;
         protected final Predicate<CommandSender> extended;
 
-        public sCommand(String helpCommandName, Predicate<CommandSender> extended) {
+        public SCommand(String helpCommandName, Predicate<CommandSender> extended) {
             super(helpCommandName);
             this.helpCommandName = helpCommandName;
             this.extended = extended;
         }
     }
 
-    private class RootCommand extends sCommand {
+    private class RootCommand extends SCommand {
 
         public RootCommand(String helpCommandName, Predicate<CommandSender> extended) {
             super(helpCommandName, extended);
@@ -32,11 +32,11 @@ public class SpigotCommandService extends CommonCommandService<Command, Command,
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
             sendRoot(sender, helpCommandName, extended.test(sender));
-            return false;
+            return true;
         }
     }
 
-    private class VersionCommand extends sCommand {
+    private class VersionCommand extends SCommand {
 
         public VersionCommand(String helpCommandName, Predicate<CommandSender> extended) {
             super(helpCommandName, extended);
@@ -61,7 +61,7 @@ public class SpigotCommandService extends CommonCommandService<Command, Command,
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
             sendHelp(sender, node);
-            return false;
+            return true;
         }
     }
 

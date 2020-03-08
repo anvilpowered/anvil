@@ -26,6 +26,12 @@ public class SpigotAnvilCommandNode implements CommandNode<Command> {
     private Map<List<String>, Function<Object, String>> usages;
 
     @Inject
+    private SpigotAnvilPluginsCommand anvilPluginsCommand;
+
+    @Inject
+    private SpigotAnvilReloadCommand anvilReloadCommand;
+
+    @Inject
     private CommandService<Command, Command, CommandSender> commandService;
 
     @Inject
@@ -45,13 +51,13 @@ public class SpigotAnvilCommandNode implements CommandNode<Command> {
 
         commandService.registerCommand(
             Collections.singletonList("plugins"),
-            new SpigotAnvilPluginsCommand("plugins"),
+            anvilPluginsCommand,
             this
         );
 
         commandService.registerCommand(
             Collections.singletonList("reload"),
-            commandService.generateHelpCommand(this),
+            anvilReloadCommand,
             this
         );
 

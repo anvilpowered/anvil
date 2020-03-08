@@ -1,5 +1,6 @@
 package org.anvilpowered.anvil.spigot.command;
 
+import com.google.inject.Inject;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
 import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;
@@ -13,13 +14,14 @@ public class SpigotAnvilPluginsCommand extends Command {
 
     protected final Inner inner;
 
-    public SpigotAnvilPluginsCommand(String name) {
-        super(name);
+    @Inject
+    public SpigotAnvilPluginsCommand(Inner inner) {
+        super("plugins");
         this.setDescription("Anvil Plugins Command");
         this.setUsage("/anvil plugins");
         this.setPermission(AnvilCoreKeys.PLUGINS_PERMISSION.getFallbackValue());
         this.setAliases(Collections.singletonList("anvil"));
-        inner = new Inner();
+        this.inner = inner;
     }
 
     private static class Inner

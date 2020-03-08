@@ -11,15 +11,15 @@ import java.util.Optional;
 
 public class SpigotAnvilReloadCommand extends Command {
 
-    protected Inner inner;
+    protected final Inner inner;
 
     @Inject
-    protected SpigotAnvilReloadCommand(String name) {
-        super(name);
-        this.inner = new Inner();
+    protected SpigotAnvilReloadCommand(Inner inner) {
+        super("reload");
+        this.inner = inner;
     }
 
-    private class Inner extends CommonAnvilReloadCommand<TextComponent, CommandSender> {
+    private static class Inner extends CommonAnvilReloadCommand<TextComponent, CommandSender> {
         private String all() {
             return doAll();
         }
