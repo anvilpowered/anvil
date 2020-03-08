@@ -25,7 +25,9 @@ import jetbrains.exodus.entitystore.StoreTransaction;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.repository.XodusRepository;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -63,6 +65,15 @@ public interface XodusCoreMemberRepository
      * @return {@code query} for the provided {@link UUID}
      */
     Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForIpAddress(String ipAddress);
+
+    CompletableFuture<Optional<BigDecimal>> getBalance(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query
+    );
+
+    CompletableFuture<Boolean> setBalance(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query,
+        BigDecimal balance
+    );
 
     /**
      * Updates the properties {@code banEndUtc}, {@code banReason}

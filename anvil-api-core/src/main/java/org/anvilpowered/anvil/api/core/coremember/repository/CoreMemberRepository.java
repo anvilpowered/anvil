@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.api.core.coremember.repository;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.repository.Repository;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +86,14 @@ public interface CoreMemberRepository<
      * @return A {@link List} of matching {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      */
     CompletableFuture<List<CoreMember<TKey>>> getForIpAddress(String ipAddress);
+
+    CompletableFuture<Optional<BigDecimal>> getBalance(TKey id);
+
+    CompletableFuture<Optional<BigDecimal>> getBalanceForUser(UUID userUUID);
+
+    CompletableFuture<Boolean> setBalance(TKey id, BigDecimal balance);
+
+    CompletableFuture<Boolean> setBalanceForUser(UUID userUUID, BigDecimal balance);
 
     /**
      * Updates the properties {@code banEndUtc}, {@code banReason}

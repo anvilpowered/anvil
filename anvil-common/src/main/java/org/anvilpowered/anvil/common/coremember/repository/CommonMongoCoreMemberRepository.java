@@ -28,6 +28,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -103,6 +104,26 @@ public class CommonMongoCoreMemberRepository
     @Override
     public CompletableFuture<List<CoreMember<ObjectId>>> getForIpAddress(String ipAddress) {
         return CompletableFuture.supplyAsync(() -> asQueryForIpAddress(ipAddress).asList());
+    }
+
+    @Override
+    public CompletableFuture<Optional<BigDecimal>> getBalance(ObjectId id) {
+        return getBalance(asQuery(id));
+    }
+
+    @Override
+    public CompletableFuture<Optional<BigDecimal>> getBalanceForUser(UUID userUUID) {
+        return getBalance(asQuery(userUUID));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setBalance(ObjectId id, BigDecimal balance) {
+        return setBalance(asQuery(id), balance);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setBalanceForUser(UUID userUUID, BigDecimal balance) {
+        return setBalance(asQuery(userUUID), balance);
     }
 
     @Override
@@ -228,6 +249,18 @@ public class CommonMongoCoreMemberRepository
     @Override
     public Query<CoreMember<ObjectId>> asQueryForIpAddress(String ipAddress) {
         return asQuery().field("ipAddress").equal(ipAddress);
+    }
+
+    @Override
+    public CompletableFuture<Optional<BigDecimal>> getBalance(Query<CoreMember<ObjectId>> query) {
+        return CompletableFuture.supplyAsync(() ->
+            Optional.ofNullable(query.project("balance", true).get())
+                .map(CoreMember::getBalance));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setBalance(Query<CoreMember<ObjectId>> query, BigDecimal balance) {
+        return update(query, set("balance", balance));
     }
 
     @Override

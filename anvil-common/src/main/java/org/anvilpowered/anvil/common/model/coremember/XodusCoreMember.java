@@ -24,6 +24,7 @@ import org.anvilpowered.anvil.api.datastore.annotation.XodusEntity;
 import org.anvilpowered.anvil.base.model.XodusDbo;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
 
     private String userUUID;
     private String userName;
+    private String balance;
     private String ipAddress;
     private long lastJoinedUtcSeconds;
     private int lastJoinedUtcNanos;
@@ -63,6 +65,16 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
     @Override
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @Override
+    public BigDecimal getBalance() {
+        return new BigDecimal(balance);
+    }
+
+    @Override
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance.toString();
     }
 
     @Override
@@ -167,6 +179,9 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
         if (userName != null) {
             object.setProperty("userName", userName);
         }
+        if (balance != null) {
+            object.setProperty("balance", balance);
+        }
         if (ipAddress != null) {
             object.setProperty("ipAddress", ipAddress);
         }
@@ -200,6 +215,10 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
         Comparable<?> userName = object.getProperty("userName");
         if (userName instanceof String) {
             this.userName = (String) userName;
+        }
+        Comparable<?> balance = object.getProperty("balance");
+        if (balance instanceof String) {
+            this.balance = (String) balance;
         }
         Comparable<?> ipAddress = object.getProperty("ipAddress");
         if (ipAddress instanceof String) {

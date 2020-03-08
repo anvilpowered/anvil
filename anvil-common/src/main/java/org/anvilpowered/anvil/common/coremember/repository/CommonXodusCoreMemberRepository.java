@@ -23,12 +23,13 @@ import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
+import org.anvilpowered.anvil.api.core.coremember.repository.XodusCoreMemberRepository;
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.Mappable;
 import org.anvilpowered.anvil.base.repository.BaseXodusRepository;
-import org.anvilpowered.anvil.api.core.coremember.repository.XodusCoreMemberRepository;
-import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -119,6 +120,26 @@ public class CommonXodusCoreMemberRepository
     @Override
     public CompletableFuture<List<CoreMember<EntityId>>> getForIpAddress(String ipAddress) {
         return getAll(asQueryForIpAddress(ipAddress));
+    }
+
+    @Override
+    public CompletableFuture<Optional<BigDecimal>> getBalance(EntityId id) {
+        return getBalance(asQuery(id));
+    }
+
+    @Override
+    public CompletableFuture<Optional<BigDecimal>> getBalanceForUser(UUID userUUID) {
+        return getBalance(asQuery(userUUID));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setBalance(EntityId id, BigDecimal balance) {
+        return setBalance(asQuery(id), balance);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setBalanceForUser(UUID userUUID, BigDecimal balance) {
+        return setBalance(asQuery(userUUID), balance);
     }
 
     @Override
@@ -244,6 +265,29 @@ public class CommonXodusCoreMemberRepository
     @Override
     public Function<? super StoreTransaction, ? extends Iterable<Entity>> asQueryForIpAddress(String ipAddress) {
         return txn -> txn.find(getTClass().getSimpleName(), "ipAddress", ipAddress);
+    }
+
+    @Override
+    public CompletableFuture<Optional<BigDecimal>> getBalance(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+        return CompletableFuture.supplyAsync(() ->
+            getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn -> {
+                Iterator<Entity> iterator = query.apply(txn).iterator();
+                if (!iterator.hasNext()) {
+                    return Optional.empty();
+                }
+                Comparable<?> balance = iterator.next().getProperty("balance");
+                if (balance instanceof String) {
+                    return Optional.of(new BigDecimal((String) balance));
+                }
+                return Optional.empty();
+            })
+        );
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setBalance(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, BigDecimal balance) {
+        return update(query, e -> e.setProperty("balance", balance.toString()));
     }
 
     @Override

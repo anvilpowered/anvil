@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.api.core.model.coremember;
 
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -30,6 +31,9 @@ public interface CoreMember<TKey> extends ObjectWithId<TKey> {
 
     String getUserName();
     void setUserName(String userName);
+
+    BigDecimal getBalance();
+    void setBalance(BigDecimal balance);
 
     String getIpAddress();
     void setIpAddress(String ipAddress);

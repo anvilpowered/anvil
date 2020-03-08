@@ -24,7 +24,9 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -58,6 +60,10 @@ public interface MongoCoreMemberRepository
      * @return {@link Query} for the provided {@link String}
      */
     Query<CoreMember<ObjectId>> asQueryForIpAddress(String ipAddress);
+
+    CompletableFuture<Optional<BigDecimal>> getBalance(Query<CoreMember<ObjectId>> query);
+
+    CompletableFuture<Boolean> setBalance(Query<CoreMember<ObjectId>> query, BigDecimal balance);
 
     /**
      * Updates the properties {@code banEndUtc}, {@code banReason}

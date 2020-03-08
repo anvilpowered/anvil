@@ -23,6 +23,7 @@ import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class MongoCoreMember extends MongoDbo implements CoreMember<ObjectId> {
 
     private UUID userUUID;
     private String userName;
+    private BigDecimal balance;
     private String ipAddress;
     private Instant lastJoinedUtc;
     private String nickName;
@@ -59,6 +61,16 @@ public class MongoCoreMember extends MongoDbo implements CoreMember<ObjectId> {
     @Override
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @Override
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    @Override
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     @Override
