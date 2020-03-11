@@ -44,5 +44,7 @@ public class SpigotModule extends CommonModule<TextComponent, CommandSender> {
         }
         bind (new TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>(){
         }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
+
+
     }
 }

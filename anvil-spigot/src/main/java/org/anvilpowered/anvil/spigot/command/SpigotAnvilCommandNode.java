@@ -5,9 +5,12 @@ import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +69,14 @@ public class SpigotAnvilCommandNode implements CommandNode<Command> {
             commandService.generateHelpCommand(this),
             this
         );
+
+        command = new Command("help", "root command", "/anvil help", Arrays.asList("h")) {
+            @Override
+            public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+                commandService.generateRootCommand("/anvil help");
+                return true;
+            }
+        };
     }
 
     private static final String ERROR_MESSAGE = "Anvil command has not been loaded yet";

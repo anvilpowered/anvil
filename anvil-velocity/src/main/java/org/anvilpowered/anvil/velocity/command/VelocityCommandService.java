@@ -89,6 +89,6 @@ public class VelocityCommandService extends CommonCommandService<Command, Comman
 
     @Override
     public Command generateReloadCommand() {
-        return new ReloadCommand();
+        return new ReloadCommand;
     }
 }
