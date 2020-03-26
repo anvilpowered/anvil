@@ -82,7 +82,6 @@ shadowJar {
         include dependency(configurate_hocon)
         include dependency(guice)
         include dependency(javasisst)
-        include dependency(javax)
         include dependency(microutils_logging)
         include dependency(mongo_java_driver)
         include dependency(mongodb_driver_sync)

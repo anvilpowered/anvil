@@ -19,62 +19,61 @@
 package org.anvilpowered.anvil.sponge.command;
 
 import org.anvilpowered.anvil.api.command.CommandNode;
-import org.anvilpowered.anvil.common.util.CommonCommandService;
-import org.spongepowered.api.command.CommandException;
+import org.anvilpowered.anvil.common.command.CommonCommandService;
+import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
-import java.util.List;
 import java.util.function.Predicate;
 
-public class SpongeCommandService extends CommonCommandService<CommandSpec, CommandExecutor, Text, CommandSource> {
+public class SpongeCommandService
+    extends CommonCommandService<CommandCallable, CommandExecutor, Text, CommandSource> {
 
     private static abstract class Command implements CommandExecutor {
 
-        protected final String helpCommandName;
+        protected final String helpUsage;
         protected final Predicate<CommandSource> extended;
 
-        public Command(String helpCommandName, Predicate<CommandSource> extended) {
-            this.helpCommandName = helpCommandName;
+        public Command(String helpUsage, Predicate<CommandSource> extended) {
+            this.helpUsage = helpUsage;
             this.extended = extended;
         }
     }
 
     private class RootCommand extends Command {
 
-        public RootCommand(String helpCommandName, Predicate<CommandSource> extended) {
-            super(helpCommandName, extended);
+        public RootCommand(String helpUsage, Predicate<CommandSource> extended) {
+            super(helpUsage, extended);
         }
 
         @Override
         public CommandResult execute(CommandSource source, CommandContext context) {
-            sendRoot(source, helpCommandName, extended.test(source));
+            sendRoot(source, helpUsage, extended.test(source));
             return CommandResult.success();
         }
     }
 
     private class VersionCommand extends Command {
 
-        public VersionCommand(String helpCommandName, Predicate<CommandSource> extended) {
-            super(helpCommandName, extended);
+        public VersionCommand(String helpUsage, Predicate<CommandSource> extended) {
+            super(helpUsage, extended);
         }
 
         @Override
         public CommandResult execute(CommandSource source, CommandContext context) {
-            sendVersion(source, helpCommandName, extended.test(source));
+            sendVersion(source, helpUsage, extended.test(source));
             return CommandResult.success();
         }
     }
 
     private class HelpCommand implements CommandExecutor {
 
-        private final CommandNode<CommandSpec> node;
+        private final CommandNode<CommandSource> node;
 
-        public HelpCommand(CommandNode<CommandSpec> node) {
+        public HelpCommand(CommandNode<CommandSource> node) {
             this.node = node;
         }
 
@@ -84,7 +83,6 @@ public class SpongeCommandService extends CommonCommandService<CommandSpec, Comm
             return CommandResult.success();
         }
     }
-
 
     private class ReloadCommand implements CommandExecutor {
 
@@ -96,36 +94,36 @@ public class SpongeCommandService extends CommonCommandService<CommandSpec, Comm
     }
 
     @Override
-    public void registerCommand(List<String> aliases, CommandSpec commandSpec, CommandNode<CommandSpec> node) {
-        node.getCommands().put(aliases, commandSpec);
-        node.getDescriptions().put(aliases,
-            c -> c instanceof CommandSource
-                ? commandSpec.getShortDescription((CommandSource) c)
-                .map(Text::toPlain).orElse("null")
-                : "null"
-        );
-        node.getPermissions().put(aliases,
-            c -> c instanceof CommandSource && commandSpec.testPermission((CommandSource) c)
-        );
-        node.getUsages().put(aliases,
-            c -> c instanceof CommandSource
-                ? commandSpec.getUsage((CommandSource) c).toPlain()
-                : "null"
-        );
+    protected void runExecutor(
+        CommandExecutor commandExecutor,
+        CommandCallable commandCallable,
+        CommandSource commandSource,
+        String alias,
+        String[] context
+    ) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public CommandExecutor generateRootCommand(String helpCommandName, Predicate<CommandSource> extended) {
-        return new RootCommand(helpCommandName, extended);
+    protected CommandExecutor generateWrapperCommand(
+        CommandExecutorWrapper<CommandCallable, CommandSource> command) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public CommandExecutor generateVersionCommand(String helpCommandName, Predicate<CommandSource> extended) {
-        return new VersionCommand(helpCommandName, extended);
+    public CommandExecutor generateRootCommand(
+        String helpUsage, Predicate<CommandSource> extended) {
+        return new RootCommand(helpUsage, extended);
     }
 
     @Override
-    public CommandExecutor generateHelpCommand(CommandNode<CommandSpec> node) {
+    public CommandExecutor generateVersionCommand(
+        String helpUsage, Predicate<CommandSource> extended) {
+        return new VersionCommand(helpUsage, extended);
+    }
+
+    @Override
+    public CommandExecutor generateHelpCommand(CommandNode<CommandSource> node) {
         return new HelpCommand(node);
     }
 

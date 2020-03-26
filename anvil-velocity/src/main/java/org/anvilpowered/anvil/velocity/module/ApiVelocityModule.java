@@ -43,7 +43,7 @@ public class ApiVelocityModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
-        bind(new TypeLiteral<CommandService<Command, Command, CommandSource>>() {
+        bind(new TypeLiteral<CommandService<Command, CommandSource>>() {
         }).to(VelocityCommandService.class);
         bind(CurrentServerService.class).to(VelocityCurrentServerService.class);
         bind(KickService.class).to(VelocityKickService.class);

@@ -44,6 +44,28 @@ public class CommonAnvilReloadCommand<TString, TCommandSource> {
     @Inject
     protected TextService<TString, TCommandSource> textService;
 
+    public void sendReload(TCommandSource source, String[] context) {
+        final int length = context.length;
+        if (length == 0) {
+            checkPresent(source, false);
+            return;
+        }
+        String[] reloadedResult = {""};
+        if ("-a".equals(context[0]) || "--all".equals(context[0])) {
+            reloadedResult[0] = doAll();
+        } else if ("-r".equals(context[0]) || "--regex".equals(context[0])) {
+            if (!checkPresent(source, length > 1)
+                || !doRegex(source, context[1], reloadedResult)) {
+                return;
+            }
+        } else {
+            if (!doDirect(source, context[0], reloadedResult)) {
+                return;
+            }
+        }
+        sendSuccess(source, reloadedResult);
+    }
+
     protected String doAll() {
         return Anvil.getEnvironmentManager()
             .getEnvironments().values().stream()

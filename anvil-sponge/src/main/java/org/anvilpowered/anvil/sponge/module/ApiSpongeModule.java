@@ -36,6 +36,7 @@ import org.anvilpowered.anvil.sponge.util.SpongePermissionService;
 import org.anvilpowered.anvil.sponge.util.SpongeTextService;
 import org.anvilpowered.anvil.sponge.util.SpongeTeleportationService;
 import org.anvilpowered.anvil.sponge.util.SpongeUserService;
+import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -49,7 +50,7 @@ public class ApiSpongeModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
-        bind(new TypeLiteral<CommandService<CommandSpec, CommandExecutor, CommandSource>>() {
+        bind(new TypeLiteral<CommandService<CommandExecutor, CommandSource>>() {
         }).to(SpongeCommandService.class);
         bind(CurrentServerService.class).to(SpongeCurrentServerService.class);
         bind(CurrentWorldService.class).to(SpongeCurrentWorldService.class);

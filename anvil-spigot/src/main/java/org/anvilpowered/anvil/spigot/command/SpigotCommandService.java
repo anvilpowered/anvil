@@ -2,117 +2,122 @@ package org.anvilpowered.anvil.spigot.command;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.api.command.CommandNode;
-import org.anvilpowered.anvil.common.util.CommonCommandService;
+import org.anvilpowered.anvil.common.command.CommonCommandService;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.function.Predicate;
 
-public class SpigotCommandService extends CommonCommandService<Command, Command, TextComponent, CommandSender> {
+public class SpigotCommandService extends CommonCommandService<Command, CommandExecutor, TextComponent, CommandSender> {
 
-    private static abstract class SCommand extends Command {
-        protected final String helpCommandName;
+    private static class WrapperCommand implements CommandExecutor {
+        private final CommandExecutorWrapper<Command, CommandSender> wrapper;
+
+        public WrapperCommand(CommandExecutorWrapper<Command, CommandSender> wrapper) {
+            this.wrapper = wrapper;
+        }
+
+        @Override
+        public boolean onCommand(CommandSender source, Command command, String label, String[] args) {
+            wrapper.execute(command, source, label, args);
+            return true;
+        }
+    }
+
+    private static abstract class SCommand implements CommandExecutor {
+        protected final String helpUsage;
         protected final Predicate<CommandSender> extended;
 
-        public SCommand(String helpCommandName, Predicate<CommandSender> extended) {
-            super(helpCommandName);
-            this.helpCommandName = helpCommandName;
+        public SCommand(String helpUsage, Predicate<CommandSender> extended) {
+            this.helpUsage = helpUsage;
             this.extended = extended;
         }
     }
 
     private class RootCommand extends SCommand {
 
-        public RootCommand(String helpCommandName, Predicate<CommandSender> extended) {
-            super(helpCommandName, extended);
+        public RootCommand(String helpUsage, Predicate<CommandSender> extended) {
+            super(helpUsage, extended);
         }
 
         @Override
-        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            sendRoot(sender, helpCommandName, extended.test(sender));
+        public boolean onCommand(CommandSender source, Command command, String label, String[] args) {
+            sendRoot(source, helpUsage, extended.test(source));
             return true;
         }
     }
 
     private class VersionCommand extends SCommand {
 
-        public VersionCommand(String helpCommandName, Predicate<CommandSender> extended) {
-            super(helpCommandName, extended);
+        public VersionCommand(String helpUsage, Predicate<CommandSender> extended) {
+            super(helpUsage, extended);
         }
 
         @Override
-        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            sendVersion(sender, helpCommandName, extended.test(sender));
+        public boolean onCommand(CommandSender source, Command command, String label, String[] args) {
+            sendVersion(source, helpUsage, extended.test(source));
             return true;
         }
     }
 
-    private class HelpCommand extends Command {
+    private class HelpCommand implements CommandExecutor {
 
-        private final CommandNode<Command> node;
+        private final CommandNode<CommandSender> node;
 
-        public HelpCommand(CommandNode<Command> node) {
-            super("help");
+        public HelpCommand(CommandNode<CommandSender> node) {
             this.node = node;
         }
 
         @Override
-        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            sendHelp(sender, node);
+        public boolean onCommand(CommandSender source, Command command, String label, String[] args) {
+            sendHelp(source, node);
             return true;
         }
     }
 
-    private class ReloadCommand extends Command {
-
-        protected ReloadCommand() {
-            super("reload");
-        }
+    private class ReloadCommand implements CommandExecutor {
 
         @Override
-        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            sendReload(sender);
+        public boolean onCommand(CommandSender source, Command command, String label, String[] args) {
+            sendReload(source);
             return true;
         }
     }
 
     @Override
-    public void registerCommand(List<String> aliases, Command command, CommandNode<Command> node) {
-        node.getCommands().put(aliases, command);
-        node.getDescriptions().put(aliases,
-            c -> c instanceof CommandSender
-                ? command.getDescription()
-                : "null"
-        );
-        node.getPermissions().put(aliases,
-            c -> c instanceof CommandSender && command.testPermission((CommandSender) c)
-        );
-        node.getUsages().put(aliases,
-            c -> c instanceof CommandSender
-                ? command.getUsage()
-                : "null"
-        );
+    protected void runExecutor(
+        CommandExecutor executor,
+        Command command,
+        CommandSender source,
+        String alias,
+        String[] context
+    ) {
+        executor.onCommand(source, command, alias, context);
     }
 
     @Override
-    public Command generateRootCommand(String helpCommandName, Predicate<CommandSender> extended) {
-        return new RootCommand(helpCommandName, extended);
+    protected CommandExecutor generateWrapperCommand(CommandExecutorWrapper<Command, CommandSender> command) {
+        return new WrapperCommand(command);
     }
 
     @Override
-    public Command generateVersionCommand(String helpCommandName, Predicate<CommandSender> extended) {
-        return new VersionCommand(helpCommandName, extended);
+    public CommandExecutor generateRootCommand(String helpUsage, Predicate<CommandSender> extended) {
+        return new RootCommand(helpUsage, extended);
     }
 
     @Override
-    public Command generateHelpCommand(CommandNode<Command> node) {
+    public CommandExecutor generateVersionCommand(String helpUsage, Predicate<CommandSender> extended) {
+        return new VersionCommand(helpUsage, extended);
+    }
+
+    @Override
+    public CommandExecutor generateHelpCommand(CommandNode<CommandSender> node) {
         return new HelpCommand(node);
     }
 
     @Override
-    public Command generateReloadCommand() {
+    public CommandExecutor generateReloadCommand() {
         return new ReloadCommand();
     }
 }

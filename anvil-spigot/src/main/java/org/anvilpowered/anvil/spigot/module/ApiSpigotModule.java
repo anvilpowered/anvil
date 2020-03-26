@@ -23,17 +23,17 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
-import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.TeleportationService;
+import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandService;
 import org.anvilpowered.anvil.spigot.util.SpigotKickService;
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService;
-import org.anvilpowered.anvil.spigot.util.SpigotTextService;
 import org.anvilpowered.anvil.spigot.util.SpigotTeleportationService;
+import org.anvilpowered.anvil.spigot.util.SpigotTextService;
 import org.anvilpowered.anvil.spigot.util.SpigotUserService;
-import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -43,7 +43,7 @@ public class ApiSpigotModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
-        bind(new TypeLiteral<CommandService<Command, Command, CommandSender>>(){
+        bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>(){
         }).to(SpigotCommandService.class);
         bind(KickService.class).to(SpigotKickService.class);
         bind(new TypeLiteral<PermissionService<Permissible>>() {

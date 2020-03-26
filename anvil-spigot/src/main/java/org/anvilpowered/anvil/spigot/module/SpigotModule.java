@@ -23,8 +23,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.anvilpowered.anvil.spigot.command.SpigotAnvilCommandNode;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
@@ -35,16 +37,15 @@ public class SpigotModule extends CommonModule<TextComponent, CommandSender> {
     @Override
     protected void configure() {
         super.configure();
-
         File configFilesLocation = Paths.get("plugins/" + AnvilCorePluginInfo.id).toFile();
         if (!configFilesLocation.exists()) {
-            if (!configFilesLocation.mkdirs()){
+            if (!configFilesLocation.mkdirs()) {
                 throw new IllegalStateException("Unable to create config directory");
             }
         }
-        bind (new TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>(){
+        bind(new TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {
         }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
-
-
+        bind(new TypeLiteral<CommandNode<CommandSender>>() {
+        }).to(SpigotAnvilCommandNode.class);
     }
 }

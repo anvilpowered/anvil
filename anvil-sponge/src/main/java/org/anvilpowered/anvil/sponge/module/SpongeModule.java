@@ -35,7 +35,7 @@ public class SpongeModule extends CommonModule<Text, CommandSource> {
         super.configure();
 
         bind(AnvilCoreConfigurationService.class).to(AnvilCoreSpongeConfigurationService.class);
-        bind(new TypeLiteral<CommandNode<CommandSpec>>() {
+        bind(new TypeLiteral<CommandNode<CommandSource>>() {
         }).to(SpongeAnvilCommandNode.class);
     }
 }

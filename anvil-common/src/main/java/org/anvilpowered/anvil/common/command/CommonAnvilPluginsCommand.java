@@ -31,7 +31,7 @@ public class CommonAnvilPluginsCommand<TString, TCommandSource> {
     @Inject
     protected TextService<TString, TCommandSource> textService;
 
-    protected void sendPlugins(TCommandSource source) {
+    public void sendPlugins(TCommandSource source) {
         String[] names = Anvil.getEnvironmentManager()
             .getEnvironments().values()
             .stream()

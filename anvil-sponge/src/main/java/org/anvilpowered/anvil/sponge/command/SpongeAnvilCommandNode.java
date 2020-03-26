@@ -20,36 +20,25 @@ package org.anvilpowered.anvil.sponge.command;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.anvilpowered.anvil.api.Environment;
-import org.anvilpowered.anvil.api.command.CommandNode;
-import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 @Singleton
-public class SpongeAnvilCommandNode implements CommandNode<CommandSpec> {
-
-    private boolean alreadyLoaded;
-    private CommandSpec command;
-    private Map<List<String>, CommandSpec> subCommands;
-    private Map<List<String>, Function<Object, String>> descriptions;
-    private Map<List<String>, Predicate<Object>> permissions;
-    private Map<List<String>, Function<Object, String>> usages;
+public class SpongeAnvilCommandNode
+    extends CommonAnvilCommandNode<CommandExecutor, CommandSource> {
 
     @Inject
     private SpongeAnvilPluginsCommand anvilPluginsCommand;
@@ -58,108 +47,49 @@ public class SpongeAnvilCommandNode implements CommandNode<CommandSpec> {
     private SpongeAnvilReloadCommand anvilReloadCommand;
 
     @Inject
-    private CommandService<CommandSpec, CommandExecutor, CommandSource> commandService;
-
-    @Inject
-    private Environment environment;
-
-    @Inject
     public SpongeAnvilCommandNode(Registry registry) {
-        registry.addRegistryLoadedListener(this::registryLoaded);
-        alreadyLoaded = false;
+        super(registry);
     }
 
-    public void registryLoaded() {
-        if (alreadyLoaded) return;
-        alreadyLoaded = true;
+    @Override
+    protected void loadCommands() {
 
-        subCommands = new HashMap<>();
-        descriptions = new HashMap<>();
-        usages = new HashMap<>();
-        permissions = new HashMap<>();
+        Map<List<String>, CommandCallable> subCommands = new HashMap<>();
 
-        commandService.registerCommand(
-            Collections.singletonList("plugins"),
-            CommandSpec.builder()
-                .description(Text.of("List plugins"))
-                .permission(AnvilCoreKeys.PLUGINS_PERMISSION.getFallbackValue())
-                .executor(anvilPluginsCommand)
-                .build(),
-            this
-        );
+        subCommands.put(PLUGINS_ALIAS, CommandSpec.builder()
+            .description(Text.of(PLUGINS_DESCRIPTION))
+            .permission(registry.getOrDefault(AnvilCoreKeys.PLUGINS_PERMISSION))
+            .executor(anvilPluginsCommand)
+            .build());
 
-        commandService.registerCommand(
-            Collections.singletonList("reload"),
-            CommandSpec.builder()
-                .description(Text.of("Reloads plugins"))
-                .permission(AnvilCoreKeys.RELOAD_PERMISSION.getFallbackValue())
-                .arguments(
-                    GenericArguments.flags().flag("a", "-all").flag("r", "-regex")
-                        .buildWith(GenericArguments.optional(
-                            GenericArguments.string(Text.of("plugin"))))
-                )
-                .executor(anvilReloadCommand)
-                .build(),
-            this
-        );
+        subCommands.put(RELOAD_ALIAS, CommandSpec.builder()
+            .description(Text.of(RELOAD_DESCRIPTION))
+            .permission(registry.getOrDefault(AnvilCoreKeys.RELOAD_PERMISSION))
+            .arguments(
+                GenericArguments.flags().flag("a", "-all").flag("r", "-regex")
+                    .buildWith(GenericArguments.optional(
+                        GenericArguments.string(Text.of("plugin"))))
+            )
+            .executor(anvilReloadCommand)
+            .build());
 
-        commandService.registerCommand(
-            Collections.singletonList("help"),
-            CommandSpec.builder()
-                .description(Text.of("Help command"))
-                .executor(commandService.generateHelpCommand(this))
-                .build(),
-            this
-        );
+        subCommands.put(HELP_ALIAS, CommandSpec.builder()
+            .description(Text.of(HELP_DESCRIPTION))
+            .executor(commandService.generateHelpCommand(this))
+            .build());
 
-        commandService.registerCommand(
-            Collections.singletonList("version"),
-            CommandSpec.builder()
-                .description(Text.of("Version command"))
-                .executor(commandService.generateVersionCommand("/anvil help"))
-                .build(),
-            this
-        );
+        subCommands.put(VERSION_ALIAS, CommandSpec.builder()
+            .description(Text.of(VERSION_DESCRIPTION))
+            .executor(commandService.generateVersionCommand(HELP_COMMAND))
+            .build());
 
-        command = CommandSpec.builder()
-            .description(Text.of("Root command"))
-            .executor(commandService.generateRootCommand("/anvil help"))
+        CommandSpec root = CommandSpec.builder()
+            .description(Text.of(ROOT_DESCRIPTION))
+            .executor(commandService.generateRootCommand(HELP_COMMAND))
             .children(subCommands)
             .build();
 
         Sponge.getCommandManager()
-            .register(environment.getPlugin(), command, AnvilCorePluginInfo.id);
-    }
-
-    private static final String ERROR_MESSAGE = "Anvil command has not been loaded yet";
-
-    @Override
-    public String getName() {
-        return AnvilCorePluginInfo.id;
-    }
-
-    @Override
-    public CommandSpec getCommand() {
-        return Objects.requireNonNull(command, ERROR_MESSAGE);
-    }
-
-    @Override
-    public Map<List<String>, CommandSpec> getCommands() {
-        return Objects.requireNonNull(subCommands, ERROR_MESSAGE);
-    }
-
-    @Override
-    public Map<List<String>, Function<Object, String>> getDescriptions() {
-        return Objects.requireNonNull(descriptions, ERROR_MESSAGE);
-    }
-
-    @Override
-    public Map<List<String>, Predicate<Object>> getPermissions() {
-        return Objects.requireNonNull(permissions, ERROR_MESSAGE);
-    }
-
-    @Override
-    public Map<List<String>, Function<Object, String>> getUsages() {
-        return Objects.requireNonNull(usages, ERROR_MESSAGE);
+            .register(environment.getPlugin(), root, AnvilCorePluginInfo.id);
     }
 }

@@ -18,35 +18,59 @@
 
 package org.anvilpowered.anvil.api.command;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
-public interface CommandService<TCommand, TCommandExecutor, TCommandSource> {
+public interface CommandService<TCommandExecutor, TCommandSource> {
 
-    void registerCommand(List<String> aliases, TCommand command, CommandNode<TCommand> node);
+    /**
+     * Generates a command that runs a child command if its alias
+     * matches the first argument of the generated command.
+     *
+     * <p>
+     * If {@code childCommandFallback} is false
+     * and the first argument does not match a child, a syntax error message will
+     * be shown to the source. Otherwise, the root command executor will run.
+     * </p>
+     *
+     * @param root                 The command to run if no child was specified.
+     * @param children             A map of child commands and their aliases.
+     * @param childCommandFallback whether to fall back to the root command if the first
+     *                             argument did not match a child command alias
+     * @throws UnsupportedOperationException on Sponge.
+     *                                       Use {@code CommandSpec} instead.
+     */
+    TCommandExecutor generateRoutingCommand(
+        @Nullable TCommandExecutor root,
+        Map<List<String>, TCommandExecutor> children,
+        boolean childCommandFallback
+    );
 
     TCommandExecutor generateRootCommand(
-        String helpCommandName,
+        String helpUsage,
         Predicate<TCommandSource> extended
     );
 
-    default TCommandExecutor generateRootCommand(String helpCommandName) {
-        return generateRootCommand(helpCommandName, e -> true);
+    default TCommandExecutor generateRootCommand(String helpUsage) {
+        return generateRootCommand(helpUsage, e -> true);
     }
 
     TCommandExecutor generateVersionCommand(
-        String helpCommandName,
+        String helpUsage,
         Predicate<TCommandSource> extended
     );
 
-    default TCommandExecutor generateVersionCommand(String helpCommandName) {
-        return generateVersionCommand(helpCommandName, e -> true);
+    default TCommandExecutor generateVersionCommand(String helpUsage) {
+        return generateVersionCommand(helpUsage, e -> true);
     }
 
     /**
      * Generates a help command for the provided {@link CommandNode}.
      */
-    TCommandExecutor generateHelpCommand(CommandNode<TCommand> node);
+    TCommandExecutor generateHelpCommand(CommandNode<TCommandSource> node);
 
     TCommandExecutor generateReloadCommand();
 }

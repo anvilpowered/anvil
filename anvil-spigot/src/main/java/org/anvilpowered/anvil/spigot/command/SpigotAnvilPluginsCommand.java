@@ -1,41 +1,24 @@
 package org.anvilpowered.anvil.spigot.command;
 
-import com.google.inject.Inject;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
 import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-
-public class SpigotAnvilPluginsCommand extends Command {
-
-    protected final Inner inner;
-
-    @Inject
-    public SpigotAnvilPluginsCommand(Inner inner) {
-        super("plugins");
-        this.setDescription("Anvil Plugins Command");
-        this.setUsage("/anvil plugins");
-        this.setPermission(AnvilCoreKeys.PLUGINS_PERMISSION.getFallbackValue());
-        this.setAliases(Collections.singletonList("anvil"));
-        this.inner = inner;
-    }
-
-    private static class Inner
-        extends CommonAnvilPluginsCommand<TextComponent, CommandSender> {
-        private void sendList(CommandSender sender) {
-            sendPlugins(sender);
-        }
-    }
+public class SpigotAnvilPluginsCommand
+    extends CommonAnvilPluginsCommand<TextComponent, CommandSender>
+    implements CommandExecutor {
 
     @Override
-    public boolean execute(@NotNull CommandSender sender,
-                           @NotNull String commandLabel,
-                           @NotNull String[] args) {
-        inner.sendList(sender);
+    public boolean onCommand(
+        CommandSender source,
+        Command command,
+        String alias,
+        String[] context
+    ) {
+        sendPlugins(source);
         return true;
     }
 }
