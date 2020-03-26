@@ -188,7 +188,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
                 } else {
-                    elements.add(TextComponent.of(o.toString()));
+                    elements.add(TextComponent.of(String.valueOf(o)));
                 }
             }
             return this;
@@ -203,7 +203,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
                 } else {
-                    elements.add(TextComponent.of(o.toString()));
+                    elements.add(TextComponent.of(String.valueOf(o)));
                 }
                 if (i != indexOfLast) {
                     if (delimiter instanceof Builder || delimiter instanceof Component) {

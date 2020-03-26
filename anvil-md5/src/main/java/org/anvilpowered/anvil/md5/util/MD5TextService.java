@@ -172,7 +172,7 @@ public abstract class MD5TextService<TCommandSource>
                 if (o instanceof Builder || o instanceof TextComponent || o instanceof ChatColor) {
                     elements.add(o);
                 } else {
-                    elements.add(o.toString());
+                    elements.add(String.valueOf(o));
                 }
             }
             return this;
@@ -187,7 +187,7 @@ public abstract class MD5TextService<TCommandSource>
                 if (o instanceof Builder || o instanceof TextComponent || o instanceof ChatColor) {
                     elements.add(o);
                 } else {
-                    elements.add(o.toString());
+                    elements.add(String.valueOf(o));
                 }
                 if (i != indexOfLast) {
                     if (delimiter instanceof Builder || delimiter instanceof TextComponent) {
