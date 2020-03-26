@@ -5,9 +5,7 @@ import com.velocitypowered.api.command.CommandSource;
 import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCommandService;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 public class VelocityCommandService extends CommonCommandService<Command, Command, TextComponent, CommandSource> {
