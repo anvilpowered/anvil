@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.sponge.module;
 
 import com.google.inject.TypeLiteral;
-import org.anvilpowered.anvil.api.util.CommandService;
+import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.CurrentWorldService;
 import org.anvilpowered.anvil.api.util.KickService;
@@ -28,7 +28,7 @@ import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
-import org.anvilpowered.anvil.sponge.util.SpongeCommandService;
+import org.anvilpowered.anvil.sponge.command.SpongeCommandService;
 import org.anvilpowered.anvil.sponge.util.SpongeCurrentServerService;
 import org.anvilpowered.anvil.sponge.util.SpongeCurrentWorldService;
 import org.anvilpowered.anvil.sponge.util.SpongeKickService;
@@ -36,6 +36,7 @@ import org.anvilpowered.anvil.sponge.util.SpongePermissionService;
 import org.anvilpowered.anvil.sponge.util.SpongeTextService;
 import org.anvilpowered.anvil.sponge.util.SpongeTeleportationService;
 import org.anvilpowered.anvil.sponge.util.SpongeUserService;
+import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -49,7 +50,7 @@ public class ApiSpongeModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
-        bind(new TypeLiteral<CommandService<CommandSpec, CommandExecutor, CommandSource>>() {
+        bind(new TypeLiteral<CommandService<CommandExecutor, CommandSource>>() {
         }).to(SpongeCommandService.class);
         bind(CurrentServerService.class).to(SpongeCurrentServerService.class);
         bind(CurrentWorldService.class).to(SpongeCurrentWorldService.class);

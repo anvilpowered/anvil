@@ -18,36 +18,35 @@
 
 package org.anvilpowered.anvil.sponge.command;
 
-import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.plugin.PluginInfo;
-import org.anvilpowered.anvil.api.util.TextService;
+import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
-public class AnvilSpongePluginsCommand implements CommandExecutor {
+import java.util.Optional;
 
-    @Inject
-    private PluginInfo<Text> pluginInfo;
-
-    @Inject
-    private TextService<Text, CommandSource> textService;
+public class SpongeAnvilReloadCommand
+    extends CommonAnvilReloadCommand<Text, CommandSource>
+    implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource source, CommandContext context) {
-        String[] names = Anvil.getEnvironmentManager()
-            .getEnvironments().values()
-            .stream()
-            .map(e -> e.getPluginInfo().getName())
-            .sorted().toArray(String[]::new);
-        textService.builder()
-            .append(pluginInfo.getPrefix())
-            .green().append("Plugins (", names.length, "): ")
-            .appendJoining(", ", names)
-            .sendTo(source);
+        Optional<String> optionalPlugin = context.getOne("plugin");
+        String[] reloadedResult = {""};
+        if (context.hasAny("a")) {
+            reloadedResult[0] = doAll();
+        } else if (!checkPresent(source, optionalPlugin.isPresent())) {
+            return CommandResult.empty();
+        } else if (context.hasAny("r")) {
+            if (!doRegex(source, optionalPlugin.get(), reloadedResult)) {
+                return CommandResult.empty();
+            }
+        } else if (!doDirect(source, optionalPlugin.get(), reloadedResult)) {
+            return CommandResult.empty();
+        }
+        sendSuccess(source, reloadedResult);
         return CommandResult.success();
     }
 }

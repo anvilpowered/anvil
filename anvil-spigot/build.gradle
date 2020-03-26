@@ -38,6 +38,7 @@ dependencies {
 
     implementation configurate_core
     implementation configurate_hocon
+    implementation findbugs
     implementation guice
     implementation javasisst
     implementation microutils_logging

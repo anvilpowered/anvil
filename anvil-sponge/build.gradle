@@ -44,6 +44,7 @@ dependencies {
         exclude(module: 'configurate-gson')
         exclude(module: 'configurate-yaml')
     }
+    implementation 'org.spongepowered:spongeapi:7.2.0-SNAPSHOT'
     annotationProcessor 'org.spongepowered:spongeapi:7.2.0-SNAPSHOT'
 }
 

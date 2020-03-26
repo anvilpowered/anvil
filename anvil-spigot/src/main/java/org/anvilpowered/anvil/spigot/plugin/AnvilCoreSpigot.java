@@ -18,6 +18,10 @@
 
 package org.anvilpowered.anvil.spigot.plugin;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.Plugin;
@@ -33,15 +37,23 @@ import java.util.Set;
 
 public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
 
-    protected final InnerAnvilCoreSpigot anvilCoreSpigot;
+    protected final Inner inner;
 
     public AnvilCoreSpigot() {
-        anvilCoreSpigot = new InnerAnvilCoreSpigot();
+        AbstractModule module = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(JavaPlugin.class).toInstance(AnvilCoreSpigot.this);
+            }
+        };
+        Injector injector = Guice.createInjector(module);
+        inner = injector.getInstance(Inner.class);
     }
 
-    private static final class InnerAnvilCoreSpigot extends AnvilCore<JavaPlugin> {
-        public InnerAnvilCoreSpigot() {
-            super(null, new SpigotModule());
+    private static final class Inner extends AnvilCore<JavaPlugin> {
+        @Inject
+        public Inner(Injector injector) {
+            super(injector, new SpigotModule());
         }
     }
 
@@ -49,7 +61,7 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
     public void onEnable() {
         AnvilImpl.completeInitialization(new ApiSpigotModule());
         Bukkit.getPluginManager().registerEvents(
-            anvilCoreSpigot.getPrimaryEnvironment()
+            inner.getPrimaryEnvironment()
                 .getInjector().getInstance(SpigotPlayerListener.class),
             this
         );
@@ -62,7 +74,7 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
 
     @Override
     public int compareTo(Plugin<JavaPlugin> o) {
-        return anvilCoreSpigot.compareTo(o);
+        return inner.compareTo(o);
     }
 
     @Override
@@ -72,11 +84,11 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
 
     @Override
     public Environment getPrimaryEnvironment() {
-        return anvilCoreSpigot.getPrimaryEnvironment();
+        return inner.getPrimaryEnvironment();
     }
 
     @Override
     public Set<Environment> getAllEnvironments() {
-        return anvilCoreSpigot.getAllEnvironments();
+        return inner.getAllEnvironments();
     }
 }

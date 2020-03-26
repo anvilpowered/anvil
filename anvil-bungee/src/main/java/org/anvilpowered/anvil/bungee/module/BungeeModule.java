@@ -24,6 +24,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.anvilpowered.anvil.api.command.CommandNode;
+import org.anvilpowered.anvil.bungee.command.BungeeAnvilCommandNode;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 
@@ -44,5 +46,7 @@ public class BungeeModule extends CommonModule<TextComponent, CommandSender> {
         }
         bind(new TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {
         }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
+        bind(new TypeLiteral<CommandNode<CommandSender>>() {
+        }).to(BungeeAnvilCommandNode.class);
     }
 }

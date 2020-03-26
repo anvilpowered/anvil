@@ -16,28 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.command;
+package org.anvilpowered.anvil.velocity.command;
 
-import org.anvilpowered.anvil.api.misc.Named;
+import com.velocitypowered.api.command.Command;
+import com.velocitypowered.api.command.CommandSource;
+import net.kyori.text.TextComponent;
+import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
+public class VelocityAnvilReloadCommand
+    extends CommonAnvilReloadCommand<TextComponent, CommandSource>
+    implements Command {
 
-public interface CommandNode<TCommandSource> extends Named {
-
-    Map<List<String>, Function<TCommandSource, String>> getDescriptions();
-
-    Map<List<String>, Predicate<TCommandSource>> getPermissions();
-
-    Map<List<String>, Function<TCommandSource, String>> getUsages();
-
-    /**
-     * @return An array containing (in order) the names
-     * of parent nodes. Empty if this is the root node.
-     */
-    default String[] getPath() {
-        return new String[0];
+    @Override
+    public void execute(CommandSource source, String[] context) {
+        sendReload(source, context);
     }
 }

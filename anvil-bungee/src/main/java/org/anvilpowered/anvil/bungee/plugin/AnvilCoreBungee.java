@@ -18,6 +18,10 @@
 
 package org.anvilpowered.anvil.bungee.plugin;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.Environment;
@@ -32,15 +36,23 @@ import java.util.Set;
 public class AnvilCoreBungee extends Plugin
     implements org.anvilpowered.anvil.api.plugin.Plugin<Plugin> {
 
-    protected final InnerAnvilCoreBungee anvilCoreBungee;
+    protected final Inner inner;
 
     public AnvilCoreBungee() {
-        anvilCoreBungee = new InnerAnvilCoreBungee();
+        AbstractModule module = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Plugin.class).toInstance(AnvilCoreBungee.this);
+            }
+        };
+        Injector injector = Guice.createInjector(module);
+        inner = injector.getInstance(Inner.class);
     }
 
-    private static final class InnerAnvilCoreBungee extends AnvilCore<Plugin> {
-        public InnerAnvilCoreBungee() {
-            super(null, new BungeeModule());
+    private static final class Inner extends AnvilCore<Plugin> {
+        @Inject
+        public Inner(Injector injector) {
+            super(injector, new BungeeModule());
         }
     }
 
@@ -48,7 +60,7 @@ public class AnvilCoreBungee extends Plugin
     public void onEnable() {
         AnvilImpl.completeInitialization(new ApiBungeeModule());
         getProxy().getPluginManager().registerListener(this,
-            anvilCoreBungee.getPrimaryEnvironment()
+            inner.getPrimaryEnvironment()
                 .getInjector().getInstance(BungeePlayerListener.class)
         );
     }
@@ -65,12 +77,12 @@ public class AnvilCoreBungee extends Plugin
 
     @Override
     public int compareTo(org.anvilpowered.anvil.api.plugin.Plugin<Plugin> o) {
-        return anvilCoreBungee.compareTo(o);
+        return inner.compareTo(o);
     }
 
     @Override
     public boolean equals(Object obj) {
-        return anvilCoreBungee.equals(obj);
+        return inner.equals(obj);
     }
 
     @Override
@@ -80,11 +92,11 @@ public class AnvilCoreBungee extends Plugin
 
     @Override
     public Environment getPrimaryEnvironment() {
-        return anvilCoreBungee.getPrimaryEnvironment();
+        return inner.getPrimaryEnvironment();
     }
 
     @Override
     public Set<Environment> getAllEnvironments() {
-        return anvilCoreBungee.getAllEnvironments();
+        return inner.getAllEnvironments();
     }
 }
