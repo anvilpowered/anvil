@@ -29,9 +29,6 @@ import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-
 public class BungeePlayerListener implements Listener {
 
     @Inject
@@ -54,10 +51,10 @@ public class BungeePlayerListener implements Listener {
                 return;
             }
             CoreMember<?> coreMember = optionalMember.get();
-            if (coreMember.isBanned() && coreMember.getBanEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
-                player.disconnect(pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()));
-            } else if (coreMember.isBanned()) {
-                coreMemberManager.getPrimaryComponent().unBanUser(player.getUniqueId());
+            if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
+                player.disconnect(
+                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())
+                );
             }
         }).join();
     }
@@ -72,12 +69,12 @@ public class BungeePlayerListener implements Listener {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> member = optionalMember.get();
-            if (member.isMuted() && member.getMuteEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
+            CoreMember<?> coreMember = optionalMember.get();
+            if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled(true);
-                player.sendMessage(pluginMessages.getMuteMessage(member.getMuteReason(), member.getMuteEndUtc()));
-            } else if (member.isMuted()) {
-                coreMemberManager.getPrimaryComponent().unMuteUser(player.getUniqueId());
+                player.sendMessage(
+                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                );
             }
         }).join();
     }

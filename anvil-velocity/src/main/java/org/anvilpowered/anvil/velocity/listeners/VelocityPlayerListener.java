@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.velocity.listeners;
 
 import com.google.inject.Inject;
-import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
@@ -28,9 +27,6 @@ import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
 public class VelocityPlayerListener {
 
@@ -52,11 +48,11 @@ public class VelocityPlayerListener {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> member = optionalMember.get();
-            if (member.isBanned() && member.getBanEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
-                event.setResult(ResultedEvent.ComponentResult.denied(pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc())));
-            } else if (member.isBanned()) {
-                coreMemberManager.getPrimaryComponent().unBanUser(player.getUniqueId());
+            CoreMember<?> coreMember = optionalMember.get();
+            if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
+                player.disconnect(
+                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())
+                );
             }
         }).join();
     }
@@ -71,12 +67,12 @@ public class VelocityPlayerListener {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> member = optionalMember.get();
-            if (member.isMuted() && member.getMuteEndUtc().isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
+            CoreMember<?> coreMember = optionalMember.get();
+            if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setResult(PlayerChatEvent.ChatResult.denied());
-                player.sendMessage(pluginMessages.getMuteMessage(member.getMuteReason(), member.getMuteEndUtc()));
-            } else if (member.isMuted()) {
-                coreMemberManager.getPrimaryComponent().unMuteUser(player.getUniqueId());
+                player.sendMessage(
+                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                );
             }
         }).join();
     }

@@ -182,6 +182,89 @@ public interface CoreMemberRepository<
     CompletableFuture<Boolean> unBanIpAddress(String ipAddress);
 
     /**
+     * Verifies whether the provided {@link CoreMember} is in fact
+     * banned.
+     *
+     * <p>
+     * A user is only banned if {@link CoreMember#isBanned()} is
+     * true and {@link CoreMember#getBanEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isBanned()} and
+     * {@link CoreMember#getBanEndUtc()} and sets the member's
+     * ban status accordingly.
+     * </p>
+     *
+     * @param coreMember {@link CoreMember} to verify ban for
+     * @return {@code true} if user is verified to be banned, otherwise {@code false}
+     */
+    boolean checkBanned(CoreMember<?> coreMember);
+
+    /**
+     * Verifies whether the {@link CoreMember} matching the provided
+     * {@link TKey} is in fact banned.
+     *
+     * <p>
+     * A user is only banned if {@link CoreMember#isBanned()} is
+     * true and {@link CoreMember#getBanEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isBanned()} and
+     * {@link CoreMember#getBanEndUtc()} and sets the member's
+     * ban status accordingly.
+     * </p>
+     *
+     * @param id {@link TKey} id of member to verify ban for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * {@code true} if user is verified to be banned, otherwise {@code false}
+     */
+    CompletableFuture<Boolean> checkBanned(TKey id);
+
+    /**
+     * Verifies whether the {@link CoreMember} matching the provided
+     * {@link UUID} userUUID is in fact banned.
+     *
+     * <p>
+     * A user is only banned if {@link CoreMember#isBanned()} is
+     * true and {@link CoreMember#getBanEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isBanned()} and
+     * {@link CoreMember#getBanEndUtc()} and sets the member's
+     * ban status accordingly.
+     * </p>
+     *
+     * @param userUUID {@link UUID} userUUID of member to verify ban for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * {@code true} if user is verified to be banned, otherwise {@code false}
+     */
+    CompletableFuture<Boolean> checkBannedForUser(UUID userUUID);
+
+    /**
+     * Verifies whether the {@link CoreMember} matching the provided
+     * {@link String} userName is in fact banned.
+     *
+     * <p>
+     * A user is only banned if {@link CoreMember#isBanned()} is
+     * true and {@link CoreMember#getBanEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isBanned()} and
+     * {@link CoreMember#getBanEndUtc()} and sets the member's
+     * ban status accordingly.
+     * </p>
+     *
+     * @param userName {@link String} userUUID of member to verify ban for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * {@code true} if user is verified to be banned, otherwise {@code false}
+     */
+    CompletableFuture<Boolean> checkBannedForUser(String userName);
+
+    /**
      * Updates the properties {@code muteEndUtc}, {@code muteReason}
      * and sets {@code muted} to {@code true} for the document
      * whose id matches the provided {@link TKey}
@@ -275,6 +358,89 @@ public interface CoreMemberRepository<
      * true if successful, otherwise false
      */
     CompletableFuture<Boolean> unMuteIpAddress(String ipAddress);
+
+    /**
+     * Verifies whether the provided {@link CoreMember} is in fact
+     * muted.
+     *
+     * <p>
+     * A user is only muted if {@link CoreMember#isMuted()} is
+     * true and {@link CoreMember#getMuteEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isMuted()} and
+     * {@link CoreMember#getMuteEndUtc()} and sets the member's
+     * mute status accordingly.
+     * </p>
+     *
+     * @param coreMember {@link CoreMember} to verify mute for
+     * @return {@code true} if user is verified to be muted, otherwise {@link false}
+     */
+    boolean checkMuted(CoreMember<?> coreMember);
+
+    /**
+     * Verifies whether the {@link CoreMember} matching the provided
+     * {@link TKey} is in fact muted.
+     *
+     * <p>
+     * A user is only muted if {@link CoreMember#isMuted()} is
+     * true and {@link CoreMember#getMuteEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isMuted()} and
+     * {@link CoreMember#getMuteEndUtc()} and sets the member's
+     * mute status accordingly.
+     * </p>
+     *
+     * @param id {@link TKey} id of member to verify mute for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * {@code true} if user is verified to be muted, otherwise {@link false}
+     */
+    CompletableFuture<Boolean> checkMuted(TKey id);
+
+    /**
+     * Verifies whether the {@link CoreMember} matching the provided
+     * {@link UUID} userUUID is in fact muted.
+     *
+     * <p>
+     * A user is only muted if {@link CoreMember#isMuted()} is
+     * true and {@link CoreMember#getMuteEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isMuted()} and
+     * {@link CoreMember#getMuteEndUtc()} and sets the member's
+     * mute status accordingly.
+     * </p>
+     *
+     * @param userUUID {@link UUID} userUUID of member to verify mute for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * {@code true} if user is verified to be muted, otherwise {@link false}
+     */
+    CompletableFuture<Boolean> checkMutedForUser(UUID userUUID);
+
+    /**
+     * Verifies whether the {@link CoreMember} matching the provided
+     * {@link String} userName is in fact muted.
+     *
+     * <p>
+     * A user is only muted if {@link CoreMember#isMuted()} is
+     * true and {@link CoreMember#getMuteEndUtc()} is in the future.
+     * </p>
+     *
+     * <p>
+     * This method checks both {@link CoreMember#isMuted()} and
+     * {@link CoreMember#getMuteEndUtc()} and sets the member's
+     * mute status accordingly.
+     * </p>
+     *
+     * @param userUUID {@link UUID} userUUID of member to verify mute for
+     * @return {@link CompletableFuture} wrapped {@link Boolean}.
+     * {@code true} if user is verified to be muted, otherwise {@link false}
+     */
+    CompletableFuture<Boolean> checkMutedForUser(String userUUID);
 
     /**
      * Updates the property {@code nickName} for the
