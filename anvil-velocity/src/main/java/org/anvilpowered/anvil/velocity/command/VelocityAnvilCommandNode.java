@@ -42,6 +42,8 @@ public class VelocityAnvilCommandNode
     @Inject
     private ProxyServer proxyServer;
 
+    private static final String HELP_COMMAND_PROXY = "/anvilv help";
+
     @Inject
     public VelocityAnvilCommandNode(Registry registry) {
         super(registry);
@@ -54,10 +56,11 @@ public class VelocityAnvilCommandNode
         subCommands.put(PLUGINS_ALIAS, anvilPluginsCommand);
         subCommands.put(RELOAD_ALIAS, anvilReloadCommand);
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
-        subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND));
+        subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND_PROXY));
 
-        proxyServer.getCommandManager().register(AnvilCorePluginInfo.id,
+        proxyServer.getCommandManager().register(AnvilCorePluginInfo.id + "v",
             commandService.generateRoutingCommand(
-                null, subCommands, false));
+                commandService.generateRootCommand(HELP_COMMAND_PROXY), subCommands, false),
+            "av");
     }
 }

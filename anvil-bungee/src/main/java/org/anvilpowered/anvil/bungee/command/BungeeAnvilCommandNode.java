@@ -44,6 +44,8 @@ public class BungeeAnvilCommandNode
     @Inject
     private CommonAnvilReloadCommand<TextComponent, CommandSender> anvilReloadCommand;
 
+    private static final String HELP_COMMAND_PROXY = "/anvilb help";
+
     @Inject
     public BungeeAnvilCommandNode(Registry registry) {
         super(registry);
@@ -56,15 +58,15 @@ public class BungeeAnvilCommandNode
         subCommands.put(PLUGINS_ALIAS, (source, context) -> anvilPluginsCommand.sendPlugins(source));
         subCommands.put(RELOAD_ALIAS, anvilReloadCommand::sendReload);
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
-        subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND));
+        subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND_PROXY));
 
         BiConsumer<CommandSender, String[]> root = commandService.generateRoutingCommand(
-            commandService.generateRootCommand(HELP_COMMAND), subCommands, false);
+            commandService.generateRootCommand(HELP_COMMAND_PROXY), subCommands, false);
 
         ProxyServer.getInstance().getPluginManager()
             .registerCommand(
                 environment.<Plugin>getPlugin().getPluginContainer(),
-                new Command(AnvilCorePluginInfo.id) {
+                new Command(AnvilCorePluginInfo.id + "b", null, "ab") {
                     @Override
                     public void execute(CommandSender sender, String[] args) {
                         root.accept(sender, args);
