@@ -41,13 +41,14 @@ public interface Environment extends Named, Comparable<Environment> {
     static <T> Binding<T> getBinding(String name, Injector injector) {
         long hash = ((long) name.hashCode()) * ((long) injector.hashCode());
         Binding<?>[] binding = {Anvil.bindingsCache.get(hash)};
-        if (binding[0] == null) {
-            injector.getBindings().forEach((k, v) -> {
-                if (k.getTypeLiteral().getType().getTypeName().contains(name)) {
-                    binding[0] = v;
-                }
-            });
+        if (binding[0] != null) {
+            return (Binding<T>) binding[0];
         }
+        injector.getBindings().forEach((k, v) -> {
+            if (k.getTypeLiteral().getType().getTypeName().contains(name)) {
+                binding[0] = v;
+            }
+        });
         Binding<T> result = Objects.requireNonNull(
             (Binding<T>) binding[0],
             "Could not find binding for service: " + name + " in injector " + injector

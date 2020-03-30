@@ -25,7 +25,7 @@ import com.google.inject.Injector;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.Environment;
-import org.anvilpowered.anvil.bungee.listeners.BungeePlayerListener;
+import org.anvilpowered.anvil.bungee.listener.BungeePlayerListener;
 import org.anvilpowered.anvil.bungee.module.ApiBungeeModule;
 import org.anvilpowered.anvil.bungee.module.BungeeModule;
 import org.anvilpowered.anvil.common.plugin.AnvilCore;

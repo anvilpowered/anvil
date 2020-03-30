@@ -23,7 +23,7 @@ import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.common.plugin.AnvilCore;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
-import org.anvilpowered.anvil.sponge.listeners.SpongePlayerListener;
+import org.anvilpowered.anvil.sponge.listener.SpongePlayerListener;
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule;
 import org.anvilpowered.anvil.sponge.module.SpongeModule;
 import org.spongepowered.api.Sponge;

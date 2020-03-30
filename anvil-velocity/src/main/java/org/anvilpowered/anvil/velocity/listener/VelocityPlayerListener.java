@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.listeners;
+package org.anvilpowered.anvil.velocity.listener;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;

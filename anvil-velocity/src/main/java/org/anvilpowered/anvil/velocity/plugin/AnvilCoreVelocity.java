@@ -27,10 +27,9 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.anvilpowered.anvil.api.AnvilImpl;
-import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.common.plugin.AnvilCore;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
-import org.anvilpowered.anvil.velocity.listeners.VelocityPlayerListener;
+import org.anvilpowered.anvil.velocity.listener.VelocityPlayerListener;
 import org.anvilpowered.anvil.velocity.module.ApiVelocityModule;
 import org.anvilpowered.anvil.velocity.module.VelocityModule;
 

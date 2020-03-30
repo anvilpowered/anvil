@@ -19,10 +19,10 @@
 package org.anvilpowered.anvil.common.coremember;
 
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.base.manager.BaseManager;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
+import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.base.manager.BaseManager;
 
 public class CommonCoreMemberManager extends BaseManager<CoreMemberRepository<?, ?>> implements CoreMemberManager {
 

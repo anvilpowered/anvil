@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.bungee.listeners;
+package org.anvilpowered.anvil.bungee.listener;
 
 import com.google.inject.Inject;
 import net.md_5.bungee.api.chat.TextComponent;

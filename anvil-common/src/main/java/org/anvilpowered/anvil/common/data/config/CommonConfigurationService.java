@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.config;
+package org.anvilpowered.anvil.common.data.config;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -26,10 +26,11 @@ import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.base.data.config.BaseConfigurationService;
 
 @Singleton
-public class AnvilCoreConfigurationService extends BaseConfigurationService {
+public class CommonConfigurationService extends BaseConfigurationService {
 
     @Inject
-    public AnvilCoreConfigurationService(ConfigurationLoader<CommentedConfigurationNode> configLoader) {
+    public CommonConfigurationService(
+        ConfigurationLoader<CommentedConfigurationNode> configLoader) {
         super(configLoader);
     }
 

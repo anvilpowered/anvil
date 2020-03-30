@@ -20,9 +20,9 @@ package org.anvilpowered.anvil.common.model.coremember;
 
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
+import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.datastore.annotation.XodusEntity;
 import org.anvilpowered.anvil.base.model.XodusDbo;
-import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 
 import java.time.Instant;
 import java.util.UUID;

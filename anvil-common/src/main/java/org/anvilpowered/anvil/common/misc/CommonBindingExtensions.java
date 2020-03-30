@@ -27,7 +27,6 @@ import org.anvilpowered.anvil.api.component.Component;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.datastore.MongoContext;
 import org.anvilpowered.anvil.api.datastore.XodusContext;
-import org.anvilpowered.anvil.api.manager.annotation.MariaDBComponent;
 import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
 import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
@@ -35,7 +34,6 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 
 import java.lang.annotation.Annotation;
-import java.util.Objects;
 
 @SuppressWarnings({"unchecked", "UnstableApiUsage"})
 public class CommonBindingExtensions implements BindingExtensions {

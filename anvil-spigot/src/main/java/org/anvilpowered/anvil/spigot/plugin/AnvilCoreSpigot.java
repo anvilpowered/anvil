@@ -27,7 +27,7 @@ import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.common.plugin.AnvilCore;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
-import org.anvilpowered.anvil.spigot.listeners.SpigotPlayerListener;
+import org.anvilpowered.anvil.spigot.listener.SpigotPlayerListener;
 import org.anvilpowered.anvil.spigot.module.ApiSpigotModule;
 import org.anvilpowered.anvil.spigot.module.SpigotModule;
 import org.bukkit.Bukkit;

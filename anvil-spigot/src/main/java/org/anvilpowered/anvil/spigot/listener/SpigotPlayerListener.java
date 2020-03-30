@@ -16,18 +16,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.config;
+package org.anvilpowered.anvil.spigot.listener;
 
 import com.google.inject.Inject;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import org.anvilpowered.anvil.common.config.AnvilCoreConfigurationService;
-import org.spongepowered.api.config.DefaultConfig;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
-public class AnvilCoreSpongeConfigurationService extends AnvilCoreConfigurationService {
+public class SpigotPlayerListener implements Listener {
 
     @Inject
-    public AnvilCoreSpongeConfigurationService(@DefaultConfig(sharedRoot = false) ConfigurationLoader<CommentedConfigurationNode> configLoader) {
-        super(configLoader);
+    CoreMemberManager coreMemberManager;
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        coreMemberManager.getPrimaryComponent()
+            .getOneOrGenerateForUser(
+                player.getUniqueId(),
+                player.getName(),
+                player.getAddress().getHostString()
+            );
     }
 }

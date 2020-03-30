@@ -16,28 +16,27 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.spigot.listeners;
+package org.anvilpowered.anvil.sponge.listener;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 
-public class SpigotPlayerListener implements Listener {
+public class SpongePlayerListener {
 
     @Inject
     CoreMemberManager coreMemberManager;
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+    @Listener
+    public void onPlayerJoin(ClientConnectionEvent.Join event) {
+        Player player = event.getTargetEntity();
         coreMemberManager.getPrimaryComponent()
             .getOneOrGenerateForUser(
                 player.getUniqueId(),
                 player.getName(),
-                player.getAddress().getHostString()
+                player.getConnection().getAddress().getHostString()
             );
     }
 }

@@ -21,6 +21,9 @@ package org.anvilpowered.anvil.common.module;
 import com.google.common.reflect.TypeToken;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
+import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.data.config.ConfigurationService;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
@@ -29,16 +32,13 @@ import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.plugin.BasicPluginInfo;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.base.data.registry.BaseExtendedRegistry;
-import org.anvilpowered.anvil.common.config.AnvilCoreConfigurationService;
 import org.anvilpowered.anvil.common.coremember.CommonCoreMemberManager;
 import org.anvilpowered.anvil.common.coremember.repository.CommonMongoCoreMemberRepository;
 import org.anvilpowered.anvil.common.coremember.repository.CommonXodusCoreMemberRepository;
+import org.anvilpowered.anvil.common.data.config.CommonConfigurationService;
 import org.anvilpowered.anvil.common.misc.CommonBindingExtensions;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginMessges;
-import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
-import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 
@@ -88,6 +88,6 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
 
         bind(Registry.class).to(BaseExtendedRegistry.class);
 
-        bind(ConfigurationService.class).to(AnvilCoreConfigurationService.class);
+        bind(ConfigurationService.class).to(CommonConfigurationService.class);
     }
 }

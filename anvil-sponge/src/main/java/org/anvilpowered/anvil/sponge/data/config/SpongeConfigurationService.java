@@ -16,27 +16,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.listeners;
+package org.anvilpowered.anvil.sponge.data.config;
 
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.anvilpowered.anvil.common.data.config.CommonConfigurationService;
+import org.spongepowered.api.config.DefaultConfig;
 
-public class SpongePlayerListener {
+public class SpongeConfigurationService extends CommonConfigurationService {
 
     @Inject
-    CoreMemberManager coreMemberManager;
-
-    @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Join event) {
-        Player player = event.getTargetEntity();
-        coreMemberManager.getPrimaryComponent()
-            .getOneOrGenerateForUser(
-                player.getUniqueId(),
-                player.getName(),
-                player.getConnection().getAddress().getHostString()
-            );
+    public SpongeConfigurationService(
+        @DefaultConfig(sharedRoot = false)
+            ConfigurationLoader<CommentedConfigurationNode> configLoader) {
+        super(configLoader);
     }
 }
