@@ -52,7 +52,7 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
      protected static final String ROOT_DESCRIPTION
         = String.format("%s root command", AnvilCorePluginInfo.name);
 
-    protected static final String RELOAD_USAGE = "[-a|--all|-r|--regex] [plugin]";
+    protected static final String RELOAD_USAGE = "[-a|--all|-r|--regex] [<plugin>]";
 
     protected static final String HELP_COMMAND = "/anvil help";
 

@@ -40,7 +40,7 @@ dependencies {
 
 blossom {
     replaceToken '$modVersion', version
-    SimpleDateFormat format = new SimpleDateFormat("uuuu-MM-dd-HH:mm:ss z")
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss z")
     format.setTimeZone(TimeZone.getTimeZone("UTC"))
     String buildDate = format.format(new Date())
     replaceToken '$buildDate', buildDate

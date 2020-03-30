@@ -45,6 +45,7 @@ public class BungeeAnvilCommandNode
     private CommonAnvilReloadCommand<TextComponent, CommandSender> anvilReloadCommand;
 
     private static final String HELP_COMMAND_PROXY = "/anvilb help";
+    private static final String ROOT_COMMAND_PROXY = "anvilb";
 
     @Inject
     public BungeeAnvilCommandNode(Registry registry) {
@@ -73,5 +74,10 @@ public class BungeeAnvilCommandNode
                     }
                 }
             );
+    }
+
+    @Override
+    public String getName() {
+        return ROOT_COMMAND_PROXY;
     }
 }
