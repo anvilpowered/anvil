@@ -37,6 +37,9 @@ public class BungeeUserService implements UserService<ProxiedPlayer, ProxiedPlay
 
     @Override
     public Optional<UUID> getUUID(String userName) {
+        if(getPlayer(userName).isPresent()) {
+            return Optional.of(getUUID(getPlayer(userName).get()));
+        }
         return Optional.empty();
     }
 
@@ -47,11 +50,11 @@ public class BungeeUserService implements UserService<ProxiedPlayer, ProxiedPlay
 
     @Override
     public UUID getUUID(ProxiedPlayer proxiedPlayer) {
-        return null;
+        return proxiedPlayer.getUniqueId();
     }
 
     @Override
     public String getUserName(ProxiedPlayer proxiedPlayer) {
-        return null;
+        return proxiedPlayer.getDisplayName();
     }
 }
