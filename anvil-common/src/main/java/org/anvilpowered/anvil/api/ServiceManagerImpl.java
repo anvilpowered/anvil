@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.api;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.common.misc.CommonBindingExtensions;
 
@@ -33,6 +34,7 @@ class ServiceManagerImpl implements ServiceManager {
 
     private final Map<TypeToken<?>, Supplier<?>> supplierBindings;
     private final Map<TypeToken<?>, Function<?, ?>> functionBindings;
+    private Injector injector;
     static final EnvironmentManagerImpl environmentManager
         = new EnvironmentManagerImpl();
 
@@ -44,10 +46,18 @@ class ServiceManagerImpl implements ServiceManager {
         registerBinding(BindingExtensions.class, CommonBindingExtensions::new);
     }
 
+    void setInjector(Injector injector) {
+        this.injector = injector;
+    }
+
     @Override
     public <T> Supplier<T> provideSupplier(TypeToken<T> typeToken) {
-        return (Supplier<T>) Objects.requireNonNull(
-            supplierBindings.get(typeToken),
+        Supplier<T> supplier = (Supplier<T>) supplierBindings.get(typeToken);
+        if (supplier != null) {
+            return supplier;
+        }
+        return () -> Objects.requireNonNull(
+            injector.getInstance(BindingExtensions.getKey(typeToken)),
             "Could not find binding for " + typeToken.getRawType().getName()
         );
     }
@@ -66,16 +76,20 @@ class ServiceManagerImpl implements ServiceManager {
                 break;
             }
         }
-        return Objects.requireNonNull(suppliers[0],
-            "Could not find binding for " + name);
+        if (suppliers[0] != null) {
+            return suppliers[0];
+        }
+        return Environment.getInstance(name, injector);
     }
 
     @Override
     public <T, R> Function<T, R> provideFunction(TypeToken<R> typeToken) {
-        return (Function<T, R>) Objects.requireNonNull(
-            functionBindings.get(typeToken),
-            "Could not find binding for " + typeToken.getRawType().getName()
-        );
+        Function<T, R> function = (Function<T, R>) functionBindings.get(typeToken);
+        if (function != null) {
+            return function;
+        }
+        return injector -> ((Injector) injector)
+            .getInstance(BindingExtensions.getKey(typeToken));
     }
 
     @Override
@@ -92,8 +106,10 @@ class ServiceManagerImpl implements ServiceManager {
                 break;
             }
         }
-        return Objects.requireNonNull(functions[0],
-            "Could not find binding for " + name);
+        if (functions[0] != null) {
+            return functions[0];
+        }
+        return injector -> Environment.getInstance(name, (Injector) injector);
     }
 
     @Override

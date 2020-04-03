@@ -106,6 +106,10 @@ class EnvironmentBuilderImpl implements Environment.Builder {
                 injector = Guice.createInjector(environment.getModules());
             }
             environment.setInjector(injector);
+            if ("anvil".equals(environment.getName())) {
+                ((ServiceManagerImpl) Anvil.getServiceManager())
+                    .setInjector(injector);
+            }
             ServiceManagerImpl.environmentManager
                 .registerEnvironment(environment, environment.getPlugin());
             for (Map.Entry<Key<?>, Consumer<?>> entry
