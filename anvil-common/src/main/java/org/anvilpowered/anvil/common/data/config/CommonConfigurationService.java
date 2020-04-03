@@ -37,6 +37,7 @@ public class CommonConfigurationService extends BaseConfigurationService {
     @Override
     protected void initNodeNameMap() {
         setName(Keys.SERVER_NAME, "server.name");
+        setName(Keys.PROXY_MODE, "server.proxyMode");
         setName(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
         setName(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
         setName(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
@@ -54,6 +55,9 @@ public class CommonConfigurationService extends BaseConfigurationService {
     @Override
     protected void initNodeDescriptionMap() {
         setDescription(Keys.SERVER_NAME, "\nServer name");
+        setDescription(Keys.PROXY_MODE, "\nEnable this if your server is running behind a proxy"
+            + "\nIf true, this setting disables the join and chat listeners"
+            + "\nto prevent conflicts with the proxy's listeners.");
         setDescription(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
             "\nPlease note that it is not recommended to change this value from the original");
         setDescription(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");

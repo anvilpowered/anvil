@@ -27,17 +27,25 @@ import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.data.key.Keys;
+import org.anvilpowered.anvil.api.data.registry.Registry;
 
 public class VelocityPlayerListener {
 
     @Inject
-    CoreMemberManager coreMemberManager;
+    private CoreMemberManager coreMemberManager;
 
     @Inject
-    PluginMessages<TextComponent> pluginMessages;
+    private PluginMessages<TextComponent> pluginMessages;
+
+    @Inject
+    private Registry registry;
 
     @Subscribe
     public void onPlayerJoin(LoginEvent event) {
+        if (registry.getOrDefault(Keys.PROXY_MODE)) {
+            return;
+        }
         Player player = event.getPlayer();
         coreMemberManager.getPrimaryComponent()
             .getOneOrGenerateForUser(
@@ -59,6 +67,9 @@ public class VelocityPlayerListener {
 
     @Subscribe
     public void onPlayerChat(PlayerChatEvent event) {
+        if (registry.getOrDefault(Keys.PROXY_MODE)) {
+            return;
+        }
         Player player = event.getPlayer();
         coreMemberManager.getPrimaryComponent()
             .getOneForUser(

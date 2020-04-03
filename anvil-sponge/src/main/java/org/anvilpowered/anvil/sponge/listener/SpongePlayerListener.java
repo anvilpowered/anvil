@@ -20,6 +20,8 @@ package org.anvilpowered.anvil.sponge.listener;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.data.key.Keys;
+import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -27,10 +29,16 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 public class SpongePlayerListener {
 
     @Inject
-    CoreMemberManager coreMemberManager;
+    private CoreMemberManager coreMemberManager;
+
+    @Inject
+    private Registry registry;
 
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
+        if (registry.getOrDefault(Keys.PROXY_MODE)) {
+            return;
+        }
         Player player = event.getTargetEntity();
         coreMemberManager.getPrimaryComponent()
             .getOneOrGenerateForUser(

@@ -20,6 +20,8 @@ package org.anvilpowered.anvil.spigot.listener;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.data.key.Keys;
+import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,10 +30,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class SpigotPlayerListener implements Listener {
 
     @Inject
-    CoreMemberManager coreMemberManager;
+    private CoreMemberManager coreMemberManager;
+
+    @Inject
+    private Registry registry;
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        if (registry.getOrDefault(Keys.PROXY_MODE)) {
+            return;
+        }
         Player player = event.getPlayer();
         coreMemberManager.getPrimaryComponent()
             .getOneOrGenerateForUser(
