@@ -41,7 +41,7 @@ public abstract class MD5TextService<TCommandSource>
 
     @Override
     public TextComponent deserialize(String text) {
-        return new TextComponent(TextComponent.fromLegacyText(text));
+        return new TextComponent(ChatColor.translateAlternateColorCodes('&', text));
     }
 
     @Override
