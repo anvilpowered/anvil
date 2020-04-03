@@ -15,11 +15,13 @@ public class BungeeCurrentServerService implements CurrentServerService {
 
     @Override
     public Optional<String> getName(UUID userUUID) {
-        return userService.getPlayer(userUUID).map(proxiedPlayer -> proxiedPlayer.getServer().getInfo().getName());
+        return userService.getPlayer(userUUID)
+            .map(proxiedPlayer -> proxiedPlayer.getServer().getInfo().getName());
     }
 
     @Override
     public Optional<String> getName(String userName) {
-        return userService.getPlayer(userName).map(proxiedPlayer -> proxiedPlayer.getServer().getInfo().getName());
+        return userService.getPlayer(userName)
+            .map(proxiedPlayer -> proxiedPlayer.getServer().getInfo().getName());
     }
 }
