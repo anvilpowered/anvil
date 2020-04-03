@@ -22,6 +22,8 @@ import com.google.inject.TypeLiteral;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.anvilpowered.anvil.api.Platform;
+import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
@@ -46,6 +48,7 @@ public class ApiBungeeModule extends ApiCommonModule {
         bind(KickService.class).to(BungeeKickService.class);
         bind(new TypeLiteral<PermissionService<CommandSender>>() {
         }).to(BungeePermissionService.class);
+        bind(Platform.class).toInstance(new PlatformImpl(true, "bungee"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSender>>() {
         }).to(BungeeTextService.class);
         bind(new TypeLiteral<UserService<ProxiedPlayer, ProxiedPlayer>>() {

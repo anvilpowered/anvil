@@ -20,6 +20,8 @@ package org.anvilpowered.anvil.spigot.module;
 
 import com.google.inject.TypeLiteral;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.anvilpowered.anvil.api.Platform;
+import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
@@ -48,6 +50,7 @@ public class ApiSpigotModule extends ApiCommonModule {
         bind(KickService.class).to(SpigotKickService.class);
         bind(new TypeLiteral<PermissionService<Permissible>>() {
         }).to(SpigotPermissionService.class);
+        bind(Platform.class).toInstance(new PlatformImpl(false, "spigot"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSender>>() {
         }).to(SpigotTextService.class);
         bind(TeleportationService.class).to(SpigotTeleportationService.class);

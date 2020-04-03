@@ -24,6 +24,8 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.permission.PermissionSubject;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.text.TextComponent;
+import org.anvilpowered.anvil.api.Platform;
+import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.KickService;
@@ -49,6 +51,7 @@ public class ApiVelocityModule extends ApiCommonModule {
         bind(KickService.class).to(VelocityKickService.class);
         bind(new TypeLiteral<PermissionService<PermissionSubject>>() {
         }).to(VelocityPermissionService.class);
+        bind(Platform.class).toInstance(new PlatformImpl(true, "velocity"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSource>>() {
         }).to(VelocityTextService.class);
         bind(new TypeLiteral<UserService<Player, Player>>() {

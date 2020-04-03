@@ -50,6 +50,10 @@ public final class Anvil {
         return getServiceManager().provide(EnvironmentManager.class);
     }
 
+    public static Platform getPlatform() {
+        return getServiceManager().provide(Platform.class);
+    }
+
     public static ServiceManager getServiceManager() {
         if (serviceManager != null) {
             return serviceManager;

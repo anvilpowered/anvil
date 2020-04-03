@@ -19,6 +19,8 @@
 package org.anvilpowered.anvil.sponge.module;
 
 import com.google.inject.TypeLiteral;
+import org.anvilpowered.anvil.api.Platform;
+import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.CurrentWorldService;
@@ -55,6 +57,7 @@ public class ApiSpongeModule extends ApiCommonModule {
         bind(KickService.class).to(SpongeKickService.class);
         bind(new TypeLiteral<PermissionService<Subject>>() {
         }).to(SpongePermissionService.class);
+        bind(Platform.class).toInstance(new PlatformImpl(false, "sponge"));
         bind(new TypeLiteral<TextService<Text, CommandSource>>() {
         }).to(SpongeTextService.class);
         bind(TeleportationService.class).to(SpongeTeleportationService.class);
