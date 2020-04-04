@@ -117,8 +117,10 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
             .setName(name)
             .setRootInjector(rootInjector)
             .addModules(module)
+            .whenLoaded(this::whenLoaded)
             .whenReady(e -> environment = e)
-            .whenReady(this::whenReady);
+            .whenReady(this::whenReady)
+            .whenReloaded(this::whenReloaded);
         applyToBuilder(builder);
         return builder;
     }
@@ -126,15 +128,26 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
     protected void applyToBuilder(Environment.Builder builder) {
     }
 
-    protected void whenReady(Environment environment) {
+    private void sendLoaded(String status) {
         PluginInfo<?> pluginInfo = environment.getPluginInfo();
         environment.getTextService().builder()
             .append(pluginInfo.getPrefix())
             .green().append(pluginInfo.getVersion())
             .aqua().append(" by ")
             .appendJoining(", ", pluginInfo.getAuthors())
-            .append(" - Loaded!")
+            .append(" - ", status, " !")
             .sendToConsole();
+    }
+
+    protected void whenLoaded(Environment environment) {
+    }
+
+    protected void whenReady(Environment environment) {
+        sendLoaded("Loaded");
+    }
+
+    protected void whenReloaded(Environment environment) {
+        sendLoaded("Reloaded");
     }
 
     @Override
