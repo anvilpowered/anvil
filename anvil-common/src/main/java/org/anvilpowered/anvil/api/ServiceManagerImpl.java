@@ -56,10 +56,7 @@ class ServiceManagerImpl implements ServiceManager {
         if (supplier != null) {
             return supplier;
         }
-        return () -> Objects.requireNonNull(
-            injector.getInstance(BindingExtensions.getKey(typeToken)),
-            "Could not find binding for " + typeToken.getRawType().getName()
-        );
+        return () -> injector.getInstance(BindingExtensions.getKey(typeToken));
     }
 
     @Override
@@ -79,7 +76,7 @@ class ServiceManagerImpl implements ServiceManager {
         if (suppliers[0] != null) {
             return suppliers[0];
         }
-        return Environment.getInstance(name, injector);
+        return () -> Environment.getInstance(name, injector);
     }
 
     @Override
