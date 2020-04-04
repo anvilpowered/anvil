@@ -147,19 +147,19 @@ public interface Registry {
     <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey);
 
     /**
-     * Runs all {@link RegistryLoadedListener listeners} that were
+     * Runs all {@link Runnable listeners} that were
      * added before this call.
      *
      * @see Environment#reload()
-     * @see #addRegistryLoadedListener(RegistryLoadedListener)
+     * @see #whenLoaded(Runnable)
      */
     void load();
 
     /**
-     * Adds a {@link RegistryLoadedListener} to be loaded on {@link #load()}
+     * Adds a {@link Runnable} to be loaded on {@link #load()}
      *
-     * @param registryLoadedListener Listener to add
+     * @param listener Listener to add
      * @see #load()
      */
-    void addRegistryLoadedListener(RegistryLoadedListener registryLoadedListener);
+    void whenLoaded(Runnable listener);
 }

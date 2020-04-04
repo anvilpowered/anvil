@@ -131,11 +131,15 @@ public interface Environment extends Named, Comparable<Environment> {
          */
         Builder withRootCommand();
 
+        Builder whenLoaded(Consumer<Environment> listener);
+
         /**
          * Called once, right after the environment is created.
          * Multiple can be added.
          */
         Builder whenReady(Consumer<Environment> listener);
+
+        Builder whenReloaded(Consumer<Environment> listener);
 
         /**
          * Builds an {@link Environment} and registers it.
