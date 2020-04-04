@@ -71,7 +71,7 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
 
     protected CommonAnvilCommandNode(Registry registry) {
         this.registry = registry;
-        registry.addRegistryLoadedListener(() -> {
+        registry.whenLoaded(() -> {
             if (alreadyLoaded) return;
             loadCommands();
             alreadyLoaded = true;

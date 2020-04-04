@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.base.data.registry;
 import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.data.key.Key;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.data.registry.RegistryLoadedListener;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,13 +40,13 @@ import java.util.stream.Collectors;
 public class BaseRegistry implements Registry {
 
     private final Map<Key<?>, Object> defaultMap, valueMap;
-    private final Collection<RegistryLoadedListener> registryLoadedListeners;
+    private final Collection<Runnable> listeners;
     private String stringRepresentation;
 
     public BaseRegistry() {
         defaultMap = new HashMap<>();
         valueMap = new HashMap<>();
-        registryLoadedListeners = new LinkedList<>();
+        listeners = new LinkedList<>();
     }
 
     @Override
@@ -140,12 +139,11 @@ public class BaseRegistry implements Registry {
 
     @Override
     public void load() {
-        registryLoadedListeners.forEach(RegistryLoadedListener::loaded);
+        listeners.forEach(Runnable::run);
     }
 
-    @Override
-    public void addRegistryLoadedListener(RegistryLoadedListener registryLoadedListener) {
-        registryLoadedListeners.add(registryLoadedListener);
+    public void whenLoaded(Runnable listener) {
+        listeners.add(listener);
     }
 
     @Override

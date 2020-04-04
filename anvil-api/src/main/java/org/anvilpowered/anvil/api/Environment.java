@@ -132,10 +132,55 @@ public interface Environment extends Named, Comparable<Environment> {
         Builder withRootCommand();
 
         /**
-         * Called once, right after the environment is created.
-         * Multiple can be added.
+         * Called when the {@link Environment} is loaded.
+         *
+         * <p>
+         * This {@link Consumer} will be invoked when the {@link Environment}
+         * is first loaded and on subsequent reloads.
+         * </p>
+         *
+         * <p>
+         * This method can be called multiple times on one builder.
+         * Preexisting listeners will be used and will not be overridden.
+         * </p>
+         *
+         * @return {@code this}
+         */
+        Builder whenLoaded(Consumer<Environment> listener);
+
+        /**
+         * Called when the {@link Environment} is loaded for the first time.
+         *
+         * <p>
+         * This {@link Consumer} will only be invoked when the {@link Environment}
+         * is loaded for the first time.
+         * </p>
+         *
+         * <p>
+         * This method can be called multiple times on one builder.
+         * Preexisting listeners will be used and will not be overridden.
+         * </p>
+         *
+         * @return {@code this}
          */
         Builder whenReady(Consumer<Environment> listener);
+
+        /**
+         * Called when the {@link Environment} is reloaded.
+         *
+         * <p>
+         * This {@link Consumer} will only be invoked when the {@link Environment}
+         * is reloaded, but not when it is first loaded.
+         * </p>
+         *
+         * <p>
+         * This method can be called multiple times on one builder.
+         * Preexisting listeners will be used and will not be overridden.
+         * </p>
+         *
+         * @return {@code this}
+         */
+        Builder whenReloaded(Consumer<Environment> listener);
 
         /**
          * Builds an {@link Environment} and registers it.

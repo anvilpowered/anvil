@@ -37,7 +37,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
 
     protected BaseManager(Registry registry) {
         this.registry = registry;
-        registry.addRegistryLoadedListener(this::registryLoaded);
+        registry.whenLoaded(this::registryLoaded);
     }
 
     @Inject(optional = true)
