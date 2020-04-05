@@ -254,10 +254,12 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
         @Override
         @SuppressWarnings("unchecked")
         public TextComponent build() {
+            boolean hover = hoverEvent != null;
+            boolean click = clickEvent != null;
 
             if (elements.isEmpty()) {
                 return TextComponent.empty();
-            } else if (elements.size() == 1) {
+            } else if (elements.size() == 1 && !hover && !click) {
                 Object o = elements.getFirst();
                 if (o instanceof Builder) {
                     return ((Builder<TextComponent, CommandSource>) o).build();
@@ -299,10 +301,10 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
             // create new builder with all previous components
             currentBuilder = TextComponent.builder().append(components);
 
-            if (hoverEvent != null) {
+            if (hover) {
                 currentBuilder.hoverEvent(hoverEvent);
             }
-            if (clickEvent != null) {
+            if (click) {
                 currentBuilder.clickEvent(clickEvent);
             }
             return currentBuilder.build();

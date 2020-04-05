@@ -265,7 +265,10 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
 
         @Override
         public Text build() {
-            if (elements.size() == 1) {
+            boolean hover = hoverAction != null;
+            boolean click = clickAction != null;
+
+            if (elements.size() == 1 && !hover && !click) {
                 TextElement o = elements.get(0);
                 if (o instanceof Builder) {
                     return ((Builder<Text, CommandSource>) o).build();
@@ -273,10 +276,10 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
                 return Text.of(o);
             }
             Text.Builder builder = Text.builder().append(Text.of(elements.toArray()));
-            if (hoverAction != null) {
+            if (hover) {
                 builder.onHover(hoverAction);
             }
-            if (clickAction != null) {
+            if (click) {
                 builder.onClick(clickAction);
             }
             return builder.build();

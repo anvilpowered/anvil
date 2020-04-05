@@ -239,10 +239,12 @@ public abstract class MD5TextService<TCommandSource>
         @Override
         @SuppressWarnings("unchecked")
         public TextComponent build() {
+            boolean hover = hoverEvent != null;
+            boolean click = clickEvent != null;
 
             if (elements.isEmpty()) {
                 return new TextComponent();
-            } else if (elements.size() == 1) {
+            } else if (elements.size() == 1 && !hover && !click) {
                 Object o = elements.getFirst();
                 if (o instanceof Builder) {
                     return ((Builder<TextComponent, TCommandSource>) o).build();
@@ -285,10 +287,10 @@ public abstract class MD5TextService<TCommandSource>
             // create new builder with all previous components
             currentBuilder = new TextComponent(components.toArray(new BaseComponent[0]));
 
-            if (hoverEvent != null) {
+            if (hover) {
                 currentBuilder.setHoverEvent(hoverEvent);
             }
-            if (clickEvent != null) {
+            if (click) {
                 currentBuilder.setClickEvent(clickEvent);
             }
             return currentBuilder;
