@@ -15,20 +15,8 @@ dependencies {
 
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
-        implementation project(':anvil-api:anvil-api-mongodb')
-        implementation project(':anvil-api:anvil-api-xodus')
-        implementation project(':anvil-api-core')
-        implementation project(':anvil-base')
-        implementation project(':anvil-base:anvil-base-mongodb')
-        implementation project(':anvil-base:anvil-base-xodus')
     } else {
         implementation project(':Anvil:anvil-api')
-        implementation project(':Anvil:anvil-api:anvil-api-mongodb')
-        implementation project(':Anvil:anvil-api:anvil-api-xodus')
-        implementation project(':Anvil:anvil-api-core')
-        implementation project(':Anvil:anvil-base')
-        implementation project(':Anvil:anvil-base:anvil-base-mongodb')
-        implementation project(':Anvil:anvil-base:anvil-base-xodus')
     }
 
     implementation configurate_core

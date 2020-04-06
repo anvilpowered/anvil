@@ -16,36 +16,18 @@ dependencies {
 
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
-        implementation project(':anvil-api:anvil-api-mongodb')
-        implementation project(':anvil-api:anvil-api-xodus')
-        implementation project(':anvil-api-core')
-        implementation project(':anvil-base')
-        implementation project(':anvil-base:anvil-base-mongodb')
-        implementation project(':anvil-base:anvil-base-xodus')
         implementation project(':anvil-common')
         implementation project(':anvil-md5')
     } else {
         implementation project(':Anvil:anvil-api')
-        implementation project(':Anvil:anvil-api:anvil-api-mongodb')
-        implementation project(':Anvil:anvil-api:anvil-api-xodus')
-        implementation project(':Anvil:anvil-api-core')
-        implementation project(':Anvil:anvil-base')
-        implementation project(':Anvil:anvil-base:anvil-base-mongodb')
-        implementation project(':Anvil:anvil-base:anvil-base-xodus')
         implementation project(':Anvil:anvil-common')
         implementation project(':Anvil:anvil-md5')
     }
 
     implementation bungee
-    implementation configurate_core
     implementation configurate_hocon
-    implementation guice
-    implementation javasisst
     implementation microutils_logging
-    implementation mongo_java_driver
-    implementation morphia
     implementation typesafe_config
-    implementation xodus_entity_store
 }
 
 shadowJar {
@@ -56,22 +38,10 @@ shadowJar {
     dependencies {
         if (rootProject.getName().equals("Anvil")) {
             include project(':anvil-api')
-            include project(':anvil-api:anvil-api-mongodb')
-            include project(':anvil-api:anvil-api-xodus')
-            include project(':anvil-api-core')
-            include project(':anvil-base')
-            include project(':anvil-base:anvil-base-mongodb')
-            include project(':anvil-base:anvil-base-xodus')
             include project(':anvil-common')
             include project(':anvil-md5')
         } else {
             include project(':Anvil:anvil-api')
-            include project(':Anvil:anvil-api:anvil-api-mongodb')
-            include project(':Anvil:anvil-api:anvil-api-xodus')
-            include project(':Anvil:anvil-api-core')
-            include project(':Anvil:anvil-base')
-            include project(':Anvil:anvil-base:anvil-base-mongodb')
-            include project(':Anvil:anvil-base:anvil-base-xodus')
             include project(':Anvil:anvil-common')
             include project(':Anvil:anvil-md5')
         }

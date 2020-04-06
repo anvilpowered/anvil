@@ -1,17 +1,6 @@
 rootProject.name = 'Anvil'
 
 include ':anvil-api'
-include ':anvil-api:anvil-api-mariadb'
-include ':anvil-api:anvil-api-mongodb'
-include ':anvil-api:anvil-api-xodus'
-
-include ':anvil-api-core'
-
-include ':anvil-base'
-include ':anvil-base:anvil-base-mariadb'
-include ':anvil-base:anvil-base-mongodb'
-include ':anvil-base:anvil-base-xodus'
-
 include ':anvil-bungee'
 include ':anvil-common'
 include ':anvil-md5'

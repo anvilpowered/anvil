@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.api.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
+import org.anvilpowered.anvil.api.repository.Repository;
 
 import java.util.UUID;
 

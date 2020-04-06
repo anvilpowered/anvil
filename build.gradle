@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'io.codearte.nexus-staging' version '0.21.2'
 }
@@ -9,11 +9,17 @@ ext.apiVersion = "1.0-SNAPSHOT"
 allprojects {
     group = "org.anvilpowered"
     version = "1.0.0-SNAPSHOT"
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 }
 
+String _name = project.hasProperty("name") ? name : ""
+String _username = project.hasProperty("username") ? username : ""
+String _password = project.hasProperty("password") ? password : ""
+String _keyId = project.hasProperty("keyId") ? keyId : ""
+String _ringFile = project.hasProperty("ringFile") ? ringFile : ""
+
 subprojects {
-    apply plugin: 'maven'
-    apply plugin: 'signing'
     apply plugin: 'com.github.johnrengelman.shadow'
     sourceCompatibility = 1.8
     if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
@@ -26,12 +32,6 @@ subprojects {
             include '**'
         }
     }
-
-    String _name = project.hasProperty("name") ? name : ""
-    String _username = project.hasProperty("username") ? username : ""
-    String _password = project.hasProperty("password") ? password : ""
-    String _keyId = project.hasProperty("keyId") ? keyId : ""
-    String _ringFile = project.hasProperty("ringFile") ? ringFile : ""
 
     nexusStaging {
         packageGroup = 'org.anvilpowered'
@@ -47,68 +47,53 @@ subprojects {
             sign configurations.archives
         }
     }
+}
 
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: _username, password: _password)
-                }
-
-                snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
-                    authentication(userName: _username, password: _password)
-                }
-
-                addFilter('anvil-api-core') { artifact, file ->
-                    artifact.name == 'anvil-api-core'
-                }
-                addFilter('anvil-api') { artifact, file ->
-                    artifact.name == 'anvil-api'
-                }
-                addFilter('anvil-api-mongodb') { artifact, file ->
-                    artifact.name == 'anvil-api-mongodb'
-                }
-                addFilter('anvil-api-xodus') { artifact, file ->
-                    artifact.name == 'anvil-api-xodus'
-                }
-                addFilter('anvil-base') { artifact, file ->
-                    artifact.name == 'anvil-base'
-                }
-                addFilter('anvil-base-mongodb') { artifact, file ->
-                    artifact.name == 'anvil-base-mongodb'
-                }
-                addFilter('anvil-base-xodus') { artifact, file ->
-                    artifact.name == 'anvil-base-xodus'
-                }
-
-                pom.project {
-                    name 'Anvil'
-                    description 'A cross-platform database API / ORM / entity framework with useful services for minecraft plugins'
-                    packaging 'jar'
-                    url 'https://github.com/AnvilPowered/Anvil'
-
-                    scm {
-                        url 'https://github.com/AnvilPowered/Anvil'
-                        connection 'scm:git:https://github.com/AnvilPowered/Anvil.git'
-                        developerConnection 'scm:git:https://github.com/AnvilPowered/Anvil.git'
+project(':anvil-api') {
+    afterEvaluate {
+        publishing {
+            repositories {
+                maven {
+                    credentials {
+                        username _username
+                        password _password
                     }
+                    def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                    def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+                    url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+                }
+            }
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.java
 
-                    licenses {
-                        license {
-                            name 'GNU GENERAL PUBLIC LICENSE Version 3'
-                            url 'https://www.gnu.org/licenses/gpl-3.0.html'
-                            distribution 'repo'
+                    artifact sourcesJar
+
+                    pom {
+                        name = 'Anvil'
+                        description = 'A cross-platform database API / ORM / entity framework with useful services for minecraft plugins'
+                        url = 'https://github.com/AnvilPowered/Anvil'
+
+                        scm {
+                            url = 'https://github.com/AnvilPowered/Anvil'
+                            connection = 'scm:git:https://github.com/AnvilPowered/Anvil.git'
+                            developerConnection = 'scm:git:https://github.com/AnvilPowered/Anvil.git'
                         }
-                    }
 
-                    developers {
-                        developer {
-                            id _username
-                            name _name
-                            organization 'AnvilPowered'
+                        licenses {
+                            license {
+                                name = 'GNU GENERAL PUBLIC LICENSE Version 3'
+                                url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                                distribution = 'repo'
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id = _username
+                                name = _name
+                                organization = 'AnvilPowered'
+                            }
                         }
                     }
                 }

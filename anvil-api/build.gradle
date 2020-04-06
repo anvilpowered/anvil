@@ -1,18 +1,25 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 version = rootProject.apiVersion
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spongepowered.org/maven' }
 }
 
 dependencies {
-    implementation reflections
-    implementation javasisst
-    implementation jetbrains_annotations
-    implementation guice
+    api bson
+    api hikari
+    api javasisst
+    api jetbrains_annotations
+    api guice
+    api mongodb_driver_sync
+    api morphia
+    api reflections
+    api xodus_entity_store
+    api configurate_core
 }
 
 artifacts {
