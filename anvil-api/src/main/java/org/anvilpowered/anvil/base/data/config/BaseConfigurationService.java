@@ -68,30 +68,49 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     private final Map<Key<?>, String> nodeDescriptionMap;
 
     private boolean configValuesEdited;
+    private boolean isWithDataStore = false;
 
     @Inject
     public BaseConfigurationService(ConfigurationLoader<CommentedConfigurationNode> configLoader) {
         this.configLoader = configLoader;
-
         verificationMap = new HashMap<>();
-        initVerificationMap();
-
         nodeNameMap = new HashMap<>();
-        initNodeNameMap();
-
         nodeDescriptionMap = new HashMap<>();
-        initNodeDescriptionMap();
     }
 
-    protected void initVerificationMap() {
-    }
-
-    protected void initNodeNameMap() {
+    protected void withCore() {
         setName(Keys.SERVER_NAME, "server.name");
-        setName(Keys.USE_SHARED_ENVIRONMENT, "datastore.useSharedEnvironment");
-        setName(Keys.USE_SHARED_CREDENTIALS, "datastore.useSharedCredentials");
+        setDescription(Keys.SERVER_NAME, "\nServer name");
+    }
+
+    private void withDataStoreCore0() {
         setName(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
         setName(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
+        setDescription(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
+            "\nPlease note that it is not recommended to change this value from the original");
+        setDescription(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
+    }
+
+    protected void withDataStoreCore() {
+        if (isWithDataStore) return;
+        isWithDataStore = true;
+        withDataStoreCore0();
+    }
+
+    protected void withDataStore() {
+        if (isWithDataStore) return;
+        isWithDataStore = true;
+        withDataStoreCore0();
+        setName(Keys.USE_SHARED_ENVIRONMENT, "datastore.useSharedEnvironment");
+        setName(Keys.USE_SHARED_CREDENTIALS, "datastore.useSharedCredentials");
+        setDescription(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use Anvil shared environment." +
+            "\nThis will use hostname and port from Anvil");
+        setDescription(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use Anvil credentials. (Requires useSharedEnvironment)" +
+            "\nThis will use (additionally) username, password, authDb and useAuth from Anvil");
+    }
+
+    protected void withMongoDb() {
+        withDataStore();
         setName(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
         setName(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
         setName(Keys.MONGODB_PORT, "datastore.mongodb.port");
@@ -102,17 +121,6 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         setName(Keys.MONGODB_USE_AUTH, "datastore.mongodb.useAuth");
         setName(Keys.MONGODB_USE_SRV, "datastore.mongodb.useSrv");
         setName(Keys.MONGODB_USE_CONNECTION_STRING, "datastore.mongodb.useConnectionString");
-    }
-
-    protected void initNodeDescriptionMap() {
-        setDescription(Keys.SERVER_NAME, "\nServer name");
-        setDescription(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use Anvil shared environment." +
-            "\nThis will use hostname and port from Anvil");
-        setDescription(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use Anvil credentials. (Requires useSharedEnvironment)" +
-            "\nThis will use (additionally) username, password, authDb and useAuth from Anvil");
-        setDescription(Keys.DATA_DIRECTORY, "\nDirectory for extra data" +
-            "\nPlease note that it is not recommended to change this value from the original");
-        setDescription(Keys.DATA_STORE_NAME, "\nDetermines which storage option to use");
         setDescription(Keys.MONGODB_CONNECTION_STRING, "\n(Advanced) You will probably not need to use this." +
             "\nCustom MongoDB connection string that will used instead of the connection info and credentials below" +
             "\nWill only be used if useConnectionString=true");
@@ -129,6 +137,23 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
             "\nOnly use this if you know what you are doing!" +
             "\nPlease note that this plugin will inherit both useConnectionString and connectionString from" +
             "\nAnvil if and only if useSharedEnvironment and useSharedCredentials are both true");
+    }
+
+    protected void withProxyMode() {
+        setName(Keys.PROXY_MODE, "server.proxyMode");
+        setDescription(Keys.PROXY_MODE, "\nEnable this if your server is running behind a proxy"
+            + "\nIf true, this setting disables the join and chat listeners"
+            + "\nto prevent conflicts with the proxy's listeners.");
+    }
+
+    protected void withDefault() {
+        withCore();
+        withMongoDb();
+    }
+
+    protected void withAll() {
+        withDefault();
+        withProxyMode();
     }
 
     protected <T> void setVerification(Key<T> key,
