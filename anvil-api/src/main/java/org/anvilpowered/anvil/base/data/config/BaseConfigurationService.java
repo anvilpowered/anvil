@@ -139,6 +139,17 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
             "\nAnvil if and only if useSharedEnvironment and useSharedCredentials are both true");
     }
 
+    protected void withRedis() {
+        setName(Keys.REDIS_HOSTNAME, "datastore.redis.hostname");
+        setName(Keys.REDIS_PORT, "datastore.redis.port");
+        setName(Keys.REDIS_PASSWORD, "datastore.redis.password");
+        setName(Keys.REDIS_USE_AUTH, "datastore.redis.useAuth");
+        setDescription(Keys.REDIS_HOSTNAME, "\nRedis hostname");
+        setDescription(Keys.REDIS_PORT, "\nRedis Port");
+        setDescription(Keys.REDIS_PASSWORD, "\nRedis password");
+        setDescription(Keys.REDIS_USE_AUTH, "\nWhether to use authentication (password) for Redis connection");
+    }
+
     protected void withProxyMode() {
         setName(Keys.PROXY_MODE, "server.proxyMode");
         setDescription(Keys.PROXY_MODE, "\nEnable this if your server is running behind a proxy"
@@ -153,6 +164,7 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
     protected void withAll() {
         withDefault();
+        withRedis();
         withProxyMode();
     }
 

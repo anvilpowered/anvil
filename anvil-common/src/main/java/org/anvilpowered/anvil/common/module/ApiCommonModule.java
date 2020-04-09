@@ -19,7 +19,9 @@
 package org.anvilpowered.anvil.common.module;
 
 import com.google.inject.AbstractModule;
+import org.anvilpowered.anvil.api.redis.RedisService;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
+import org.anvilpowered.anvil.common.redis.CommonRedisService;
 import org.anvilpowered.anvil.common.util.CommonTimeFormatService;
 
 public class ApiCommonModule extends AbstractModule {
@@ -27,5 +29,6 @@ public class ApiCommonModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(TimeFormatService.class).to(CommonTimeFormatService.class);
+        bind(RedisService.class).to(CommonRedisService.class);
     }
 }

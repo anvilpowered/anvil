@@ -88,6 +88,14 @@ public final class Keys {
     };
     public static final Key<Boolean> MONGODB_USE_CONNECTION_STRING = new Key<Boolean>("MONGODB_USE_CONNECTION_STRING", false) {
     };
+    public static final Key<String> REDIS_HOSTNAME = new Key<String>("REDIS_HOSTNAME", "localhost") {
+    };
+    public static final Key<Integer> REDIS_PORT = new Key<Integer>("REDIS_PORT", 6379) {
+    };
+    public static final Key<String> REDIS_PASSWORD = new Key<String>("REDIS_PASSWORD", "username") {
+    };
+    public static final Key<Boolean> REDIS_USE_AUTH = new Key<Boolean>("REDIS_USE_AUTH", false) {
+    };
 
     static {
         registerKey(SERVER_NAME);
@@ -107,5 +115,9 @@ public final class Keys {
         registerKey(MONGODB_AUTH_DB);
         registerKey(MONGODB_USE_AUTH);
         registerKey(MONGODB_USE_SRV);
+        registerKey(REDIS_HOSTNAME);
+        registerKey(REDIS_PORT);
+        registerKey(REDIS_PASSWORD);
+        registerKey(REDIS_USE_AUTH);
     }
 }
