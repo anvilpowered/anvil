@@ -16,9 +16,8 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.storageservice;
+package org.anvilpowered.anvil.api.datastore;
 
-import org.anvilpowered.anvil.api.component.Component;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
 

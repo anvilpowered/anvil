@@ -16,13 +16,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.component;
+package org.anvilpowered.anvil.api.datastore;
 
-import org.anvilpowered.anvil.api.cache.CacheService;
-import org.anvilpowered.anvil.api.datastore.DataStoreContext;
-import org.anvilpowered.anvil.api.manager.Manager;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
-import org.anvilpowered.anvil.api.repository.Repository;
 
 import java.util.Optional;
 

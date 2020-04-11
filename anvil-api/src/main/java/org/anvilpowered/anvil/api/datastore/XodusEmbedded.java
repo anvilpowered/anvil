@@ -16,23 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.repository;
+package org.anvilpowered.anvil.api.datastore;
 
-import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.storageservice.StorageService;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.time.Instant;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
-public interface Repository<
-    TKey,
-    T extends ObjectWithId<TKey>,
-    TDataStore>
-    extends StorageService<TKey, T, TDataStore> {
-
-    /**
-     * @return The time of creation of this document as an {@link Instant}
-     */
-    CompletableFuture<Optional<Instant>> getCreatedUtc(TKey id);
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface XodusEmbedded {
 }

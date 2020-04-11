@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.api.misc;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import org.anvilpowered.anvil.api.component.Component;
+import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 
 import java.lang.annotation.Annotation;

@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.repository;
+package org.anvilpowered.anvil.base.datastore;
 
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
@@ -25,11 +25,10 @@ import jetbrains.exodus.entitystore.EntityIterator;
 import jetbrains.exodus.entitystore.EntityRemovedInDatabaseException;
 import jetbrains.exodus.entitystore.StoreTransaction;
 import org.anvilpowered.anvil.api.Anvil;
+import org.anvilpowered.anvil.api.datastore.XodusRepository;
 import org.anvilpowered.anvil.api.model.Mappable;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.repository.XodusRepository;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
-import org.anvilpowered.anvil.base.component.BaseXodusComponent;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;

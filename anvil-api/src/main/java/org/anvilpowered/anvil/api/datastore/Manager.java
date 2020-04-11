@@ -16,14 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.manager;
+package org.anvilpowered.anvil.api.datastore;
 
 import com.google.inject.name.Named;
-import org.anvilpowered.anvil.api.component.Component;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
-import org.anvilpowered.anvil.api.repository.Repository;
 import org.anvilpowered.anvil.api.util.TextService;
 
 /**

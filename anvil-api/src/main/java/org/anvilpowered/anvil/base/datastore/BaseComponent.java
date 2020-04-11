@@ -16,9 +16,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.component;
+package org.anvilpowered.anvil.base.datastore;
 
-import org.anvilpowered.anvil.api.component.Component;
+import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 
 import java.util.Optional;

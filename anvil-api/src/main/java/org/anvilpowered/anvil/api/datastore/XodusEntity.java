@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.datastore.annotation;
+package org.anvilpowered.anvil.api.datastore;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

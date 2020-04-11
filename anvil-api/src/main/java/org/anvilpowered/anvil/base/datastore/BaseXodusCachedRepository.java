@@ -16,16 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.repository;
+package org.anvilpowered.anvil.base.datastore;
 
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
-import org.anvilpowered.anvil.api.cache.CacheService;
+import org.anvilpowered.anvil.api.datastore.CacheService;
+import org.anvilpowered.anvil.api.datastore.CachedRepository;
+import org.anvilpowered.anvil.api.datastore.StorageService;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.repository.CachedRepository;
-import org.anvilpowered.anvil.api.storageservice.StorageService;
 
 import java.util.ArrayList;
 import java.util.Collections;

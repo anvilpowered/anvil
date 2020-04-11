@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.manager;
+package org.anvilpowered.anvil.base.datastore;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.ConfigurationException;
@@ -25,10 +25,10 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.component.Component;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.manager.Manager;
+import org.anvilpowered.anvil.api.datastore.Component;
+import org.anvilpowered.anvil.api.datastore.Manager;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 
 import java.util.Locale;

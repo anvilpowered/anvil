@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.api.core.coremember.repository;
 
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
-import org.anvilpowered.anvil.api.repository.MongoRepository;
+import org.anvilpowered.anvil.api.datastore.MongoRepository;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;

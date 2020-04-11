@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.core.coremember.repository.MongoCoreMemberRepository;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
-import org.anvilpowered.anvil.base.repository.BaseMongoRepository;
+import org.anvilpowered.anvil.base.datastore.BaseMongoRepository;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;

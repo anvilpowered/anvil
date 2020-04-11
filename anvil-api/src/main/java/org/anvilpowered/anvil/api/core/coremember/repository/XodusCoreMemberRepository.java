@@ -23,7 +23,7 @@ import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
-import org.anvilpowered.anvil.api.repository.XodusRepository;
+import org.anvilpowered.anvil.api.datastore.XodusRepository;
 
 import java.time.Instant;
 import java.util.UUID;

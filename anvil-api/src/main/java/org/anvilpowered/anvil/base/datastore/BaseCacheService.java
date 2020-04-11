@@ -16,15 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.cache;
+package org.anvilpowered.anvil.base.datastore;
 
-import org.anvilpowered.anvil.api.cache.CacheService;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.base.component.BaseComponent;
-import org.anvilpowered.anvil.base.storageservice.BaseStorageService;
 
 import java.util.ArrayList;
 import java.util.List;

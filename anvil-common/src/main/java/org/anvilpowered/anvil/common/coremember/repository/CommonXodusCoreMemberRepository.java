@@ -27,7 +27,7 @@ import org.anvilpowered.anvil.api.core.coremember.repository.XodusCoreMemberRepo
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.Mappable;
-import org.anvilpowered.anvil.base.repository.BaseXodusRepository;
+import org.anvilpowered.anvil.base.datastore.BaseXodusRepository;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;

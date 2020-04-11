@@ -16,16 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.datastore.annotation;
+package org.anvilpowered.anvil.api.datastore;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.zaxxer.hikari.HikariDataSource;
+import org.anvilpowered.anvil.api.model.ObjectWithId;
 
-@Inherited
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface XodusEmbedded {
+import java.util.UUID;
+
+public interface SqlRepository<
+    T extends ObjectWithId<UUID>>
+    extends Repository<UUID, T, HikariDataSource> {
 }

@@ -23,7 +23,7 @@ import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
-import org.anvilpowered.anvil.api.component.Component;
+import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.datastore.MongoContext;
 import org.anvilpowered.anvil.api.datastore.XodusContext;

@@ -16,14 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.repository;
+package org.anvilpowered.anvil.base.datastore;
 
 import com.mongodb.WriteResult;
 import org.anvilpowered.anvil.api.Anvil;
+import org.anvilpowered.anvil.api.datastore.MongoRepository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.repository.MongoRepository;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
-import org.anvilpowered.anvil.base.component.BaseMongoComponent;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;

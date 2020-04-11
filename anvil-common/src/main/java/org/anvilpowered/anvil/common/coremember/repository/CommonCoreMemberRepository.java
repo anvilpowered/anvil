@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.common.coremember.repository;
 import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
 import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
-import org.anvilpowered.anvil.base.repository.BaseRepository;
+import org.anvilpowered.anvil.base.datastore.BaseRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

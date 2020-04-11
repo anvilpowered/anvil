@@ -16,11 +16,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.storageservice;
+package org.anvilpowered.anvil.base.datastore;
 
 import org.anvilpowered.anvil.api.Anvil;
+import org.anvilpowered.anvil.api.datastore.StorageService;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.storageservice.StorageService;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
 
 import java.util.Optional;

@@ -16,12 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.base.repository;
+package org.anvilpowered.anvil.base.datastore;
 
-import org.anvilpowered.anvil.api.cache.CacheService;
+import org.anvilpowered.anvil.api.datastore.CacheService;
+import org.anvilpowered.anvil.api.datastore.CachedRepository;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.repository.CachedRepository;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;

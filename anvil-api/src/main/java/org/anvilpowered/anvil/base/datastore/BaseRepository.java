@@ -16,15 +16,30 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.repository;
+package org.anvilpowered.anvil.base.datastore;
 
-import com.zaxxer.hikari.HikariDataSource;
+import org.anvilpowered.anvil.api.datastore.DataStoreContext;
+import org.anvilpowered.anvil.api.datastore.Repository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.repository.Repository;
 
-import java.util.UUID;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
-public interface MariaRepository<
-    T extends ObjectWithId<UUID>>
-    extends Repository<UUID, T, HikariDataSource> {
+public abstract class BaseRepository<
+    TKey,
+    T extends ObjectWithId<TKey>,
+    TDataStore>
+    extends BaseComponent<TKey, TDataStore>
+    implements Repository<TKey, T, TDataStore>,
+    BaseStorageService<TKey, T, TDataStore> {
+
+    protected BaseRepository(DataStoreContext<TKey, TDataStore> dataStoreContext) {
+        super(dataStoreContext);
+    }
+
+    @Override
+    public CompletableFuture<Optional<Instant>> getCreatedUtc(TKey id) {
+        return getOne(id).thenApplyAsync(o -> o.map(ObjectWithId::getCreatedUtc));
+    }
 }

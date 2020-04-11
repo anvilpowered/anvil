@@ -29,10 +29,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.UUID;
 
-public final class MariaContext extends DataStoreContext<UUID, HikariDataSource> {
+public final class SqlContext extends DataStoreContext<UUID, HikariDataSource> {
 
     @Inject
-    public MariaContext(Registry registry) {
+    public SqlContext(Registry registry) {
         super(registry);
     }
 

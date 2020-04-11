@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.repository;
+package org.anvilpowered.anvil.api.datastore;
 
 import com.mongodb.WriteResult;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
