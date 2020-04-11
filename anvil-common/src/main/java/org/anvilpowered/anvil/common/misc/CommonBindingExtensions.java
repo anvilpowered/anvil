@@ -27,8 +27,6 @@ import org.anvilpowered.anvil.api.component.Component;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.datastore.MongoContext;
 import org.anvilpowered.anvil.api.datastore.XodusContext;
-import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
-import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
@@ -54,7 +52,7 @@ public class CommonBindingExtensions implements BindingExtensions {
         TypeToken<From2> from2,
         TypeToken<From3> from3,
         TypeToken<Target> target,
-        Class<? extends Annotation> componentAnnotation
+        Annotation componentAnnotation
     ) {
         binder.bind((TypeLiteral<From1>) TypeLiteral.get(from2.getType()))
             .annotatedWith(componentAnnotation)
@@ -72,9 +70,20 @@ public class CommonBindingExtensions implements BindingExtensions {
         TypeToken<From1> from1,
         TypeToken<From2> from2,
         TypeToken<Target> target,
-        Class<? extends Annotation> componentAnnotation
+        Annotation componentAnnotation
     ) {
         bind(from1, from1, from2, target, componentAnnotation);
+    }
+
+    @Override
+    public <From, Target extends From> void bind(
+        TypeToken<From> from,
+        TypeToken<Target> target,
+        Annotation annotation
+    ) {
+        binder.bind(BindingExtensions.getTypeLiteral(from))
+            .annotatedWith(annotation)
+            .to(BindingExtensions.getTypeLiteral(target));
     }
 
     @Override
@@ -99,19 +108,19 @@ public class CommonBindingExtensions implements BindingExtensions {
 
     @Override
     @SafeVarargs
-    public final void withContexts(Class<? extends Annotation>... componentAnnotations) {
-        for (Class<? extends Annotation> annotation : componentAnnotations) {
-            if (annotation.equals(MongoDBComponent.class)) {
+    public final void withContexts(String... dataStoreNames) {
+        for (String name : dataStoreNames) {
+            if ("mongodb".equals(name)) {
                 binder.bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
                 }).to(MongoContext.class);
                 continue;
-            } else if (annotation.equals(XodusComponent.class)) {
+            } else if ("xodus".equals(name)) {
                 binder.bind(new TypeLiteral<DataStoreContext<EntityId, PersistentEntityStore>>() {
                 }).to(XodusContext.class);
                 continue;
             }
-            throw new IllegalArgumentException("Provided componentAnnotation "
-                + annotation.getCanonicalName() + " does not match any DataStoreContext");
+            throw new IllegalArgumentException("Provided dataStoreName "
+                + name + " does not match any predefined dataStoreNames");
         }
     }
 

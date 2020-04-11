@@ -18,12 +18,10 @@
 
 package org.anvilpowered.anvil.api.manager;
 
+import com.google.inject.name.Named;
 import org.anvilpowered.anvil.api.component.Component;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.manager.annotation.MariaDBComponent;
-import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
-import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.repository.Repository;
 import org.anvilpowered.anvil.api.util.TextService;
@@ -143,27 +141,31 @@ public interface Manager<C extends Component<?, ?>> {
     String getDefaultIdentifierPluralLower();
 
     /**
+     * Provides the current {@link Component} as defined by
+     * {@link Keys#DATA_STORE_NAME} in the current {@link Registry}.
+     *
      * <p>
      * The current {@link Component} implementation is defined as the
      * implementation provided by Guice that meets the following criteria:
      * </p>
-     * <ol>
-     *     <li>
-     *         Annotated with one of the following
-     *         <ul>
-     *             <li>{@link MariaDBComponent}</li>
-     *             <li>{@link MongoDBComponent}</li>
-     *             <li>{@link XodusComponent}</li>
-     *         </ul>
-     *     </li>
-     *     <li>
-     *         The value for {@link Keys#DATA_STORE_NAME} found by
-     *         the the provided {@link Registry} must match (ignored case)
-     *         one of the above annotations without 'Component'.
-     *         For example, 'mongodb' (or any capitalization thereof) will
-     *         match {@link MongoDBComponent}
-     *     </li>
-     * </ol>
+     * <br>
+     * <p>
+     * The value for {@link Keys#DATA_STORE_NAME} found by
+     * the the current {@link Registry} must match (ignored case) a registered
+     * datastore implementation. This can be one of the following predefined values:
+     * </p>
+     * <ul>
+     *   <li>{@code "mongodb"}</li>
+     *   <li>{@code "xodus"}</li>
+     * </ul>
+     * <p>
+     * or a custom value defined by your guice module.
+     * </p>
+     * <br>
+     * <p>
+     * For example, 'mongodb' (or any capitalization thereof) will match
+     * a {@link Component} annotated with {@link Named}{@code (value = "mongodb"}
+     * </p>
      * <p>
      * Use {@link BindingExtensions} to bind your component implementations
      * </p>

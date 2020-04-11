@@ -18,15 +18,18 @@
 
 package org.anvilpowered.anvil.base.manager;
 
+import com.google.common.reflect.TypeToken;
+import com.google.inject.ConfigurationException;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.component.Component;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.manager.Manager;
-import org.anvilpowered.anvil.api.manager.annotation.MariaDBComponent;
-import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
-import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
+import org.anvilpowered.anvil.api.misc.BindingExtensions;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -40,17 +43,8 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
         registry.whenLoaded(this::registryLoaded);
     }
 
-    @Inject(optional = true)
-    @MariaDBComponent
-    private C mariaComponent;
-
-    @Inject(optional = true)
-    @MongoDBComponent
-    private C mongoComponent;
-
-    @Inject(optional = true)
-    @XodusComponent
-    private C xodusComponent;
+    @Inject
+    private Injector injector;
 
     private C currentComponent;
 
@@ -59,22 +53,12 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     }
 
     private void loadComponent() {
-        String dataStoreName = Anvil.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry);
+        String dataStoreName = Anvil.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry)
+            .toLowerCase(Locale.ENGLISH);
         try {
-            switch (dataStoreName.toLowerCase(Locale.ENGLISH)) {
-                case "mariadb":
-                    currentComponent = Objects.requireNonNull(mariaComponent, "MariaDB component not bound for manager " + getClass().getName());
-                    break;
-                case "mongodb":
-                    currentComponent = Objects.requireNonNull(mongoComponent, "MongoDB component not bound for manager " + getClass().getName());
-                    break;
-                case "xodus":
-                    currentComponent = Objects.requireNonNull(xodusComponent, "Xodus component not bound for manager " + getClass().getName());
-                    break;
-                default:
-                    throw new IllegalStateException("Invalid DataStoreName");
-            }
-        } catch (IllegalStateException e) {
+            currentComponent = injector.getInstance(Key.get(BindingExtensions.getTypeLiteral(new TypeToken<C>(getClass()) {
+            }), Names.named(dataStoreName)));
+        } catch (IllegalStateException | ConfigurationException e) {
             String message = "Anvil: Could not find requested data store: \"" + dataStoreName + "\". Did you bind it correctly?";
             System.err.println(message);
             throw new IllegalStateException(message, e);

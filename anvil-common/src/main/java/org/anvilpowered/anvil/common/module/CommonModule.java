@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.module;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.name.Names;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
@@ -26,8 +27,6 @@ import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepositor
 import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.data.config.ConfigurationService;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.manager.annotation.MongoDBComponent;
-import org.anvilpowered.anvil.api.manager.annotation.XodusComponent;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.plugin.BasicPluginInfo;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
@@ -69,7 +68,7 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
             },
             new TypeToken<CommonMongoCoreMemberRepository>() {
             },
-            MongoDBComponent.class
+            Names.named("mongodb")
         );
 
         be.bind(
@@ -79,12 +78,12 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
             },
             new TypeToken<CommonXodusCoreMemberRepository>() {
             },
-            XodusComponent.class
+            Names.named("xodus")
         );
 
         bind(CoreMemberManager.class).to(CommonCoreMemberManager.class);
 
-        be.withContexts(MongoDBComponent.class, XodusComponent.class);
+        be.withContexts("mongodb", "xodus");
 
         bind(Registry.class).to(BaseExtendedRegistry.class);
 
