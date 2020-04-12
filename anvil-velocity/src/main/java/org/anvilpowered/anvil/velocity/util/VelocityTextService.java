@@ -197,6 +197,9 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
         @Override
         public Builder<TextComponent, CommandSource> appendJoining(
             Object delimiter, Object... contents) {
+            if (!(delimiter instanceof Builder || delimiter instanceof Component)) {
+                delimiter = TextComponent.of(delimiter.toString());
+            }
             final int indexOfLast = contents.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
                 Object o = contents[i];
@@ -206,11 +209,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                     elements.add(TextComponent.of(String.valueOf(o)));
                 }
                 if (i != indexOfLast) {
-                    if (delimiter instanceof Builder || delimiter instanceof Component) {
-                        elements.add(delimiter);
-                    } else {
-                        elements.add(TextComponent.of(delimiter.toString()));
-                    }
+                    elements.add(delimiter);
                 }
             }
             return this;

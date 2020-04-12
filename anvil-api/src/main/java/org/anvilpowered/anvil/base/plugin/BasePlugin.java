@@ -135,7 +135,7 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
             .green().append(pluginInfo.getVersion())
             .aqua().append(" by ")
             .appendJoining(", ", pluginInfo.getAuthors())
-            .append(" - ", status, " !")
+            .append(" - ", status, "!")
             .sendToConsole();
     }
 
