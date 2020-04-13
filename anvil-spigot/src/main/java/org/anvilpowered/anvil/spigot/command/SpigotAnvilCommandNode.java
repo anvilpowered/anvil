@@ -41,6 +41,9 @@ public class SpigotAnvilCommandNode
     private SpigotAnvilReloadCommand anvilReloadCommand;
 
     @Inject
+    private SpigotCallbackCommand callbackCommand;
+
+    @Inject
     public SpigotAnvilCommandNode(Registry registry) {
         super(registry);
     }
@@ -54,12 +57,19 @@ public class SpigotAnvilCommandNode
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND));
 
-        PluginCommand root = environment.<JavaPlugin>getPlugin()
-            .getPluginContainer().getCommand(getName());
+        JavaPlugin plugin = environment.<JavaPlugin>getPlugin().getPluginContainer();
+
+        PluginCommand root = plugin.getCommand(getName());
 
         Objects.requireNonNull(root, "Anvil command not registered");
 
         root.setExecutor(commandService.generateRoutingCommand(
             commandService.generateRootCommand(HELP_COMMAND), subCommands, false));
+
+        PluginCommand callback = plugin.getCommand("callback");
+
+        Objects.requireNonNull(callback, "Callback command not registered");
+
+        callback.setExecutor(callbackCommand);
     }
 }

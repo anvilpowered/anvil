@@ -8,3 +8,5 @@ website: https://anvilpowered.org
 commands:
   anvil:
     description: Anvil root command
+  callback:
+    description: Anvil callback command

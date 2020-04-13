@@ -28,6 +28,7 @@ import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;
 import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
+import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 
 import java.util.HashMap;
@@ -43,6 +44,9 @@ public class BungeeAnvilCommandNode
 
     @Inject
     private CommonAnvilReloadCommand<TextComponent, CommandSender> anvilReloadCommand;
+
+    @Inject
+    private CommonCallbackCommand<TextComponent, CommandSender> callbackCommand;
 
     private static final String HELP_COMMAND_PROXY = "/anvilb help";
     private static final String ROOT_COMMAND_PROXY = "anvilb";
@@ -64,13 +68,23 @@ public class BungeeAnvilCommandNode
         BiConsumer<CommandSender, String[]> root = commandService.generateRoutingCommand(
             commandService.generateRootCommand(HELP_COMMAND_PROXY), subCommands, false);
 
+        Plugin plugin = environment.<Plugin>getPlugin().getPluginContainer();
         ProxyServer.getInstance().getPluginManager()
-            .registerCommand(
-                environment.<Plugin>getPlugin().getPluginContainer(),
-                new Command(AnvilCorePluginInfo.id + "b", null, "ab") {
+            .registerCommand(plugin,
+                new Command("anvilb", null, "ab", "anvilb:ab", "anvilb:anvilb") {
                     @Override
-                    public void execute(CommandSender sender, String[] args) {
-                        root.accept(sender, args);
+                    public void execute(CommandSender source, String[] context) {
+                        root.accept(source, context);
+                    }
+                }
+            );
+
+        ProxyServer.getInstance().getPluginManager()
+            .registerCommand(plugin,
+                new Command("callback", null, "anvilb:callback") {
+                    @Override
+                    public void execute(CommandSender source, String[] context) {
+                        callbackCommand.executeCallback(source, context);
                     }
                 }
             );

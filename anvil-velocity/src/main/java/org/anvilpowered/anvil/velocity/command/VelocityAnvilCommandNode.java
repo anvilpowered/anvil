@@ -40,6 +40,9 @@ public class VelocityAnvilCommandNode
     private VelocityAnvilReloadCommand anvilReloadCommand;
 
     @Inject
+    private VelocityCallbackCommand callbackCommand;
+
+    @Inject
     private ProxyServer proxyServer;
 
     private static final String HELP_COMMAND_PROXY = "/anvilv help";
@@ -59,10 +62,12 @@ public class VelocityAnvilCommandNode
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND_PROXY));
 
-        proxyServer.getCommandManager().register(AnvilCorePluginInfo.id + "v",
+        proxyServer.getCommandManager().register("anvilv",
             commandService.generateRoutingCommand(
                 commandService.generateRootCommand(HELP_COMMAND_PROXY), subCommands, false),
-            "av");
+            "av", "anvilv:av", "anvilv:anvilv");
+
+        proxyServer.getCommandManager().register("callback", callbackCommand, "anvilv:callback");
     }
 
     @Override

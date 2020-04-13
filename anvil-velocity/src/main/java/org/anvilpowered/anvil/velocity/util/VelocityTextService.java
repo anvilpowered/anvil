@@ -29,11 +29,11 @@ import net.kyori.text.format.TextColor;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.common.util.CommonTextService;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.function.Consumer;
 
 public class VelocityTextService extends CommonTextService<TextComponent, CommandSource> {
 
@@ -73,7 +73,9 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
     protected class VelocityTextBuilder extends CommonTextBuilder {
 
         private final Deque<Object> elements;
+        @Nullable
         private HoverEvent hoverEvent;
+        @Nullable
         private ClickEvent clickEvent;
 
         protected VelocityTextBuilder() {
@@ -223,20 +225,16 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
         @Override
         public Builder<TextComponent, CommandSource> onClickSuggestCommand(String command) {
+            callback = null;
             clickEvent = ClickEvent.suggestCommand(command);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> onClickRunCommand(String command) {
+            callback = null;
             clickEvent = ClickEvent.runCommand(command);
             return this;
-        }
-
-        @Override
-        public Builder<TextComponent, CommandSource> onClickExecuteCallback(
-            Consumer<CommandSource> callback) {
-            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -246,6 +244,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
         @Override
         public Builder<TextComponent, CommandSource> onClickOpenUrl(String url) {
+            callback = null;
             clickEvent = ClickEvent.openUrl(url);
             return this;
         }
@@ -254,6 +253,9 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
         @SuppressWarnings("unchecked")
         public TextComponent build() {
             boolean hover = hoverEvent != null;
+            if (callback != null) {
+                initializeCallback();
+            }
             boolean click = clickEvent != null;
 
             if (elements.isEmpty()) {

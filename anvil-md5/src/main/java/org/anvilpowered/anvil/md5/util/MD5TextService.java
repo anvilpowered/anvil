@@ -25,11 +25,11 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.common.util.CommonTextService;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.function.Consumer;
 
 public abstract class MD5TextService<TCommandSource>
     extends CommonTextService<TextComponent, TCommandSource> {
@@ -57,7 +57,9 @@ public abstract class MD5TextService<TCommandSource>
     protected class MD5TextBuilder extends CommonTextBuilder {
 
         private final Deque<Object> elements;
+        @Nullable
         private HoverEvent hoverEvent;
+        @Nullable
         private ClickEvent clickEvent;
 
         protected MD5TextBuilder() {
@@ -209,24 +211,21 @@ public abstract class MD5TextService<TCommandSource>
 
         @Override
         public Builder<TextComponent, TCommandSource> onClickSuggestCommand(String command) {
+            callback = null;
             clickEvent = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command);
             return this;
         }
 
         @Override
         public Builder<TextComponent, TCommandSource> onClickRunCommand(String command) {
+            callback = null;
             clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> onClickExecuteCallback(
-            Consumer<TCommandSource> callback) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public Builder<TextComponent, TCommandSource> onClickOpenUrl(String url) {
+            callback = null;
             clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
             return this;
         }
@@ -240,6 +239,9 @@ public abstract class MD5TextService<TCommandSource>
         @SuppressWarnings("unchecked")
         public TextComponent build() {
             boolean hover = hoverEvent != null;
+            if (callback != null) {
+                initializeCallback();
+            }
             boolean click = clickEvent != null;
 
             if (elements.isEmpty()) {

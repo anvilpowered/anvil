@@ -18,7 +18,10 @@
 
 package org.anvilpowered.anvil.common.util;
 
+import com.google.inject.Inject;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.util.TextService;
+import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -26,7 +29,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +39,9 @@ public abstract class CommonTextService<TString, TCommandSource>
     implements TextService<TString, TCommandSource> {
 
     private static final int LINE_WIDTH = 91;
+
+    @Inject
+    protected CommonCallbackCommand<TString, TCommandSource> callbackCommand;
 
     @Override
     public TString success(String s) {
@@ -76,6 +84,9 @@ public abstract class CommonTextService<TString, TCommandSource>
 
     protected abstract class CommonTextBuilder
         implements Builder<TString, TCommandSource> {
+
+        @Nullable
+        protected Consumer<TCommandSource> callback;
 
         @Override
         public Builder<TString, TCommandSource> append(CharSequence... contents) {
@@ -196,6 +207,32 @@ public abstract class CommonTextService<TString, TCommandSource>
         public Builder<TString, TCommandSource> onHoverShowText(
             Builder<TString, TCommandSource> builder) {
             return onHoverShowText(builder.build());
+        }
+
+        @Override
+        public Builder<TString, TCommandSource> onClickExecuteCallback(
+            Consumer<TCommandSource> callback) {
+            this.callback = callback;
+            return this;
+        }
+
+        protected void initializeCallback() {
+            UUID uuid = UUID.randomUUID();
+            callbackCommand.addCallback(uuid, callback);
+            String platform = Anvil.getPlatform().getName();
+            String command;
+            switch (platform) {
+                case "bungee":
+                    command = "/anvilb:callback ";
+                    break;
+                case "velocity":
+                    command = "/anvilv:callback ";
+                    break;
+                default:
+                    command = "/anvil:callback ";
+                    break;
+            }
+            onClickRunCommand(command + uuid);
         }
 
         @Override
