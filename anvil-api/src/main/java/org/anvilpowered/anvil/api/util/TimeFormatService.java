@@ -40,15 +40,25 @@ public interface TimeFormatService {
 
     Optional<Instant> parseInstant(String input);
 
-    String format(Duration duration);
+    FormatResult format(Duration duration);
 
-    String format(Instant instant);
+    FormatResult format(Instant instant);
 
-    String formatDurationUnsafe(String input);
+    FormatResult formatDurationUnsafe(String input);
 
-    Optional<String> formatDuration(String input);
+    Optional<FormatResult> formatDuration(String input);
 
-    String formatInstantUnsafe(String input);
+    FormatResult formatInstantUnsafe(String input);
 
-    Optional<String> formatInstant(String input);
+    Optional<FormatResult> formatInstant(String input);
+
+    interface FormatResult {
+        FormatResult maxCharacters(int maxCharacters);
+
+        FormatResult maxUnits(int maxUnits);
+
+        FormatResult withoutNano();
+
+        String get();
+    }
 }

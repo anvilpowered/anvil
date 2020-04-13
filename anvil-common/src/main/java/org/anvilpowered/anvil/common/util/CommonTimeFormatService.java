@@ -38,10 +38,16 @@ public class CommonTimeFormatService implements TimeFormatService {
     private static final long SECONDS_IN_HOUR = 3600;
     private static final long SECONDS_IN_MINUTE = 60;
 
-    private static DateTimeFormatter dateTimeFormat
-        = DateTimeFormatter.ofPattern("uuuu-MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC);
+    private static final DateTimeFormatter[] dateTimeFormat = {
+        DateTimeFormatter.ofPattern("ss").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("mm:ss").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("dd-HH:mm:ss").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("uuuu-MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC)
+    };
 
-    private static Pattern timePattern = Pattern.compile(
+    private static final Pattern timePattern = Pattern.compile(
         "\\s*((?<years>-?[0-9]*)\\s*[yY])?" +
             "\\s*((?<months>-?[0-9]*)\\s*M)?" +
             "\\s*((?<days>-?[0-9]*)\\s*[dD])?" +
@@ -101,7 +107,7 @@ public class CommonTimeFormatService implements TimeFormatService {
 
     @Override
     public Instant parseInstantUnsafe(String input) {
-        return Instant.from(dateTimeFormat.parse(input));
+        return Instant.from(dateTimeFormat[5].parse(input));
     }
 
     @Override
@@ -114,72 +120,198 @@ public class CommonTimeFormatService implements TimeFormatService {
     }
 
     @Override
-    public String format(Duration duration) {
-        StringBuilder s = new StringBuilder();
-        long seconds = duration.getSeconds();
-        long nanos = duration.getNano();
-        if (seconds == 0) {
-            return nanos > 0 ? nanos + " nanoseconds" : "0 seconds";
-        }
-        long years = seconds / SECONDS_IN_YEAR;
-        seconds -= SECONDS_IN_YEAR * years;
-        long months = seconds / SECONDS_IN_MONTH;
-        seconds -= SECONDS_IN_MONTH * months;
-        long days = seconds / SECONDS_IN_DAY;
-        seconds -= SECONDS_IN_DAY * days;
-        long hours = seconds / SECONDS_IN_HOUR;
-        seconds -= SECONDS_IN_HOUR * hours;
-        long minutes = seconds / SECONDS_IN_MINUTE;
-        seconds -= SECONDS_IN_MINUTE * minutes;
-        if (years != 0) {
-            s.append(years).append(years == 1 ? " year, " : " years, ");
-        }
-        if (months != 0) {
-            s.append(months).append(months == 1 ? " month, " : " months, ");
-        }
-        if (days != 0) {
-            s.append(days).append(days == 1 ? " day, " : " days, ");
-        }
-        if (hours != 0) {
-            s.append(hours).append(hours == 1 ? " hour, " : " hours, ");
-        }
-        if (minutes != 0) {
-            s.append(minutes).append(minutes == 1 ? " minute, " : " minutes, ");
-        }
-        if (seconds != 0) {
-            s.append(seconds).append(seconds == 1 ? " second, " : " seconds, ");
-        }
-        if (nanos != 0) {
-            s.append(nanos).append(nanos == 1 ? " nanosecond" : " nanoseconds");
-        } else if (s.length() > 1) {
-            s.deleteCharAt(s.length() - 1);
-            s.deleteCharAt(s.length() - 1);
-        }
-        return s.toString();
+    public FormatResult format(Duration duration) {
+        return new DurationFormatResult(duration);
     }
 
     @Override
-    public String format(Instant instant) {
-        return dateTimeFormat.format(instant);
+    public FormatResult format(Instant instant) {
+        return new InstantFormatResult(instant);
     }
 
     @Override
-    public String formatDurationUnsafe(String input) {
+    public FormatResult formatDurationUnsafe(String input) {
         return format(parseDurationUnsafe(input));
     }
 
     @Override
-    public Optional<String> formatDuration(String input) {
+    public Optional<FormatResult> formatDuration(String input) {
         return parseDuration(input).map(this::format);
     }
 
     @Override
-    public String formatInstantUnsafe(String input) {
+    public FormatResult formatInstantUnsafe(String input) {
         return format(parseInstantUnsafe(input));
     }
 
     @Override
-    public Optional<String> formatInstant(String input) {
+    public Optional<FormatResult> formatInstant(String input) {
         return parseInstant(input).map(this::format);
+    }
+
+    private static final class DurationFormatResult implements FormatResult {
+
+        private final Duration duration;
+        int maxCharacters;
+        int maxUnits;
+        boolean withoutNano;
+
+        private DurationFormatResult(Duration duration) {
+            this.duration = duration;
+            maxCharacters = -1;
+            maxUnits = -1;
+            withoutNano = false;
+        }
+
+        @Override
+        public FormatResult maxCharacters(int maxCharacters) {
+            this.maxCharacters = maxCharacters;
+            return this;
+        }
+
+        @Override
+        public FormatResult maxUnits(int maxUnits) {
+            this.maxUnits = maxUnits;
+            return this;
+        }
+
+        @Override
+        public FormatResult withoutNano() {
+            withoutNano = true;
+            return this;
+        }
+
+        @Override
+        public String get() {
+            if (maxCharacters == 0 || maxUnits == 0) {
+                return "";
+            }
+            StringBuilder s = new StringBuilder();
+            long seconds = duration.getSeconds();
+            int nanos = duration.getNano();
+            if (seconds == 0) {
+                return nanos > 0 ? nanos + " nanoseconds" : "0 seconds";
+            }
+            long years = seconds / SECONDS_IN_YEAR;
+            seconds -= SECONDS_IN_YEAR * years;
+            long months = seconds / SECONDS_IN_MONTH;
+            seconds -= SECONDS_IN_MONTH * months;
+            long days = seconds / SECONDS_IN_DAY;
+            seconds -= SECONDS_IN_DAY * days;
+            long hours = seconds / SECONDS_IN_HOUR;
+            seconds -= SECONDS_IN_HOUR * hours;
+            long minutes = seconds / SECONDS_IN_MINUTE;
+            seconds -= SECONDS_IN_MINUTE * minutes;
+            int units = maxUnits < 0 ? Integer.MIN_VALUE : 0;
+            if (years != 0) {
+                String t = years + (years == 1 ? " year, " : " years, ");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    ++units;
+                }
+            }
+            if (months != 0 && units <= maxUnits) {
+                String t = months + (months == 1 ? " month, " : " months, ");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    ++units;
+                }
+            }
+            if (days != 0 && units <= maxUnits) {
+                String t = days + (days == 1 ? " day, " : " days, ");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    ++units;
+                }
+            }
+            if (hours != 0 && units <= maxUnits) {
+                String t = hours + (hours == 1 ? " hour, " : " hours, ");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    ++units;
+                }
+            }
+            if (minutes != 0 && units <= maxUnits) {
+                String t = minutes + (minutes == 1 ? " minute, " : " minutes, ");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    ++units;
+                }
+            }
+            if (seconds != 0 && units <= maxUnits) {
+                String t = seconds + (seconds == 1 ? " second, " : " seconds, ");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    ++units;
+                }
+            }
+            if (nanos != 0 && !withoutNano && units <= maxUnits) {
+                String t = nanos + (nanos == 1 ? " nanosecond" : " nanoseconds");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    return s.toString();
+                }
+            }
+            if (s.length() > 1) {
+                s.deleteCharAt(s.length() - 1);
+                s.deleteCharAt(s.length() - 1);
+            }
+            return s.toString();
+        }
+    }
+
+    private static final class InstantFormatResult implements FormatResult {
+
+        private final Instant instant;
+        int maxUnits;
+        boolean withoutNano;
+
+        private InstantFormatResult(Instant instant) {
+            this.instant = instant;
+            maxUnits = -1;
+            withoutNano = false;
+        }
+
+        @Override
+        public FormatResult maxCharacters(int maxCharacters) {
+            if (maxCharacters < 0 || maxCharacters > 18) {
+                maxUnits = -1;
+            } else if (maxCharacters > 13) {
+                maxUnits = 5;
+            } else if (maxCharacters > 10) {
+                maxUnits = 4;
+            } else if (maxCharacters > 7) {
+                maxUnits = 3;
+            } else if (maxCharacters > 4) {
+                maxUnits = 2;
+            } else if (maxCharacters > 1) {
+                maxUnits = 1;
+            } else {
+                maxUnits = 0;
+            }
+            return this;
+        }
+
+        @Override
+        public FormatResult maxUnits(int maxUnits) {
+            this.maxUnits = maxUnits;
+            return this;
+        }
+
+        @Override
+        public FormatResult withoutNano() {
+            return this;
+        }
+
+        @Override
+        public String get() {
+            if (maxUnits == 0) {
+                return "";
+            }
+            if (maxUnits < 0 || maxUnits > 6) {
+                return dateTimeFormat[5].format(instant);
+            }
+            return dateTimeFormat[maxUnits - 1].format(instant);
+        }
     }
 }
