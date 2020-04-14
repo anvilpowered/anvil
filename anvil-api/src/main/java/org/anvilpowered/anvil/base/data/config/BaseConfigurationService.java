@@ -101,12 +101,25 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         if (isWithDataStore) return;
         isWithDataStore = true;
         withDataStoreCore0();
-        setName(Keys.USE_SHARED_ENVIRONMENT, "datastore.useSharedEnvironment");
-        setName(Keys.USE_SHARED_CREDENTIALS, "datastore.useSharedCredentials");
-        setDescription(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use Anvil shared environment." +
-            "\nThis will use hostname and port from Anvil");
-        setDescription(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use Anvil credentials. (Requires useSharedEnvironment)" +
-            "\nThis will use (additionally) username, password, authDb and useAuth from Anvil");
+        setName(Keys.USE_SHARED_CREDENTIALS, "datastore.anvil.useSharedCredentials");
+        setName(Keys.USE_SHARED_ENVIRONMENT, "datastore.anvil.useSharedEnvironment");
+        setDescription(Keys.USE_SHARED_CREDENTIALS, "\nWhether to use Anvil's shared credentials."
+            + "\nIf enabled, the following datastore settings will be inherited from Anvil's config (Requires useSharedEnvironment)"
+            + "\n\t- mongodb.authDb"
+            + "\n\t- mongodb.connectionString"
+            + "\n\t- mongodb.password"
+            + "\n\t- mongodb.username"
+            + "\n\t- mongodb.useAuth"
+            + "\n\t- mongodb.useConnectionString"
+            + "\n\t- mongodb.useSrv"
+            + "\nPlease note: If this is enabled, the values for above settings in this config file have no effect"
+        );
+        setDescription(Keys.USE_SHARED_ENVIRONMENT, "\nWhether to use Anvil's shared environment."
+            + "\nIf enabled, the following datastore settings will be inherited from Anvil's config"
+            + "\n\t- mongodb.hostname"
+            + "\n\t- mongodb.port"
+            + "\nPlease note: If this is enabled, the values for above settings in this config file have no effect"
+        );
     }
 
     protected void withMongoDb() {
