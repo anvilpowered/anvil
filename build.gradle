@@ -82,8 +82,8 @@ project(':anvil-api') {
 
                         licenses {
                             license {
-                                name = 'GNU GENERAL PUBLIC LICENSE Version 3'
-                                url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                                name = 'GNU LESSER GENERAL PUBLIC LICENSE Version 3'
+                                url = 'https://www.gnu.org/licenses/lgpl-3.0.html'
                                 distribution = 'repo'
                             }
                         }
