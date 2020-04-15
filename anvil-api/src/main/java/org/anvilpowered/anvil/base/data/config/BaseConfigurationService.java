@@ -122,7 +122,7 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         );
     }
 
-    protected void withMongoDb() {
+    protected void withMongoDB() {
         withDataStore();
         setName(Keys.MONGODB_CONNECTION_STRING, "datastore.mongodb.connectionString");
         setName(Keys.MONGODB_HOSTNAME, "datastore.mongodb.hostname");
@@ -172,7 +172,7 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
     protected void withDefault() {
         withCore();
-        withMongoDb();
+        withMongoDB();
     }
 
     protected void withAll() {

@@ -105,28 +105,28 @@ public interface BindingExtensions {
     );
 
     /**
-     * Binds the {@link DataStoreContext} matching the provided {@code dataStoreNames}
+     * Binds the mongodb {@link DataStoreContext}
      * <p>
-     * Passing {@code "mongodb"} to this method is the same as invoking:
+     * Using this method is the same as invoking:
      * </p>
      * <pre>{@code
      * bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
      * }).to(MongoContext.class);
      * }</pre>
-     * <p>
-     * {@code dataStoreNames} may be of the following predefined values:
-     * </p>
-     * <ul>
-     *   <li>{@code "mongodb"}</li>
-     *   <li>{@code "xodus"}</li>
-     * </ul>
-     * </p>
-     *
-     * @param dataStoreNames Names matching a {@link DataStoreContext}.
-     * @throws IllegalArgumentException If any of the provided annotations do not
-     *                                  match a {@link DataStoreContext}
      */
-    void withContexts(String... dataStoreNames);
+    void withMongoDB();
+
+    /**
+     * Binds the xodus {@link DataStoreContext}
+     * <p>
+     * Using this method is the same as invoking:
+     * </p>
+     * <pre>{@code
+     * binder.bind(new TypeLiteral<DataStoreContext<EntityId, PersistentEntityStore>>() {
+     * }).to(XodusContext.class);
+     * }</pre>
+     */
+    void withXodus();
 
 
     static <T> TypeLiteral<T> getTypeLiteral(TypeToken<T> typeToken) {

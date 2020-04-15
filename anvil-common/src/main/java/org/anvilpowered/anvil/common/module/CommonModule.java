@@ -83,7 +83,8 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
 
         bind(CoreMemberManager.class).to(CommonCoreMemberManager.class);
 
-        be.withContexts("mongodb", "xodus");
+        be.withMongoDB();
+        be.withXodus();
 
         bind(Registry.class).to(BaseExtendedRegistry.class);
 

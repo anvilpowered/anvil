@@ -107,21 +107,14 @@ public class CommonBindingExtensions implements BindingExtensions {
     }
 
     @Override
-    @SafeVarargs
-    public final void withContexts(String... dataStoreNames) {
-        for (String name : dataStoreNames) {
-            if ("mongodb".equals(name)) {
-                binder.bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
-                }).to(MongoContext.class);
-                continue;
-            } else if ("xodus".equals(name)) {
-                binder.bind(new TypeLiteral<DataStoreContext<EntityId, PersistentEntityStore>>() {
-                }).to(XodusContext.class);
-                continue;
-            }
-            throw new IllegalArgumentException("Provided dataStoreName "
-                + name + " does not match any predefined dataStoreNames");
-        }
+    public void withMongoDB() {
+        binder.bind(new TypeLiteral<DataStoreContext<ObjectId, Datastore>>() {
+        }).to(MongoContext.class);
     }
 
+    @Override
+    public void withXodus() {
+        binder.bind(new TypeLiteral<DataStoreContext<EntityId, PersistentEntityStore>>() {
+        }).to(XodusContext.class);
+    }
 }
