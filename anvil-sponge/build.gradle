@@ -51,6 +51,7 @@ shadowJar {
             include project(':Anvil:anvil-common')
         }
 
+        relocate("org.apache.commons", "relocated.apache")
         include dependency(apache_commons)
         include dependency(bson)
         include dependency(javasisst)
