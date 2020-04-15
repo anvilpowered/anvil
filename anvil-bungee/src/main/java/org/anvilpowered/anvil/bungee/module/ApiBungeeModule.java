@@ -25,11 +25,13 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandService;
+import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.bungee.command.BungeeCommandService;
+import org.anvilpowered.anvil.bungee.util.BungeeCurrentServerService;
 import org.anvilpowered.anvil.bungee.util.BungeeKickService;
 import org.anvilpowered.anvil.bungee.util.BungeePermissionService;
 import org.anvilpowered.anvil.bungee.util.BungeeTextService;
@@ -53,5 +55,6 @@ public class ApiBungeeModule extends ApiCommonModule {
         }).to(BungeeTextService.class);
         bind(new TypeLiteral<UserService<ProxiedPlayer, ProxiedPlayer>>() {
         }).to(BungeeUserService.class);
+        bind(CurrentServerService.class).to(BungeeCurrentServerService.class);
     }
 }
