@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.sponge.util;
 
 import org.anvilpowered.anvil.common.util.CommonTextService;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.service.pagination.PaginationList;
@@ -31,7 +32,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;

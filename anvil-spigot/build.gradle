@@ -12,8 +12,6 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
         implementation project(':anvil-common')
@@ -24,18 +22,15 @@ dependencies {
         implementation project(':Anvil:anvil-md5')
     }
 
-    implementation configurate_core
     implementation configurate_hocon
-    implementation findbugs
     implementation guice
     implementation javasisst
     implementation microutils_logging
     implementation mongo_java_driver
     implementation morphia
+    implementation spigot
     implementation typesafe_config
     implementation xodus_entity_store
-
-    compileOnly('org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT')
 }
 
 shadowJar {

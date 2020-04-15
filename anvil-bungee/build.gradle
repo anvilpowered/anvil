@@ -12,8 +12,6 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
         implementation project(':anvil-common')
@@ -26,8 +24,12 @@ dependencies {
 
     implementation bungee
     implementation configurate_hocon
+    implementation javasisst
     implementation microutils_logging
+    implementation mongo_java_driver
+    implementation morphia
     implementation typesafe_config
+    implementation xodus_entity_store
 }
 
 shadowJar {

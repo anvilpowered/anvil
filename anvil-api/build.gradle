@@ -15,7 +15,6 @@ dependencies {
     api configurate_core
     api guice
     api hikari
-    api javasisst
     api jedis
     api jetbrains_annotations
     api mongodb_driver_sync

@@ -18,11 +18,11 @@
 
 package org.anvilpowered.anvil.velocity.util;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.UserService;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 

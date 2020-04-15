@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.spigot.util;
 
+import com.google.inject.Inject;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.bukkit.entity.Player;
 
-import javax.inject.Inject;
 import java.util.UUID;
 
 public class SpigotKickService implements KickService {

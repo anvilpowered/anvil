@@ -18,11 +18,11 @@
 
 package org.anvilpowered.anvil.velocity.util;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.util.KickService;
 
-import javax.inject.Inject;
 import java.util.UUID;
 
 public class VelocityKickService implements KickService {

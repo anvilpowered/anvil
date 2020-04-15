@@ -12,8 +12,6 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
         implementation project(':anvil-common')
@@ -27,14 +25,9 @@ dependencies {
     implementation microutils_logging
     implementation mongo_java_driver
     implementation morphia
+    implementation sponge
+    annotationProcessor sponge
     implementation xodus_entity_store
-
-    compileOnly('org.spongepowered:spongeapi:7.2.0-SNAPSHOT') {
-        exclude(module: 'configurate-gson')
-        exclude(module: 'configurate-yaml')
-    }
-    implementation 'org.spongepowered:spongeapi:7.2.0-SNAPSHOT'
-    annotationProcessor 'org.spongepowered:spongeapi:7.2.0-SNAPSHOT'
 }
 
 shadowJar {
@@ -51,6 +44,7 @@ shadowJar {
             include project(':Anvil:anvil-common')
         }
 
+        relocate("org.apache.commons", "relocated.apache")
         include dependency(apache_commons)
         include dependency(bson)
         include dependency(javasisst)

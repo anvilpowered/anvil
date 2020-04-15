@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.spigot.util;
 
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
