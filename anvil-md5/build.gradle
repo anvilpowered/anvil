@@ -2,12 +2,6 @@ plugins {
     id 'java'
 }
 
-repositories {
-    mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url 'https://repo.spongepowered.org/maven' }
-}
-
 dependencies {
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
@@ -18,4 +12,8 @@ dependencies {
     }
 
     implementation bungee
+}
+
+artifacts {
+    archives jar
 }

@@ -5,10 +5,7 @@ plugins {
 jar.enabled = false // we only want shadowJar
 
 repositories {
-    mavenCentral()
     maven { url 'http://repo.nukkitx.com/maven-snapshots' }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url 'https://repo.spongepowered.org/maven' }
 }
 
 dependencies {

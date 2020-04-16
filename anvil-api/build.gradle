@@ -4,12 +4,6 @@ plugins {
 
 version = rootProject.apiVersion
 
-repositories {
-    mavenCentral()
-    maven { url 'https://repo.spongepowered.org/maven' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
 dependencies {
     api bson
     api configurate_core
@@ -24,5 +18,5 @@ dependencies {
 }
 
 artifacts {
-    archives jar, sourcesJar
+    archives jar
 }

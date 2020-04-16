@@ -22,6 +22,12 @@ String _ringFile = project.hasProperty("ringFile") ? ringFile : ""
 subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
     sourceCompatibility = 1.8
+    repositories {
+        mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://repo.spongepowered.org/maven' }
+        maven { url 'https://jetbrains.bintray.com/xodus' }
+    }
     if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
         version = version.replace("-SNAPSHOT", "-RC${buildNumber}")
     }
@@ -46,6 +52,9 @@ subprojects {
         signing {
             sign configurations.archives
         }
+    }
+    artifacts {
+        archives sourcesJar
     }
 }
 
