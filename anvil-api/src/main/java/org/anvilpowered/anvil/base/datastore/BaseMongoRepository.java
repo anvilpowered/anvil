@@ -47,8 +47,7 @@ public interface BaseMongoRepository<
     default CompletableFuture<Optional<T>> insertOne(T item) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                item.setId((ObjectId) getDataStoreContext()
-                    .getDataStore().save(item).getId());
+                getDataStoreContext().getDataStore().save(item);
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return Optional.empty();
@@ -62,8 +61,7 @@ public interface BaseMongoRepository<
         return CompletableFuture.supplyAsync(() ->
             list.stream().filter(item -> {
                 try {
-                    item.setId((ObjectId) getDataStoreContext()
-                        .getDataStore().save(item).getId());
+                    getDataStoreContext().getDataStore().save(item);
                 } catch (RuntimeException e) {
                     e.printStackTrace();
                     return false;
@@ -74,15 +72,18 @@ public interface BaseMongoRepository<
     }
 
     @Override
+    default CompletableFuture<Optional<T>> getOne(Query<T> query) {
+        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(query.get()));
+    }
+
+    @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
-        return CompletableFuture.supplyAsync(() ->
-            Optional.ofNullable(asQuery(id).get()));
+        return getOne(asQuery(id));
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(Instant createdUtc) {
-        return CompletableFuture.supplyAsync(() ->
-            Optional.ofNullable(asQuery(createdUtc).get()));
+        return getOne(asQuery(createdUtc));
     }
 
     @Override

@@ -33,6 +33,8 @@ public interface MongoRepository<
     T extends ObjectWithId<ObjectId>>
     extends Repository<ObjectId, T, Datastore> {
 
+    CompletableFuture<Optional<T>> getOne(Query<T> query);
+
     CompletableFuture<WriteResult> delete(Query<T> query);
 
     UpdateOperations<T> createUpdateOperations();
