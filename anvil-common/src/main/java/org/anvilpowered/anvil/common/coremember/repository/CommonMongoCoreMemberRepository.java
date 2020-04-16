@@ -54,39 +54,41 @@ public class CommonMongoCoreMemberRepository
             flags[i] = false;
         }
         return getOneForUser(userUUID).thenApplyAsync(optionalMember -> {
-            if (optionalMember.isPresent()) {
-                UpdateOperations<CoreMember<ObjectId>> updateOperations = createUpdateOperations();
-                boolean updateName = false;
-                boolean updateIpAddress = false;
-                if (!userName.equals(optionalMember.get().getUserName())) {
-                    updateOperations.set("userName", userName);
-                    updateName = true;
-                }
-                if (!optionalMember.get().getIpAddress().equals(ipAddress)) {
-                    updateOperations.set("ipAddress", ipAddress);
-                    updateIpAddress = true;
-                }
-                updateOperations.set("lastJoinedUtc", OffsetDateTime.now(ZoneOffset.UTC).toInstant());
-                if (getDataStoreContext().getDataStore().update(asQuery(optionalMember.get().getId()), updateOperations).getUpdatedCount() > 0) {
-                    if (updateName) {
-                        optionalMember.get().setUserName(userName);
-                    }
-                    if (updateIpAddress) {
-                        optionalMember.get().setIpAddress(ipAddress);
-                    }
-                }
-                flags[1] = updateName;
-                flags[2] = updateIpAddress;
-                return optionalMember;
+            if (!optionalMember.isPresent()) {
+                CoreMember<ObjectId> member = generateEmpty();
+                member.setUserUUID(userUUID);
+                member.setUserName(userName);
+                member.setIpAddress(ipAddress);
+                member.setLastJoinedUtc(OffsetDateTime.now(ZoneOffset.UTC).toInstant());
+                flags[0] = true;
+                return insertOne(member).join();
             }
-            // if there isn't one already, create a new one
-            CoreMember<ObjectId> member = generateEmpty();
-            member.setUserUUID(userUUID);
-            member.setUserName(userName);
-            member.setIpAddress(ipAddress);
-            member.setLastJoinedUtc(OffsetDateTime.now(ZoneOffset.UTC).toInstant());
-            flags[0] = true;
-            return insertOne(member).join();
+
+            UpdateOperations<CoreMember<ObjectId>> updateOperations = createUpdateOperations();
+            boolean updateName = false;
+            boolean updateIpAddress = false;
+            if (!userName.equals(optionalMember.get().getUserName())) {
+                updateOperations.set("userName", userName);
+                updateName = true;
+            }
+            if (!optionalMember.get().getIpAddress().equals(ipAddress)) {
+                updateOperations.set("ipAddress", ipAddress);
+                updateIpAddress = true;
+            }
+            updateOperations.set("lastJoinedUtc", OffsetDateTime.now(ZoneOffset.UTC).toInstant());
+            if (getDataStoreContext().getDataStore()
+                .update(asQuery(optionalMember.get().getId()), updateOperations)
+                .getUpdatedCount() > 0) {
+                if (updateName) {
+                    optionalMember.get().setUserName(userName);
+                    flags[1] = true;
+                }
+                if (updateIpAddress) {
+                    optionalMember.get().setIpAddress(ipAddress);
+                    flags[2] = true;
+                }
+            }
+            return optionalMember;
         });
     }
 

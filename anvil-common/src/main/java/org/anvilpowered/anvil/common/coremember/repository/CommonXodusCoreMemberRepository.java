@@ -86,8 +86,12 @@ public class CommonXodusCoreMemberRepository
                     updateIPAddress = true;
                 }
                 Instant now = OffsetDateTime.now(ZoneOffset.UTC).toInstant();
-                entity.setProperty("lastJoinedUtc", now);
-                entity.setProperty("updatedUtc", now);
+                long nowSeconds = now.getEpochSecond();
+                int nowNanos = now.getNano();
+                entity.setProperty("lastJoinedUtcSeconds", nowSeconds);
+                entity.setProperty("lastJoinedUtcNanos", nowNanos);
+                entity.setProperty("updatedUtcSeconds", nowSeconds);
+                entity.setProperty("updatedUtcNanos", nowNanos);
                 if (txn.commit()) {
                     if (updateUsername) {
                         item.setUserName(userName);
