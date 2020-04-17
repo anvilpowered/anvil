@@ -203,6 +203,7 @@ public class CommonTimeFormatService implements TimeFormatService {
             long minutes = seconds / SECONDS_IN_MINUTE;
             seconds -= SECONDS_IN_MINUTE * minutes;
             int units = maxUnits < 0 ? Integer.MIN_VALUE : 0;
+            int maxCharacters = this.maxCharacters < 0 ? Integer.MAX_VALUE : this.maxCharacters;
             if (years != 0) {
                 String t = years + (years == 1 ? " year, " : " years, ");
                 if (s.length() + t.length() <= maxCharacters) {
