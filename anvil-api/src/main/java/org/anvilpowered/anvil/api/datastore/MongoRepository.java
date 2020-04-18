@@ -26,6 +26,7 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,6 +35,8 @@ public interface MongoRepository<
     extends Repository<ObjectId, T, Datastore> {
 
     CompletableFuture<Optional<T>> getOne(Query<T> query);
+
+    CompletableFuture<List<T>> getAll(Query<T> query);
 
     CompletableFuture<WriteResult> delete(Query<T> query);
 

@@ -161,7 +161,12 @@ public interface BaseMongoRepository<
 
     @Override
     default CompletableFuture<List<T>> getAll() {
-        return CompletableFuture.supplyAsync(() -> asQuery().asList());
+        return getAll(asQuery());
+    }
+
+    @Override
+    default CompletableFuture<List<T>> getAll(Query<T> query) {
+        return CompletableFuture.supplyAsync(query::asList);
     }
 
     @Override
