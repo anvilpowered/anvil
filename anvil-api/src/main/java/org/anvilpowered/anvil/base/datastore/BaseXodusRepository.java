@@ -176,8 +176,13 @@ public interface BaseXodusRepository<
         Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
         return CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
-                query.apply(txn).forEach(Entity::delete);
-                return txn.commit();
+                boolean success = false;
+                for (Entity entity : query.apply(txn)) {
+                    if (entity.delete()) {
+                        success = true;
+                    }
+                }
+                return txn.commit() && success;
             })
         );
     }

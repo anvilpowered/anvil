@@ -18,14 +18,12 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
-import com.mongodb.WriteResult;
 import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.datastore.CachedRepository;
 import org.anvilpowered.anvil.api.datastore.StorageService;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,17 +47,5 @@ public interface BaseMongoCachedRepository<
     @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
         return applyToBothConditionally(c -> c.getOne(id).join(), () -> BaseMongoRepository.super.getOne(id).join());
-    }
-
-    @Override
-    default CompletableFuture<WriteResult> delete(Query<T> query) {
-        return applyFromDBToCache(() -> BaseMongoRepository.super.delete(query).join(), (c, w) -> {
-            try {
-                if (w.wasAcknowledged() && w.getN() > 0) {
-                    c.deleteOne((ObjectId) w.getUpsertedId());
-                }
-            } catch (RuntimeException ignored) {
-            }
-        });
     }
 }

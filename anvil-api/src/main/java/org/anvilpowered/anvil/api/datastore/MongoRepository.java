@@ -18,7 +18,6 @@
 
 package org.anvilpowered.anvil.api.datastore;
 
-import com.mongodb.WriteResult;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
@@ -38,7 +37,7 @@ public interface MongoRepository<
 
     CompletableFuture<List<T>> getAll(Query<T> query);
 
-    CompletableFuture<WriteResult> delete(Query<T> query);
+    CompletableFuture<Boolean> delete(Query<T> query);
 
     UpdateOperations<T> createUpdateOperations();
 

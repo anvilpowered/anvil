@@ -18,7 +18,6 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
-import com.mongodb.WriteResult;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.datastore.MongoRepository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
@@ -96,27 +95,25 @@ public interface BaseMongoRepository<
     }
 
     @Override
-    default CompletableFuture<WriteResult> delete(Query<T> query) {
+    default CompletableFuture<Boolean> delete(Query<T> query) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return getDataStoreContext().getDataStore().delete(query);
+                return getDataStoreContext().getDataStore().delete(query).getN() > 0;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return WriteResult.unacknowledged();
+                return false;
             }
         });
     }
 
     @Override
     default CompletableFuture<Boolean> deleteOne(ObjectId id) {
-        return delete(asQuery(id))
-            .thenApplyAsync(wr -> wr.wasAcknowledged() && wr.getN() > 0);
+        return delete(asQuery(id));
     }
 
     @Override
     default CompletableFuture<Boolean> deleteOne(Instant createdUtc) {
-        return delete(asQuery(createdUtc))
-            .thenApplyAsync(wr -> wr.wasAcknowledged() && wr.getN() > 0);
+        return delete(asQuery(createdUtc));
     }
 
     @Override
