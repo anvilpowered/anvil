@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api.datastore;
 
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -43,6 +44,9 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     private Class<?>[] entityClasses;
     private Class<TKey> tKeyClass;
 
+    @Inject(optional = true)
+    private ClassLoader classLoader;
+
     protected DataStoreContext(Registry registry) {
         connectionOpenedListeners = new ArrayList<>();
         connectionClosedListeners = new ArrayList<>();
@@ -67,9 +71,11 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     }
 
     @SafeVarargs
-    protected final Class<?>[] calculateEntityClasses(final String baseScanPackage, final Class<? extends Annotation>... entityAnnotations) {
+    protected final Class<?>[] calculateEntityClasses(
+        final String baseScanPackage, final Class<? extends Annotation>... entityAnnotations) {
         if (entityAnnotations.length == 0) return EMPTY_CLASS_ARRAY;
-        Reflections reflections = new Reflections(baseScanPackage, new TypeAnnotationsScanner(), new SubTypesScanner());
+        Reflections reflections = new Reflections(
+            baseScanPackage, new TypeAnnotationsScanner(), new SubTypesScanner(), classLoader);
         Set<Class<?>> types = reflections.getTypesAnnotatedWith(entityAnnotations[0]);
         for (int i = 1; i < entityAnnotations.length; i++) {
             types.addAll(reflections.getTypesAnnotatedWith(entityAnnotations[i]));

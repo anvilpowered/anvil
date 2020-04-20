@@ -100,6 +100,8 @@ class EnvironmentBuilderImpl implements Environment.Builder {
             environment.addModule(new AbstractModule() {
                 @Override
                 protected void configure() {
+                    bind(ClassLoader.class).toInstance(environment.getPlugin()
+                        .getClass().getClassLoader());
                     bind(Environment.class).toInstance(environment);
                     bind(new TypeLiteral<Plugin<?>>() {
                     }).toInstance(environment.getPlugin());
