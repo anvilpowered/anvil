@@ -53,12 +53,12 @@ subprojects {
             sign configurations.archives
         }
     }
-    artifacts {
-        archives sourcesJar
-    }
 }
 
 project(':anvil-api') {
+    artifacts {
+        archives sourcesJar
+    }
     afterEvaluate {
         publishing {
             repositories {
