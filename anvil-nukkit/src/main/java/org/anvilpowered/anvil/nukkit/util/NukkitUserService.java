@@ -20,13 +20,14 @@ package org.anvilpowered.anvil.nukkit.util;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.util.CommonUserService;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class NukkitUserService implements UserService<Player, Player> {
+public class NukkitUserService extends CommonUserService<Player, Player> {
 
     @Override
     public Optional<Player> get(String userName) {
@@ -54,13 +55,21 @@ public class NukkitUserService implements UserService<Player, Player> {
     }
 
     @Override
-    public Optional<UUID> getUUID(String userName) {
-        return Optional.ofNullable(Server.getInstance().getPlayer(userName)).map(Player::getUniqueId);
+    public CompletableFuture<Optional<UUID>> getUUID(String userName) {
+        Optional<UUID> userUUID = get(userName).map(Player::getUniqueId);
+        if (userUUID.isPresent()) {
+            return CompletableFuture.completedFuture(userUUID);
+        }
+        return super.getUUID(userName);
     }
 
     @Override
-    public Optional<String> getUserName(UUID userUUID) {
-        return Server.getInstance().getPlayer(userUUID).map(Player::getDisplayName);
+    public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
+        Optional<String> userName = get(userUUID).map(Player::getName);
+        if (userName.isPresent()) {
+            return CompletableFuture.completedFuture(userName);
+        }
+        return super.getUserName(userUUID);
     }
 
     @Override

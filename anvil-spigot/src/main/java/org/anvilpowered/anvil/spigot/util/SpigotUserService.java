@@ -18,16 +18,16 @@
 
 package org.anvilpowered.anvil.spigot.util;
 
-import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.util.CommonUserService;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class SpigotUserService implements UserService<Player, Player> {
+public class SpigotUserService extends CommonUserService<Player, Player> {
 
     @Override
     public Optional<Player> get(String userName) {
@@ -55,13 +55,21 @@ public class SpigotUserService implements UserService<Player, Player> {
     }
 
     @Override
-    public Optional<UUID> getUUID(String userName) {
-        return get(userName).map(Entity::getUniqueId);
+    public CompletableFuture<Optional<UUID>> getUUID(String userName) {
+        Optional<UUID> userUUID = getPlayer(userName).map(Player::getUniqueId);
+        if (userUUID.isPresent()) {
+            return CompletableFuture.completedFuture(userUUID);
+        }
+        return super.getUUID(userName);
     }
 
     @Override
-    public Optional<String> getUserName(UUID userUUID) {
-        return get(userUUID).map(Player::getName);
+    public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
+        Optional<String> userName = getPlayer(userUUID).map(Player::getName);
+        if (userName.isPresent()) {
+            return CompletableFuture.completedFuture(userName);
+        }
+        return super.getUserName(userUUID);
     }
 
     @Override

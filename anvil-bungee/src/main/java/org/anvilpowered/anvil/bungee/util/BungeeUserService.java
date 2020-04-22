@@ -20,13 +20,14 @@ package org.anvilpowered.anvil.bungee.util;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.util.CommonUserService;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class BungeeUserService implements UserService<ProxiedPlayer, ProxiedPlayer> {
+public class BungeeUserService extends CommonUserService<ProxiedPlayer, ProxiedPlayer> {
 
     @Override
     public Optional<ProxiedPlayer> get(String userName) {
@@ -54,13 +55,21 @@ public class BungeeUserService implements UserService<ProxiedPlayer, ProxiedPlay
     }
 
     @Override
-    public Optional<UUID> getUUID(String userName) {
-        return getPlayer(userName).map(ProxiedPlayer::getUniqueId);
+    public CompletableFuture<Optional<UUID>> getUUID(String userName) {
+        Optional<UUID> userUUID = getPlayer(userName).map(ProxiedPlayer::getUniqueId);
+        if (userUUID.isPresent()) {
+            return CompletableFuture.completedFuture(userUUID);
+        }
+        return super.getUUID(userName);
     }
 
     @Override
-    public Optional<String> getUserName(UUID userUUID) {
-        return Optional.empty();
+    public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
+        Optional<String> userName = getPlayer(userUUID).map(ProxiedPlayer::getName);
+        if (userName.isPresent()) {
+            return CompletableFuture.completedFuture(userName);
+        }
+        return super.getUserName(userUUID);
     }
 
     @Override

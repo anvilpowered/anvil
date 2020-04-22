@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.api.util;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Service for translating UUIDs to UserNames or UserNames to UUIDs
@@ -37,9 +38,9 @@ public interface UserService<TUser, TPlayer> {
 
     Collection<TPlayer> getOnlinePlayers();
 
-    Optional<UUID> getUUID(String userName);
+    CompletableFuture<Optional<UUID>> getUUID(String userName);
 
-    Optional<String> getUserName(UUID userUUID);
+    CompletableFuture<Optional<String>> getUserName(UUID userUUID);
 
     UUID getUUID(TUser user);
 

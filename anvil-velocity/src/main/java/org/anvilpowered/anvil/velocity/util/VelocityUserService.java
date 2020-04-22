@@ -21,14 +21,14 @@ package org.anvilpowered.anvil.velocity.util;
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.util.UuidUtils;
-import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.util.CommonUserService;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class VelocityUserService implements UserService<Player, Player> {
+public class VelocityUserService extends CommonUserService<Player, Player> {
 
     @Inject
     private ProxyServer proxyServer;
@@ -59,13 +59,21 @@ public class VelocityUserService implements UserService<Player, Player> {
     }
 
     @Override
-    public Optional<UUID> getUUID(String userName) {
-        return Optional.of(UuidUtils.generateOfflinePlayerUuid(userName));
+    public CompletableFuture<Optional<UUID>> getUUID(String userName) {
+        Optional<UUID> userUUID = getPlayer(userName).map(Player::getUniqueId);
+        if (userUUID.isPresent()) {
+            return CompletableFuture.completedFuture(userUUID);
+        }
+        return super.getUUID(userName);
     }
 
     @Override
-    public Optional<String> getUserName(UUID userUUID) {
-        return get(userUUID).map(Player::getUsername);
+    public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
+        Optional<String> userName = getPlayer(userUUID).map(Player::getUsername);
+        if (userName.isPresent()) {
+            return CompletableFuture.completedFuture(userName);
+        }
+        return super.getUserName(userUUID);
     }
 
     @Override

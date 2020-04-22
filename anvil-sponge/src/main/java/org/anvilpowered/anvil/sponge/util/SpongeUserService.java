@@ -18,18 +18,18 @@
 
 package org.anvilpowered.anvil.sponge.util;
 
-import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.util.CommonUserService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
-import org.spongepowered.api.util.Identifiable;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class SpongeUserService implements UserService<User, Player> {
+public class SpongeUserService extends CommonUserService<User, Player> {
 
     @Override
     public Optional<User> get(String userName) {
@@ -57,13 +57,21 @@ public class SpongeUserService implements UserService<User, Player> {
     }
 
     @Override
-    public Optional<UUID> getUUID(String userName) {
-        return get(userName).map(Identifiable::getUniqueId);
+    public CompletableFuture<Optional<UUID>> getUUID(String userName) {
+        Optional<UUID> userUUID = getPlayer(userName).map(Player::getUniqueId);
+        if (userUUID.isPresent()) {
+            return CompletableFuture.completedFuture(userUUID);
+        }
+        return super.getUUID(userName);
     }
 
     @Override
-    public Optional<String> getUserName(UUID userUUID) {
-        return get(userUUID).map(User::getName);
+    public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
+        Optional<String> userName = getPlayer(userUUID).map(Player::getName);
+        if (userName.isPresent()) {
+            return CompletableFuture.completedFuture(userName);
+        }
+        return super.getUserName(userUUID);
     }
 
     @Override
