@@ -26,6 +26,7 @@ import net.kyori.text.TextComponent;
 import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
 import net.kyori.text.format.TextColor;
+import net.kyori.text.format.TextDecoration;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.common.util.CommonTextService;
@@ -181,6 +182,36 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
         @Override
         public Builder<TextComponent, CommandSource> yellow() {
             elements.add(TextColor.YELLOW);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, CommandSource> bold() {
+            elements.add(TextDecoration.BOLD);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, CommandSource> italic() {
+            elements.add(TextDecoration.ITALIC);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, CommandSource> obfuscated() {
+            elements.add(TextDecoration.OBFUSCATED);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, CommandSource> strikethrough() {
+            elements.add(TextDecoration.STRIKETHROUGH);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, CommandSource> underlined() {
+            elements.add(TextDecoration.UNDERLINED);
             return this;
         }
 

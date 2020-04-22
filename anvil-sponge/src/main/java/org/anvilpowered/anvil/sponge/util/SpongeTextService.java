@@ -30,6 +30,7 @@ import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.net.MalformedURLException;
@@ -186,6 +187,36 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
         @Override
         public Builder<Text, CommandSource> yellow() {
             elements.add(TextColors.YELLOW);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> bold() {
+            elements.add(TextStyles.BOLD);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> italic() {
+            elements.add(TextStyles.ITALIC);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> obfuscated() {
+            elements.add(TextStyles.OBFUSCATED);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> strikethrough() {
+            elements.add(TextStyles.STRIKETHROUGH);
+            return this;
+        }
+
+        @Override
+        public Builder<Text, CommandSource> underlined() {
+            elements.add(TextStyles.UNDERLINE);
             return this;
         }
 

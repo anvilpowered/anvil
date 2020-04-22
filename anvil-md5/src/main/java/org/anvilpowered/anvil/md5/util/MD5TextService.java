@@ -169,6 +169,36 @@ public abstract class MD5TextService<TCommandSource>
         }
 
         @Override
+        public Builder<TextComponent, TCommandSource> bold() {
+            elements.add(ChatColor.BOLD);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, TCommandSource> italic() {
+            elements.add(ChatColor.ITALIC);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, TCommandSource> obfuscated() {
+            elements.add(ChatColor.MAGIC);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, TCommandSource> strikethrough() {
+            elements.add(ChatColor.STRIKETHROUGH);
+            return this;
+        }
+
+        @Override
+        public Builder<TextComponent, TCommandSource> underlined() {
+            elements.add(ChatColor.UNDERLINE);
+            return this;
+        }
+
+        @Override
         public Builder<TextComponent, TCommandSource> append(Object... contents) {
             for (Object o : contents) {
                 if (o instanceof Builder || o instanceof TextComponent || o instanceof ChatColor) {
