@@ -39,7 +39,7 @@ import org.spongepowered.api.plugin.PluginContainer;
     version = AnvilCorePluginInfo.version,
     description = AnvilCorePluginInfo.description,
     url = AnvilCorePluginInfo.url,
-    authors = "Cableguy20"
+    authors = AnvilCorePluginInfo.organizationName
 )
 public class AnvilCoreSponge extends AnvilCore<PluginContainer> {
 

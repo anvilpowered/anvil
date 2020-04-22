@@ -39,7 +39,7 @@ import org.anvilpowered.anvil.velocity.module.VelocityModule;
     version = AnvilCorePluginInfo.version,
     description = AnvilCorePluginInfo.description,
     url = AnvilCorePluginInfo.url,
-    authors = "Cableguy20"
+    authors = AnvilCorePluginInfo.organizationName
 )
 public class AnvilCoreVelocity extends AnvilCore<PluginContainer> {
 
