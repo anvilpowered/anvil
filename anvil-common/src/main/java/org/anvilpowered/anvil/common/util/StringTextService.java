@@ -149,6 +149,36 @@ public abstract class StringTextService<TCommandSource>
         }
 
         @Override
+        public Builder<String, TCommandSource> bold() {
+            elements.append("\u00a7l");
+            return this;
+        }
+
+        @Override
+        public Builder<String, TCommandSource> italic() {
+            elements.append("\u00a7o");
+            return this;
+        }
+
+        @Override
+        public Builder<String, TCommandSource> obfuscated() {
+            elements.append("\u00a7k");
+            return this;
+        }
+
+        @Override
+        public Builder<String, TCommandSource> strikethrough() {
+            elements.append("\u00a7m");
+            return this;
+        }
+
+        @Override
+        public Builder<String, TCommandSource> underlined() {
+            elements.append("\u00a7n");
+            return this;
+        }
+
+        @Override
         public Builder<String, TCommandSource> append(Object... contents) {
             for (Object o : contents) {
                 if (o instanceof Builder) {

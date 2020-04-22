@@ -282,6 +282,46 @@ public interface TextService<TString, TCommandSource>
         Builder<TString, TCommandSource> yellow();
 
         /**
+         * Sets the current style to bold. Only applies
+         * to text appended after this call.
+         *
+         * @return {@code this}
+         */
+        Builder<TString, TCommandSource> bold();
+
+        /**
+         * Sets the current style to italic. Only applies
+         * to text appended after this call.
+         *
+         * @return {@code this}
+         */
+        Builder<TString, TCommandSource> italic();
+
+        /**
+         * Sets the current style to obfuscated. Only applies
+         * to text appended after this call.
+         *
+         * @return {@code this}
+         */
+        Builder<TString, TCommandSource> obfuscated();
+
+        /**
+         * Sets the current style to strikethrough. Only applies
+         * to text appended after this call.
+         *
+         * @return {@code this}
+         */
+        Builder<TString, TCommandSource> strikethrough();
+
+        /**
+         * Sets the current style to underlined. Only applies
+         * to text appended after this call.
+         *
+         * @return {@code this}
+         */
+        Builder<TString, TCommandSource> underlined();
+
+        /**
          * Append the provided contents to this builder
          *
          * @param contents {@link Object} contents to append
