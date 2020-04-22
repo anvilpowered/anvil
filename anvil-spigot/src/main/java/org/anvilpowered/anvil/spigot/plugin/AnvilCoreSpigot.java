@@ -35,6 +35,9 @@ import org.anvilpowered.anvil.spigot.module.SpigotModule;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,16 +57,20 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
             }
         };
         Injector injector = Guice.createInjector(module);
-        inner = injector.getInstance(Inner.class);
+        inner = new Inner(injector);
     }
 
-    private static final class Inner extends AnvilCore<JavaPlugin> {
-        @Inject
-        private JavaPlugin plugin;
+    private final class Inner extends AnvilCore<JavaPlugin> {
 
-        @Inject
         public Inner(Injector injector) {
             super(injector, new SpigotModule());
+        }
+
+        @Override
+        protected void applyToBuilder(Environment.Builder builder) {
+            super.applyToBuilder(builder);
+            builder.addEarlyServices(SpigotPlayerListener.class, t ->
+                Bukkit.getPluginManager().registerEvents(t, AnvilCoreSpigot.this));
         }
 
         @Override
@@ -95,13 +102,13 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
             boolean anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE);
 
             if (serverProxyMode && !anvilProxyMode) {
-                plugin.getLogger().log(
+                getLogger().log(
                     Level.SEVERE,
                     "It looks like you are running this server behind a proxy. " +
                         "If this is the case, set server.proxyMode=true in the anvil config"
                 );
             } else if (anvilProxyMode && !serverProxyMode) {
-                plugin.getLogger().log(
+                getLogger().log(
                     Level.SEVERE,
                     "It looks like you are not running this server behind a proxy. " +
                         "If this is the case, set server.proxyMode=false in the anvil config"
@@ -112,12 +119,12 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
 
     @Override
     public void onEnable() {
-        AnvilImpl.completeInitialization(new ApiSpigotModule());
-        Bukkit.getPluginManager().registerEvents(
-            inner.getPrimaryEnvironment()
-                .getInjector().getInstance(SpigotPlayerListener.class),
-            this
-        );
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onLoad(ServerLoadEvent event) {
+                AnvilImpl.completeInitialization(new ApiSpigotModule());
+            }
+        }, this);
     }
 
     @Override

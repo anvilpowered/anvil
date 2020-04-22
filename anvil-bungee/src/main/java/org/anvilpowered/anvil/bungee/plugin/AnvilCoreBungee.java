@@ -46,13 +46,21 @@ public class AnvilCoreBungee extends Plugin
             }
         };
         Injector injector = Guice.createInjector(module);
-        inner = injector.getInstance(Inner.class);
+        inner = new Inner(injector);
     }
 
-    private static final class Inner extends AnvilCore<Plugin> {
+    private final class Inner extends AnvilCore<Plugin> {
+
         @Inject
         public Inner(Injector injector) {
             super(injector, new BungeeModule());
+        }
+
+        @Override
+        protected void applyToBuilder(Environment.Builder builder) {
+            super.applyToBuilder(builder);
+            builder.addEarlyServices(BungeePlayerListener.class, t ->
+                getProxy().getPluginManager().registerListener(AnvilCoreBungee.this, t));
         }
     }
 
