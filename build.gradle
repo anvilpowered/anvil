@@ -27,6 +27,7 @@ subprojects {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://repo.spongepowered.org/maven' }
         maven { url 'https://jetbrains.bintray.com/xodus' }
+        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
     }
     if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
         version = version.replace("-SNAPSHOT", "-RC${buildNumber}")

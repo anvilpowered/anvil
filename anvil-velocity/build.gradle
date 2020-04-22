@@ -19,6 +19,11 @@ dependencies {
 
     implementation guice
     implementation javasisst
+    implementation kotlin_reflect
+    implementation kotlin_stdlib
+    implementation kotlin_stdlib8
+    implementation kotlinx_coroutines
+    implementation kotlinx_serialization
     implementation microutils_logging
     implementation mongo_java_driver
     implementation morphia
@@ -45,6 +50,11 @@ shadowJar {
         include dependency(bson)
         include dependency(javasisst)
         include dependency(jedis)
+        include dependency(kotlin_reflect)
+        include dependency(kotlin_stdlib)
+        include dependency(kotlin_stdlib8)
+        include dependency(kotlinx_coroutines)
+        include dependency(kotlinx_serialization)
         include dependency(microutils_logging)
         include dependency(mongo_java_driver)
         include dependency(mongodb_driver_sync)
