@@ -59,6 +59,7 @@ shadowJar {
         include dependency(mongodb_driver_sync)
         include dependency(morphia)
         include dependency(reflections)
+        include dependency(slf4j)
         include dependency(typesafe_config)
         include dependency(xodus)
         include dependency(xodus_entity_store)
