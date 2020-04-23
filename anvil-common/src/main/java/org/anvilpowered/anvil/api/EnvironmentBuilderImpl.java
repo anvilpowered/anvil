@@ -34,7 +34,9 @@ import org.anvilpowered.anvil.api.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -65,7 +67,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
         Map<String, Collection<Consumer<Environment>>> loadedListeners = new HashMap<>();
         Map<String, Collection<Consumer<Environment>>> readyListeners = new HashMap<>();
         Map<String, Collection<Consumer<Environment>>> reloadedListeners = new HashMap<>();
-        Collection<EnvironmentImpl> environments = builders.stream().map(builder -> {
+        List<EnvironmentImpl> environments = builders.stream().map(builder -> {
             final String name = builder.name;
             loadedListeners.put(name, builder.loadedListeners);
             readyListeners.put(name, builder.readyListeners);
@@ -94,6 +96,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
                 }
             }
         };
+        environments.sort(Comparator.naturalOrder());
         for (EnvironmentImpl environment : environments) {
             environment.addModule(platformModule);
             environment.addModule(commonModule);

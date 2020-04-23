@@ -120,4 +120,9 @@ class EnvironmentImpl implements Environment {
     public boolean equals(Object obj) {
         return obj instanceof Environment && getName().equals(((Environment) obj).getName());
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

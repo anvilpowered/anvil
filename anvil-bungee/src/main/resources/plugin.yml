@@ -1,5 +1,5 @@
 name: Anvil
-version: "0.1.0-SNAPSHOT"
+version: "0.1.1"
 main: org.anvilpowered.anvil.bungee.plugin.AnvilCoreBungee
 api-version: 1.15
 description: A cross-platform Minecraft plugin framework
