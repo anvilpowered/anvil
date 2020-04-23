@@ -34,6 +34,7 @@ public interface Registry {
      * Gets this registry's value for the provided {@link Key}
      * and throws an exception if it is not present.
      *
+     * @param <T> The value type of the provided {@link Key}
      * @param key The {@link Key} to get the value for
      * @return This registry's value for the provided {@link Key}
      * @throws NoSuchElementException If this registry has no value defined
@@ -45,6 +46,7 @@ public interface Registry {
      * Gets this registry's value for the provided {@link Key}
      * or {@link Optional#empty()} if it is not present.
      *
+     * @param <T> The value type of the provided {@link Key}
      * @param key The {@link Key} to get the value for
      * @return This registry's value for the provided {@link Key} or {@link Optional#empty()}
      */
@@ -54,6 +56,7 @@ public interface Registry {
      * Gets this registry's default value for the provided {@link Key}
      * or the fallback value if it is not present.
      *
+     * @param <T> The value type of the provided {@link Key}
      * @param key The {@link Key} to get the default value for
      * @return This registry's default value for the provided {@link Key} or the fallback value
      */
@@ -65,6 +68,7 @@ public interface Registry {
      * Gets this registry's value for the provided {@link Key}
      * or the default value if it is not present.
      *
+     * @param <T> The value type of the provided {@link Key}
      * @param key The {@link Key} to get the default value for
      * @return This registry's value for the provided {@link Key} or the default value
      */
@@ -75,6 +79,7 @@ public interface Registry {
     /**
      * Sets this registry's value for the provided {@link Key}
      *
+     * @param <T>   The value type of the provided {@link Key}
      * @param key   The {@link Key} to set the value for
      * @param value The value to set
      */
@@ -83,6 +88,7 @@ public interface Registry {
     /**
      * Removes this registry's value for the provided {@link Key}
      *
+     * @param <T> The value type of the provided {@link Key}
      * @param key The {@link Key} to set the value for
      */
     <T> void remove(Key<T> key);
@@ -91,6 +97,7 @@ public interface Registry {
      * Applies the provided transformation to this registry's
      * value for the provided {@link Key}
      *
+     * @param <T>         The value type of the provided {@link Key}
      * @param key         The {@link Key} to transform the value for
      * @param transformer The transformation to apply
      */
@@ -100,6 +107,7 @@ public interface Registry {
      * Applies the provided transformation to this registry's
      * value for the provided {@link Key}
      *
+     * @param <T>         The value type of the provided {@link Key}
      * @param key         The {@link Key} to transform the value for
      * @param transformer The transformation to apply
      */
@@ -109,6 +117,7 @@ public interface Registry {
      * Adds the provided value to this registry's
      * {@link Collection} value for the provided {@link Key}
      *
+     * @param <T>   The value type of the provided {@link Key}
      * @param key   The {@link Key} of the collection
      *              to add the provided value to
      * @param value The value to add
@@ -119,6 +128,7 @@ public interface Registry {
      * Removes the provided value from this registry's
      * {@link Collection} value for the provided {@link Key}
      *
+     * @param <T>   The value type of the provided {@link Key}
      * @param key   The {@link Key} of the collection
      *              to add the provided value to
      * @param value The value to add
@@ -129,6 +139,8 @@ public interface Registry {
      * Puts the provided key and value pair to this registry's
      * {@link Map} value for the provided {@link Key}
      *
+     * @param <K>      The key type of the map value for the provided key
+     * @param <T>      The value type of the map value for the provided key
      * @param key      The {@link Key} of the map to add the
      *                 provided key and value pair to
      * @param mapKey   The map key to add
@@ -140,8 +152,9 @@ public interface Registry {
      * Removes the provided key from this registry's
      * {@link Map} value for the provided {@link Key}
      *
-     * @param key    The {@link Key} of the map to remove the
-     *               provided mapKey from
+     * @param <K>    The key type of the map value for the provided key
+     * @param <T>    The value type of the map value for the provided key
+     * @param key    The {@link Key} of the map to remove the provided mapKey from
      * @param mapKey The map key to remove
      */
     <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey);

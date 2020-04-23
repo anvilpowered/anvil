@@ -30,6 +30,7 @@ import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -234,7 +235,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     }
 
     @Override
-    public Environment.Builder setRootInjector(Injector rootInjector) {
+    public Environment.Builder setRootInjector(@Nullable Injector rootInjector) {
         this.rootInjector = rootInjector;
         return this;
     }

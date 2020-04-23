@@ -31,6 +31,7 @@ public interface Repository<
     extends StorageService<TKey, T, TDataStore> {
 
     /**
+     * @param id The id of the document
      * @return The time of creation of this document as an {@link Instant}
      */
     CompletableFuture<Optional<Instant>> getCreatedUtc(TKey id);

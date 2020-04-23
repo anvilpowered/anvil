@@ -93,6 +93,8 @@ public interface Manager<C extends Component<?, ?>> {
      * <p>
      * Used in text sent to the player
      * </p>
+     *
+     * @return The default singular identifier for this module
      */
     String getDefaultIdentifierSingularUpper();
 
@@ -107,6 +109,8 @@ public interface Manager<C extends Component<?, ?>> {
      * <p>
      * Used in text sent to the player
      * </p>
+     *
+     * @return The default plural identifier for this module
      */
     String getDefaultIdentifierPluralUpper();
 
@@ -121,6 +125,8 @@ public interface Manager<C extends Component<?, ?>> {
      * <p>
      * Used in text sent to the player
      * </p>
+     *
+     * @return The default singular identifier for this module
      */
     String getDefaultIdentifierSingularLower();
 
@@ -135,6 +141,8 @@ public interface Manager<C extends Component<?, ?>> {
      * <p>
      * Used in text sent to the player
      * </p>
+     *
+     * @return The default plural identifier for this module
      */
     String getDefaultIdentifierPluralLower();
 

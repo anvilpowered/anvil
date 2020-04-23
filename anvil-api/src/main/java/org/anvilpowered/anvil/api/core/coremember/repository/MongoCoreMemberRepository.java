@@ -117,7 +117,7 @@ public interface MongoCoreMemberRepository
     CompletableFuture<Boolean> setNickName(Query<CoreMember<ObjectId>> query, String nickName);
 
     /**
-     * Deletes the property {@Code nickName} for
+     * Deletes the property {@code nickName} for
      * documents that match the provided {@link boolean}
      * @param query {@link Query} to update documents for
      * @return {@link CompletableFuture} wrapped {@link Boolean}

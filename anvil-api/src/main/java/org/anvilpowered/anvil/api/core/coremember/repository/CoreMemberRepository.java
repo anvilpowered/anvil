@@ -55,6 +55,10 @@ public interface CoreMemberRepository<
      * There are currently 5 elements reserved for future use
      * </p>
      *
+     * @param userUUID  {@link UUID} userUUID of user.
+     * @param userName  {@link String} Name of user.
+     * @param ipAddress {@link String} IP Address of user.
+     * @param flags     A boolean array of length 8.
      * @return An {@link Optional} containing the inserted {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      * @throws IllegalArgumentException If {@code flags} is not of length 8
      */
@@ -67,21 +71,27 @@ public interface CoreMemberRepository<
      * If the userName has changed since the last time this method was called, it will be updated in the database
      * </p>
      *
+     * @param userUUID  {@link UUID} userUUID of user
+     * @param userName  {@link String} Name of user
+     * @param ipAddress {@link String} IP Address of user
      * @return An {@link Optional} containing the inserted {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      */
     CompletableFuture<Optional<CoreMember<TKey>>> getOneOrGenerateForUser(UUID userUUID, String userName, String ipAddress);
 
     /**
+     * @param userUUID {@link UUID} userUUID of user
      * @return An {@link Optional} containing a matching {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      */
     CompletableFuture<Optional<CoreMember<TKey>>> getOneForUser(UUID userUUID);
 
     /**
+     * @param userName {@link String} Name of user
      * @return An {@link Optional} containing a matching {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      */
     CompletableFuture<Optional<CoreMember<TKey>>> getOneForUser(String userName);
 
     /**
+     * @param ipAddress {@link String} IP Address of user
      * @return A {@link List} of matching {@link CoreMember} if successful, otherwise {@link Optional#empty()}
      */
     CompletableFuture<List<CoreMember<TKey>>> getForIpAddress(String ipAddress);
@@ -375,7 +385,7 @@ public interface CoreMemberRepository<
      * </p>
      *
      * @param coreMember {@link CoreMember} to verify mute for
-     * @return {@code true} if user is verified to be muted, otherwise {@link false}
+     * @return {@code true} if user is verified to be muted, otherwise {@code false}
      */
     boolean checkMuted(CoreMember<?> coreMember);
 
@@ -396,7 +406,7 @@ public interface CoreMemberRepository<
      *
      * @param id {@link TKey} id of member to verify mute for
      * @return {@link CompletableFuture} wrapped {@link Boolean}.
-     * {@code true} if user is verified to be muted, otherwise {@link false}
+     * {@code true} if user is verified to be muted, otherwise {@code false}
      */
     CompletableFuture<Boolean> checkMuted(TKey id);
 
@@ -417,7 +427,7 @@ public interface CoreMemberRepository<
      *
      * @param userUUID {@link UUID} userUUID of member to verify mute for
      * @return {@link CompletableFuture} wrapped {@link Boolean}.
-     * {@code true} if user is verified to be muted, otherwise {@link false}
+     * {@code true} if user is verified to be muted, otherwise {@code false}
      */
     CompletableFuture<Boolean> checkMutedForUser(UUID userUUID);
 
@@ -438,7 +448,7 @@ public interface CoreMemberRepository<
      *
      * @param userUUID {@link UUID} userUUID of member to verify mute for
      * @return {@link CompletableFuture} wrapped {@link Boolean}.
-     * {@code true} if user is verified to be muted, otherwise {@link false}
+     * {@code true} if user is verified to be muted, otherwise {@code false}
      */
     CompletableFuture<Boolean> checkMutedForUser(String userUUID);
 

@@ -88,6 +88,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     }
 
     /**
+     * @param name The name that the entity class contains
      * @return First entityClass that contains {@code name}
      */
     public final Optional<Class<?>> getEntityClass(final String name) {
@@ -100,6 +101,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     }
 
     /**
+     * @param name The name that the entity class contains
      * @return First entityClass that contains (ignored case) the provided name
      */
     public final Class<?> getEntityClassUnsafe(final String name) {

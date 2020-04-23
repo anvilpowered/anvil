@@ -82,7 +82,7 @@ public interface TextService<TString, TCommandSource>
 
     /**
      * Deserializes the provided {@link String} using the
-     * character '&' to determine styles
+     * character {@literal '&'} to determine styles.
      *
      * @param text {@link String} text to deserialize
      * @return The {@link TString} result of the deserialization
@@ -91,7 +91,7 @@ public interface TextService<TString, TCommandSource>
 
     /**
      * Serializes the provided {@link String} using the
-     * character '&' to serialize styles
+     * character {@literal '&'} to serialize styles.
      *
      * @param text {@link TString} text to serialize
      * @return The {@link String} result of the serialization
@@ -109,7 +109,7 @@ public interface TextService<TString, TCommandSource>
 
     /**
      * Removes all styles codes from the provided {@link String}
-     * using the character '&' to determine styles
+     * using the character {@literal '&'} to determine styles
      *
      * <p>
      * For example, {@code "&l&bhello &aworld"} becomes {@code "hello world"}
@@ -398,10 +398,10 @@ public interface TextService<TString, TCommandSource>
          * If the value for padding is longer than one character,
          * the appended result may not reach the full provided {@code width}.
          * This can be seen in the following example:
+         * </p>
          * <pre>{@code
          * builder.appendWithPaddingLeft(15, "abc", "hello");
          * }</pre>
-         * </p>
          * <p>
          * which appends the result {@code "abcabcabchello"} (14 characters instead of 15)
          * </p>
@@ -421,10 +421,10 @@ public interface TextService<TString, TCommandSource>
          * @param padding  The padding to fill the left side with
          * @param contents The contents to append
          * @return {@code this}
-         * @throws IllegalArgumentException If width < 1
-         * @throws IllegalArgumentException If padding length < 1
-         * @throws IllegalArgumentException If padding length > width
-         * @throws IllegalArgumentException If contents length > width
+         * @throws IllegalArgumentException If width {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal >} width
+         * @throws IllegalArgumentException If contents length {@literal >} width
          */
         Builder<TString, TCommandSource> appendWithPaddingLeft(
             int width, Object padding, Object... contents);
@@ -448,10 +448,10 @@ public interface TextService<TString, TCommandSource>
          * If the value for padding is longer than one character,
          * the appended result may not reach the full provided {@code width}.
          * This can be seen in the following example:
+         * </p>
          * <pre>{@code
          * builder.appendWithPaddingLeft(15, "abc", "hello");
          * }</pre>
-         * </p>
          * <p>
          * which appends the result {@code "abcabcabchello"} (14 characters instead of 15)
          * </p>
@@ -471,10 +471,10 @@ public interface TextService<TString, TCommandSource>
          * @param padding  The padding to fill the left side with
          * @param contents The contents to append
          * @return {@code this}
-         * @throws IllegalArgumentException If width < 1
-         * @throws IllegalArgumentException If padding length < 1
-         * @throws IllegalArgumentException If padding length > width
-         * @throws IllegalArgumentException If contents length > width
+         * @throws IllegalArgumentException If width {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal >} width
+         * @throws IllegalArgumentException If contents length {@literal >} width
          */
         Builder<TString, TCommandSource> appendWithPaddingLeft(
             int width, Object padding, CharSequence... contents);
@@ -498,10 +498,10 @@ public interface TextService<TString, TCommandSource>
          * If the value for padding is longer than one character,
          * the appended result may not reach the full provided {@code width}.
          * This can be seen in the following example:
+         * </p>
          * <pre>{@code
          * builder.appendWithPaddingAround(15, "abc", "hello");
          * }</pre>
-         * </p>
          * <p>
          * which appends the result {@code "abchelloabc"} (11 characters instead of 15)
          * </p>
@@ -523,10 +523,10 @@ public interface TextService<TString, TCommandSource>
          * @param padding  The padding to fill the left and right side with
          * @param contents The contents to append
          * @return {@code this}
-         * @throws IllegalArgumentException If width < 1
-         * @throws IllegalArgumentException If padding length < 1
-         * @throws IllegalArgumentException If padding length > width
-         * @throws IllegalArgumentException If contents length > width
+         * @throws IllegalArgumentException If width {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal >} width
+         * @throws IllegalArgumentException If contents length {@literal >} width
          */
         Builder<TString, TCommandSource> appendWithPaddingAround(
             int width, Object padding, Object... contents);
@@ -550,10 +550,10 @@ public interface TextService<TString, TCommandSource>
          * If the value for padding is longer than one character,
          * the appended result may not reach the full provided {@code width}.
          * This can be seen in the following example:
+         * </p>
          * <pre>{@code
          * builder.appendWithPaddingAround(15, "abc", "hello");
          * }</pre>
-         * </p>
          * <p>
          * which appends the result {@code "abchelloabc"} (11 characters instead of 15)
          * </p>
@@ -575,10 +575,10 @@ public interface TextService<TString, TCommandSource>
          * @param padding  The padding to fill the left and right side with
          * @param contents The contents to append
          * @return {@code this}
-         * @throws IllegalArgumentException If width < 1
-         * @throws IllegalArgumentException If padding length < 1
-         * @throws IllegalArgumentException If padding length > width
-         * @throws IllegalArgumentException If contents length > width
+         * @throws IllegalArgumentException If width {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal >} width
+         * @throws IllegalArgumentException If contents length {@literal >} width
          */
         Builder<TString, TCommandSource> appendWithPaddingAround(
             int width, Object padding, CharSequence... contents);
@@ -602,10 +602,10 @@ public interface TextService<TString, TCommandSource>
          * If the value for padding is longer than one character,
          * the appended result may not reach the full provided {@code width}.
          * This can be seen in the following example:
+         * </p>
          * <pre>{@code
          * builder.appendWithPaddingRight(15, "abc", "hello");
          * }</pre>
-         * </p>
          * <p>
          * which appends the result {@code "helloabcabcabc"} (14 characters instead of 15)
          * </p>
@@ -625,10 +625,10 @@ public interface TextService<TString, TCommandSource>
          * @param padding  The padding to fill the right side with
          * @param contents The contents to append
          * @return {@code this}
-         * @throws IllegalArgumentException If width < 1
-         * @throws IllegalArgumentException If padding length < 1
-         * @throws IllegalArgumentException If padding length > width
-         * @throws IllegalArgumentException If contents length > width
+         * @throws IllegalArgumentException If width {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal >} width
+         * @throws IllegalArgumentException If contents length {@literal >} width
          */
         Builder<TString, TCommandSource> appendWithPaddingRight(
             int width, Object padding, Object... contents);
@@ -652,10 +652,10 @@ public interface TextService<TString, TCommandSource>
          * If the value for padding is longer than one character,
          * the appended result may not reach the full provided {@code width}.
          * This can be seen in the following example:
+         * </p>
          * <pre>{@code
          * builder.appendWithPaddingRight(15, "abc", "hello");
          * }</pre>
-         * </p>
          * <p>
          * which appends the result {@code "helloabcabcabc"} (14 characters instead of 15)
          * </p>
@@ -675,10 +675,10 @@ public interface TextService<TString, TCommandSource>
          * @param padding  The padding to fill the right side with
          * @param contents The contents to append
          * @return {@code this}
-         * @throws IllegalArgumentException If width < 1
-         * @throws IllegalArgumentException If padding length < 1
-         * @throws IllegalArgumentException If padding length > width
-         * @throws IllegalArgumentException If contents length > width
+         * @throws IllegalArgumentException If width {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal <} 1
+         * @throws IllegalArgumentException If padding length {@literal >} width
+         * @throws IllegalArgumentException If contents length {@literal >} width
          */
         Builder<TString, TCommandSource> appendWithPaddingRight(
             int width, Object padding, CharSequence... contents);
@@ -1038,7 +1038,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @param linesPerPge The lines per page to set
          * @return {@code this}
-         * @throws IllegalArgumentException If linesPerPage < 1
+         * @throws IllegalArgumentException If linesPerPage {@literal <} 1
          */
         PaginationBuilder<TString, TCommandSource> linesPerPage(
             int linesPerPge);

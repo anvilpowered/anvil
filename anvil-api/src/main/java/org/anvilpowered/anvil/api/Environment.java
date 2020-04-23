@@ -31,6 +31,7 @@ import org.anvilpowered.anvil.api.misc.Named;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -121,13 +122,27 @@ public interface Environment extends Named, Comparable<Environment> {
 
         <T> Builder addEarlyServices(TypeToken<T> typeToken, Consumer<T> initializer);
 
+        /**
+         * Sets the name for this environment builder.
+         *
+         * @param name {@link String} Name to set.
+         * @return {@code this}
+         */
         Builder setName(String name);
 
-        Builder setRootInjector(Injector rootInjector);
+        /**
+         * Sets the root injector for this environment builder.
+         *
+         * @param rootInjector {@link Injector} to set. Pass {@code null} to unset.
+         * @return {@code this}
+         */
+        Builder setRootInjector(@Nullable Injector rootInjector);
 
         /**
          * This will load your root {@link CommandNode} as
          * defined by your guice module
+         *
+         * @return {@code this}
          */
         Builder withRootCommand();
 
@@ -144,6 +159,7 @@ public interface Environment extends Named, Comparable<Environment> {
          * Preexisting listeners will be used and will not be overridden.
          * </p>
          *
+         * @param listener {@link Consumer} to run when this environment is loaded
          * @return {@code this}
          */
         Builder whenLoaded(Consumer<Environment> listener);
@@ -161,6 +177,7 @@ public interface Environment extends Named, Comparable<Environment> {
          * Preexisting listeners will be used and will not be overridden.
          * </p>
          *
+         * @param listener {@link Consumer} to run when this environment is ready
          * @return {@code this}
          */
         Builder whenReady(Consumer<Environment> listener);
@@ -178,6 +195,7 @@ public interface Environment extends Named, Comparable<Environment> {
          * Preexisting listeners will be used and will not be overridden.
          * </p>
          *
+         * @param listener {@link Consumer} to run when this environment is reloaded
          * @return {@code this}
          */
         Builder whenReloaded(Consumer<Environment> listener);

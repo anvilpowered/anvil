@@ -42,6 +42,7 @@ public interface CommandService<TCommandExecutor, TCommandSource> {
      *                             argument did not match a child command alias
      * @throws UnsupportedOperationException on Sponge.
      *                                       Use {@code CommandSpec} instead.
+     * @return A routing command
      */
     TCommandExecutor generateRoutingCommand(
         @Nullable TCommandExecutor root,
@@ -69,8 +70,13 @@ public interface CommandService<TCommandExecutor, TCommandSource> {
 
     /**
      * Generates a help command for the provided {@link CommandNode}.
+     * @param node The command node to return the HelpCommand for
+     * @return A help command for the provided {@link CommandNode}
      */
     TCommandExecutor generateHelpCommand(CommandNode<TCommandSource> node);
 
+    /**
+     * @return A reload command
+     */
     TCommandExecutor generateReloadCommand();
 }

@@ -34,6 +34,8 @@ public interface CacheService<
 
     /**
      * Starts cache invalidation task
+     *
+     * @param intervalSeconds How often the cache invalidation task should run
      */
     void startCacheInvalidationTask(Integer intervalSeconds);
 
@@ -43,7 +45,6 @@ public interface CacheService<
     void stopCacheInvalidationTask();
 
     /**
-     *
      * @return Cache invalidation task
      */
     Runnable getCacheInvalidationTask();
