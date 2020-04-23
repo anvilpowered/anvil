@@ -1,5 +1,5 @@
 name: Anvil
-version: "0.1.1"
+version: "0.1.2-SNAPSHOT"
 main: org.anvilpowered.anvil.spigot.plugin.AnvilCoreSpigot
 api-version: 1.15
 description: A cross-platform Minecraft plugin framework
