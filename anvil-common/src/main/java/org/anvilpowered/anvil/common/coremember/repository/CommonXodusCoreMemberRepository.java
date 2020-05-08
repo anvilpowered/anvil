@@ -254,7 +254,8 @@ public class CommonXodusCoreMemberRepository
     public CompletableFuture<Boolean> ban(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason) {
         return update(query, e -> {
             e.setProperty("banned", true);
-            e.setProperty("banEndUtc", endUtc);
+            e.setProperty("banEndUtcSeconds", endUtc.getEpochSecond());
+            e.setProperty("banEndUtcNanos", endUtc.getNano());
             e.setProperty("banReason", reason);
         });
     }
@@ -268,7 +269,8 @@ public class CommonXodusCoreMemberRepository
     public CompletableFuture<Boolean> mute(Function<? super StoreTransaction, ? extends Iterable<Entity>> query, Instant endUtc, String reason) {
         return update(query, e -> {
             e.setProperty("muted", true);
-            e.setProperty("muteEndUtc", endUtc);
+            e.setProperty("muteEndUtcSeconds", endUtc.getEpochSecond());
+            e.setProperty("muteEndUtcNanos", endUtc.getNano());
             e.setProperty("muteReason", reason);
         });
     }
