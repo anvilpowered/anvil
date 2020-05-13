@@ -46,8 +46,7 @@ public class ApiBungeeModule extends ApiCommonModule {
         bind(new TypeLiteral<CommandService<BiConsumer<CommandSender, String[]>, CommandSender>>(){
         }).to(BungeeCommandService.class);
         bind(KickService.class).to(BungeeKickService.class);
-        bind(new TypeLiteral<PermissionService<CommandSender>>() {
-        }).to(BungeePermissionService.class);
+        bind(PermissionService.class).to(BungeePermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(true, "bungee"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSender>>() {
         }).to(BungeeTextService.class);

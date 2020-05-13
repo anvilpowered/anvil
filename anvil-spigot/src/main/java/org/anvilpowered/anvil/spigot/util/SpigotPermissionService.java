@@ -21,10 +21,10 @@ package org.anvilpowered.anvil.spigot.util;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.bukkit.permissions.Permissible;
 
-public class SpigotPermissionService implements PermissionService<Permissible> {
+public class SpigotPermissionService implements PermissionService {
 
     @Override
-    public boolean hasPermission(Permissible subject, String permission) {
-        return subject.hasPermission(permission);
+    public boolean hasPermission(Object subject, String permission) {
+        return subject instanceof Permissible && ((Permissible) subject).hasPermission(permission);
     }
 }

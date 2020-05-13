@@ -21,10 +21,11 @@ package org.anvilpowered.anvil.bungee.util;
 import net.md_5.bungee.api.CommandSender;
 import org.anvilpowered.anvil.api.util.PermissionService;
 
-public class BungeePermissionService implements PermissionService<CommandSender> {
+public class BungeePermissionService implements PermissionService {
 
     @Override
-    public boolean hasPermission(CommandSender subject, String permission) {
-        return subject.hasPermission(permission);
+    public boolean hasPermission(Object subject, String permission) {
+        return subject instanceof CommandSender
+            && ((CommandSender) subject).hasPermission(permission);
     }
 }

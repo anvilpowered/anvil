@@ -18,18 +18,22 @@
 
 package org.anvilpowered.anvil.api.util;
 
-public interface PermissionService<TSubject> {
+public interface PermissionService {
 
     /**
-     * Checks whether the provided {@link TSubject} has
+     * Checks whether the provided {@code subject} has
      * the provided {@code permission}. Depending on
      * the target platform, this can be a
      * Player, User, Group etc...
      *
-     * @param subject    The {@link TSubject} to test
-     * @param permission the {@link String} permission to check
-     * @return Whether the provided {@link TSubject} has
-     * the provided {@code permission}.
+     * <p>
+     * If the provided {@code subject} is the console, returns {@code true}
+     * </p>
+     *
+     * @param subject    The {@code subject} to test
+     * @param permission The {@code permission} to check
+     * @return Whether the provided {@code subject} has
+     * the provided {@code permission} or is the console.
      */
-    boolean hasPermission(TSubject subject, String permission);
+    boolean hasPermission(Object subject, String permission);
 }

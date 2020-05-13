@@ -55,8 +55,7 @@ public class ApiSpongeModule extends ApiCommonModule {
         bind(CurrentServerService.class).to(SpongeCurrentServerService.class);
         bind(CurrentWorldService.class).to(SpongeCurrentWorldService.class);
         bind(KickService.class).to(SpongeKickService.class);
-        bind(new TypeLiteral<PermissionService<Subject>>() {
-        }).to(SpongePermissionService.class);
+        bind(PermissionService.class).to(SpongePermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(false, "sponge"));
         bind(new TypeLiteral<TextService<Text, CommandSource>>() {
         }).to(SpongeTextService.class);

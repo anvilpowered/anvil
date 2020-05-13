@@ -48,8 +48,7 @@ public class ApiSpigotModule extends ApiCommonModule {
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>(){
         }).to(SpigotCommandService.class);
         bind(KickService.class).to(SpigotKickService.class);
-        bind(new TypeLiteral<PermissionService<Permissible>>() {
-        }).to(SpigotPermissionService.class);
+        bind(PermissionService.class).to(SpigotPermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(false, "spigot"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSender>>() {
         }).to(SpigotTextService.class);

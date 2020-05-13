@@ -49,8 +49,7 @@ public class ApiVelocityModule extends ApiCommonModule {
         }).to(VelocityCommandService.class);
         bind(CurrentServerService.class).to(VelocityCurrentServerService.class);
         bind(KickService.class).to(VelocityKickService.class);
-        bind(new TypeLiteral<PermissionService<PermissionSubject>>() {
-        }).to(VelocityPermissionService.class);
+        bind(PermissionService.class).to(VelocityPermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(true, "velocity"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSource>>() {
         }).to(VelocityTextService.class);

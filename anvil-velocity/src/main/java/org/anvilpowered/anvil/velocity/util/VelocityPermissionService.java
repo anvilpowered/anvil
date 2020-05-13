@@ -21,10 +21,11 @@ package org.anvilpowered.anvil.velocity.util;
 import com.velocitypowered.api.permission.PermissionSubject;
 import org.anvilpowered.anvil.api.util.PermissionService;
 
-public class VelocityPermissionService implements PermissionService<PermissionSubject> {
+public class VelocityPermissionService implements PermissionService {
 
     @Override
-    public boolean hasPermission(PermissionSubject subject, String permission) {
-        return subject.hasPermission(permission);
+    public boolean hasPermission(Object subject, String permission) {
+        return subject instanceof PermissionSubject
+            && ((PermissionSubject) subject).hasPermission(permission);
     }
 }
