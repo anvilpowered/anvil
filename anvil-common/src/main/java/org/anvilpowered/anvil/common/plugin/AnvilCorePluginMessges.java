@@ -57,4 +57,12 @@ public class AnvilCorePluginMessges<TString, TCommandSource> implements PluginMe
             .yellow().append("\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
             .build();
     }
+
+    @Override
+    public TString getNoPermission() {
+        return textService.builder()
+            .append(pluginInfo.getPrefix())
+            .red().append("You do not have permission for this command!")
+            .build();
+    }
 }

@@ -25,4 +25,6 @@ public interface PluginMessages<TString> {
     TString getBanMessage(String reason, Instant endUtc);
 
     TString getMuteMessage(String reason, Instant endUtc);
+
+    TString getNoPermission();
 }
