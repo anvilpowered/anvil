@@ -43,6 +43,7 @@ subprojects {
         ext.'signing.password' = _password
         ext.'signing.secretKeyRingFile' = _ringFile
         signing {
+            sign publishing.publications
             sign configurations.archives
         }
     }
@@ -70,9 +71,6 @@ project(':anvil-api') {
             publications {
                 mavenJava(MavenPublication) {
                     from components.java
-
-                    artifact sourcesJar
-                    artifact javadocJar
 
                     pom {
                         name = 'Anvil'
