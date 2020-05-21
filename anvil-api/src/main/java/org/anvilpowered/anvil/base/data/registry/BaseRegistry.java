@@ -18,14 +18,17 @@
 
 package org.anvilpowered.anvil.base.data.registry;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.TreeMultimap;
 import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.data.key.Key;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -40,13 +43,14 @@ import java.util.stream.Collectors;
 public class BaseRegistry implements Registry {
 
     private final Map<Key<?>, Object> defaultMap, valueMap;
-    private final Collection<Runnable> listeners;
+    private final Multimap<Integer, Runnable> listeners;
     private String stringRepresentation;
 
     public BaseRegistry() {
         defaultMap = new HashMap<>();
         valueMap = new HashMap<>();
-        listeners = new LinkedList<>();
+        listeners = TreeMultimap.create(Ordering.natural(),
+            Comparator.comparingInt(Object::hashCode));
     }
 
     @Override
@@ -139,11 +143,13 @@ public class BaseRegistry implements Registry {
 
     @Override
     public void load() {
-        listeners.forEach(Runnable::run);
+        for (Integer order : listeners.keySet()) {
+            listeners.get(order).forEach(Runnable::run);
+        }
     }
 
-    public void whenLoaded(Runnable listener) {
-        listeners.add(listener);
+    public void whenLoaded(Runnable listener, int order) {
+        listeners.put(order, listener);
     }
 
     @Override

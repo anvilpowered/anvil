@@ -169,10 +169,31 @@ public interface Registry {
     void load();
 
     /**
-     * Adds a {@link Runnable} to be loaded on {@link #load()}
+     * Adds a {@link Runnable} to be loaded on {@link #load()}.
+     *
+     * <p>
+     * Listeners are grouped by order. Smaller orders run before larger ones.
+     * The execution order within one order group is not guaranteed.
+     * </p>
+     *
+     * @param listener Listener to add
+     * @param order    The order to run this listener in. Smaller is earlier
+     * @see #load()
+     */
+    void whenLoaded(Runnable listener, int order);
+
+    /**
+     * Adds a {@link Runnable} to be loaded on {@link #load()}.
+     *
+     * <p>
+     * This uses the order {@code 0}
+     * </p>
      *
      * @param listener Listener to add
      * @see #load()
+     * @see #whenLoaded(Runnable)
      */
-    void whenLoaded(Runnable listener);
+    default void whenLoaded(Runnable listener) {
+        whenLoaded(listener, 0);
+    }
 }
