@@ -182,7 +182,7 @@ public class CommonTimeFormatService implements TimeFormatService {
         }
 
         @Override
-        public String get() {
+        public String toString() {
             if (maxCharacters == 0 || maxUnits == 0) {
                 return "";
             }
@@ -305,7 +305,7 @@ public class CommonTimeFormatService implements TimeFormatService {
         }
 
         @Override
-        public String get() {
+        public String toString() {
             if (maxUnits == 0) {
                 return "";
             }

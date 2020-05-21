@@ -53,12 +53,38 @@ public interface TimeFormatService {
     Optional<FormatResult> formatInstant(String input);
 
     interface FormatResult {
+
+        /**
+         * Sets the maximum amount of characters in the result. Providing a
+         * negative value means no maximum.
+         *
+         * @param maxCharacters The maximum amount of characters
+         * @return {@code this}
+         */
         FormatResult maxCharacters(int maxCharacters);
 
+        /**
+         * Sets the maximum amount of units in the result. Providing a
+         * negative value means no maximum.
+         *
+         * @param maxUnits The maximum amount of units
+         * @return {@code this}
+         */
         FormatResult maxUnits(int maxUnits);
 
+        /**
+         * Removes the nano second component of the result
+         *
+         * @return {@code this}
+         */
         FormatResult withoutNano();
 
-        String get();
+        /**
+         * Builds and returns the string representation of this {@link FormatResult}
+         *
+         * @return The string representation of this {@link FormatResult}
+         */
+        @Override
+        String toString();
     }
 }
