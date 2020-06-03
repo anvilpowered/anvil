@@ -5,6 +5,7 @@ plugins {
 jar.enabled = false // we only want shadowJar
 
 repositories {
+    maven { url 'https://libraries.minecraft.net/' }
     maven { url 'https://repo.velocitypowered.com/snapshots/' }
 }
 
