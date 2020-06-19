@@ -30,8 +30,8 @@ import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandService;
 import org.anvilpowered.anvil.nukkit.util.NukkitKickService;
-import org.anvilpowered.anvil.nukkit.util.NukkitTextService;
 import org.anvilpowered.anvil.nukkit.util.NukkitTeleportationService;
+import org.anvilpowered.anvil.nukkit.util.NukkitTextService;
 import org.anvilpowered.anvil.nukkit.util.NukkitUserService;
 
 public class ApiNukkitModule extends ApiCommonModule {

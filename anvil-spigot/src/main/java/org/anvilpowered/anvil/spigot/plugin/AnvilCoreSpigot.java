@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.spigot.plugin;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.Environment;

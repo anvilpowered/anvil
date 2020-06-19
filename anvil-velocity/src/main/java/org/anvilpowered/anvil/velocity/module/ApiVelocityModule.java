@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.velocity.module;
 import com.google.inject.TypeLiteral;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.permission.PermissionSubject;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.Platform;

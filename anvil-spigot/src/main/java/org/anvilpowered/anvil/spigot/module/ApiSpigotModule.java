@@ -38,7 +38,6 @@ import org.anvilpowered.anvil.spigot.util.SpigotUserService;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 
 public class ApiSpigotModule extends ApiCommonModule {
 

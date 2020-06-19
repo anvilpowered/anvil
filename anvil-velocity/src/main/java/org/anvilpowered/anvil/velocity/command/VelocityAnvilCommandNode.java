@@ -24,7 +24,6 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 
 import java.util.HashMap;
 import java.util.List;

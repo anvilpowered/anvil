@@ -29,7 +29,6 @@ import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;
 import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 
 import java.util.HashMap;
 import java.util.List;
