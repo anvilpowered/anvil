@@ -28,12 +28,4 @@ import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 public class VelocityCallbackCommand
     extends CommonCallbackCommand<TextComponent, CommandSource>
     implements Command {
-
-    @Override
-    public void execute(
-        CommandSource source,
-        String[] context
-    ) {
-        executeCallback(source, context);
-    }
 }

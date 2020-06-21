@@ -57,16 +57,16 @@ public class CommonAnvilReloadCommand<TString, TCommandSource> {
     @Inject
     protected TextService<TString, TCommandSource> textService;
 
-    public void sendReload(TCommandSource source, String[] context) {
+    public void execute(TCommandSource source, String[] context) {
         if (permissionService.hasPermission(source,
             registry.getOrDefault(AnvilCoreKeys.RELOAD_PERMISSION))) {
-            sendReloadDirect(source, context);
+            executeDirect(source, context);
         } else {
             textService.send(pluginMessages.getNoPermission(), source);
         }
     }
 
-    public void sendReloadDirect(TCommandSource source, String[] context) {
+    public void executeDirect(TCommandSource source, String[] context) {
         final int length = context.length;
         if (length == 0) {
             checkPresent(source, false);

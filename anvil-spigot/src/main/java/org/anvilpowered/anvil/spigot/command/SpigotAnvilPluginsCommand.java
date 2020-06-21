@@ -35,7 +35,7 @@ public class SpigotAnvilPluginsCommand
         String alias,
         String[] context
     ) {
-        sendPlugins(source);
+        execute(source);
         return true;
     }
 }

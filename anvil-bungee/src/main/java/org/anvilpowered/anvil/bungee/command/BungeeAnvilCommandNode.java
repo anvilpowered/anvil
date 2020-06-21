@@ -62,8 +62,8 @@ public class BungeeAnvilCommandNode
     protected void loadCommands() {
         Map<List<String>, BiConsumer<CommandSender, String[]>> subCommands = new HashMap<>();
 
-        subCommands.put(PLUGINS_ALIAS, (source, context) -> anvilPluginsCommand.sendPlugins(source));
-        subCommands.put(RELOAD_ALIAS, anvilReloadCommand::sendReload);
+        subCommands.put(PLUGINS_ALIAS, (source, context) -> anvilPluginsCommand.execute(source));
+        subCommands.put(RELOAD_ALIAS, anvilReloadCommand::execute);
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND_PROXY));
 
@@ -85,7 +85,7 @@ public class BungeeAnvilCommandNode
                 new Command("callback", null, "anvilb:callback") {
                     @Override
                     public void execute(CommandSender source, String[] context) {
-                        callbackCommand.executeCallback(source, context);
+                        callbackCommand.execute(source, context);
                     }
                 }
             );

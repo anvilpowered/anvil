@@ -26,9 +26,4 @@ import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
 public class VelocityAnvilReloadCommand
     extends CommonAnvilReloadCommand<TextComponent, CommandSource>
     implements Command {
-
-    @Override
-    public void execute(CommandSource source, String[] context) {
-        sendReload(source, context);
-    }
 }

@@ -26,9 +26,4 @@ import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;
 public class VelocityAnvilPluginsCommand
     extends CommonAnvilPluginsCommand<TextComponent, CommandSource>
     implements Command {
-
-    @Override
-    public void execute(CommandSource source, String[] context) {
-        sendPlugins(source);
-    }
 }

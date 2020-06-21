@@ -47,7 +47,7 @@ public class CommonCallbackCommand<TString, TCommandSource> {
         callbacks.put(uuid, callback);
     }
 
-    public void executeCallback(TCommandSource source, String[] context) {
+    public void execute(TCommandSource source, String[] context) {
         if (context.length == 0) {
             textService.builder()
                 .append(pluginInfo.getPrefix())

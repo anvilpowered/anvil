@@ -34,7 +34,7 @@ public class NukkitAnvilPluginsCommand
         String alias,
         String[] context
     ) {
-        sendPlugins(source);
+        execute(source);
         return true;
     }
 }

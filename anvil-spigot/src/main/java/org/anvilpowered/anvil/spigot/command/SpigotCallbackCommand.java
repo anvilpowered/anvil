@@ -37,7 +37,7 @@ public class SpigotCallbackCommand
         String alias,
         String[] context
     ) {
-        executeCallback(source, context);
+        execute(source, context);
         return true;
     }
 }

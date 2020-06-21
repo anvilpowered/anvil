@@ -31,7 +31,7 @@ public class SpongeAnvilPluginsCommand
 
     @Override
     public CommandResult execute(CommandSource source, CommandContext context) {
-        sendPluginsDirect(source);
+        executeDirect(source);
         return CommandResult.success();
     }
 }

@@ -26,6 +26,7 @@ import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
+import org.jetbrains.annotations.Nullable;
 
 public class CommonAnvilPluginsCommand<TString, TCommandSource> {
 
@@ -44,16 +45,20 @@ public class CommonAnvilPluginsCommand<TString, TCommandSource> {
     @Inject
     protected TextService<TString, TCommandSource> textService;
 
-    public void sendPlugins(TCommandSource source) {
+    public void execute(TCommandSource source) {
+        execute(source, null);
+    }
+
+    public void execute(TCommandSource source, String @Nullable [] context) {
         if (permissionService.hasPermission(source,
             registry.getOrDefault(AnvilCoreKeys.PLUGINS_PERMISSION))) {
-            sendPluginsDirect(source);
+            executeDirect(source);
         } else {
             textService.send(pluginMessages.getNoPermission(), source);
         }
     }
 
-    public void sendPluginsDirect(TCommandSource source) {
+    public void executeDirect(TCommandSource source) {
         String[] names = Anvil.getEnvironmentManager()
             .getEnvironments().values()
             .stream()

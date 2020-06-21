@@ -35,7 +35,7 @@ public class SpigotAnvilReloadCommand
         String alias,
         String[] context
     ) {
-        sendReload(source, context);
+        execute(source, context);
         return true;
     }
 }
