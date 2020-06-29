@@ -16,17 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.redis;
+package org.anvilpowered.anvil.api.data.registry;
 
-import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPubSub;
+public enum RegistryScope {
 
-public interface RedisService {
+    /**
+     * The annotated value persists only between deep reloads.
+     * <p>
+     * Use this scope for values that should be reloadable but not necessarily
+     * during normal operation of the plugin.
+     * </p>
+     */
+    DEEP,
 
-    @RegistryScoped
-    JedisPool getJedisPool();
-
-    @RegistryScoped
-    void registerSubscriber(JedisPubSub subscriber);
+    /**
+     * The annotated value persists only between normal reloads.
+     * This value is the default value for the {@link RegistryScoped} annotation.
+     * <p>
+     * Use this scope for
+     * </p>
+     */
+    DEFAULT,
 }

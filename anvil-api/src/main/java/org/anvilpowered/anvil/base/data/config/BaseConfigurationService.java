@@ -28,6 +28,8 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.anvilpowered.anvil.api.data.config.ConfigurationService;
 import org.anvilpowered.anvil.api.data.key.Key;
 import org.anvilpowered.anvil.api.data.key.Keys;
+import org.anvilpowered.anvil.api.data.registry.RegistryScope;
+import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 import org.anvilpowered.anvil.base.data.registry.BaseRegistry;
 
 import java.io.IOException;
@@ -244,9 +246,13 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     }
 
     @Override
-    public void load() {
-        initConfigMaps();
-        super.load();
+    public void load(RegistryScope registryScope) {
+        final int ordinal = registryScope.ordinal();
+        if (ordinal <= RegistryScope.DEFAULT.ordinal()) {
+            loadDefaultScope();
+        }
+        loadConfig();
+        loadOrdinal(ordinal);
     }
 
     @Override
@@ -281,8 +287,8 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         node.setValue(key, getDefault(key));
     }
 
-    private void initConfigMaps() {
-
+    @RegistryScoped
+    private void loadConfig() {
         try {
             rootConfigurationNode = configLoader.load();
         } catch (IOException e) {

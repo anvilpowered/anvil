@@ -40,6 +40,7 @@ public interface Registry {
      * @throws NoSuchElementException If this registry has no value defined
      *                                for the provided {@link Key}
      */
+    @RegistryScoped
     <T> T getUnsafe(Key<T> key);
 
     /**
@@ -50,6 +51,7 @@ public interface Registry {
      * @param key The {@link Key} to get the value for
      * @return This registry's value for the provided {@link Key} or {@link Optional#empty()}
      */
+    @RegistryScoped
     <T> Optional<T> get(Key<T> key);
 
     /**
@@ -60,6 +62,7 @@ public interface Registry {
      * @param key The {@link Key} to get the default value for
      * @return This registry's default value for the provided {@link Key} or the fallback value
      */
+    @RegistryScoped
     default <T> T getDefault(Key<T> key) {
         return key.getFallbackValue();
     }
@@ -69,11 +72,26 @@ public interface Registry {
      * or the default value if it is not present.
      *
      * @param <T> The value type of the provided {@link Key}
-     * @param key The {@link Key} to get the default value for
+     * @param key The {@link Key} to get the value or (if not present) the default value for
      * @return This registry's value for the provided {@link Key} or the default value
      */
+    @RegistryScoped
     default <T> T getOrDefault(Key<T> key) {
         return get(key).orElse(getDefault(key));
+    }
+
+    /**
+     * Similar to {@link #getOrDefault(Key)}, but performs additional (implementation specific)
+     * checks that could potentially check other registries if certain requirements are met.
+     * <strong>Use {@link #getOrDefault(Key)} unless you are sure you need this.</strong>
+     *
+     * @param <T> The value type of the provided {@link Key}
+     * @param key The {@link Key} to get the value for
+     * @return The value for the provided {@link Key} as defined by the additional checks
+     */
+    @RegistryScoped
+    default <T> T getExtraSafe(Key<T> key) {
+        return getOrDefault(key);
     }
 
     /**
@@ -83,6 +101,7 @@ public interface Registry {
      * @param key   The {@link Key} to set the value for
      * @param value The value to set
      */
+    @RegistryScoped
     <T> void set(Key<T> key, T value);
 
     /**
@@ -91,6 +110,7 @@ public interface Registry {
      * @param <T> The value type of the provided {@link Key}
      * @param key The {@link Key} to set the value for
      */
+    @RegistryScoped
     <T> void remove(Key<T> key);
 
     /**
@@ -101,6 +121,7 @@ public interface Registry {
      * @param key         The {@link Key} to transform the value for
      * @param transformer The transformation to apply
      */
+    @RegistryScoped
     <T> void transform(Key<T> key, BiFunction<? super Key<T>, ? super T, ? extends T> transformer);
 
     /**
@@ -111,6 +132,7 @@ public interface Registry {
      * @param key         The {@link Key} to transform the value for
      * @param transformer The transformation to apply
      */
+    @RegistryScoped
     <T> void transform(Key<T> key, Function<? super T, ? extends T> transformer);
 
     /**
@@ -122,6 +144,7 @@ public interface Registry {
      *              to add the provided value to
      * @param value The value to add
      */
+    @RegistryScoped
     <T> void addToCollection(Key<? extends Collection<T>> key, T value);
 
     /**
@@ -133,6 +156,7 @@ public interface Registry {
      *              to add the provided value to
      * @param value The value to add
      */
+    @RegistryScoped
     <T> void removeFromCollection(Key<? extends Collection<T>> key, T value);
 
     /**
@@ -146,6 +170,7 @@ public interface Registry {
      * @param mapKey   The map key to add
      * @param mapValue The map value to add
      */
+    @RegistryScoped
     <K, T> void putInMap(Key<? extends Map<K, T>> key, K mapKey, T mapValue);
 
     /**
@@ -157,16 +182,31 @@ public interface Registry {
      * @param key    The {@link Key} of the map to remove the provided mapKey from
      * @param mapKey The map key to remove
      */
+    @RegistryScoped
     <K, T> void removeFromMap(Key<? extends Map<K, T>> key, K mapKey);
 
     /**
      * Runs all {@link Runnable listeners} that were
-     * added before this call.
+     * added before this call in the provided registryScope.
+     *
+     * @param registryScope The {@link RegistryScope} to load
+     * @see Environment#reload()
+     * @see #whenLoaded(Runnable)
+     */
+    @RegistryScoped
+    void load(RegistryScope registryScope);
+
+    /**
+     * Runs all {@link Runnable listeners} that were
+     * added before this call in the {@link RegistryScope#DEFAULT default scope}.
      *
      * @see Environment#reload()
      * @see #whenLoaded(Runnable)
      */
-    void load();
+    @RegistryScoped
+    default void load() {
+        load(RegistryScope.DEFAULT);
+    }
 
     /**
      * Adds a {@link Runnable} to be loaded on {@link #load()}.
@@ -175,25 +215,43 @@ public interface Registry {
      * Listeners are grouped by order. Smaller orders run before larger ones.
      * The execution order within one order group is not guaranteed.
      * </p>
-     *
-     * @param listener Listener to add
-     * @param order    The order to run this listener in. Smaller is earlier
-     * @see #load()
-     */
-    void whenLoaded(Runnable listener, int order);
-
-    /**
-     * Adds a {@link Runnable} to be loaded on {@link #load()}.
-     *
      * <p>
-     * This uses the order {@code 0}
+     * Please note that {@link ListenerRegistrationEnd#register()} must be invoked to
+     * complete the registration.
      * </p>
      *
      * @param listener Listener to add
+     * @return A {@link ListenerRegistrationEnd} for specifying additional parameters and
+     * completing the registration.
      * @see #load()
-     * @see #whenLoaded(Runnable)
      */
-    default void whenLoaded(Runnable listener) {
-        whenLoaded(listener, 0);
+    ListenerRegistrationEnd whenLoaded(Runnable listener);
+
+    interface ListenerRegistrationEnd {
+
+        /**
+         * Sets the order for the listener.
+         * The default order is 0.
+         *
+         * @param order The order to run this listener in. Smaller is earlier.
+         * @return {@code this}
+         */
+        ListenerRegistrationEnd order(int order);
+
+        /**
+         * Sets the scope for the listener.
+         * The default scope is {@link RegistryScope#DEFAULT}.
+         *
+         * @param scope The scope to run this listener in.
+         * @return {@code this}
+         * @see RegistryScope
+         * @see RegistryScoped
+         */
+        ListenerRegistrationEnd scope(RegistryScope scope);
+
+        /**
+         * Completes the listener registration.
+         */
+        void register();
     }
 }

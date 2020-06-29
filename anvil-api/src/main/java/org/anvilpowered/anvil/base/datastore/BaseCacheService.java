@@ -52,7 +52,7 @@ public abstract class BaseCacheService<
     protected BaseCacheService(DataStoreContext<TKey, TDataStore> dataStoreContext, Registry registry) {
         super(dataStoreContext);
         this.registry = registry;
-        registry.whenLoaded(this::registryLoaded);
+        registry.whenLoaded(this::registryLoaded).register();
         cache = new ConcurrentHashMap<>();
     }
 

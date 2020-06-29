@@ -39,6 +39,7 @@ public final class SqlContext extends DataStoreContext<UUID, HikariDataSource> {
     @Override
     public HikariDataSource loadDataStore() {
 
+/*
         String hostname = Anvil.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_HOSTNAME"), registry);
         int port = Anvil.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_PORT"), registry);
         String username = Anvil.resolveForSharedEnvironment(Keys.resolveUnsafe("MARIADB_USERNAME"), registry);
@@ -62,6 +63,7 @@ public final class SqlContext extends DataStoreContext<UUID, HikariDataSource> {
         config.setDriverClassName("org.mariadb.jdbc.Driver");
         config.setMaximumPoolSize(20);
         return new HikariDataSource(config);
+ */     return null;
     }
 
     protected void closeConnection(HikariDataSource dataStore) {

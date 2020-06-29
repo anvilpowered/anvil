@@ -28,6 +28,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.data.registry.RegistryScope;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
@@ -135,12 +136,12 @@ class EnvironmentBuilderImpl implements Environment.Builder {
             Registry registry = injector.getInstance(Registry.class);
             for (Consumer<Environment> listener
                 : loadedListeners.get(environment.getName())) {
-                registry.whenLoaded(() -> listener.accept(environment));
+                registry.whenLoaded(() -> listener.accept(environment)).register();
             }
-            registry.load();
+            registry.load(RegistryScope.DEEP);
             for (Consumer<Environment> listener
                 : reloadedListeners.get(environment.getName())) {
-                registry.whenLoaded(() -> listener.accept(environment));
+                registry.whenLoaded(() -> listener.accept(environment)).register();
             }
             for (Consumer<Environment> listener
                 : readyListeners.get(environment.getName())) {

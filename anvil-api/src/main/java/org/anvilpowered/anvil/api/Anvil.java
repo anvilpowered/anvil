@@ -20,9 +20,6 @@ package org.anvilpowered.anvil.api;
 
 import com.google.inject.Binder;
 import com.google.inject.Binding;
-import org.anvilpowered.anvil.api.data.key.Key;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 
 import java.util.HashMap;
@@ -64,27 +61,5 @@ public final class Anvil {
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new IllegalStateException("Could not find ServiceManager implementation!", e);
         }
-    }
-
-    public static <T> T resolveForSharedEnvironment(Key<T> key, Registry registry) {
-        Registry coreRegistry = getEnvironmentManager().getCoreEnvironment().getRegistry();
-        if (registry.getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
-            if (key.equals(Keys.DATA_STORE_NAME)
-                || key.equals(Keys.MONGODB_HOSTNAME)
-                || key.equals(Keys.MONGODB_PORT)
-                || key.equals(Keys.MONGODB_USE_SRV)) {
-                return coreRegistry.getOrDefault(key);
-            } else if (registry.getOrDefault(Keys.USE_SHARED_CREDENTIALS)) {
-                if (key.equals(Keys.MONGODB_USE_CONNECTION_STRING)
-                    || key.equals(Keys.MONGODB_CONNECTION_STRING)
-                    || key.equals(Keys.MONGODB_USERNAME)
-                    || key.equals(Keys.MONGODB_PASSWORD)
-                    || key.equals(Keys.MONGODB_AUTH_DB)
-                    || key.equals(Keys.MONGODB_USE_AUTH)) {
-                    return coreRegistry.getOrDefault(key);
-                }
-            }
-        }
-        return registry.getOrDefault(key);
     }
 }

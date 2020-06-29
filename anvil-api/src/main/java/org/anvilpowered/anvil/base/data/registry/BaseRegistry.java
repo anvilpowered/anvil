@@ -18,15 +18,18 @@
 
 package org.anvilpowered.anvil.base.data.registry;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Ordering;
-import com.google.common.collect.TreeMultimap;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.google.inject.Singleton;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.data.key.Key;
+import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.data.registry.RegistryScope;
+import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -43,14 +46,14 @@ import java.util.stream.Collectors;
 public class BaseRegistry implements Registry {
 
     private final Map<Key<?>, Object> defaultMap, valueMap;
-    private final Multimap<Integer, Runnable> listeners;
+    private final Table<RegistryScope, Integer, Collection<Runnable>> listeners;
+    private Registry coreRegistry;
     private String stringRepresentation;
 
     public BaseRegistry() {
         defaultMap = new HashMap<>();
         valueMap = new HashMap<>();
-        listeners = TreeMultimap.create(Ordering.natural(),
-            Comparator.comparingInt(Object::hashCode));
+        listeners = HashBasedTable.create(2, 3);
     }
 
     @Override
@@ -94,9 +97,36 @@ public class BaseRegistry implements Registry {
         stringRepresentation = null;
     }
 
+    @RegistryScoped
     protected <T> void setDefault(Key<T> key, T value) {
         defaultMap.put(key, value);
         stringRepresentation = null;
+    }
+
+    @Override
+    public <T> T getExtraSafe(Key<T> key) {
+        if (coreRegistry == null) {
+            coreRegistry = Anvil.getServiceManager().provide(Registry.class);
+        }
+        if (this != coreRegistry
+            && getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
+            if (key.equals(Keys.DATA_STORE_NAME)
+                || key.equals(Keys.MONGODB_HOSTNAME)
+                || key.equals(Keys.MONGODB_PORT)
+                || key.equals(Keys.MONGODB_USE_SRV)) {
+                return coreRegistry.getOrDefault(key);
+            } else if (getOrDefault(Keys.USE_SHARED_CREDENTIALS)) {
+                if (key.equals(Keys.MONGODB_USE_CONNECTION_STRING)
+                    || key.equals(Keys.MONGODB_CONNECTION_STRING)
+                    || key.equals(Keys.MONGODB_USERNAME)
+                    || key.equals(Keys.MONGODB_PASSWORD)
+                    || key.equals(Keys.MONGODB_AUTH_DB)
+                    || key.equals(Keys.MONGODB_USE_AUTH)) {
+                    return coreRegistry.getOrDefault(key);
+                }
+            }
+        }
+        return getOrDefault(key);
     }
 
     @Override
@@ -142,14 +172,64 @@ public class BaseRegistry implements Registry {
     }
 
     @Override
-    public void load() {
-        for (Integer order : listeners.keySet()) {
-            listeners.get(order).forEach(Runnable::run);
+    public ListenerRegistrationEnd whenLoaded(Runnable listener) {
+        return new ListenerRegistrationEndImpl(listener);
+    }
+
+    private class ListenerRegistrationEndImpl implements ListenerRegistrationEnd {
+
+        private final Runnable listener;
+        private int order;
+        private RegistryScope registryScope;
+
+        public ListenerRegistrationEndImpl(Runnable listener) {
+            this.listener = listener;
+            order = 0;
+            registryScope = RegistryScope.DEFAULT;
+        }
+
+        @Override
+        public ListenerRegistrationEnd order(int order) {
+            this.order = 0;
+            return this;
+        }
+
+        @Override
+        public ListenerRegistrationEnd scope(RegistryScope registryScope) {
+            this.registryScope = registryScope;
+            return this;
+        }
+
+        @Override
+        public void register() {
+            listeners.row(registryScope)
+                .computeIfAbsent(order, o -> new ArrayList<>())
+                .add(listener);
         }
     }
 
-    public void whenLoaded(Runnable listener, int order) {
-        listeners.put(order, listener);
+    @Override
+    public void load(RegistryScope registryScope) {
+        final int ordinal = registryScope.ordinal();
+        if (ordinal <= RegistryScope.DEFAULT.ordinal()) {
+            loadDefaultScope();
+        }
+        loadOrdinal(ordinal);
+    }
+
+    protected final void loadOrdinal(int ordinal) {
+        final RegistryScope[] values = RegistryScope.values();
+        final int valueLength = values.length;
+        for (int i = ordinal; i < valueLength; i++) {
+            listeners.row(values[i]).forEach((n, l) -> l.forEach(Runnable::run));
+        }
+    }
+
+    /**
+     * Override this method to load values into this registry on normal reloads
+     */
+    @RegistryScoped
+    protected void loadDefaultScope() {
     }
 
     @Override

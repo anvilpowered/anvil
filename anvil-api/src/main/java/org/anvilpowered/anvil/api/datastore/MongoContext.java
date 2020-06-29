@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.bson.types.ObjectId;
@@ -52,16 +51,16 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
     protected Datastore loadDataStore() {
 
         /* === Get values from config === */
-        String connectionString = Anvil.resolveForSharedEnvironment(Keys.MONGODB_CONNECTION_STRING, registry);
-        String hostname = Anvil.resolveForSharedEnvironment(Keys.MONGODB_HOSTNAME, registry);
-        int port = Anvil.resolveForSharedEnvironment(Keys.MONGODB_PORT, registry);
-        String dbName = Anvil.resolveForSharedEnvironment(Keys.MONGODB_DBNAME, registry);
-        String username = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USERNAME, registry);
-        String password = Anvil.resolveForSharedEnvironment(Keys.MONGODB_PASSWORD, registry);
-        String authDb = Anvil.resolveForSharedEnvironment(Keys.MONGODB_AUTH_DB, registry);
-        boolean useAuth = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USE_AUTH, registry);
-        boolean useSrv = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USE_SRV, registry);
-        boolean useConnectionString = Anvil.resolveForSharedEnvironment(Keys.MONGODB_USE_CONNECTION_STRING, registry);
+        String connectionString = registry.getExtraSafe(Keys.MONGODB_CONNECTION_STRING);
+        String hostname = registry.getExtraSafe(Keys.MONGODB_HOSTNAME);
+        int port = registry.getExtraSafe(Keys.MONGODB_PORT);
+        String dbName = registry.getExtraSafe(Keys.MONGODB_DBNAME);
+        String username = registry.getExtraSafe(Keys.MONGODB_USERNAME);
+        String password = registry.getExtraSafe(Keys.MONGODB_PASSWORD);
+        String authDb = registry.getExtraSafe(Keys.MONGODB_AUTH_DB);
+        boolean useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH);
+        boolean useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV);
+        boolean useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING);
 
         /* === Determine credentials for MongoDB === */
         String clientUrl;

@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 import org.anvilpowered.anvil.api.redis.RedisService;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -34,12 +35,13 @@ public class CommonRedisService implements RedisService {
 
     private Registry registry;
 
+    @RegistryScoped
     private JedisPool jedisPool;
 
     @Inject
     protected CommonRedisService(Registry registry) {
         this.registry = registry;
-        registry.whenLoaded(this::registryLoaded);
+        registry.whenLoaded(this::registryLoaded).register();
     }
 
     private void registryLoaded() {

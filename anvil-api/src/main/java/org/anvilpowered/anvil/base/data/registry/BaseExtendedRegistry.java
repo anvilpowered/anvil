@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.data.config.ConfigurationService;
 import org.anvilpowered.anvil.api.data.key.Key;
+import org.anvilpowered.anvil.api.data.registry.RegistryScope;
 
 import java.util.Optional;
 
@@ -52,9 +53,9 @@ public class BaseExtendedRegistry extends BaseRegistry {
     }
 
     @Override
-    public void load() {
-        configurationService.load();
-        super.load();
+    public void load(RegistryScope registryScope) {
+        configurationService.load(registryScope);
+        super.load(registryScope);
     }
 
     @Override

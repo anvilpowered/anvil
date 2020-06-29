@@ -25,9 +25,9 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.Manager;
 
@@ -44,7 +44,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
 
     protected BaseManager(Registry registry) {
         this.registry = registry;
-        registry.whenLoaded(this::registryLoaded);
+        registry.whenLoaded(this::registryLoaded).register();
         componentType = new TypeToken<C>(getClass()) {
         };
     }
@@ -52,6 +52,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     @Inject
     private Injector injector;
 
+    @RegistryScoped
     private C currentComponent;
 
     private void registryLoaded() {
@@ -59,7 +60,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     }
 
     private void loadComponent() {
-        String dataStoreName = Anvil.resolveForSharedEnvironment(Keys.DATA_STORE_NAME, registry)
+        String dataStoreName = registry.getExtraSafe(Keys.DATA_STORE_NAME)
             .toLowerCase(Locale.ENGLISH);
         String type = componentType.getRawType().getCanonicalName();
         Named named = Names.named(dataStoreName);
@@ -78,6 +79,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     }
 
     @Override
+    @RegistryScoped
     public C getPrimaryComponent() {
         try {
             if (currentComponent == null) {
