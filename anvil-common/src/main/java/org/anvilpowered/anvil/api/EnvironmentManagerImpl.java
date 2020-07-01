@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.api;
 
 import com.google.common.collect.ImmutableMap;
-import org.anvilpowered.anvil.api.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,12 +34,10 @@ import java.util.stream.Stream;
 class EnvironmentManagerImpl implements EnvironmentManager{
 
     private final Map<String, Environment> environments;
-    final Map<String, Plugin<?>> plugins;
-    final Map<Plugin<?>, Set<Environment>> pluginEnvironmentMap;
+    final Map<Object, Set<Environment>> pluginEnvironmentMap;
 
     public EnvironmentManagerImpl() {
         environments = new HashMap<>();
-        plugins = new HashMap<>();
         pluginEnvironmentMap = new HashMap<>();
     }
 
@@ -83,17 +80,7 @@ class EnvironmentManagerImpl implements EnvironmentManager{
         return Optional.ofNullable(environments.get(name));
     }
 
-    @Override
-    public Environment getEnvironment(Plugin<?> plugin) {
-        return Objects.requireNonNull(environments.get(plugin.getName()));
-    }
-
-    @Override
-    public Set<Environment> getEnvironments(Plugin<?> plugin) {
-        return Objects.requireNonNull(pluginEnvironmentMap.get(plugin));
-    }
-
-    void registerEnvironment(Environment environment, Plugin<?> plugin) {
+    void registerEnvironment(Environment environment, Object plugin) {
         final String name = environment.getName();
         if (environments.containsKey(name)) {
             throw new IllegalArgumentException("Environment " + name + " already exists");
@@ -104,7 +91,6 @@ class EnvironmentManagerImpl implements EnvironmentManager{
             envs = new TreeSet<>();
             envs.add(environment);
             pluginEnvironmentMap.put(plugin, envs);
-            plugins.put(plugin.getName(), plugin);
         } else {
             envs.add(environment);
         }

@@ -16,13 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.plugin;
+package org.anvilpowered.anvil.sponge;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.AnvilImpl;
-import org.anvilpowered.anvil.common.plugin.AnvilCore;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.sponge.listener.SpongePlayerListener;
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule;
 import org.anvilpowered.anvil.sponge.module.SpongeModule;
@@ -31,26 +31,26 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
 
 @Plugin(
-    id = AnvilCorePluginInfo.id,
-    name = AnvilCorePluginInfo.name,
-    version = AnvilCorePluginInfo.version,
-    description = AnvilCorePluginInfo.description,
-    url = AnvilCorePluginInfo.url,
-    authors = AnvilCorePluginInfo.organizationName
+    id = AnvilPluginInfo.id,
+    name = AnvilPluginInfo.name,
+    version = AnvilPluginInfo.version,
+    description = AnvilPluginInfo.description,
+    url = AnvilPluginInfo.url,
+    authors = AnvilPluginInfo.organizationName
 )
-public class AnvilCoreSponge extends AnvilCore<PluginContainer> {
+public class AnvilSponge extends AnvilImpl {
 
     @Inject
-    public AnvilCoreSponge(Injector injector) {
+    public AnvilSponge(Injector injector) {
         super(injector, new SpongeModule());
     }
 
     @Listener(order = Order.EARLY)
     public void onInit(GameInitializationEvent event) {
-        AnvilImpl.completeInitialization(new ApiSpongeModule());
-        Sponge.getEventManager().registerListeners(this, environment.getInjector().getInstance(SpongePlayerListener.class));
+        EnvironmentBuilderImpl.completeInitialization(new ApiSpongeModule());
+        Sponge.getEventManager().registerListeners(this,
+            environment.getInjector().getInstance(SpongePlayerListener.class));
     }
 }

@@ -22,7 +22,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 
@@ -34,7 +33,7 @@ class EnvironmentImpl implements Environment {
 
     private Injector injector;
     private final String name;
-    private final Plugin<?> plugin;
+    private final Object plugin;
     private final boolean withRootCommand;
     private final Collection<Module> modules;
     private final Map<Key<?>, Consumer<?>> earlyServices;
@@ -42,7 +41,7 @@ class EnvironmentImpl implements Environment {
     EnvironmentImpl(
         Injector injector,
         String name,
-        Plugin<?> plugin,
+        Object plugin,
         boolean withRootCommand,
         Collection<Module> modules,
         Map<Key<?>, Consumer<?>> earlyServices
@@ -91,9 +90,8 @@ class EnvironmentImpl implements Environment {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <TPluginContainer> Plugin<TPluginContainer> getPlugin() {
-        return (Plugin<TPluginContainer>) plugin;
+    public Object getPlugin() {
+        return plugin;
     }
 
     @Override

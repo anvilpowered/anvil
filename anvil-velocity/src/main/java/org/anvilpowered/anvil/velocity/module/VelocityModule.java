@@ -27,7 +27,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.anvilpowered.anvil.common.module.CommonModule;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.velocity.command.VelocityAnvilCommandNode;
 import org.anvilpowered.anvil.velocity.command.VelocityCallbackCommand;
 
@@ -39,7 +39,7 @@ public class VelocityModule extends CommonModule<TextComponent, CommandSource> {
     @Override
     protected void configure() {
         super.configure();
-        File configFilesLocation = Paths.get("plugins/" + AnvilCorePluginInfo.id).toFile();
+        File configFilesLocation = Paths.get("plugins/" + AnvilPluginInfo.id).toFile();
         if (!configFilesLocation.exists()) {
             if (!configFilesLocation.mkdirs()) {
                 throw new IllegalStateException("Unable to create config directory");

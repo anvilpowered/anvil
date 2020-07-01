@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.bungee.plugin;
+package org.anvilpowered.anvil.bungee;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -25,31 +25,28 @@ import com.google.inject.Injector;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.Environment;
+import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.bungee.listener.BungeePlayerListener;
 import org.anvilpowered.anvil.bungee.module.ApiBungeeModule;
 import org.anvilpowered.anvil.bungee.module.BungeeModule;
-import org.anvilpowered.anvil.common.plugin.AnvilCore;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 
-import java.util.Set;
-
-public class AnvilCoreBungee extends Plugin
-    implements org.anvilpowered.anvil.api.plugin.Plugin<Plugin> {
+public class AnvilBungee extends Plugin {
 
     protected final Inner inner;
 
-    public AnvilCoreBungee() {
+    public AnvilBungee() {
         AbstractModule module = new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Plugin.class).toInstance(AnvilCoreBungee.this);
+                bind(Plugin.class).toInstance(AnvilBungee.this);
+                bind(AnvilBungee.class).toInstance(AnvilBungee.this);
             }
         };
         Injector injector = Guice.createInjector(module);
         inner = new Inner(injector);
     }
 
-    private final class Inner extends AnvilCore<Plugin> {
+    public final class Inner extends AnvilImpl {
 
         @Inject
         public Inner(Injector injector) {
@@ -60,51 +57,20 @@ public class AnvilCoreBungee extends Plugin
         protected void applyToBuilder(Environment.Builder builder) {
             super.applyToBuilder(builder);
             builder.addEarlyServices(BungeePlayerListener.class, t ->
-                getProxy().getPluginManager().registerListener(AnvilCoreBungee.this, t));
+                getProxy().getPluginManager().registerListener(AnvilBungee.this, t));
         }
     }
 
     @Override
     public void onEnable() {
-        AnvilImpl.completeInitialization(new ApiBungeeModule());
+        EnvironmentBuilderImpl.completeInitialization(new ApiBungeeModule());
         getProxy().getPluginManager().registerListener(this,
-            inner.getPrimaryEnvironment()
-                .getInjector().getInstance(BungeePlayerListener.class)
+            inner.getEnvironment().getInjector().getInstance(BungeePlayerListener.class)
         );
     }
 
     @Override
     public String toString() {
-        return AnvilCorePluginInfo.id;
-    }
-
-    @Override
-    public String getName() {
-        return AnvilCorePluginInfo.name;
-    }
-
-    @Override
-    public int compareTo(org.anvilpowered.anvil.api.plugin.Plugin<Plugin> o) {
-        return inner.compareTo(o);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return inner.equals(obj);
-    }
-
-    @Override
-    public AnvilCoreBungee getPluginContainer() {
-        return this;
-    }
-
-    @Override
-    public Environment getPrimaryEnvironment() {
-        return inner.getPrimaryEnvironment();
-    }
-
-    @Override
-    public Set<Environment> getAllEnvironments() {
-        return inner.getAllEnvironments();
+        return inner.toString();
     }
 }

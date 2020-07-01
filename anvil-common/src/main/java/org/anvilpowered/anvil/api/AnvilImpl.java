@@ -18,11 +18,28 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.inject.Injector;
 import com.google.inject.Module;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 
-public class AnvilImpl {
+public class AnvilImpl extends Anvil {
 
-    public static void completeInitialization(Module platformModule) {
-        EnvironmentBuilderImpl.completeInitialization(platformModule);
+    public AnvilImpl(Injector injector, Module module) {
+        super(AnvilPluginInfo.id, injector, module);
+    }
+
+    @Override
+    protected void applyToBuilder(Environment.Builder builder) {
+        builder.withRootCommand();
+    }
+
+    @Override
+    protected void whenReady(Environment environment) {
+        super.whenReady(environment);
+        Anvil.environment = environment;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 }

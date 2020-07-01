@@ -18,12 +18,9 @@
 
 package org.anvilpowered.anvil.api;
 
-import org.anvilpowered.anvil.api.plugin.Plugin;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -42,8 +39,4 @@ public interface EnvironmentManager {
     Optional<Environment> getEnvironment(Pattern pattern);
 
     Optional<Environment> getEnvironment(String name);
-
-    Environment getEnvironment(Plugin<?> plugin);
-
-    Set<Environment> getEnvironments(Plugin<?> plugin);
 }

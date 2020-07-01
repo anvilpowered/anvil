@@ -30,7 +30,6 @@ import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.data.registry.RegistryScope;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
-import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -47,11 +46,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-class EnvironmentBuilderImpl implements Environment.Builder {
+public class EnvironmentBuilderImpl implements Environment.Builder {
 
     private String name;
     private Injector rootInjector;
-    private Plugin<?> plugin;
+    private Object plugin;
     private boolean withRootCommand = false;
     private final Collection<Module> modules;
     private final Map<Key<?>, Consumer<?>> earlyServices;
@@ -61,7 +60,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     private static final Collection<EnvironmentBuilderImpl> builders = new ArrayList<>();
     private static boolean alreadyCompleted = false;
 
-    static void completeInitialization(Module platformModule) {
+    public static void completeInitialization(Module platformModule) {
         if (alreadyCompleted) {
             throw new IllegalStateException("This method should only be called exactly once (in Anvil Common)");
         }
@@ -91,11 +90,6 @@ class EnvironmentBuilderImpl implements Environment.Builder {
                         .annotatedWith(Names.named(environment.getName()))
                         .toInstance(environment);
                 }
-                for (Plugin<?> plugin : ServiceManagerImpl.environmentManager.plugins.values()) {
-                    bind(new TypeLiteral<Plugin<?>>() {
-                    }).annotatedWith(Names.named(plugin.getName()))
-                        .toInstance(plugin);
-                }
             }
         };
         environments.sort(Comparator.naturalOrder());
@@ -108,8 +102,6 @@ class EnvironmentBuilderImpl implements Environment.Builder {
                     bind(ClassLoader.class).toInstance(environment.getPlugin()
                         .getClass().getClassLoader());
                     bind(Environment.class).toInstance(environment);
-                    bind(new TypeLiteral<Plugin<?>>() {
-                    }).toInstance(environment.getPlugin());
                 }
             });
             Injector injector = environment.getInjector();
@@ -266,7 +258,7 @@ class EnvironmentBuilderImpl implements Environment.Builder {
     }
 
     @Override
-    public void register(Plugin<?> plugin) {
+    public void register(Object plugin) {
         Objects.requireNonNull(name, "Could not register environment: name is required!");
         Objects.requireNonNull(plugin, "Could not register environment: name is required!");
         this.plugin = plugin;

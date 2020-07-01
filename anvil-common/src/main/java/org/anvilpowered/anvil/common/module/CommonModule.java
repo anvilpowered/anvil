@@ -36,8 +36,8 @@ import org.anvilpowered.anvil.common.coremember.repository.CommonMongoCoreMember
 import org.anvilpowered.anvil.common.coremember.repository.CommonXodusCoreMemberRepository;
 import org.anvilpowered.anvil.common.data.config.CommonConfigurationService;
 import org.anvilpowered.anvil.common.misc.CommonBindingExtensions;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginMessges;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 
@@ -50,15 +50,15 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
         BindingExtensions be = new CommonBindingExtensions(binder());
 
         be.bind(new TypeToken<PluginInfo<TString>>(getClass()) {
-        }, new TypeToken<AnvilCorePluginInfo<TString, TCommandSource>>(getClass()) {
+        }, new TypeToken<AnvilPluginInfo<TString, TCommandSource>>(getClass()) {
         });
 
         be.bind(new TypeToken<BasicPluginInfo>(getClass()) {
-        }, new TypeToken<AnvilCorePluginInfo<TString, TCommandSource>>(getClass()) {
+        }, new TypeToken<AnvilPluginInfo<TString, TCommandSource>>(getClass()) {
         });
 
         be.bind(new TypeToken<PluginMessages<TString>>(getClass()) {
-        }, new TypeToken<AnvilCorePluginMessges<TString, TCommandSource>>(getClass()) {
+        }, new TypeToken<AnvilPluginMessages<TString, TCommandSource>>(getClass()) {
         });
 
         be.bind(

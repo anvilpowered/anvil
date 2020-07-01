@@ -29,7 +29,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-public class AnvilCorePluginMessges<TString, TCommandSource> implements PluginMessages<TString> {
+public class AnvilPluginMessages<TString, TCommandSource> implements PluginMessages<TString> {
 
     @Inject
     protected PluginInfo<TString> pluginInfo;

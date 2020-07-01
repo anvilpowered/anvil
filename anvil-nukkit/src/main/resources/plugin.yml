@@ -1,6 +1,6 @@
 name: Anvil
 version: "0.2.0-SNAPSHOT"
-main: org.anvilpowered.anvil.nukkit.plugin.AnvilCoreNukkit
+main: org.anvilpowered.anvil.nukkit.AnvilNukkit
 api: ["1.0.0"]
 description: A cross-platform Minecraft plugin framework
 website: https://anvilpowered.org

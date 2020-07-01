@@ -18,33 +18,24 @@
 
 package org.anvilpowered.anvil.base.plugin;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.reflect.TypeToken;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
-import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 
-import java.util.Collections;
-import java.util.Set;
-
 /**
- * A simple default implementation of {@link Plugin} that only registers a
- * single {@link Environment} with the same name as this {@link Plugin}
+ * A helper class for quickly creating an environment. While not strictly necessary, it can
+ * simplify the start up process in most cases.
  */
 @SuppressWarnings("UnstableApiUsage")
-public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginContainer> {
-
-    @Inject
-    protected TPluginContainer pluginContainer;
+public abstract class BasePlugin {
 
     protected Environment environment;
-
-    protected final String name;
 
     protected BasePlugin(
         String name,
@@ -52,7 +43,6 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Module module,
         Key<?>... earlyServices
     ) {
-        this.name = name;
         createDefaultBuilder(name, rootInjector, module)
             .addEarlyServices(earlyServices)
             .register(this);
@@ -64,7 +54,6 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Module module,
         Class<?>... earlyServices
     ) {
-        this.name = name;
         createDefaultBuilder(name, rootInjector, module)
             .addEarlyServices(earlyServices)
             .register(this);
@@ -76,7 +65,6 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Module module,
         TypeLiteral<?>... earlyServices
     ) {
-        this.name = name;
         createDefaultBuilder(name, rootInjector, module)
             .addEarlyServices(earlyServices)
             .register(this);
@@ -88,7 +76,6 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Module module,
         TypeToken<?>... earlyServices
     ) {
-        this.name = name;
         createDefaultBuilder(name, rootInjector, module)
             .addEarlyServices(earlyServices)
             .register(this);
@@ -99,13 +86,8 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
         Injector rootInjector,
         Module module
     ) {
-        this.name = name;
         createDefaultBuilder(name, rootInjector, module)
             .register(this);
-    }
-
-    protected BasePlugin(String name) {
-        this.name = name;
     }
 
     protected Environment.Builder createDefaultBuilder(
@@ -152,36 +134,8 @@ public abstract class BasePlugin<TPluginContainer> implements Plugin<TPluginCont
 
     @Override
     public String toString() {
-        return getName();
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int compareTo(Plugin<TPluginContainer> o) {
-        return name.compareTo(o.getName());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Plugin && name.equals(((Plugin<?>) obj).getName());
-    }
-
-    @Override
-    public TPluginContainer getPluginContainer() {
-        return pluginContainer;
-    }
-
-    @Override
-    public Environment getPrimaryEnvironment() {
-        return environment;
-    }
-
-    @Override
-    public Set<Environment> getAllEnvironments() {
-        return Collections.singleton(environment);
+        return MoreObjects.toStringHelper(this)
+            .add("name", environment.getName())
+            .toString();
     }
 }

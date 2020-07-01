@@ -23,8 +23,8 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.bungee.AnvilBungee;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;
 import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
@@ -47,6 +47,9 @@ public class BungeeAnvilCommandNode
     @Inject
     private CommonCallbackCommand<TextComponent, CommandSender> callbackCommand;
 
+    @Inject
+    private AnvilBungee plugin;
+
     private static final String HELP_COMMAND_PROXY = "/anvilb help";
     private static final String ROOT_COMMAND_PROXY = "anvilb";
 
@@ -67,7 +70,6 @@ public class BungeeAnvilCommandNode
         BiConsumer<CommandSender, String[]> root = commandService.generateRoutingCommand(
             commandService.generateRootCommand(HELP_COMMAND_PROXY), subCommands, false);
 
-        Plugin plugin = environment.<Plugin>getPlugin().getPluginContainer();
         ProxyServer.getInstance().getPluginManager()
             .registerCommand(plugin,
                 new Command("anvilb", null, "ab", "anvilb:ab", "anvilb:anvilb") {

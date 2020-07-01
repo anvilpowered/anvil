@@ -20,19 +20,26 @@ package org.anvilpowered.anvil.api;
 
 import com.google.inject.Binder;
 import com.google.inject.Binding;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.core.coremember.repository.CoreMemberRepository;
+import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
+import org.anvilpowered.anvil.base.plugin.BasePlugin;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings({"unused"})
-public final class Anvil {
+public class Anvil extends BasePlugin {
 
     static final Map<Long, Binding<?>> bindingsCache = new HashMap<>();
-    private static ServiceManager serviceManager;
+    protected static ServiceManager serviceManager;
+    protected static Environment environment;
 
-    private Anvil() {
-        throw new AssertionError("**boss music** No instance for you!");
+    Anvil(String name, Injector rootInjector, Module module) {
+        super(name, rootInjector, module);
     }
 
     public static BindingExtensions getBindingExtensions(Binder binder) {
@@ -48,7 +55,19 @@ public final class Anvil {
     }
 
     public static Platform getPlatform() {
-        return getServiceManager().provide(Platform.class);
+        return environment.getInjector().getInstance(Platform.class);
+    }
+
+    public static Registry getRegistry() {
+        return environment.getInjector().getInstance(Registry.class);
+    }
+
+    public static CoreMemberManager getCoreMemberManager() {
+        return environment.getInjector().getInstance(CoreMemberManager.class);
+    }
+
+    public static CoreMemberRepository<?, ?> getCoreMemberRepository() {
+        return getCoreMemberManager().getPrimaryComponent();
     }
 
     public static ServiceManager getServiceManager() {

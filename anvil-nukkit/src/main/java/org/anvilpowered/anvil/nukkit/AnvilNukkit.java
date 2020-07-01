@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.nukkit.plugin;
+package org.anvilpowered.anvil.nukkit;
 
 import cn.nukkit.Server;
 import cn.nukkit.plugin.Plugin;
@@ -26,32 +26,28 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.AnvilImpl;
-import org.anvilpowered.anvil.api.Environment;
-import org.anvilpowered.anvil.common.plugin.AnvilCore;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.nukkit.listener.NukkitPlayerListener;
 import org.anvilpowered.anvil.nukkit.module.ApiNukkitModule;
 import org.anvilpowered.anvil.nukkit.module.NukkitModule;
 
-import java.util.Set;
-
-public class AnvilCoreNukkit extends PluginBase
-    implements org.anvilpowered.anvil.api.plugin.Plugin<Plugin> {
+public class AnvilNukkit extends PluginBase {
 
     protected final Inner inner;
 
-    public AnvilCoreNukkit() {
+    public AnvilNukkit() {
         AbstractModule module = new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Plugin.class).toInstance(AnvilCoreNukkit.this);
+                bind(Plugin.class).toInstance(AnvilNukkit.this);
+                bind(AnvilNukkit.class).toInstance(AnvilNukkit.this);
             }
         };
         Injector injector = Guice.createInjector(module);
         inner = injector.getInstance(Inner.class);
     }
 
-    private static final class Inner extends AnvilCore<Plugin> {
+    private static final class Inner extends AnvilImpl {
 
         @Inject
         public Inner(Injector injector) {
@@ -61,36 +57,15 @@ public class AnvilCoreNukkit extends PluginBase
 
     @Override
     public void onEnable() {
-        AnvilImpl.completeInitialization(new ApiNukkitModule());
+        EnvironmentBuilderImpl.completeInitialization(new ApiNukkitModule());
         Server.getInstance().getPluginManager().registerEvents(
-            inner.getPrimaryEnvironment()
-                .getInjector().getInstance(NukkitPlayerListener.class),
+            inner.getEnvironment().getInjector().getInstance(NukkitPlayerListener.class),
             this
         );
     }
 
     @Override
     public String toString() {
-        return AnvilCorePluginInfo.id;
-    }
-
-    @Override
-    public int compareTo(org.anvilpowered.anvil.api.plugin.Plugin<Plugin> o) {
-        return inner.compareTo(o);
-    }
-
-    @Override
-    public AnvilCoreNukkit getPluginContainer() {
-        return this;
-    }
-
-    @Override
-    public Environment getPrimaryEnvironment() {
-        return inner.getPrimaryEnvironment();
-    }
-
-    @Override
-    public Set<Environment> getAllEnvironments() {
-        return inner.getAllEnvironments();
+        return inner.toString();
     }
 }

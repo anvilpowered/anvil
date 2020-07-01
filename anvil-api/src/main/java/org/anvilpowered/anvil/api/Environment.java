@@ -28,7 +28,6 @@ import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.Named;
-import org.anvilpowered.anvil.api.plugin.Plugin;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +89,7 @@ public interface Environment extends Named, Comparable<Environment> {
 
     Injector getInjector();
 
-    <TPluginContainer> Plugin<TPluginContainer> getPlugin();
+    Object getPlugin();
 
     <TString> PluginInfo<TString> getPluginInfo();
 
@@ -203,8 +202,8 @@ public interface Environment extends Named, Comparable<Environment> {
         /**
          * Builds an {@link Environment} and registers it.
          *
-         * @param plugin {@link Plugin} owner for this environment
+         * @param plugin The owner for this environment
          */
-        void register(Plugin<?> plugin);
+        void register(Object plugin);
     }
 }

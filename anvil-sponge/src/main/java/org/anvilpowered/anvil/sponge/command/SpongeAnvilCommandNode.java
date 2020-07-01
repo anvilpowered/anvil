@@ -23,7 +23,7 @@ import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandSource;
@@ -90,6 +90,6 @@ public class SpongeAnvilCommandNode
             .build();
 
         Sponge.getCommandManager()
-            .register(environment.getPlugin(), root, AnvilCorePluginInfo.id);
+            .register(environment.getPlugin(), root, AnvilPluginInfo.id);
     }
 }

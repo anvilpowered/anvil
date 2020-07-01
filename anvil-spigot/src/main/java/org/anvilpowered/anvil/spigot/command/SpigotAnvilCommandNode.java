@@ -21,10 +21,10 @@ package org.anvilpowered.anvil.spigot.command;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
+import org.anvilpowered.anvil.spigot.AnvilSpigot;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +44,9 @@ public class SpigotAnvilCommandNode
     private SpigotCallbackCommand callbackCommand;
 
     @Inject
+    private AnvilSpigot plugin;
+
+    @Inject
     public SpigotAnvilCommandNode(Registry registry) {
         super(registry);
     }
@@ -56,8 +59,6 @@ public class SpigotAnvilCommandNode
         subCommands.put(RELOAD_ALIAS, anvilReloadCommand);
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND));
-
-        JavaPlugin plugin = environment.<JavaPlugin>getPlugin().getPluginContainer();
 
         PluginCommand root = plugin.getCommand(getName());
 

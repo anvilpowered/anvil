@@ -26,6 +26,7 @@ import cn.nukkit.plugin.Plugin;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
+import org.anvilpowered.anvil.nukkit.AnvilNukkit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,9 @@ public class NukkitAnvilCommandNode
     private NukkitAnvilReloadCommand anvilReloadCommand;
 
     @Inject
+    private AnvilNukkit plugin;
+
+    @Inject
     public NukkitAnvilCommandNode(Registry registry) {
         super(registry);
     }
@@ -54,8 +58,7 @@ public class NukkitAnvilCommandNode
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND));
 
-        PluginCommand<Plugin> root = new PluginCommand<>(
-            getName(), environment.<Plugin>getPlugin().getPluginContainer());
+        PluginCommand<Plugin> root = new PluginCommand<>(getName(), plugin);
 
         root.setExecutor(commandService.generateRoutingCommand(
             commandService.generateRootCommand(HELP_COMMAND), subCommands, false));

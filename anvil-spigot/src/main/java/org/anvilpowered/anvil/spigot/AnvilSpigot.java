@@ -16,18 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.spigot.plugin;
+package org.anvilpowered.anvil.spigot;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.Environment;
+import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.api.data.config.ConfigurationService;
 import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.plugin.Plugin;
-import org.anvilpowered.anvil.common.plugin.AnvilCore;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
 import org.anvilpowered.anvil.spigot.listener.SpigotPlayerListener;
 import org.anvilpowered.anvil.spigot.module.ApiSpigotModule;
 import org.anvilpowered.anvil.spigot.module.SpigotModule;
@@ -41,25 +39,25 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Set;
 import java.util.logging.Level;
 
-public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
+public class AnvilSpigot extends JavaPlugin {
 
     protected final Inner inner;
 
-    public AnvilCoreSpigot() {
+    public AnvilSpigot() {
         AbstractModule module = new AbstractModule() {
             @Override
             protected void configure() {
-                bind(JavaPlugin.class).toInstance(AnvilCoreSpigot.this);
+                bind(JavaPlugin.class).toInstance(AnvilSpigot.this);
+                bind(AnvilSpigot.class).toInstance(AnvilSpigot.this);
             }
         };
         Injector injector = Guice.createInjector(module);
         inner = new Inner(injector);
     }
 
-    private final class Inner extends AnvilCore<JavaPlugin> {
+    private final class Inner extends AnvilImpl {
 
         public Inner(Injector injector) {
             super(injector, new SpigotModule());
@@ -69,7 +67,7 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
         protected void applyToBuilder(Environment.Builder builder) {
             super.applyToBuilder(builder);
             builder.addEarlyServices(SpigotPlayerListener.class, t ->
-                Bukkit.getPluginManager().registerEvents(t, AnvilCoreSpigot.this));
+                Bukkit.getPluginManager().registerEvents(t, AnvilSpigot.this));
         }
 
         @Override
@@ -121,33 +119,13 @@ public class AnvilCoreSpigot extends JavaPlugin implements Plugin<JavaPlugin> {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onLoad(ServerLoadEvent event) {
-                AnvilImpl.completeInitialization(new ApiSpigotModule());
+                EnvironmentBuilderImpl.completeInitialization(new ApiSpigotModule());
             }
         }, this);
     }
 
     @Override
     public String toString() {
-        return AnvilCorePluginInfo.id;
-    }
-
-    @Override
-    public int compareTo(Plugin<JavaPlugin> o) {
-        return inner.compareTo(o);
-    }
-
-    @Override
-    public AnvilCoreSpigot getPluginContainer() {
-        return this;
-    }
-
-    @Override
-    public Environment getPrimaryEnvironment() {
-        return inner.getPrimaryEnvironment();
-    }
-
-    @Override
-    public Set<Environment> getAllEnvironments() {
-        return inner.getAllEnvironments();
+        return inner.toString();
     }
 }

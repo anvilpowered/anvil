@@ -27,7 +27,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.bungee.command.BungeeAnvilCommandNode;
 import org.anvilpowered.anvil.common.module.CommonModule;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -38,7 +38,7 @@ public class BungeeModule extends CommonModule<TextComponent, CommandSender> {
     protected void configure() {
         super.configure();
 
-        File configFilesLocation = Paths.get("plugins/" + AnvilCorePluginInfo.id).toFile();
+        File configFilesLocation = Paths.get("plugins/" + AnvilPluginInfo.id).toFile();
         if (!configFilesLocation.exists()) {
             if (!configFilesLocation.mkdirs()) {
                 throw new IllegalStateException("Unable to create config directory");

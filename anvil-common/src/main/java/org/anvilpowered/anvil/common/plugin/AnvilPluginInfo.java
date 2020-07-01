@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 
-public class AnvilCorePluginInfo<TString, TCommandSource> implements PluginInfo<TString> {
+public class AnvilPluginInfo<TString, TCommandSource> implements PluginInfo<TString> {
     public static final String id = "anvil";
     public static final String name = "Anvil";
     public static final String version = "$modVersion";

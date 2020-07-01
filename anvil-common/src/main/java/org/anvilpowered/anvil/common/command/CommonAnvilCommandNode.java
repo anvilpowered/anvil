@@ -23,7 +23,7 @@ import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.common.plugin.AnvilCorePluginInfo;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,15 +42,15 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
     protected static final List<String> VERSION_ALIAS = Collections.singletonList("version");
 
     protected static final String PLUGINS_DESCRIPTION
-        = String.format("%s plugins command", AnvilCorePluginInfo.name);
+        = String.format("%s plugins command", AnvilPluginInfo.name);
     protected static final String RELOAD_DESCRIPTION
-        = String.format("%s reload command", AnvilCorePluginInfo.name);
+        = String.format("%s reload command", AnvilPluginInfo.name);
     protected static final String HELP_DESCRIPTION
-        = String.format("%s help command", AnvilCorePluginInfo.name);
+        = String.format("%s help command", AnvilPluginInfo.name);
     protected static final String VERSION_DESCRIPTION
-        = String.format("%s version command", AnvilCorePluginInfo.name);
+        = String.format("%s version command", AnvilPluginInfo.name);
      protected static final String ROOT_DESCRIPTION
-        = String.format("%s root command", AnvilCorePluginInfo.name);
+        = String.format("%s root command", AnvilPluginInfo.name);
 
     protected static final String RELOAD_USAGE = "[-a|--all|-r|--regex] [<plugin>]";
 
@@ -108,6 +108,6 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
 
     @Override
     public String getName() {
-        return AnvilCorePluginInfo.id;
+        return AnvilPluginInfo.id;
     }
 }
