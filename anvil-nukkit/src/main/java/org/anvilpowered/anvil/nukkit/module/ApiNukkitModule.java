@@ -22,14 +22,18 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandExecutor;
 import cn.nukkit.command.CommandSender;
 import com.google.inject.TypeLiteral;
+import org.anvilpowered.anvil.api.Platform;
+import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.KickService;
+import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandService;
 import org.anvilpowered.anvil.nukkit.util.NukkitKickService;
+import org.anvilpowered.anvil.nukkit.util.NukkitPermissionService;
 import org.anvilpowered.anvil.nukkit.util.NukkitTeleportationService;
 import org.anvilpowered.anvil.nukkit.util.NukkitTextService;
 import org.anvilpowered.anvil.nukkit.util.NukkitUserService;
@@ -42,6 +46,8 @@ public class ApiNukkitModule extends ApiCommonModule {
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>(){
         }).to(NukkitCommandService.class);
         bind(KickService.class).to(NukkitKickService.class);
+        bind(PermissionService.class).to(NukkitPermissionService.class);
+        bind(Platform.class).toInstance(new PlatformImpl(false, "nukkit"));
         bind(new TypeLiteral<TextService<String, CommandSender>>() {
         }).to(NukkitTextService.class);
         bind(TeleportationService.class).to(NukkitTeleportationService.class);
