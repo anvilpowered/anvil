@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -43,13 +43,13 @@ class EnvironmentManagerImpl implements EnvironmentManager{
 
     @Override
     public Environment getCoreEnvironment() {
-        return Objects.requireNonNull(environments.get("anvil"),
+        return Preconditions.checkNotNull(environments.get("anvil"),
             "Global environment not loaded");
     }
 
     @Override
     public Environment getEnvironmentUnsafe(String name) {
-        return Objects.requireNonNull(environments.get(name),
+        return Preconditions.checkNotNull(environments.get(name),
             "Could not find environment " + name);
     }
 

@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.sponge.util;
 
 import org.anvilpowered.anvil.common.util.CommonTextService;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.service.pagination.PaginationList;

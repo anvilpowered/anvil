@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
@@ -30,9 +31,8 @@ import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.Named;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"UnstableApiUsage", "unchecked"})
@@ -49,7 +49,7 @@ public interface Environment extends Named, Comparable<Environment> {
                 binding[0] = v;
             }
         });
-        Binding<T> result = Objects.requireNonNull(
+        Binding<T> result = Preconditions.checkNotNull(
             (Binding<T>) binding[0],
             "Could not find binding for service: " + name + " in injector " + injector
         );

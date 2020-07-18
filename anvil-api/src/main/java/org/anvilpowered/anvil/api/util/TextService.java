@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.api.util;
 
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.URL;
 import java.util.Optional;

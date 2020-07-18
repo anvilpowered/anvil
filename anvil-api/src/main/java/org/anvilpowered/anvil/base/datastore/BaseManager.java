@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
+import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Binding;
 import com.google.inject.Inject;
@@ -30,10 +31,10 @@ import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.Manager;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 @SuppressWarnings({"UnstableApiUsage", "unchecked"})
 public abstract class BaseManager<C extends Component<?, ?>> implements Manager<C> {
@@ -52,6 +53,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     @Inject
     private Injector injector;
 
+    @Nullable
     @RegistryScoped
     private C currentComponent;
 
@@ -85,7 +87,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
             if (currentComponent == null) {
                 loadComponent();
             }
-            return Objects.requireNonNull(currentComponent,
+            return Preconditions.checkNotNull(currentComponent,
                 "An error occurred while loading current component");
         } catch (RuntimeException e) {
             String message = "Anvil: DataStoreName has not been loaded yet!" +

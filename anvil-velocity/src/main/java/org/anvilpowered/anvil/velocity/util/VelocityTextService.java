@@ -30,7 +30,7 @@ import net.kyori.text.format.TextDecoration;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.common.util.CommonTextService;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.URL;
 import java.util.Deque;

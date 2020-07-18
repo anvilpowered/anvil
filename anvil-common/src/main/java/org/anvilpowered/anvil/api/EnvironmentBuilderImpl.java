@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -30,7 +31,7 @@ import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.data.registry.RegistryScope;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -259,8 +259,8 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
 
     @Override
     public void register(Object plugin) {
-        Objects.requireNonNull(name, "Could not register environment: name is required!");
-        Objects.requireNonNull(plugin, "Could not register environment: name is required!");
+        Preconditions.checkNotNull(name, "name");
+        Preconditions.checkNotNull(plugin, "plugin");
         this.plugin = plugin;
         builders.add(this);
     }

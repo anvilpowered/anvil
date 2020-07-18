@@ -24,7 +24,7 @@ import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.spigot.command;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
@@ -29,7 +30,6 @@ import org.bukkit.command.PluginCommand;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class SpigotAnvilCommandNode
     extends CommonAnvilCommandNode<CommandExecutor, CommandSender> {
@@ -62,14 +62,14 @@ public class SpigotAnvilCommandNode
 
         PluginCommand root = plugin.getCommand(getName());
 
-        Objects.requireNonNull(root, "Anvil command not registered");
+        Preconditions.checkNotNull(root, "Anvil command not registered");
 
         root.setExecutor(commandService.generateRoutingCommand(
             commandService.generateRootCommand(HELP_COMMAND), subCommands, false));
 
         PluginCommand callback = plugin.getCommand("callback");
 
-        Objects.requireNonNull(callback, "Callback command not registered");
+        Preconditions.checkNotNull(callback, "Callback command not registered");
 
         callback.setExecutor(callbackCommand);
     }

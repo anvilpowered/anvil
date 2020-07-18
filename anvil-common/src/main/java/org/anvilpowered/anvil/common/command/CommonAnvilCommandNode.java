@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.common.command;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.command.CommandNode;
@@ -29,7 +30,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -93,17 +93,17 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
 
     @Override
     public Map<List<String>, Function<TCommandSource, String>> getDescriptions() {
-        return Objects.requireNonNull(descriptions, ERROR_MESSAGE);
+        return Preconditions.checkNotNull(descriptions, ERROR_MESSAGE);
     }
 
     @Override
     public Map<List<String>, Predicate<TCommandSource>> getPermissions() {
-        return Objects.requireNonNull(permissions, ERROR_MESSAGE);
+        return Preconditions.checkNotNull(permissions, ERROR_MESSAGE);
     }
 
     @Override
     public Map<List<String>, Function<TCommandSource, String>> getUsages() {
-        return Objects.requireNonNull(usages, ERROR_MESSAGE);
+        return Preconditions.checkNotNull(usages, ERROR_MESSAGE);
     }
 
     @Override

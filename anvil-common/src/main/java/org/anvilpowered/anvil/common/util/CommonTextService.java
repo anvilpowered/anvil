@@ -18,16 +18,16 @@
 
 package org.anvilpowered.anvil.common.util;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -396,11 +396,11 @@ public abstract class CommonTextService<TString, TCommandSource>
             TString padding,
             int linesPerPage
         ) {
-            this.contents = Objects.requireNonNull(contents, "Contents is required!");
+            this.contents = Preconditions.checkNotNull(contents, "contents");
             this.title = title;
             this.header = header;
             this.footer = footer;
-            this.padding = Objects.requireNonNull(padding, "Padding is required!");
+            this.padding = Preconditions.checkNotNull(padding, "padding");
             this.linesPerPage = linesPerPage;
         }
 

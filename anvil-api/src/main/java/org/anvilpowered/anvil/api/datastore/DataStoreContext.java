@@ -18,8 +18,10 @@
 
 package org.anvilpowered.anvil.api.datastore;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -28,7 +30,6 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,6 +41,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     private final List<ConnectionClosedListener<TDataStore>> connectionClosedListeners;
     protected final Registry registry;
 
+    @Nullable
     private TDataStore dataStore;
     private Class<?>[] entityClasses;
     private Class<TKey> tKeyClass;
@@ -67,7 +69,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
             dataStore = loadDataStore();
             notifyConnectionOpenedListeners(dataStore);
         }
-        return Objects.requireNonNull(dataStore, "An error occurred while loading datastore");
+        return Preconditions.checkNotNull(dataStore, "An error occurred while loading datastore");
     }
 
     @SafeVarargs

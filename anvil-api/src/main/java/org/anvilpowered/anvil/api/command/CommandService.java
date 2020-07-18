@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.api.command;
 
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.Map;
