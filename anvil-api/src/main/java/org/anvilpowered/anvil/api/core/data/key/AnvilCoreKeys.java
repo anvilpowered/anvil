@@ -33,7 +33,8 @@ public final class AnvilCoreKeys {
     };
 
     static {
-        Keys.registerKey(PLUGINS_PERMISSION);
-        Keys.registerKey(RELOAD_PERMISSION);
+        Keys.startRegistration("anvil")
+            .register(PLUGINS_PERMISSION)
+            .register(RELOAD_PERMISSION);
     }
 }

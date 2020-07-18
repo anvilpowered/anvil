@@ -18,32 +18,103 @@
 
 package org.anvilpowered.anvil.api.data.key;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.Iterator;
 import java.util.Optional;
 
 public final class Keys {
 
-    private static Map<String, Key<?>> keyMap = new HashMap<>();
+    private static final String GLOBAL_NAMESPACE
+        = "global";
+
+    private static final Table<String, String, Key<?>> keys
+        = HashBasedTable.create();
 
     private Keys() {
         throw new AssertionError("**boss music** No instance for you!");
     }
 
-    public static void registerKey(Key<?> key) {
-        keyMap.put(key.getName(), key);
+    /**
+     * <p>
+     * Used to start the registration of keys in a namespace.
+     * </p>
+     * <br>
+     * <p>
+     * Example usage:
+     * </p>
+     * <pre><code>
+     * static {
+     *     Keys.startRegistration("ontime")
+     *         .register(RANKS)
+     *         .register(CHECK_PERMISSION)
+     *         .register(CHECK_EXTENDED_PERMISSION)
+     *         .register(EDIT_PERMISSION)
+     *         .register(IMPORT_PERMISSION);
+     * }
+     * </code></pre>
+     *
+     * @param nameSpace The namespace to register the keys in. Usually the name of the plugin.
+     * @return A {@link KeyRegistrationEnd} instance for registering keys
+     */
+    public static KeyRegistrationEnd startRegistration(String nameSpace) {
+        return new KeyRegistrationEnd(nameSpace);
+    }
+
+    public final static class KeyRegistrationEnd {
+
+        private final String nameSpace;
+
+        KeyRegistrationEnd(String nameSpace) {
+            this.nameSpace = nameSpace;
+        }
+
+        private void checkName(String nameSpace, String name) {
+            if (keys.contains(nameSpace, name)) {
+                throw new IllegalArgumentException("The provided key " + name + " conflicts with a"
+                    + " key of the same name in the " + nameSpace + " namespace.");
+            }
+        }
+
+        /**
+         * Registers the provided key.
+         *
+         * @param key The {@link Key} to register
+         * @return {@code this}
+         */
+        public KeyRegistrationEnd register(Key<?> key) {
+            final String name = key.getName();
+            checkName(nameSpace, name);
+            keys.put(nameSpace, key.getName(), key);
+            return this;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Key<T> resolveUnsafe(String name, String nameSpace) {
+        return (Key<T>) Preconditions.checkNotNull(keys.get(nameSpace, name));
     }
 
     @SuppressWarnings("unchecked")
     public static <T> Key<T> resolveUnsafe(String name) {
-        return (Key<T>) Objects.requireNonNull(keyMap.get(name));
+        return (Key<T>) resolve(name).orElseThrow(() ->
+            new IllegalArgumentException("Could not resolve key " + name));
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Optional<Key<T>> resolve(String name) {
-        try {
-            return Optional.ofNullable(resolveUnsafe(name));
-        } catch (ClassCastException ignored) {
+        @Nullable
+        Key<T> candidate = (Key<T>) keys.get(GLOBAL_NAMESPACE, name);
+        if (candidate != null) {
+            return Optional.of(candidate);
+        }
+        Iterator<Key<?>> it = keys.column(name).values().iterator();
+        if (it.hasNext()) {
+            return Optional.of((Key<T>) it.next());
+        } else {
             return Optional.empty();
         }
     }
@@ -98,26 +169,27 @@ public final class Keys {
     };
 
     static {
-        registerKey(SERVER_NAME);
-        registerKey(PROXY_MODE);
-        registerKey(BASE_SCAN_PACKAGE);
-        registerKey(CACHE_INVALIDATION_INTERVAL_SECONDS);
-        registerKey(CACHE_INVALIDATION_TIMOUT_SECONDS);
-        registerKey(USE_SHARED_ENVIRONMENT);
-        registerKey(USE_SHARED_CREDENTIALS);
-        registerKey(DATA_DIRECTORY);
-        registerKey(DATA_STORE_NAME);
-        registerKey(MONGODB_HOSTNAME);
-        registerKey(MONGODB_PORT);
-        registerKey(MONGODB_DBNAME);
-        registerKey(MONGODB_USERNAME);
-        registerKey(MONGODB_PASSWORD);
-        registerKey(MONGODB_AUTH_DB);
-        registerKey(MONGODB_USE_AUTH);
-        registerKey(MONGODB_USE_SRV);
-        registerKey(REDIS_HOSTNAME);
-        registerKey(REDIS_PORT);
-        registerKey(REDIS_PASSWORD);
-        registerKey(REDIS_USE_AUTH);
+        startRegistration(GLOBAL_NAMESPACE)
+            .register(SERVER_NAME)
+            .register(PROXY_MODE)
+            .register(BASE_SCAN_PACKAGE)
+            .register(CACHE_INVALIDATION_INTERVAL_SECONDS)
+            .register(CACHE_INVALIDATION_TIMOUT_SECONDS)
+            .register(USE_SHARED_ENVIRONMENT)
+            .register(USE_SHARED_CREDENTIALS)
+            .register(DATA_DIRECTORY)
+            .register(DATA_STORE_NAME)
+            .register(MONGODB_HOSTNAME)
+            .register(MONGODB_PORT)
+            .register(MONGODB_DBNAME)
+            .register(MONGODB_USERNAME)
+            .register(MONGODB_PASSWORD)
+            .register(MONGODB_AUTH_DB)
+            .register(MONGODB_USE_AUTH)
+            .register(MONGODB_USE_SRV)
+            .register(REDIS_HOSTNAME)
+            .register(REDIS_PORT)
+            .register(REDIS_PASSWORD)
+            .register(REDIS_USE_AUTH);
     }
 }
