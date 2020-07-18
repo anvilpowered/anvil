@@ -95,6 +95,52 @@ public interface Registry {
     }
 
     /**
+     * Replaces each "{}" in the provided template with the values of the provided keys.
+     *
+     * @return The formatted string
+     * @throws IllegalArgumentException if the number of "{}" in the template != keys.length
+     */
+    default String format(String template, Key<?>... keys) {
+        final int length = template.length();
+        final int keyLength = keys.length;
+        // false = not in bracket; expecting [^}]
+        // true = read opening bracket; expecting [}]
+        boolean inBracket = false;
+        int keyIndex = 0;
+        // assumes an average of 10 characters per placeholder (+2 because of braces)
+        StringBuilder builder = new StringBuilder(length + keys.length * 8);
+        for (int i = 0; i < length; i++) {
+            final char candidate = template.charAt(i);
+            if (!inBracket && candidate != '{') {
+                // normal case
+                builder.append(candidate);
+            } else if (!inBracket) {
+                // (candidate == '{') == true
+                inBracket = true;
+                if (++keyIndex >= keyLength) {
+                    throw new IllegalArgumentException(
+                        "Key index out of bounds. Not enough keys for number of placeholders"
+                    );
+                }
+                builder.append(keys[keyIndex]);
+            } else if (candidate == '}') {
+                // inBracket == true
+                inBracket = false;
+            } else {
+                throw new IllegalArgumentException("Expected '}' got '" + candidate
+                    + "' at index " + i + " for template " + template);
+            }
+        }
+        // make sure we have used each key
+        if (++keyIndex != keyLength) {
+            throw new IllegalArgumentException(
+                "Key index out of bounds. Not enough placeholders for number of keys"
+            );
+        }
+        return builder.toString();
+    }
+
+    /**
      * Sets this registry's value for the provided {@link Key}
      *
      * @param <T>   The value type of the provided {@link Key}
