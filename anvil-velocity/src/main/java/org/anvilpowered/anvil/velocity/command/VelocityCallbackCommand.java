@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.velocity.command;
 import com.google.inject.Singleton;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 
 @Singleton

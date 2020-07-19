@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.velocity.util;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.api.util.KickService;
 
 import java.util.UUID;
