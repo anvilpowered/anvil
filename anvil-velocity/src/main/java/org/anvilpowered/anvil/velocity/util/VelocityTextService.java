@@ -21,14 +21,15 @@ package org.anvilpowered.anvil.velocity.util;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.event.ClickEvent;
-import net.kyori.text.event.HoverEvent;
-import net.kyori.text.format.TextColor;
-import net.kyori.text.format.TextDecoration;
-import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.common.util.CommonTextService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -58,24 +59,24 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
     @Override
     public TextComponent deserialize(String text) {
-        return LegacyComponentSerializer.legacy().deserialize(text, '&');
+        return LegacyComponentSerializer.legacy().deserialize(text);
     }
 
     @Override
     public String serialize(TextComponent text) {
-        return LegacyComponentSerializer.legacy().serialize(text, '&');
+        return LegacyComponentSerializer.legacy().serialize(text);
     }
 
     @Override
     public String serializePlain(TextComponent text) {
-        return PlainComponentSerializer.INSTANCE.serialize(text);
+        return PlainComponentSerializer.plain().serialize(text.asComponent());
     }
 
     protected class VelocityTextBuilder extends CommonTextBuilder {
 
         private final Deque<Object> elements;
         @Nullable
-        private HoverEvent hoverEvent;
+        private HoverEvent<?> hoverEvent;
         @Nullable
         private ClickEvent clickEvent;
 
@@ -85,103 +86,103 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
         @Override
         public Builder<TextComponent, CommandSource> aqua() {
-            elements.add(TextColor.AQUA);
+            elements.add(NamedTextColor.AQUA);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> black() {
-            elements.add(TextColor.BLACK);
+            elements.add(NamedTextColor.BLACK);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> blue() {
-            elements.add(TextColor.BLUE);
+            elements.add(NamedTextColor.BLUE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_aqua() {
-            elements.add(TextColor.DARK_AQUA);
+            elements.add(NamedTextColor.DARK_AQUA);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_blue() {
-            elements.add(TextColor.DARK_BLUE);
+            elements.add(NamedTextColor.DARK_BLUE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_gray() {
-            elements.add(TextColor.DARK_GRAY);
+            elements.add(NamedTextColor.DARK_GRAY);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_green() {
-            elements.add(TextColor.DARK_GREEN);
+            elements.add(NamedTextColor.DARK_GREEN);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_purple() {
-            elements.add(TextColor.DARK_PURPLE);
+            elements.add(NamedTextColor.DARK_PURPLE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> dark_red() {
-            elements.add(TextColor.DARK_RED);
+            elements.add(NamedTextColor.DARK_RED);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> gold() {
-            elements.add(TextColor.GOLD);
+            elements.add(NamedTextColor.GOLD);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> gray() {
-            elements.add(TextColor.GRAY);
+            elements.add(NamedTextColor.GRAY);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> green() {
-            elements.add(TextColor.GREEN);
+            elements.add(NamedTextColor.GREEN);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> light_purple() {
-            elements.add(TextColor.LIGHT_PURPLE);
+            elements.add(NamedTextColor.LIGHT_PURPLE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> red() {
-            elements.add(TextColor.RED);
+            elements.add(NamedTextColor.RED);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> reset() {
-            elements.add(TextColor.WHITE);
+            elements.add(NamedTextColor.WHITE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> white() {
-            elements.add(TextColor.WHITE);
+            elements.add(NamedTextColor.WHITE);
             return this;
         }
 
         @Override
         public Builder<TextComponent, CommandSource> yellow() {
-            elements.add(TextColor.YELLOW);
+            elements.add(NamedTextColor.YELLOW);
             return this;
         }
 
