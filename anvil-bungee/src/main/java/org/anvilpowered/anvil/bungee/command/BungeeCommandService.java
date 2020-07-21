@@ -18,12 +18,14 @@
 
 package org.anvilpowered.anvil.bungee.command;
 
+import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCommandService;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -107,6 +109,17 @@ public class BungeeCommandService extends CommonCommandService<Command,
         String alias,
         String[] context) {
         executor.accept(source, context);
+    }
+
+    @Override
+    protected List<String> getSuggestions(
+        BiConsumer<CommandSender, String[]> executor,
+        Command command,
+        CommandSender commandSender,
+        String alias,
+        String[] context
+    ) {
+        return ImmutableList.of();
     }
 
     @Override

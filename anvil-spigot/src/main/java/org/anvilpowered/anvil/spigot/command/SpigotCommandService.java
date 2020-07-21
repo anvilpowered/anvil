@@ -18,13 +18,16 @@
 
 package org.anvilpowered.anvil.spigot.command;
 
+import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCommandService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class SpigotCommandService extends CommonCommandService<Command, CommandExecutor, TextComponent, CommandSender> {
@@ -112,6 +115,20 @@ public class SpigotCommandService extends CommonCommandService<Command, CommandE
         String[] context
     ) {
         executor.onCommand(source, command, alias, context);
+    }
+
+    @Override
+    protected List<String> getSuggestions(
+        CommandExecutor executor,
+        Command command,
+        CommandSender source,
+        String alias,
+        String[] context
+    ) {
+        if (executor instanceof TabCompleter) {
+            return ((TabCompleter) executor).onTabComplete(source, command, alias, context);
+        }
+        return ImmutableList.of();
     }
 
     @Override

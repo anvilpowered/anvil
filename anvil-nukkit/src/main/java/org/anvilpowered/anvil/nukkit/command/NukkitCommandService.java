@@ -21,9 +21,11 @@ package org.anvilpowered.anvil.nukkit.command;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandExecutor;
 import cn.nukkit.command.CommandSender;
+import com.google.common.collect.ImmutableList;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCommandService;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class NukkitCommandService extends CommonCommandService<Command, CommandExecutor, String, CommandSender> {
@@ -111,6 +113,17 @@ public class NukkitCommandService extends CommonCommandService<Command, CommandE
         String[] context
     ) {
         executor.onCommand(source, command, alias, context);
+    }
+
+    @Override
+    protected List<String> getSuggestions(
+        CommandExecutor commandExecutor,
+        Command command,
+        CommandSender commandSender,
+        String alias,
+        String[] context
+    ) {
+        return ImmutableList.of();
     }
 
     @Override

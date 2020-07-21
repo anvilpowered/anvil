@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.common.command;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.command.CommandNode;
@@ -58,11 +59,33 @@ public abstract class CommonCommandService<
         String[] context
     );
 
+    protected abstract List<String> getSuggestions(
+        TCommandExecutor executor,
+        TCommand command,
+        TCommandSource source,
+        String alias,
+        String[] context
+    );
+
     protected abstract TCommandExecutor generateWrapperCommand(
         CommandExecutorWrapper<TCommand, TCommandSource> command);
 
     protected interface CommandExecutorWrapper<TCommand, TCommandSource> {
-        void execute(TCommand command, TCommandSource source, String alias, String[] context);
+        void execute(
+            TCommand command,
+            TCommandSource source,
+            String alias,
+            String[] context
+        );
+
+        default List<String> suggest(
+            TCommand command,
+            TCommandSource commandSource,
+            String alias,
+            String[] context
+        ) {
+            return ImmutableList.of();
+        }
     }
 
     private void sendSubCommandError(
@@ -83,13 +106,25 @@ public abstract class CommonCommandService<
             .sendTo(source);
     }
 
-    @Override
-    public TCommandExecutor generateRoutingCommand(
-        @Nullable TCommandExecutor root,
-        Map<List<String>, TCommandExecutor> children,
-        boolean childCommandFallback
-    ) {
-        return generateWrapperCommand((command, source, alias, context) -> {
+    private class RoutingCommand implements CommandExecutorWrapper<TCommand, TCommandSource> {
+
+        @Nullable
+        private final TCommandExecutor root;
+        private final Map<List<String>, TCommandExecutor> children;
+        private final boolean childCommandFallback;
+
+        private RoutingCommand(
+            @Nullable TCommandExecutor root,
+            Map<List<String>, TCommandExecutor> children,
+            boolean childCommandFallback
+        ) {
+            this.root = root;
+            this.children = children;
+            this.childCommandFallback = childCommandFallback;
+        }
+
+        @Override
+        public void execute(TCommand command, TCommandSource source, String alias, String[] context) {
             final int length = context.length;
             if (length > 0) {
                 for (Map.Entry<List<String>, TCommandExecutor> entry : children.entrySet()) {
@@ -113,7 +148,46 @@ public abstract class CommonCommandService<
                 return;
             }
             runExecutor(root, command, source, alias, context);
-        });
+        }
+
+        @Override
+        public List<String> suggest(TCommand command, TCommandSource source, String alias, String[] context) {
+            final int length = context.length;
+            if (length == 0) {
+                return ImmutableList.of();
+            }
+            if (length == 1) {
+                List<String> suggestions = new ArrayList<>();
+                for (List<String> aliases : children.keySet()) {
+                    if (aliases.size() == 0) {
+                        continue;
+                    }
+                    suggestions.add(aliases.get(0));
+                }
+                return suggestions;
+            }
+            for (Map.Entry<List<String>, TCommandExecutor> entry : children.entrySet()) {
+                final List<String> key = entry.getKey();
+                if (key.contains(context[0])) {
+                    return getSuggestions(entry.getValue(), command, source, context[0],
+                        // remove the first argument (the child selector)
+                        Arrays.copyOfRange(context, 1, length));
+                }
+            }
+            if (!childCommandFallback) {
+                return ImmutableList.of();
+            }
+            return getSuggestions(root, command, source, alias, context);
+        }
+    }
+
+    @Override
+    public TCommandExecutor generateRoutingCommand(
+        @Nullable TCommandExecutor root,
+        Map<List<String>, TCommandExecutor> children,
+        boolean childCommandFallback
+    ) {
+        return generateWrapperCommand(new RoutingCommand(root, children, childCommandFallback));
     }
 
     protected void sendRoot(TCommandSource source, String helpUsage, boolean extended) {

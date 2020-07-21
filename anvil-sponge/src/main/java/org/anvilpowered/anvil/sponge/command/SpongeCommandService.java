@@ -27,6 +27,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class SpongeCommandService
@@ -95,6 +96,17 @@ public class SpongeCommandService
 
     @Override
     protected void runExecutor(
+        CommandExecutor commandExecutor,
+        CommandCallable commandCallable,
+        CommandSource commandSource,
+        String alias,
+        String[] context
+    ) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    protected List<String> getSuggestions(
         CommandExecutor commandExecutor,
         CommandCallable commandCallable,
         CommandSource commandSource,

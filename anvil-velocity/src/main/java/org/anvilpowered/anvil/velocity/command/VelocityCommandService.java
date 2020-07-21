@@ -24,6 +24,7 @@ import net.kyori.text.TextComponent;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCommandService;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class VelocityCommandService extends CommonCommandService<Command, Command, TextComponent, CommandSource> {
@@ -38,6 +39,11 @@ public class VelocityCommandService extends CommonCommandService<Command, Comman
         @Override
         public void execute(CommandSource source, String[] args) {
             wrapper.execute(null, source, null, args);
+        }
+
+        @Override
+        public List<String> suggest(CommandSource source, String[] currentArgs) {
+            return wrapper.suggest(null, source, null, currentArgs);
         }
     }
 
@@ -106,6 +112,17 @@ public class VelocityCommandService extends CommonCommandService<Command, Comman
         String[] context
     ) {
         executor.execute(source, context);
+    }
+
+    @Override
+    protected List<String> getSuggestions(
+        Command executor,
+        Command command,
+        CommandSource source,
+        String alias,
+        String[] context
+    ) {
+        return executor.suggest(source, context);
     }
 
     @Override
