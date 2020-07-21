@@ -24,11 +24,13 @@ import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
 import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.misc.Named;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.jetbrains.annotations.Contract;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -64,6 +66,20 @@ public class CommonAnvilReloadCommand<TString, TCommandSource> {
         } else {
             textService.send(pluginMessages.getNoPermission(), source);
         }
+    }
+
+    public List<String> suggest() {
+        List<String> suggestions = Anvil.getEnvironmentManager()
+            .getEnvironments().values().stream()
+            .map(Named::getName)
+            .sorted().collect(Collectors.toList());
+        suggestions.add("--all");
+        suggestions.add("--regex");
+        return suggestions;
+    }
+
+    public List<String> suggest(TCommandSource source, String[] context) {
+        return suggest();
     }
 
     public void executeDirect(TCommandSource source, String[] context) {

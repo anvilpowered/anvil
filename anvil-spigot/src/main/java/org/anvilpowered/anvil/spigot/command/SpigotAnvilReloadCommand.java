@@ -23,10 +23,13 @@ import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+
+import java.util.List;
 
 public class SpigotAnvilReloadCommand
     extends CommonAnvilReloadCommand<TextComponent, CommandSender>
-    implements CommandExecutor {
+    implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(
@@ -37,5 +40,15 @@ public class SpigotAnvilReloadCommand
     ) {
         execute(source, context);
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(
+        CommandSender source,
+        Command command,
+        String alias,
+        String[] context
+    ) {
+        return suggest(source, context);
     }
 }

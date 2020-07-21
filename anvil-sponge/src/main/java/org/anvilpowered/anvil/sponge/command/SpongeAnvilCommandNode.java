@@ -68,7 +68,11 @@ public class SpongeAnvilCommandNode
             .arguments(
                 GenericArguments.flags().flag("a", "-all").flag("r", "-regex")
                     .buildWith(GenericArguments.optional(
-                        GenericArguments.string(Text.of("plugin"))))
+                        GenericArguments.withSuggestions(
+                            GenericArguments.string(Text.of("plugin")),
+                            anvilReloadCommand.suggest()
+                        )
+                    ))
             )
             .executor(anvilReloadCommand)
             .build());
