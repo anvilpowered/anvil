@@ -32,9 +32,8 @@ import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.registry.RegistryScope;
-import org.anvilpowered.anvil.common.util.JavaUtilLoggingAdapter;
+import org.anvilpowered.anvil.common.module.PlatformModule;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,10 +64,6 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
     private static boolean alreadyCompleted = false;
 
     public static void completeInitialization(Module platformModule, Module fallbackModule) {
-        completeInitialization(platformModule, fallbackModule, false);
-    }
-
-    public static void completeInitialization(Module platformModule, Module fallbackModule, boolean bindLogger) {
         if (alreadyCompleted) {
             throw new IllegalStateException("This method should only be called exactly once (in Anvil Common)");
         }
@@ -112,9 +107,11 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
                     bind(ClassLoader.class).toInstance(environment.getPlugin()
                         .getClass().getClassLoader());
                     bind(Environment.class).toInstance(environment);
-                    // We only want to bind the logger if the platform doesn't already have the binding
-                    if (bindLogger) {
-                        bind(Logger.class).toInstance(new JavaUtilLoggingAdapter(environment.getName()));
+                    if (platformModule instanceof PlatformModule) {
+                        Platform platform = ((PlatformModule) platformModule).getPlatform();
+                        if (platform instanceof PlatformImpl) {
+                            ((PlatformImpl) platform).bindLoggerOptionally(environment, binder());
+                        }
                     }
                 }
             });

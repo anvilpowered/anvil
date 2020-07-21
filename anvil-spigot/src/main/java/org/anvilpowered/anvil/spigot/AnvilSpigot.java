@@ -117,7 +117,7 @@ public class AnvilSpigot extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onLoad(ServerLoadEvent event) {
-                EnvironmentBuilderImpl.completeInitialization(new ApiSpigotModule(), new SpigotFallbackModule(), true);
+                EnvironmentBuilderImpl.completeInitialization(new ApiSpigotModule(), new SpigotFallbackModule());
             }
         }, this);
     }

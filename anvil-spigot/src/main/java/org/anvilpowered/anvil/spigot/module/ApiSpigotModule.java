@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.spigot.module;
 
 import com.google.inject.TypeLiteral;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
@@ -30,7 +29,8 @@ import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.entity.EntityUtils;
-import org.anvilpowered.anvil.common.module.ApiCommonModule;
+import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter;
+import org.anvilpowered.anvil.common.module.PlatformModule;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandService;
 import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils;
@@ -43,19 +43,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ApiSpigotModule extends ApiCommonModule {
+public class ApiSpigotModule extends PlatformModule {
+
+    public ApiSpigotModule() {
+        super(new PlatformImpl(false, "spigot", JavaUtilLoggingAdapter::bindLogger));
+    }
 
     @Override
     protected void configure() {
         super.configure();
         bind(CommandExecuteService.class).to(SpigotCommandExecuteService.class);
-        bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>(){
+        bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>() {
         }).to(SpigotCommandService.class);
         bind(KickService.class).to(SpigotKickService.class);
         bind(EntityUtils.class).to(SpigotEntityUtils.class);
         bind(LocationService.class).to(SpigotLocationService.class);
         bind(PermissionService.class).to(SpigotPermissionService.class);
-        bind(Platform.class).toInstance(new PlatformImpl(false, "spigot"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSender>>() {
         }).to(SpigotTextService.class);
         bind(new TypeLiteral<UserService<Player, Player>>() {

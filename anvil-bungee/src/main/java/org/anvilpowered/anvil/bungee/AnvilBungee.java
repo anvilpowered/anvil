@@ -64,7 +64,7 @@ public class AnvilBungee extends Plugin {
 
     @Override
     public void onEnable() {
-        EnvironmentBuilderImpl.completeInitialization(new ApiBungeeModule(), new BungeeFallbackModule(), true);
+        EnvironmentBuilderImpl.completeInitialization(new ApiBungeeModule(), new BungeeFallbackModule());
         getProxy().getPluginManager().registerListener(this,
             AnvilImpl.getEnvironment().getInjector().getInstance(BungeePlayerListener.class)
         );

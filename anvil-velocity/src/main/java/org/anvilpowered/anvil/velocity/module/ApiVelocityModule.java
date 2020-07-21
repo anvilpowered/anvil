@@ -23,7 +23,6 @@ import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.TextComponent;
-import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
@@ -32,7 +31,7 @@ import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
-import org.anvilpowered.anvil.common.module.ApiCommonModule;
+import org.anvilpowered.anvil.common.module.PlatformModule;
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService;
 import org.anvilpowered.anvil.velocity.command.VelocityCommandService;
 import org.anvilpowered.anvil.velocity.server.VelocityLocationService;
@@ -41,7 +40,11 @@ import org.anvilpowered.anvil.velocity.util.VelocityPermissionService;
 import org.anvilpowered.anvil.velocity.util.VelocityTextService;
 import org.anvilpowered.anvil.velocity.util.VelocityUserService;
 
-public class ApiVelocityModule extends ApiCommonModule {
+public class ApiVelocityModule extends PlatformModule {
+
+    public ApiVelocityModule() {
+        super(new PlatformImpl(true, "velocity"));
+    }
 
     @Override
     protected void configure() {
@@ -52,7 +55,6 @@ public class ApiVelocityModule extends ApiCommonModule {
         bind(KickService.class).to(VelocityKickService.class);
         bind(LocationService.class).to(VelocityLocationService.class);
         bind(PermissionService.class).to(VelocityPermissionService.class);
-        bind(Platform.class).toInstance(new PlatformImpl(true, "velocity"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSource>>() {
         }).to(VelocityTextService.class);
         bind(new TypeLiteral<UserService<Player, Player>>() {

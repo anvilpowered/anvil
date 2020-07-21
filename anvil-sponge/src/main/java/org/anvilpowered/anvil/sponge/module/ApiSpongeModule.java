@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.sponge.module;
 
 import com.google.inject.TypeLiteral;
-import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
@@ -29,7 +28,7 @@ import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.entity.EntityUtils;
-import org.anvilpowered.anvil.common.module.ApiCommonModule;
+import org.anvilpowered.anvil.common.module.PlatformModule;
 import org.anvilpowered.anvil.sponge.command.SpongeCommandExecuteService;
 import org.anvilpowered.anvil.sponge.command.SpongeCommandService;
 import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils;
@@ -44,7 +43,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 
-public class ApiSpongeModule extends ApiCommonModule {
+public class ApiSpongeModule extends PlatformModule {
+
+    public ApiSpongeModule() {
+        super(new PlatformImpl(false, "sponge"));
+    }
 
     @Override
     protected void configure() {
@@ -56,7 +59,6 @@ public class ApiSpongeModule extends ApiCommonModule {
         bind(KickService.class).to(SpongeKickService.class);
         bind(LocationService.class).to(SpongeLocationService.class);
         bind(PermissionService.class).to(SpongePermissionService.class);
-        bind(Platform.class).toInstance(new PlatformImpl(false, "sponge"));
         bind(new TypeLiteral<TextService<Text, CommandSource>>() {
         }).to(SpongeTextService.class);
         bind(new TypeLiteral<UserService<User, Player>>() {

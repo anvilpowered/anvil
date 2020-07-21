@@ -16,9 +16,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.util;
+package org.anvilpowered.anvil.common.module;
 
+import com.google.inject.Binder;
 import com.google.inject.Inject;
+import org.anvilpowered.anvil.api.Environment;
 import org.slf4j.Marker;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
@@ -38,6 +40,10 @@ public class JavaUtilLoggingAdapter extends MarkerIgnoringBase implements Locati
     private Logger logger;
 
     private final String name;
+
+    public static void bindLogger(Environment environment, Binder binder) {
+        binder.bind(org.slf4j.Logger.class).toInstance(new JavaUtilLoggingAdapter(environment.getName()));
+    }
 
     public JavaUtilLoggingAdapter(String name) {
         this.name = name;

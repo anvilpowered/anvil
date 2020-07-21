@@ -18,19 +18,41 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.inject.Binder;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.function.BiConsumer;
+
 public class PlatformImpl implements Platform {
 
     private final boolean isProxy;
     private final String name;
+    @Nullable
+    private final BiConsumer<Environment, Binder> loggerBinder;
 
-    public PlatformImpl(boolean isProxy, String name) {
+    public PlatformImpl(
+        boolean isProxy,
+        String name,
+        @Nullable BiConsumer<Environment, Binder> loggerBinder
+    ) {
         this.isProxy = isProxy;
         this.name = name;
+        this.loggerBinder = loggerBinder;
+    }
+
+    public PlatformImpl(boolean isProxy, String name) {
+        this(isProxy, name, null);
     }
 
     @Override
     public boolean isProxy() {
         return isProxy;
+    }
+
+    public void bindLoggerOptionally(Environment environment, Binder binder) {
+        if (loggerBinder != null) {
+            loggerBinder.accept(environment, binder);
+        }
     }
 
     @Override
