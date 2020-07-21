@@ -135,7 +135,7 @@ public abstract class BasePlugin {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-            .add("name", environment.getName())
+            .add("name", environment == null ? "null" : environment.getName())
             .toString();
     }
 }
