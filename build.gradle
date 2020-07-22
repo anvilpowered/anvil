@@ -8,7 +8,7 @@ ext.apiVersion = "0.3-SNAPSHOT"
 
 allprojects {
     group = "org.anvilpowered"
-    version = "0.2.1"
+    version = "0.3.0-SNAPSHOT"
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 }
