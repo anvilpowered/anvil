@@ -22,6 +22,7 @@ import com.google.inject.TypeLiteral;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
+import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
@@ -29,6 +30,7 @@ import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
+import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandService;
 import org.anvilpowered.anvil.spigot.util.SpigotKickService;
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService;
@@ -44,6 +46,7 @@ public class ApiSpigotModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(CommandExecuteService.class).to(SpigotCommandExecuteService.class);
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>(){
         }).to(SpigotCommandService.class);
         bind(KickService.class).to(SpigotKickService.class);

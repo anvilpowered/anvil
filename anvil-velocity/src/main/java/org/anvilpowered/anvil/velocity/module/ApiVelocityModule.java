@@ -25,6 +25,7 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
+import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.CurrentServerService;
 import org.anvilpowered.anvil.api.util.KickService;
@@ -32,6 +33,7 @@ import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
+import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService;
 import org.anvilpowered.anvil.velocity.command.VelocityCommandService;
 import org.anvilpowered.anvil.velocity.util.VelocityCurrentServerService;
 import org.anvilpowered.anvil.velocity.util.VelocityKickService;
@@ -44,6 +46,7 @@ public class ApiVelocityModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(CommandExecuteService.class).to(VelocityCommandExecuteService.class);
         bind(new TypeLiteral<CommandService<Command, CommandSource>>() {
         }).to(VelocityCommandService.class);
         bind(CurrentServerService.class).to(VelocityCurrentServerService.class);

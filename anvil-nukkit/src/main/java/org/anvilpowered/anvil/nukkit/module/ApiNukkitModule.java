@@ -24,6 +24,7 @@ import cn.nukkit.command.CommandSender;
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
+import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
@@ -31,6 +32,7 @@ import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
+import org.anvilpowered.anvil.nukkit.command.NukkitCommandExecuteService;
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandService;
 import org.anvilpowered.anvil.nukkit.util.NukkitKickService;
 import org.anvilpowered.anvil.nukkit.util.NukkitPermissionService;
@@ -43,6 +45,7 @@ public class ApiNukkitModule extends ApiCommonModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(CommandExecuteService.class).to(NukkitCommandExecuteService.class);
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>(){
         }).to(NukkitCommandService.class);
         bind(KickService.class).to(NukkitKickService.class);
