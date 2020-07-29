@@ -38,8 +38,4 @@ public class AnvilImpl extends Anvil {
         super.whenReady(environment);
         Anvil.environment = environment;
     }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
 }

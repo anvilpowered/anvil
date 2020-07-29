@@ -59,7 +59,7 @@ public class AnvilNukkit extends PluginBase {
     public void onEnable() {
         EnvironmentBuilderImpl.completeInitialization(new ApiNukkitModule());
         Server.getInstance().getPluginManager().registerEvents(
-            inner.getEnvironment().getInjector().getInstance(NukkitPlayerListener.class),
+            AnvilImpl.getEnvironment().getInjector().getInstance(NukkitPlayerListener.class),
             this
         );
     }

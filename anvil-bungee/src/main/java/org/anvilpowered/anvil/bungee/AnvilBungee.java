@@ -65,7 +65,7 @@ public class AnvilBungee extends Plugin {
     public void onEnable() {
         EnvironmentBuilderImpl.completeInitialization(new ApiBungeeModule());
         getProxy().getPluginManager().registerListener(this,
-            inner.getEnvironment().getInjector().getInstance(BungeePlayerListener.class)
+            AnvilImpl.getEnvironment().getInjector().getInstance(BungeePlayerListener.class)
         );
     }
 

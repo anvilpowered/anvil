@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Binder;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
@@ -37,6 +38,7 @@ public class Anvil extends BasePlugin {
     static final Map<Long, Binding<?>> bindingsCache = new HashMap<>();
     protected static ServiceManager serviceManager;
     protected static Environment environment;
+    private static final String NOT_LOADED = "Anvil has not been loaded yet!";
 
     Anvil(String name, Injector rootInjector, Module module) {
         super(name, rootInjector, module);
@@ -54,16 +56,20 @@ public class Anvil extends BasePlugin {
         return getServiceManager().provide(EnvironmentManager.class);
     }
 
+    public static Environment getEnvironment() {
+        return Preconditions.checkNotNull(environment, NOT_LOADED);
+    }
+
     public static Platform getPlatform() {
-        return environment.getInjector().getInstance(Platform.class);
+        return getEnvironment().getInjector().getInstance(Platform.class);
     }
 
     public static Registry getRegistry() {
-        return environment.getInjector().getInstance(Registry.class);
+        return getEnvironment().getInjector().getInstance(Registry.class);
     }
 
     public static CoreMemberManager getCoreMemberManager() {
-        return environment.getInjector().getInstance(CoreMemberManager.class);
+        return getEnvironment().getInjector().getInstance(CoreMemberManager.class);
     }
 
     public static CoreMemberRepository<?, ?> getCoreMemberRepository() {
