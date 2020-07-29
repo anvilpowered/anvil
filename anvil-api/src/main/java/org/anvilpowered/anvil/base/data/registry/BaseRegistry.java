@@ -27,6 +27,7 @@ import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.data.registry.RegistryScope;
 import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +49,7 @@ public class BaseRegistry implements Registry {
     private final Map<Key<?>, Object> defaultMap, valueMap;
     private final Table<RegistryScope, Integer, Collection<Runnable>> listeners;
     private Registry coreRegistry;
+    @Nullable
     private String stringRepresentation;
 
     public BaseRegistry() {
@@ -106,7 +108,7 @@ public class BaseRegistry implements Registry {
     @Override
     public <T> T getExtraSafe(Key<T> key) {
         if (coreRegistry == null) {
-            coreRegistry = Anvil.getServiceManager().provide(Registry.class);
+            coreRegistry = Anvil.getRegistry();
         }
         if (this != coreRegistry
             && getOrDefault(Keys.USE_SHARED_ENVIRONMENT)) {
