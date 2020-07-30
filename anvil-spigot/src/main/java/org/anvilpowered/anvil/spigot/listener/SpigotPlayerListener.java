@@ -22,10 +22,21 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.entity.RestrictionService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.server.ServerCommandEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 public class SpigotPlayerListener implements Listener {
 
@@ -34,6 +45,9 @@ public class SpigotPlayerListener implements Listener {
 
     @Inject
     private Registry registry;
+
+    @Inject
+    private RestrictionService restrictionService;
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -47,5 +61,47 @@ public class SpigotPlayerListener implements Listener {
                 player.getName(),
                 player.getAddress().getHostString()
             );
+    }
+
+    @EventHandler
+    public void onMovement(PlayerMoveEvent event) {
+        if (restrictionService.get(event.getPlayer().getUniqueId()).movement()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInteraction(EntityInteractEvent event) {
+        if (restrictionService.get(event.getEntity().getUniqueId()).interaction()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventory(InventoryInteractEvent event) {
+        if (restrictionService.get(event.getWhoClicked().getUniqueId()).inventory()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCommands(PlayerCommandPreprocessEvent event) {
+        if (restrictionService.get(event.getPlayer().getUniqueId()).commands()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onReceiveDamage(EntityDamageEvent event) {
+        if (restrictionService.get(event.getEntity().getUniqueId()).damage()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDealDamage(EntityDamageByEntityEvent event) {
+        if (restrictionService.get(event.getDamager().getUniqueId()).damage()) {
+            event.setCancelled(true);
+        }
     }
 }

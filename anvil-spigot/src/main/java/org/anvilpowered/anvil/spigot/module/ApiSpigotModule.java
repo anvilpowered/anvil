@@ -29,9 +29,11 @@ import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.entity.EntityUtils;
 import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandService;
+import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils;
 import org.anvilpowered.anvil.spigot.util.SpigotKickService;
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService;
 import org.anvilpowered.anvil.spigot.util.SpigotTeleportationService;
@@ -50,6 +52,7 @@ public class ApiSpigotModule extends ApiCommonModule {
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>(){
         }).to(SpigotCommandService.class);
         bind(KickService.class).to(SpigotKickService.class);
+        bind(EntityUtils.class).to(SpigotEntityUtils.class);
         bind(PermissionService.class).to(SpigotPermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(false, "spigot"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSender>>() {
