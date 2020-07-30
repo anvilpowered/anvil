@@ -22,8 +22,18 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.data.key.Keys;
 import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.entity.RestrictionService;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.action.InteractEvent;
+import org.spongepowered.api.event.command.SendCommandEvent;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.item.inventory.TargetInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
 public class SpongePlayerListener {
@@ -33,6 +43,9 @@ public class SpongePlayerListener {
 
     @Inject
     private Registry registry;
+
+    @Inject
+    private RestrictionService restrictionService;
 
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
@@ -46,5 +59,41 @@ public class SpongePlayerListener {
                 player.getName(),
                 player.getConnection().getAddress().getHostString()
             );
+    }
+
+    @Listener
+    public void onMovement(MoveEntityEvent event, @Getter("getTargetEntity") Entity entity) {
+        if (restrictionService.get(entity).movement()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @Listener
+    public void onInteraction(InteractEvent event, @Root Entity entity) {
+        if (restrictionService.get(entity).interaction()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @Listener
+    public void onInventory(TargetInventoryEvent event, @Root Player player) {
+        if (event instanceof Cancellable
+            && restrictionService.get(player.getUniqueId()).inventory()) {
+            ((Cancellable) event).setCancelled(true);
+        }
+    }
+
+    @Listener
+    public void onCommands(SendCommandEvent event, @Root Player player) {
+        if (restrictionService.get(player.getUniqueId()).commands()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @Listener
+    public void onDamage(DamageEntityEvent event, @Getter("getTargetEntity") Entity target, @Root Entity root) {
+        if (restrictionService.get(target).damage() || restrictionService.get(root).damage()) {
+            event.setCancelled(true);
+        }
     }
 }
