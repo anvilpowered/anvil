@@ -20,7 +20,9 @@ package org.anvilpowered.anvil.api.misc;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Key;
+import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 
@@ -135,5 +137,20 @@ public interface BindingExtensions {
 
     static <T> Key<T> getKey(TypeToken<T> typeToken) {
         return Key.get(getTypeLiteral(typeToken));
+    }
+
+    static <T> Provider<T> asInternalProvider(Class<T> clazz) {
+        return () -> Anvil.getEnvironment().getInjector()
+            .getInstance(clazz);
+    }
+
+    static <T> Provider<T> asInternalProvider(TypeLiteral<T> typeLiteral) {
+        return () -> Anvil.getEnvironment().getInjector()
+            .getInstance(Key.get(typeLiteral));
+    }
+
+    static <T> Provider<T> asInternalProvider(TypeToken<T> typeToken) {
+        return () -> Anvil.getEnvironment().getInjector()
+            .getInstance(BindingExtensions.getKey(typeToken));
     }
 }
