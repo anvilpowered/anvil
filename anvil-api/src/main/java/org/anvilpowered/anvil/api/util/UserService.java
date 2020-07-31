@@ -36,6 +36,8 @@ public interface UserService<TUser, TPlayer> {
 
     Optional<TPlayer> getPlayer(UUID userUUID);
 
+    Optional<TPlayer> getPlayer(TUser user);
+
     Collection<TPlayer> getOnlinePlayers();
 
     CompletableFuture<Optional<UUID>> getUUID(String userName);

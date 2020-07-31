@@ -52,6 +52,11 @@ public class SpongeUserService extends CommonUserService<User, Player> {
     }
 
     @Override
+    public Optional<Player> getPlayer(User user) {
+        return user.getPlayer();
+    }
+
+    @Override
     public Collection<Player> getOnlinePlayers() {
         return Sponge.getServer().getOnlinePlayers();
     }

@@ -50,6 +50,11 @@ public class SpigotUserService extends CommonUserService<Player, Player> {
     }
 
     @Override
+    public Optional<Player> getPlayer(Player player) {
+        return Optional.of(player);
+    }
+
+    @Override
     public Collection<Player> getOnlinePlayers() {
         return (Collection<Player>) Bukkit.getOnlinePlayers();
     }

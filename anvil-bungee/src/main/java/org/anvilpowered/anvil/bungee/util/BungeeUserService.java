@@ -50,6 +50,11 @@ public class BungeeUserService extends CommonUserService<ProxiedPlayer, ProxiedP
     }
 
     @Override
+    public Optional<ProxiedPlayer> getPlayer(ProxiedPlayer proxiedPlayer) {
+        return Optional.of(proxiedPlayer);
+    }
+
+    @Override
     public Collection<ProxiedPlayer> getOnlinePlayers() {
         return ProxyServer.getInstance().getPlayers();
     }
