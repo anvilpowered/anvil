@@ -18,8 +18,6 @@
 
 package org.anvilpowered.anvil.base.data.registry;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.data.key.Key;
@@ -29,7 +27,6 @@ import org.anvilpowered.anvil.api.data.registry.RegistryScope;
 import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,7 +44,7 @@ import java.util.stream.Collectors;
 public class BaseRegistry implements Registry {
 
     private final Map<Key<?>, Object> defaultMap, valueMap;
-    private final Table<RegistryScope, Integer, Collection<Runnable>> listeners;
+    private final Map<Integer, Map<Runnable, RegistryScope>> listeners;
     private Registry coreRegistry;
     @Nullable
     private String stringRepresentation;
@@ -55,7 +52,7 @@ public class BaseRegistry implements Registry {
     public BaseRegistry() {
         defaultMap = new HashMap<>();
         valueMap = new HashMap<>();
-        listeners = HashBasedTable.create(2, 3);
+        listeners = new HashMap<>();
     }
 
     @Override
@@ -192,7 +189,7 @@ public class BaseRegistry implements Registry {
 
         @Override
         public ListenerRegistrationEnd order(int order) {
-            this.order = 0;
+            this.order = order;
             return this;
         }
 
@@ -204,9 +201,8 @@ public class BaseRegistry implements Registry {
 
         @Override
         public void register() {
-            listeners.row(registryScope)
-                .computeIfAbsent(order, o -> new ArrayList<>())
-                .add(listener);
+            listeners.computeIfAbsent(order, o -> new HashMap<>())
+                .put(listener, registryScope);
         }
     }
 
@@ -220,11 +216,13 @@ public class BaseRegistry implements Registry {
     }
 
     protected final void loadOrdinal(int ordinal) {
-        final RegistryScope[] values = RegistryScope.values();
-        final int valueLength = values.length;
-        for (int i = ordinal; i < valueLength; i++) {
-            listeners.row(values[i]).forEach((n, l) -> l.forEach(Runnable::run));
-        }
+        listeners.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey())
+            .forEach(e -> e.getValue().forEach((r, c) -> {
+                if (ordinal <= c.ordinal()) {
+                    r.run();
+                }
+            }));
     }
 
     /**
