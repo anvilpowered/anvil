@@ -20,8 +20,8 @@ package org.anvilpowered.anvil.sponge.command;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.spongepowered.api.Sponge;
@@ -58,13 +58,13 @@ public class SpongeAnvilCommandNode
 
         subCommands.put(PLUGINS_ALIAS, CommandSpec.builder()
             .description(Text.of(PLUGINS_DESCRIPTION))
-            .permission(registry.getOrDefault(AnvilCoreKeys.PLUGINS_PERMISSION))
+            .permission(registry.getOrDefault(Keys.PLUGINS_PERMISSION))
             .executor(anvilPluginsCommand)
             .build());
 
         subCommands.put(RELOAD_ALIAS, CommandSpec.builder()
             .description(Text.of(RELOAD_DESCRIPTION))
-            .permission(registry.getOrDefault(AnvilCoreKeys.RELOAD_PERMISSION))
+            .permission(registry.getOrDefault(Keys.RELOAD_PERMISSION))
             .arguments(
                 GenericArguments.flags().flag("a", "-all").flag("r", "-regex")
                     .buildWith(GenericArguments.optional(

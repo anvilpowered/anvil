@@ -16,28 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.util;
+package org.anvilpowered.anvil.api.registry;
 
-import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.registry.Keys;
-import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
+public enum RegistryScope {
 
-import java.util.Optional;
-import java.util.UUID;
+    /**
+     * The annotated value persists only between deep reloads.
+     * <p>
+     * Use this scope for values that should be reloadable but not necessarily
+     * during normal operation of the plugin.
+     * </p>
+     */
+    DEEP,
 
-public class SpongeCurrentServerService implements CurrentServerService {
-
-    @Inject
-    protected Registry registry;
-
-    @Override
-    public Optional<String> getName(UUID userUUID) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
-
-    @Override
-    public Optional<String> getName(String userName) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
+    /**
+     * The annotated value persists only between normal reloads.
+     * This value is the default value for the {@link RegistryScoped} annotation.
+     * <p>
+     * Use this scope for
+     * </p>
+     */
+    DEFAULT,
 }

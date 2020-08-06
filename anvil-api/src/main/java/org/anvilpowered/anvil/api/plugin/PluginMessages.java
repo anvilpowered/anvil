@@ -16,28 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.util;
+package org.anvilpowered.anvil.api.plugin;
 
-import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.registry.Keys;
-import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
+import java.time.Instant;
 
-import java.util.Optional;
-import java.util.UUID;
+public interface PluginMessages<TString> {
 
-public class SpongeCurrentServerService implements CurrentServerService {
+    TString getBanMessage(String reason, Instant endUtc);
 
-    @Inject
-    protected Registry registry;
+    TString getMuteMessage(String reason, Instant endUtc);
 
-    @Override
-    public Optional<String> getName(UUID userUUID) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
-
-    @Override
-    public Optional<String> getName(String userName) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
+    TString getNoPermission();
 }

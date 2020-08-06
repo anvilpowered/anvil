@@ -16,28 +16,29 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.util;
+package org.anvilpowered.anvil.api.coremember;
 
-import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.registry.Keys;
-import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
+import org.anvilpowered.anvil.api.datastore.Manager;
 
-import java.util.Optional;
-import java.util.UUID;
-
-public class SpongeCurrentServerService implements CurrentServerService {
-
-    @Inject
-    protected Registry registry;
+public interface CoreMemberManager extends Manager<CoreMemberRepository<?, ?>> {
 
     @Override
-    public Optional<String> getName(UUID userUUID) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
+    default String getDefaultIdentifierSingularUpper() {
+        return "Core member";
     }
 
     @Override
-    public Optional<String> getName(String userName) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
+    default String getDefaultIdentifierPluralUpper() {
+        return "Core members";
+    }
+
+    @Override
+    default String getDefaultIdentifierSingularLower() {
+        return "core member";
+    }
+
+    @Override
+    default String getDefaultIdentifierPluralLower() {
+        return "core members";
     }
 }

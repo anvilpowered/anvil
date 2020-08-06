@@ -20,10 +20,10 @@ package org.anvilpowered.anvil.common.command;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
-import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
-import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
+import org.anvilpowered.anvil.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +51,7 @@ public class CommonAnvilPluginsCommand<TString, TCommandSource> {
 
     public void execute(TCommandSource source, String @Nullable [] context) {
         if (permissionService.hasPermission(source,
-            registry.getOrDefault(AnvilCoreKeys.PLUGINS_PERMISSION))) {
+            registry.getOrDefault(Keys.PLUGINS_PERMISSION))) {
             executeDirect(source);
         } else {
             textService.send(pluginMessages.getNoPermission(), source);

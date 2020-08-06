@@ -24,11 +24,11 @@ import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.TextComponent;
-import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
-import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 
 public class VelocityPlayerListener {
 

@@ -16,28 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.util;
+package org.anvilpowered.anvil.api.registry;
 
-import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.registry.Keys;
-import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
+public interface ConfigurationService extends Registry {
 
-import java.util.Optional;
-import java.util.UUID;
-
-public class SpongeCurrentServerService implements CurrentServerService {
-
-    @Inject
-    protected Registry registry;
-
-    @Override
-    public Optional<String> getName(UUID userUUID) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
-
-    @Override
-    public Optional<String> getName(String userName) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
+    /**
+     * Updates the config with values from the registry. Will only update the file if changes were made
+     *
+     * @return {@code true} if there were updated values to save and they were saved successfully
+     * otherwise {@code false}
+     */
+    boolean save();
 }

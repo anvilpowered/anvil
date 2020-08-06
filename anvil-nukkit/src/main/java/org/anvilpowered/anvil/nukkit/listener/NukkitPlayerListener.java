@@ -24,11 +24,11 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
-import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 
 public class NukkitPlayerListener implements Listener {
 

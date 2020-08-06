@@ -23,7 +23,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.bungee.AnvilBungee;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;

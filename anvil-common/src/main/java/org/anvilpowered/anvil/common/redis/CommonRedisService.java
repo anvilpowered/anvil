@@ -20,10 +20,10 @@ package org.anvilpowered.anvil.common.redis;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 import org.anvilpowered.anvil.api.redis.RedisService;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;

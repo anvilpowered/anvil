@@ -25,11 +25,11 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
-import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 
 public class BungeePlayerListener implements Listener {
 

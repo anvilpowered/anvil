@@ -19,8 +19,8 @@
 package org.anvilpowered.anvil.common.util;
 
 import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.core.model.coremember.CoreMember;
+import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
+import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.util.UserService;
 
 import java.util.Optional;

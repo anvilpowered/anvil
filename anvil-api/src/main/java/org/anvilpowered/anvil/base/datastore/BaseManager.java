@@ -26,11 +26,11 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
-import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.Manager;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Locale;

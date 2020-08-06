@@ -21,9 +21,7 @@ package org.anvilpowered.anvil.api.datastore;
 import com.google.inject.Inject;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.registry.Registry;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

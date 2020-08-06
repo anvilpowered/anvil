@@ -21,8 +21,8 @@ package org.anvilpowered.anvil.api;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
-import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
+import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.util.TextService;
 
 import java.util.Collection;

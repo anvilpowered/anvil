@@ -19,10 +19,10 @@
 package org.anvilpowered.anvil.sponge.listener;
 
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.core.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.entity.RestrictionService;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Cancellable;

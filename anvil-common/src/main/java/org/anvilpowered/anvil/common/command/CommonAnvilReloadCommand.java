@@ -21,11 +21,11 @@ package org.anvilpowered.anvil.common.command;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
-import org.anvilpowered.anvil.api.core.data.key.AnvilCoreKeys;
-import org.anvilpowered.anvil.api.core.plugin.PluginMessages;
-import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.misc.Named;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
+import org.anvilpowered.anvil.api.plugin.PluginMessages;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.jetbrains.annotations.Contract;
@@ -61,7 +61,7 @@ public class CommonAnvilReloadCommand<TString, TCommandSource> {
 
     public void execute(TCommandSource source, String[] context) {
         if (permissionService.hasPermission(source,
-            registry.getOrDefault(AnvilCoreKeys.RELOAD_PERMISSION))) {
+            registry.getOrDefault(Keys.RELOAD_PERMISSION))) {
             executeDirect(source, context);
         } else {
             textService.send(pluginMessages.getNoPermission(), source);

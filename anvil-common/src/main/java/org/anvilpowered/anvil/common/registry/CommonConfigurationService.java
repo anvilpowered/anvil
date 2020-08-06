@@ -16,28 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.util;
+package org.anvilpowered.anvil.common.registry;
 
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.registry.Keys;
-import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
+import com.google.inject.Singleton;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.anvilpowered.anvil.base.registry.BaseConfigurationService;
 
-import java.util.Optional;
-import java.util.UUID;
-
-public class SpongeCurrentServerService implements CurrentServerService {
+@Singleton
+public class CommonConfigurationService extends BaseConfigurationService {
 
     @Inject
-    protected Registry registry;
-
-    @Override
-    public Optional<String> getName(UUID userUUID) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
-
-    @Override
-    public Optional<String> getName(String userName) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
+    public CommonConfigurationService(
+        ConfigurationLoader<CommentedConfigurationNode> configLoader) {
+        super(configLoader);
+        withDataStoreCore();
+        withDefault();
+        withProxyMode();
     }
 }

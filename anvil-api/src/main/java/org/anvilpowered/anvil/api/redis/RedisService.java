@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.api.redis;
 
-import org.anvilpowered.anvil.api.data.registry.RegistryScoped;
+import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 

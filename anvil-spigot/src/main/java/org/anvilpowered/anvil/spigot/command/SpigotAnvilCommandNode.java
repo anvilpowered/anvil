@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.spigot.command;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.data.registry.Registry;
+import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.spigot.AnvilSpigot;
 import org.bukkit.command.CommandExecutor;

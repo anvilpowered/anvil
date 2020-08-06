@@ -18,11 +18,11 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
-import org.anvilpowered.anvil.api.data.key.Keys;
-import org.anvilpowered.anvil.api.data.registry.Registry;
 import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
+import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;

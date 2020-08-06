@@ -20,10 +20,10 @@ package org.anvilpowered.anvil.sponge.module;
 
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.command.CommandNode;
-import org.anvilpowered.anvil.common.data.config.CommonConfigurationService;
 import org.anvilpowered.anvil.common.module.CommonModule;
+import org.anvilpowered.anvil.common.registry.CommonConfigurationService;
 import org.anvilpowered.anvil.sponge.command.SpongeAnvilCommandNode;
-import org.anvilpowered.anvil.sponge.data.config.SpongeConfigurationService;
+import org.anvilpowered.anvil.sponge.registry.SpongeConfigurationService;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
 
