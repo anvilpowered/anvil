@@ -59,12 +59,12 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
     @Override
     public TextComponent deserialize(String text) {
-        return LegacyComponentSerializer.legacySection().deserialize(text);
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
     }
 
     @Override
     public String serialize(TextComponent text) {
-        return LegacyComponentSerializer.legacySection().serialize(text);
+        return LegacyComponentSerializer.legacyAmpersand().serialize(text);
     }
 
     @Override
