@@ -22,6 +22,7 @@ import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -30,6 +31,7 @@ import org.anvilpowered.anvil.api.registry.Key;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.RegistryScope;
 import org.anvilpowered.anvil.api.registry.RegistryScoped;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -70,6 +72,8 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
     private boolean configValuesEdited;
     private boolean isWithDataStore = false;
+    @Nullable
+    private ConfigurationOptions options;
 
     @Inject
     public BaseConfigurationService(ConfigurationLoader<CommentedConfigurationNode> configLoader) {
@@ -77,6 +81,10 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         verificationMap = new HashMap<>();
         nodeNameMap = new HashMap<>();
         nodeDescriptionMap = new HashMap<>();
+    }
+
+    protected void setOptions(@Nullable ConfigurationOptions options) {
+        this.options = options;
     }
 
     protected void withCore() {
@@ -289,7 +297,11 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     @RegistryScoped
     private void loadConfig() {
         try {
-            rootConfigurationNode = configLoader.load();
+            if (options == null) {
+                rootConfigurationNode = configLoader.load();
+            } else {
+                rootConfigurationNode = configLoader.load(options);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
