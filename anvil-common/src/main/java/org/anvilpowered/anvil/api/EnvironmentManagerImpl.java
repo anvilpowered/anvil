@@ -19,8 +19,8 @@
 package org.anvilpowered.anvil.api;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ class EnvironmentManagerImpl implements EnvironmentManager{
 
     @Override
     public Map<String, Environment> getEnvironments() {
-        return ImmutableMap.copyOf(environments);
+        return Collections.unmodifiableMap(environments);
     }
 
     @Override
