@@ -20,11 +20,15 @@ package org.anvilpowered.anvil.common.registry;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection;
+import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.base.registry.BaseConfigurationService;
 
 @Singleton
+@SuppressWarnings("UnstableApiUsage")
 public class CommonConfigurationService extends BaseConfigurationService {
 
     @Inject
@@ -34,5 +38,14 @@ public class CommonConfigurationService extends BaseConfigurationService {
         withDataStoreCore();
         withDefault();
         withProxyMode();
+        setName(Keys.TIME_ZONE, "server.timezone");
+        setDescription(Keys.TIME_ZONE,"\nThe server's timezone id. Use \"auto\" for the local system time, otherwise"
+            + "\nplease see https://nodatime.org/TimeZones (note that your system's available timezones may differ)."
+            + "\nThis option is useful if your server machine and community are based in different timezones."
+        );
+        TypeSerializerCollection serializers = TypeSerializerCollection.defaults().newChild();
+        serializers.register(Keys.TIME_ZONE, new ZoneIdSerializer());
+        ConfigurationOptions options = ConfigurationOptions.defaults();
+        setOptions(options.withSerializers(serializers));
     }
 }

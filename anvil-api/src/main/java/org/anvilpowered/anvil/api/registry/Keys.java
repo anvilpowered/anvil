@@ -23,8 +23,10 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.time.ZoneId;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.TimeZone;
 
 public final class Keys {
 
@@ -121,6 +123,8 @@ public final class Keys {
 
     public static final Key<String> SERVER_NAME = new Key<String>("SERVER_NAME", "server") {
     };
+    public static final Key<ZoneId> TIME_ZONE = new Key<ZoneId>("TIME_ZONE", ZoneId.systemDefault()) {
+    };
     public static final Key<Boolean> PROXY_MODE = new Key<Boolean>("PROXY_MODE", false) {
     };
     public static final Key<String> BASE_SCAN_PACKAGE = new Key<String>("BASE_SCAN_PACKAGE", "org.anvilpowered.anvil.common.model") {
@@ -178,6 +182,7 @@ public final class Keys {
     static {
         startRegistration(GLOBAL_NAMESPACE)
             .register(SERVER_NAME)
+            .register(TIME_ZONE)
             .register(PROXY_MODE)
             .register(BASE_SCAN_PACKAGE)
             .register(CACHE_INVALIDATION_INTERVAL_SECONDS)
