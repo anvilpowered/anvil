@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id("org.jetbrains.kotlin.jvm") version "${kotlin_version}"
 }
 
 jar.enabled = false // we only want shadowJar
@@ -20,9 +21,9 @@ dependencies {
 
     implementation guice
     implementation javasisst
-    implementation kotlin_reflect
-    implementation kotlin_stdlib
-    implementation kotlin_stdlib8
+    implementation(kotlin_reflect + ":" + kotlin_version)
+    implementation(kotlin_stdlib + ":" + kotlin_version)
+    implementation(kotlin_stdlib8 + ":" + kotlin_version)
     implementation kotlinx_coroutines
     implementation kotlinx_serialization
     implementation microutils_logging
@@ -72,3 +73,14 @@ artifacts {
     archives shadowJar
 }
 
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
