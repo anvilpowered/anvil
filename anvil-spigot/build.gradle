@@ -22,9 +22,9 @@ dependencies {
     implementation configurate_hocon
     implementation guice
     implementation javasisst
-    implementation kotlin_reflect
-    implementation kotlin_stdlib
-    implementation kotlin_stdlib8
+    implementation(kotlin_reflect + ":" + kotlin_version)
+    implementation(kotlin_stdlib + ":" + kotlin_version)
+    implementation(kotlin_stdlib8 + ":" + kotlin_version)
     implementation kotlinx_coroutines
     implementation kotlinx_serialization
     implementation microutils_logging
