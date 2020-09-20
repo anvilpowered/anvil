@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.base.registry;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.registry.Key;
@@ -26,6 +27,7 @@ import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.registry.RegistryScope;
 import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,6 +44,9 @@ import java.util.stream.Collectors;
 @Singleton
 @SuppressWarnings("unchecked")
 public class BaseRegistry implements Registry {
+
+    @Inject
+    protected Logger logger;
 
     private final Map<Key<?>, Object> defaultMap, valueMap;
     private final Map<Integer, Map<Runnable, RegistryScope>> listeners;

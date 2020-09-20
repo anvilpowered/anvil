@@ -267,7 +267,11 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         if (configValuesEdited) {
             for (Map.Entry<Key<?>, String> entry : nodeNameMap.entrySet()) {
                 CommentedConfigurationNode node = fromString(entry.getValue());
-                node.setValue(getUnsafe(entry.getKey()));
+                try {
+                    setNodeValue(node, entry.getKey());
+                } catch (ObjectMappingException e) {
+                    logger.error("Unable to set config value for " + entry.getKey(), e);
+                }
             }
             try {
                 configLoader.save(rootConfigurationNode);
@@ -289,9 +293,12 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         return node;
     }
 
-    private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key)
-        throws ObjectMappingException {
+    private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
         node.setValue(key, getDefault(key));
+    }
+
+    private <T> void setNodeValue(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
+        node.setValue(key, getOrDefault(key));
     }
 
     @RegistryScoped
