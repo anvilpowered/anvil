@@ -45,7 +45,6 @@ public class VelocityAnvilCommandNode
     private ProxyServer proxyServer;
 
     private static final String HELP_COMMAND_PROXY = "/anvilv help";
-    private static final String ROOT_COMMAND_PROXY = "anvilv";
 
     @Inject
     public VelocityAnvilCommandNode(Registry registry) {
@@ -67,10 +66,5 @@ public class VelocityAnvilCommandNode
             "av", "anvilv:av", "anvilv:anvilv");
 
         proxyServer.getCommandManager().register("callback", callbackCommand, "anvilv:callback");
-    }
-
-    @Override
-    public String getName() {
-        return ROOT_COMMAND_PROXY;
     }
 }

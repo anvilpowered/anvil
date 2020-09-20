@@ -20,11 +20,13 @@ package org.anvilpowered.anvil.common.command;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -91,6 +93,26 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
 
     private static final String ERROR_MESSAGE = "Anvil command has not been loaded yet";
 
+    @Nullable
+    private static String alias;
+
+    public static String getAlias() {
+        if (alias == null) {
+            switch (Anvil.getPlatform().getName()) {
+                case "bungee":
+                    alias = "anvilb";
+                    break;
+                case "velocity":
+                    alias = "anvilv";
+                    break;
+                default:
+                    alias = "anvil";
+                    break;
+            }
+        }
+        return alias;
+    }
+
     @Override
     public Map<List<String>, Function<TCommandSource, String>> getDescriptions() {
         return Preconditions.checkNotNull(descriptions, ERROR_MESSAGE);
@@ -108,6 +130,6 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
 
     @Override
     public String getName() {
-        return AnvilPluginInfo.id;
+        return getAlias();
     }
 }
