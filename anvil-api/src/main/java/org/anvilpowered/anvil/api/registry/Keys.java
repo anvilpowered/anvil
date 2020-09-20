@@ -20,10 +20,13 @@ package org.anvilpowered.anvil.api.registry;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Table;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
 
 public final class Keys {
@@ -33,6 +36,9 @@ public final class Keys {
 
     private static final Table<String, String, Key<?>> keys
         = HashBasedTable.create();
+
+    private static final Map<String, Map<String, Key<?>>> localAndGlobalCache
+        = new HashMap<>();
 
     private Keys() {
         throw new AssertionError("**boss music** No instance for you!");
@@ -99,6 +105,11 @@ public final class Keys {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T> Optional<Key<T>> resolve(String name, String nameSpace) {
+        return Optional.ofNullable((Key<T>) keys.get(nameSpace, name));
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T> Key<T> resolveUnsafe(String name) {
         return (Key<T>) resolve(name).orElseThrow(() ->
             new IllegalArgumentException("Could not resolve key " + name));
@@ -117,6 +128,29 @@ public final class Keys {
         } else {
             return Optional.empty();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<Key<T>> resolveLocalAndGlobal(String name, String nameSpace) {
+        @Nullable
+        Key<T> candidate = (Key<T>) keys.get(nameSpace, name);
+        if (candidate != null) {
+            return Optional.of(candidate);
+        }
+        return Optional.ofNullable((Key<T>) keys.get(GLOBAL_NAMESPACE, name));
+    }
+
+    public static Map<String, Key<?>> getAll(String nameSpace) {
+        Map<String, Key<?>> result = localAndGlobalCache.get(nameSpace);
+        if (result != null) {
+            return result;
+        }
+        result = ImmutableMap.<String, Key<?>>builder()
+            .putAll(keys.row(nameSpace))
+            .putAll(keys.row(GLOBAL_NAMESPACE))
+            .build();
+        localAndGlobalCache.put(nameSpace, result);
+        return result;
     }
 
     public static final Key<String> SERVER_NAME = new Key<String>("SERVER_NAME", "server") {
