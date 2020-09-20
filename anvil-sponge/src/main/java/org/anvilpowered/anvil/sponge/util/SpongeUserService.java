@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.sponge.util;
 
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.common.util.CommonUserService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -30,6 +31,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class SpongeUserService extends CommonUserService<User, Player> {
+
+    @Inject
+    public SpongeUserService() {
+        super(User.class);
+    }
 
     @Override
     public Optional<User> get(String userName) {

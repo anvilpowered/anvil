@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.nukkit.util;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.common.util.CommonUserService;
 
 import java.util.Collection;
@@ -28,6 +29,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class NukkitUserService extends CommonUserService<Player, Player> {
+
+    @Inject
+    public NukkitUserService() {
+        super(Player.class);
+    }
 
     @Override
     public Optional<Player> get(String userName) {

@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.spigot.util;
 
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.common.util.CommonUserService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -28,6 +29,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class SpigotUserService extends CommonUserService<Player, Player> {
+
+    @Inject
+    public SpigotUserService() {
+        super(Player.class);
+    }
 
     @Override
     public Optional<Player> get(String userName) {

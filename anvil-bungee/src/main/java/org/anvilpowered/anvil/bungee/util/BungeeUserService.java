@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.bungee.util;
 
+import com.google.inject.Inject;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.anvilpowered.anvil.common.util.CommonUserService;
@@ -28,6 +29,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class BungeeUserService extends CommonUserService<ProxiedPlayer, ProxiedPlayer> {
+
+    @Inject
+    public BungeeUserService() {
+        super(ProxiedPlayer.class);
+    }
 
     @Override
     public Optional<ProxiedPlayer> get(String userName) {

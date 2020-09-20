@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.common.util;
 
 import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.util.UserService;
 
@@ -27,20 +26,35 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+@SuppressWarnings("unchecked")
 public abstract class CommonUserService<TUser, TPlayer> implements UserService<TUser, TPlayer> {
 
-    protected CoreMemberManager coreMemberManager
-        = Anvil.getServiceManager().provide(CoreMemberManager.class);
+    private static final UUID constant = UUID.nameUUIDFromBytes(new byte[0]);
+
+    private final Class<TUser> userClass;
+
+    protected CommonUserService(Class<TUser> userClass) {
+        this.userClass = userClass;
+    }
 
     @Override
     public CompletableFuture<Optional<UUID>> getUUID(String userName) {
-        return coreMemberManager.getPrimaryComponent()
+        return Anvil.getCoreMemberRepository()
             .getOneForUser(userName).thenApplyAsync(c -> c.map(CoreMember::getUserUUID));
     }
 
     @Override
     public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
-        return coreMemberManager.getPrimaryComponent()
+        return Anvil.getCoreMemberRepository()
             .getOneForUser(userUUID).thenApplyAsync(c -> c.map(CoreMember::getUserName));
+    }
+
+    @Override
+    public UUID getUUIDSafe(Object object) {
+        if (userClass.isInstance(object)) {
+            return getUUID((TUser) object);
+        } else {
+            return constant;
+        }
     }
 }

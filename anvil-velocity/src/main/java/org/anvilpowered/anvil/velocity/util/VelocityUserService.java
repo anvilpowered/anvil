@@ -33,6 +33,11 @@ public class VelocityUserService extends CommonUserService<Player, Player> {
     @Inject
     private ProxyServer proxyServer;
 
+    @Inject
+    public VelocityUserService() {
+        super(Player.class);
+    }
+
     @Override
     public Optional<Player> get(String userName) {
         return proxyServer.getPlayer(userName);

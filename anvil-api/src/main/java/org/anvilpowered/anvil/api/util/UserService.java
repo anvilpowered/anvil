@@ -46,5 +46,11 @@ public interface UserService<TUser, TPlayer> {
 
     UUID getUUID(TUser user);
 
+    /**
+     * If the provided object has a {@link UUID}, return it. Otherwise return a constant UUID that is
+     * the same for all objects without a UUID.
+     */
+    UUID getUUIDSafe(Object object);
+
     String getUserName(TUser user);
 }
