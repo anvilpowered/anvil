@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.base.registry.BaseConfigurationService;
 
 @Singleton
@@ -34,5 +35,8 @@ public class CommonConfigurationService extends BaseConfigurationService {
         withDataStoreCore();
         withDefault();
         withProxyMode();
+        setName(Keys.REGEDIT_ALLOW_SENSITIVE, "server.regeditAllowSensitive");
+        setDescription(Keys.REGEDIT_ALLOW_SENSITIVE,"\nWhether the regedit command should have access to sensitive"
+            + " settings such as connection details.");
     }
 }

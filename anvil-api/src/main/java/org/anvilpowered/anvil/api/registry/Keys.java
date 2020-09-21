@@ -153,66 +153,110 @@ public final class Keys {
         return result;
     }
 
-    public static final Key<String> SERVER_NAME = new Key<String>("SERVER_NAME", "server") {
-    };
-    public static final Key<Boolean> PROXY_MODE = new Key<Boolean>("PROXY_MODE", false) {
-    };
-    public static final Key<String> BASE_SCAN_PACKAGE = new Key<String>("BASE_SCAN_PACKAGE", "org.anvilpowered.anvil.common.model") {
-    };
-    public static final Key<Integer> CACHE_INVALIDATION_INTERVAL_SECONDS = new Key<Integer>("CACHE_INVALIDATION_INTERVAL_SECONDS", 30) {
-    };
-    public static final Key<Integer> CACHE_INVALIDATION_TIMOUT_SECONDS = new Key<Integer>("CACHE_INVALIDATION_TIMOUT_SECONDS", 300) {
-    };
-    public static final Key<Boolean> USE_SHARED_ENVIRONMENT = new Key<Boolean>("USE_SHARED_ENVIRONMENT", false) {
-    };
-    public static final Key<Boolean> USE_SHARED_CREDENTIALS = new Key<Boolean>("USE_SHARED_CREDENTIALS", false) {
-    };
-    public static final Key<String> DATA_DIRECTORY = new Key<String>("DATA_DIRECTORY", "anvil") {
-    };
-    public static final Key<String> DATA_STORE_NAME = new Key<String>("DATA_STORE_NAME", "xodus") {
-    };
-    public static final Key<String> MONGODB_CONNECTION_STRING = new Key<String>(
-        "MONGODB_CONNECTION_STRING",
-        "mongodb://admin:password@localhost:27017/anvil?authSource=admin") {
-    };
-    public static final Key<String> MONGODB_HOSTNAME = new Key<String>("MONGODB_HOSTNAME", "localhost") {
-    };
-    public static final Key<Integer> MONGODB_PORT = new Key<Integer>("MONGODB_PORT", 27017) {
-    };
-    public static final Key<String> MONGODB_DBNAME = new Key<String>("MONGODB_DBNAME", "anvil") {
-    };
-    public static final Key<String> MONGODB_USERNAME = new Key<String>("MONGODB_USERNAME", "admin") {
-    };
-    public static final Key<String> MONGODB_PASSWORD = new Key<String>("MONGODB_PASSWORD", "password") {
-    };
-    public static final Key<String> MONGODB_AUTH_DB = new Key<String>("MONGODB_AUTH_DB", "admin") {
-    };
-    public static final Key<Boolean> MONGODB_USE_AUTH = new Key<Boolean>("MONGODB_USE_AUTH", false) {
-    };
-    public static final Key<Boolean> MONGODB_USE_SRV = new Key<Boolean>("MONGODB_USE_SRV", false) {
-    };
-    public static final Key<Boolean> MONGODB_USE_CONNECTION_STRING = new Key<Boolean>("MONGODB_USE_CONNECTION_STRING", false) {
-    };
-    public static final Key<String> REDIS_HOSTNAME = new Key<String>("REDIS_HOSTNAME", "localhost") {
-    };
-    public static final Key<Integer> REDIS_PORT = new Key<Integer>("REDIS_PORT", 6379) {
-    };
-    public static final Key<String> REDIS_PASSWORD = new Key<String>("REDIS_PASSWORD", "username") {
-    };
-    public static final Key<Boolean> REDIS_USE_AUTH = new Key<Boolean>("REDIS_USE_AUTH", false) {
-    };
+    public static final Key<String> SERVER_NAME =
+        Key.builder("SERVER_NAME", "server")
+            .build();
+    public static final Key<Boolean> PROXY_MODE =
+        Key.builder("PROXY_MODE", false)
+            .build();
+    public static final Key<Boolean> REGEDIT_ALLOW_SENSITIVE =
+        Key.builder("REGEDIT_ALLOW_SENSITIVE", false)
+            .userImmutable()
+            .build();
+    public static final Key<String> BASE_SCAN_PACKAGE =
+        Key.builder("BASE_SCAN_PACKAGE", "org.anvilpowered.anvil.common.model")
+            .userImmutable()
+            .build();
+    public static final Key<Integer> CACHE_INVALIDATION_INTERVAL_SECONDS =
+        Key.builder("CACHE_INVALIDATION_INTERVAL_SECONDS", 30)
+            .build();
+    public static final Key<Integer> CACHE_INVALIDATION_TIMOUT_SECONDS =
+        Key.builder("CACHE_INVALIDATION_TIMOUT_SECONDS", 300)
+            .build();
+    public static final Key<Boolean> USE_SHARED_ENVIRONMENT =
+        Key.builder("USE_SHARED_ENVIRONMENT", false)
+            .build();
+    public static final Key<Boolean> USE_SHARED_CREDENTIALS =
+        Key.builder("USE_SHARED_CREDENTIALS", false)
+            .build();
+    public static final Key<String> DATA_DIRECTORY =
+        Key.builder("DATA_DIRECTORY", "anvil")
+            .build();
+    public static final Key<String> DATA_STORE_NAME =
+        Key.builder("DATA_STORE_NAME", "xodus")
+            .build();
+    public static final Key<String> MONGODB_CONNECTION_STRING =
+        Key.builder("MONGODB_CONNECTION_STRING", "mongodb://admin:password@localhost:27017/anvil?authSource=admin")
+            .sensitive()
+            .build();
+    public static final Key<String> MONGODB_HOSTNAME =
+        Key.builder("MONGODB_HOSTNAME", "localhost")
+            .sensitive()
+            .build();
+    public static final Key<Integer> MONGODB_PORT =
+        Key.builder("MONGODB_PORT", 27017)
+            .sensitive()
+            .build();
+    public static final Key<String> MONGODB_DBNAME =
+        Key.builder("MONGODB_DBNAME", "anvil")
+            .sensitive()
+            .build();
+    public static final Key<String> MONGODB_USERNAME =
+        Key.builder("MONGODB_USERNAME", "admin")
+            .sensitive()
+            .build();
+    public static final Key<String> MONGODB_PASSWORD =
+        Key.builder("MONGODB_PASSWORD", "password")
+            .sensitive()
+            .build();
+    public static final Key<String> MONGODB_AUTH_DB =
+        Key.builder("MONGODB_AUTH_DB", "admin")
+            .sensitive()
+            .build();
+    public static final Key<Boolean> MONGODB_USE_AUTH =
+        Key.builder("MONGODB_USE_AUTH", false)
+            .sensitive()
+            .build();
+    public static final Key<Boolean> MONGODB_USE_SRV =
+        Key.builder("MONGODB_USE_SRV", false)
+            .sensitive()
+            .build();
+    public static final Key<Boolean> MONGODB_USE_CONNECTION_STRING =
+        Key.builder("MONGODB_USE_CONNECTION_STRING", false)
+            .sensitive()
+            .build();
+    public static final Key<String> REDIS_HOSTNAME =
+        Key.builder("REDIS_HOSTNAME", "localhost")
+            .sensitive()
+            .build();
+    public static final Key<Integer> REDIS_PORT =
+        Key.builder("REDIS_PORT", 6379)
+            .sensitive()
+            .build();
+    public static final Key<String> REDIS_PASSWORD =
+        Key.builder("REDIS_PASSWORD", "username")
+            .sensitive()
+            .build();
+    public static final Key<Boolean> REDIS_USE_AUTH =
+        Key.builder("REDIS_USE_AUTH", false)
+            .sensitive()
+            .build();
 
-    public static final Key<String> PLUGINS_PERMISSION
-        = new Key<String>("PLUGINS_PERMISSION", "anvil.admin.plugins") {
-    };
-    public static final Key<String> RELOAD_PERMISSION
-        = new Key<String>("RELOAD_PERMISSION", "anvil.admin.reload") {
-    };
+    public static final Key<String> PLUGINS_PERMISSION =
+        Key.builder("PLUGINS_PERMISSION", "anvil.admin.plugins")
+            .build();
+    public static final Key<String> REGEDIT_PERMISSION =
+        Key.builder("REGEDIT_PERMISSION", "anvil.admin.regedit")
+            .build();
+    public static final Key<String> RELOAD_PERMISSION =
+        Key.builder("RELOAD_PERMISSION", "anvil.admin.reload")
+            .build();
 
     static {
         startRegistration(GLOBAL_NAMESPACE)
             .register(SERVER_NAME)
             .register(PROXY_MODE)
+            .register(REGEDIT_ALLOW_SENSITIVE)
             .register(BASE_SCAN_PACKAGE)
             .register(CACHE_INVALIDATION_INTERVAL_SECONDS)
             .register(CACHE_INVALIDATION_TIMOUT_SECONDS)
@@ -235,6 +279,7 @@ public final class Keys {
 
         startRegistration("anvil")
             .register(PLUGINS_PERMISSION)
+            .register(REGEDIT_PERMISSION)
             .register(RELOAD_PERMISSION)
         ;
     }
