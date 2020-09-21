@@ -112,6 +112,7 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
             }
             environment.setInjector(injector);
             if ("anvil".equals(environment.getName())) {
+                Anvil.environment = environment;
                 ((ServiceManagerImpl) Anvil.getServiceManager())
                     .setInjector(injector);
             }

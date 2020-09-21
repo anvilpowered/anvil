@@ -32,10 +32,4 @@ public class AnvilImpl extends Anvil {
     protected void applyToBuilder(Environment.Builder builder) {
         builder.withRootCommand();
     }
-
-    @Override
-    protected void whenReady(Environment environment) {
-        super.whenReady(environment);
-        Anvil.environment = environment;
-    }
 }
