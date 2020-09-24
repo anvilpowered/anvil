@@ -34,6 +34,7 @@ public class CommonTimeFormatService implements TimeFormatService {
 
     private static final long SECONDS_IN_YEAR = 31536000;
     private static final long SECONDS_IN_MONTH = 2628000;
+    private static final long SECONDS_IN_WEEK = 604800;
     private static final long SECONDS_IN_DAY = 86400;
     private static final long SECONDS_IN_HOUR = 3600;
     private static final long SECONDS_IN_MINUTE = 60;
@@ -50,6 +51,7 @@ public class CommonTimeFormatService implements TimeFormatService {
     private static final Pattern timePattern = Pattern.compile(
         "\\s*((?<years>-?[0-9]*)\\s*[yY])?" +
             "\\s*((?<months>-?[0-9]*)\\s*M)?" +
+            "\\s*((?<weeks>-?[0-9]*)\\s*[wW])?" +
             "\\s*((?<days>-?[0-9]*)\\s*[dD])?" +
             "\\s*((?<hours>-?[0-9]*)\\s*[hH])?" +
             "\\s*((?<minutes>-?[0-9]*)\\s*m)?" +
@@ -66,6 +68,8 @@ public class CommonTimeFormatService implements TimeFormatService {
             .map(g -> Long.parseLong(g) * SECONDS_IN_YEAR).orElse(0L)
             + Optional.ofNullable(matcher.group("months"))
             .map(g -> Long.parseLong(g) * SECONDS_IN_MONTH).orElse(0L)
+            + Optional.ofNullable(matcher.group("weeks"))
+            .map(g -> Long.parseLong(g) * SECONDS_IN_WEEK).orElse(0L)
             + Optional.ofNullable(matcher.group("days"))
             .map(g -> Long.parseLong(g) * SECONDS_IN_DAY).orElse(0L)
             + Optional.ofNullable(matcher.group("hours"))
@@ -196,6 +200,8 @@ public class CommonTimeFormatService implements TimeFormatService {
             seconds -= SECONDS_IN_YEAR * years;
             long months = seconds / SECONDS_IN_MONTH;
             seconds -= SECONDS_IN_MONTH * months;
+            long weeks = seconds / SECONDS_IN_WEEK;
+            seconds -= SECONDS_IN_WEEK * weeks;
             long days = seconds / SECONDS_IN_DAY;
             seconds -= SECONDS_IN_DAY * days;
             long hours = seconds / SECONDS_IN_HOUR;
@@ -213,6 +219,13 @@ public class CommonTimeFormatService implements TimeFormatService {
             }
             if (months != 0 && units <= maxUnits) {
                 String t = months + (months == 1 ? " month, " : " months, ");
+                if (s.length() + t.length() <= maxCharacters) {
+                    s.append(t);
+                    ++units;
+                }
+            }
+            if (weeks != 0 && units <= maxUnits) {
+                String t = weeks + (weeks == 1 ? " week, " : " weeks, ");
                 if (s.length() + t.length() <= maxCharacters) {
                     s.append(t);
                     ++units;
