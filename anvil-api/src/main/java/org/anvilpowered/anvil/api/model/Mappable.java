@@ -18,7 +18,8 @@
 
 package org.anvilpowered.anvil.api.model;
 
-import java.io.ByteArrayOutputStream;
+import jetbrains.exodus.util.LightByteArrayOutputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
@@ -54,7 +55,7 @@ public interface Mappable<T> {
 
     static byte[] serializeUnsafe(Object object) throws IOException {
         try (
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            LightByteArrayOutputStream baos = new LightByteArrayOutputStream();
             ObjectOutput oos = new ObjectOutputStream(baos)
         ) {
             oos.writeObject(object);
