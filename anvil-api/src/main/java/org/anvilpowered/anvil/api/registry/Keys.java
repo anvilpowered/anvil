@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Table;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -157,6 +158,13 @@ public final class Keys {
         Key.builder(TypeTokens.STRING)
             .name("SERVER_NAME")
             .fallback("server")
+            .build();
+    public static final Key<ZoneId> TIME_ZONE =
+        Key.builder(TypeTokens.ZONE_ID)
+            .name("TIME_ZONE")
+            .fallback(ZoneId.systemDefault())
+            .parser(ZoneIdSerializer::parse)
+            .toStringer(ZoneIdSerializer::toString)
             .build();
     public static final Key<Boolean> PROXY_MODE =
         Key.builder(TypeTokens.BOOLEAN)
@@ -309,6 +317,7 @@ public final class Keys {
     static {
         startRegistration(GLOBAL_NAMESPACE)
             .register(SERVER_NAME)
+            .register(TIME_ZONE)
             .register(PROXY_MODE)
             .register(REGEDIT_ALLOW_SENSITIVE)
             .register(BASE_SCAN_PACKAGE)

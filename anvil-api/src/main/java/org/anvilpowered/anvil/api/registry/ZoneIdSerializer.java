@@ -18,19 +18,23 @@
 
 package org.anvilpowered.anvil.api.registry;
 
-import com.google.common.reflect.TypeToken;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.ZoneId;
 
-@SuppressWarnings("UnstableApiUsage")
-public final class TypeTokens {
+public class ZoneIdSerializer {
 
-    private TypeTokens() {
-        throw new AssertionError("**boss music** No instance for you!");
+    private static final String AUTO = "auto";
+
+    public static ZoneId parse(@Nullable String input) {
+        if (input == null || AUTO.equals(input)) {
+            return ZoneId.systemDefault();
+        } else {
+            return ZoneId.of(input);
+        }
     }
 
-    public static final TypeToken<Boolean> BOOLEAN = TypeToken.of(Boolean.class);
-    public static final TypeToken<Integer> INTEGER = TypeToken.of(Integer.class);
-    public static final TypeToken<String> STRING = TypeToken.of(String.class);
-    public static final TypeToken<ZoneId> ZONE_ID = TypeToken.of(ZoneId.class);
+    public static String toString(@Nullable ZoneId zoneId) {
+        return zoneId == null || zoneId.equals(ZoneId.systemDefault()) ? AUTO : zoneId.getId();
+    }
 }

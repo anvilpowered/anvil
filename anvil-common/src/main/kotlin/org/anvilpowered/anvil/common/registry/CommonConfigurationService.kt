@@ -35,8 +35,14 @@ open class CommonConfigurationService @Inject constructor(
         withDefault()
         withProxyMode()
         setName(Keys.REGEDIT_ALLOW_SENSITIVE, "server.regeditAllowSensitive")
+        setName(Keys.TIME_ZONE, "server.timezone")
         setDescription(Keys.REGEDIT_ALLOW_SENSITIVE, """
 Whether the regedit command should have access to sensitive settings such as connection details.
+""")
+        setDescription(Keys.TIME_ZONE, """
+The server's timezone id. Use "auto" for the local system time, otherwise
+please see https://nodatime.org/TimeZones (note that your system's available timezones may differ).
+This option is useful if your server machine and community are based in different timezones.
 """)
         val serializers = TypeSerializerCollection.defaults().newChild()
         serializers.register(Keys.TIME_ZONE.type, CommonZoneIdSerializer())

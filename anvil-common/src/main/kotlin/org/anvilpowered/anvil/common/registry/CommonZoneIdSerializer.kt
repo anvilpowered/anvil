@@ -16,21 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.registry;
+package org.anvilpowered.anvil.common.registry
 
-import com.google.common.reflect.TypeToken;
+import com.google.common.reflect.TypeToken
+import ninja.leaping.configurate.ConfigurationNode
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer
+import org.anvilpowered.anvil.api.registry.ZoneIdSerializer
+import java.time.ZoneId
 
-import java.time.ZoneId;
+@Suppress("UnstableApiUsage")
+class CommonZoneIdSerializer : ZoneIdSerializer(), TypeSerializer<ZoneId> {
 
-@SuppressWarnings("UnstableApiUsage")
-public final class TypeTokens {
-
-    private TypeTokens() {
-        throw new AssertionError("**boss music** No instance for you!");
+    override fun deserialize(type: TypeToken<*>, node: ConfigurationNode): ZoneId = parse(node.string)
+    override fun serialize(type: TypeToken<*>, zoneId: ZoneId?, node: ConfigurationNode) {
+        node.value = toString(zoneId)
     }
-
-    public static final TypeToken<Boolean> BOOLEAN = TypeToken.of(Boolean.class);
-    public static final TypeToken<Integer> INTEGER = TypeToken.of(Integer.class);
-    public static final TypeToken<String> STRING = TypeToken.of(String.class);
-    public static final TypeToken<ZoneId> ZONE_ID = TypeToken.of(ZoneId.class);
 }
