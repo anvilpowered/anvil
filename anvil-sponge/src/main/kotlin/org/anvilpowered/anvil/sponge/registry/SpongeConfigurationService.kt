@@ -15,21 +15,16 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.sponge.registry
 
-package org.anvilpowered.anvil.sponge.registry;
+import com.google.inject.Inject
+import com.google.inject.Singleton
+import ninja.leaping.configurate.commented.CommentedConfigurationNode
+import ninja.leaping.configurate.loader.ConfigurationLoader
+import org.anvilpowered.anvil.common.registry.CommonConfigurationService
+import org.spongepowered.api.config.DefaultConfig
 
-import com.google.inject.Inject;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import org.anvilpowered.anvil.common.registry.CommonConfigurationService;
-import org.spongepowered.api.config.DefaultConfig;
-
-public class SpongeConfigurationService extends CommonConfigurationService {
-
-    @Inject
-    public SpongeConfigurationService(
-        @DefaultConfig(sharedRoot = false)
-            ConfigurationLoader<CommentedConfigurationNode> configLoader) {
-        super(configLoader);
-    }
-}
+@Singleton
+class SpongeConfigurationService @Inject constructor(
+    @DefaultConfig(sharedRoot = false) configLoader: ConfigurationLoader<CommentedConfigurationNode>
+) : CommonConfigurationService(configLoader)
