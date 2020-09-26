@@ -294,11 +294,11 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     }
 
     private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
-        node.setValue(key, getDefault(key));
+        node.setValue(key.getType(), getDefault(key));
     }
 
     private <T> void setNodeValue(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
-        node.setValue(key, getOrDefault(key));
+        node.setValue(key.getType(), getOrDefault(key));
     }
 
     @RegistryScoped
@@ -347,24 +347,30 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         }
     }
 
+    @Nullable
+    private <T> T initConfigValue(Key<T> key, CommentedConfigurationNode node, boolean[] modified) {
+        return initConfigValue(key, key.getType(), node, modified);
+    }
+
     /**
      * @param typeToken {@link TypeToken} of node to parse. Pass a {@link Key} to save that value to the registry
      * @param node      {@link CommentedConfigurationNode} to get value from
      */
-    private <T> T initConfigValue(TypeToken<T> typeToken, CommentedConfigurationNode node, boolean[] modified) {
+    @Nullable
+    private <T> T initConfigValue(@Nullable Key<T> key, TypeToken<T> typeToken, CommentedConfigurationNode node, boolean[] modified) {
 
         // it ain't pretty but it works
 
-        if (typeToken instanceof Key && typeToken.isSubtypeOf(List.class)) {
+        if (key != null && typeToken.isSubtypeOf(List.class)) {
 
             // *** unwrap list *** //
             try {
 
                 Method getMethod = List.class.getMethod("get", int.class);
                 Invokable<? extends T, ?> invokable = typeToken.method(getMethod);
-                T list = (T) verify(verificationMap.get(typeToken), node.getList(invokable.getReturnType()), node, modified);
+                T list = (T) verify(verificationMap.get(key), node.getList(invokable.getReturnType()), node, modified);
 
-                set((Key<T>) typeToken, list);
+                set(key, list);
 
                 return list;
 
@@ -386,11 +392,10 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
                 for (Map.Entry<?, ? extends CommentedConfigurationNode> entry : node.getChildrenMap().entrySet()) {
                     // here comes the recursion
-                    result.put(entry.getValue().getKey(), initConfigValue(subType, entry.getValue(), modified));
+                    result.put(entry.getValue().getKey(), initConfigValue(null, subType, entry.getValue(), modified));
                 }
 
-                if (typeToken instanceof Key) {
-                    Key<T> key = (Key<T>) typeToken;
+                if (key != null) {
                     T map = (T) verify(verificationMap.get(key), result, node, modified);
                     set(key, map);
                 }
@@ -401,10 +406,9 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
                 e.printStackTrace();
                 return null;
             }
-        } else if (typeToken instanceof Key) {
+        } else if (key != null) {
             try {
                 T value = node.getValue(typeToken);
-                Key<T> key = (Key<T>) typeToken;
                 set(key, (T) verify(verificationMap.get(key), value, node, modified));
                 return value;
             } catch (ClassCastException | ObjectMappingException e) {

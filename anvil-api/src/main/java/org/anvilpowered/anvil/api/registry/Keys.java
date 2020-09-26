@@ -154,102 +154,156 @@ public final class Keys {
     }
 
     public static final Key<String> SERVER_NAME =
-        Key.builder("SERVER_NAME", "server")
+        Key.builder(TypeTokens.STRING)
+            .name("SERVER_NAME")
+            .fallback("server")
             .build();
     public static final Key<Boolean> PROXY_MODE =
-        Key.builder("PROXY_MODE", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("PROXY_MODE")
+            .fallback(false)
             .build();
     public static final Key<Boolean> REGEDIT_ALLOW_SENSITIVE =
-        Key.builder("REGEDIT_ALLOW_SENSITIVE", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("REGEDIT_ALLOW_SENSITIVE")
+            .fallback(false)
             .userImmutable()
             .build();
     public static final Key<String> BASE_SCAN_PACKAGE =
-        Key.builder("BASE_SCAN_PACKAGE", "org.anvilpowered.anvil.common.model")
+        Key.builder(TypeTokens.STRING)
+            .name("BASE_SCAN_PACKAGE")
+            .fallback("org.anvilpowered.anvil.common.model")
             .userImmutable()
             .build();
     public static final Key<Integer> CACHE_INVALIDATION_INTERVAL_SECONDS =
-        Key.builder("CACHE_INVALIDATION_INTERVAL_SECONDS", 30)
+        Key.builder(TypeTokens.INTEGER)
+            .name("CACHE_INVALIDATION_INTERVAL_SECONDS")
+            .fallback(30)
             .build();
     public static final Key<Integer> CACHE_INVALIDATION_TIMOUT_SECONDS =
-        Key.builder("CACHE_INVALIDATION_TIMOUT_SECONDS", 300)
+        Key.builder(TypeTokens.INTEGER)
+            .name("CACHE_INVALIDATION_TIMOUT_SECONDS")
+            .fallback(300)
             .build();
     public static final Key<Boolean> USE_SHARED_ENVIRONMENT =
-        Key.builder("USE_SHARED_ENVIRONMENT", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("USE_SHARED_ENVIRONMENT")
+            .fallback(false)
             .build();
     public static final Key<Boolean> USE_SHARED_CREDENTIALS =
-        Key.builder("USE_SHARED_CREDENTIALS", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("USE_SHARED_CREDENTIALS")
+            .fallback(false)
             .build();
     public static final Key<String> DATA_DIRECTORY =
-        Key.builder("DATA_DIRECTORY", "anvil")
+        Key.builder(TypeTokens.STRING)
+            .name("DATA_DIRECTORY")
+            .fallback("anvil")
             .build();
     public static final Key<String> DATA_STORE_NAME =
-        Key.builder("DATA_STORE_NAME", "xodus")
+        Key.builder(TypeTokens.STRING)
+            .name("DATA_STORE_NAME")
+            .fallback("xodus")
             .build();
     public static final Key<String> MONGODB_CONNECTION_STRING =
-        Key.builder("MONGODB_CONNECTION_STRING", "mongodb://admin:password@localhost:27017/anvil?authSource=admin")
+        Key.builder(TypeTokens.STRING)
+            .name("MONGODB_CONNECTION_STRING")
+            .fallback("mongodb://admin:password@localhost:27017/anvil?authSource=admin")
             .sensitive()
             .build();
     public static final Key<String> MONGODB_HOSTNAME =
-        Key.builder("MONGODB_HOSTNAME", "localhost")
+        Key.builder(TypeTokens.STRING)
+            .name("MONGODB_HOSTNAME")
+            .fallback("localhost")
             .sensitive()
             .build();
     public static final Key<Integer> MONGODB_PORT =
-        Key.builder("MONGODB_PORT", 27017)
+        Key.builder(TypeTokens.INTEGER)
+            .name("MONGODB_PORT")
+            .fallback(27017)
             .sensitive()
             .build();
     public static final Key<String> MONGODB_DBNAME =
-        Key.builder("MONGODB_DBNAME", "anvil")
+        Key.builder(TypeTokens.STRING)
+            .name("MONGODB_DBNAME")
+            .fallback("anvil")
             .sensitive()
             .build();
     public static final Key<String> MONGODB_USERNAME =
-        Key.builder("MONGODB_USERNAME", "admin")
+        Key.builder(TypeTokens.STRING)
+            .name("MONGODB_USERNAME")
+            .fallback("admin")
             .sensitive()
             .build();
     public static final Key<String> MONGODB_PASSWORD =
-        Key.builder("MONGODB_PASSWORD", "password")
+        Key.builder(TypeTokens.STRING)
+            .name("MONGODB_PASSWORD")
+            .fallback("password")
             .sensitive()
             .build();
     public static final Key<String> MONGODB_AUTH_DB =
-        Key.builder("MONGODB_AUTH_DB", "admin")
+        Key.builder(TypeTokens.STRING)
+            .name("MONGODB_AUTH_DB")
+            .fallback("admin")
             .sensitive()
             .build();
     public static final Key<Boolean> MONGODB_USE_AUTH =
-        Key.builder("MONGODB_USE_AUTH", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("MONGODB_USE_AUTH")
+            .fallback(false)
             .sensitive()
             .build();
     public static final Key<Boolean> MONGODB_USE_SRV =
-        Key.builder("MONGODB_USE_SRV", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("MONGODB_USE_SRV")
+            .fallback(false)
             .sensitive()
             .build();
     public static final Key<Boolean> MONGODB_USE_CONNECTION_STRING =
-        Key.builder("MONGODB_USE_CONNECTION_STRING", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("MONGODB_USE_CONNECTION_STRING")
+            .fallback(false)
             .sensitive()
             .build();
     public static final Key<String> REDIS_HOSTNAME =
-        Key.builder("REDIS_HOSTNAME", "localhost")
+        Key.builder(TypeTokens.STRING)
+            .name("REDIS_HOSTNAME")
+            .fallback("localhost")
             .sensitive()
             .build();
     public static final Key<Integer> REDIS_PORT =
-        Key.builder("REDIS_PORT", 6379)
+        Key.builder(TypeTokens.INTEGER)
+            .name("REDIS_PORT")
+            .fallback(6379)
             .sensitive()
             .build();
     public static final Key<String> REDIS_PASSWORD =
-        Key.builder("REDIS_PASSWORD", "username")
+        Key.builder(TypeTokens.STRING)
+            .name("REDIS_PASSWORD")
+            .fallback("password")
             .sensitive()
             .build();
     public static final Key<Boolean> REDIS_USE_AUTH =
-        Key.builder("REDIS_USE_AUTH", false)
+        Key.builder(TypeTokens.BOOLEAN)
+            .name("REDIS_USE_AUTH")
+            .fallback(false)
             .sensitive()
             .build();
 
     public static final Key<String> PLUGINS_PERMISSION =
-        Key.builder("PLUGINS_PERMISSION", "anvil.admin.plugins")
+        Key.builder(TypeTokens.STRING)
+            .name("PLUGINS_PERMISSION")
+            .fallback("anvil.admin.plugins")
             .build();
     public static final Key<String> REGEDIT_PERMISSION =
-        Key.builder("REGEDIT_PERMISSION", "anvil.admin.regedit")
+        Key.builder(TypeTokens.STRING)
+            .name("REGEDIT_PERMISSION")
+            .fallback("anvil.admin.regedit")
             .build();
     public static final Key<String> RELOAD_PERMISSION =
-        Key.builder("RELOAD_PERMISSION", "anvil.admin.reload")
+        Key.builder(TypeTokens.STRING)
+            .name("RELOAD_PERMISSION")
+            .fallback("anvil.admin.reload")
             .build();
 
     static {

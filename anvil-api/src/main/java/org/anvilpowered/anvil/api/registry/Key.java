@@ -25,8 +25,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.function.Function;
 
 @SuppressWarnings({"UnstableApiUsage", "unchecked"})
-public abstract class Key<T> extends TypeToken<T> implements Named, Comparable<Key<T>> {
+public abstract class Key<T> implements Named, Comparable<Key<T>> {
 
+    private final TypeToken<T> type;
     private final String name;
     private final T fallbackValue;
     private final boolean userImmutable;
@@ -38,22 +39,17 @@ public abstract class Key<T> extends TypeToken<T> implements Named, Comparable<K
     @Nullable
     private final Function<T, String> toStringer;
 
-    @Deprecated // to be removed in 0.4, use Key.of(String, T) instead
-    protected Key(String name, T fallbackValue) {
-        this(Key.class, name, fallbackValue, false, false, null, null, null);
-    }
-
     Key(
-        Class<?> declaringClass,
+        TypeToken<T> type,
         String name,
-        T fallbackValue,
+        @Nullable T fallbackValue,
         boolean userImmutable,
         boolean sensitive,
         @Nullable String description,
         @Nullable Function<String, T> parser,
         @Nullable Function<T, String> toStringer
     ) {
-        super(declaringClass);
+        this.type = type;
         this.name = name;
         this.fallbackValue = fallbackValue;
         this.userImmutable = userImmutable;
@@ -67,7 +63,23 @@ public abstract class Key<T> extends TypeToken<T> implements Named, Comparable<K
         this.toStringer = toStringer;
     }
 
-    interface Builder<T> {
+    public interface Builder<T> {
+
+        /**
+         * Sets the name of the generated {@link Key}
+         *
+         * @param name The name to set
+         * @return {@code this}
+         */
+        Builder<T> name(String name);
+
+        /**
+         * Sets the fallback value of the generated {@link Key}
+         *
+         * @param fallbackValue The fallback value to set
+         * @return {@code this}
+         */
+        Builder<T> fallback(@Nullable T fallbackValue);
 
         /**
          * Indicates that the generated {@link Key} cannot be changed by the user.
@@ -117,12 +129,12 @@ public abstract class Key<T> extends TypeToken<T> implements Named, Comparable<K
         Key<T> build();
     }
 
-    public static <T> Builder<T> builder(String name, T fallbackValue) {
-        return new KeyBuilder<>(name, fallbackValue);
+    public static <T> Builder<T> builder(TypeToken<T> type) {
+        return new KeyBuilder<>(type);
     }
 
     @Nullable
-    private Function<String, T> extractParser(T value) {
+    private Function<String, T> extractParser(@Nullable T value) {
         if (value instanceof String) {
             return s -> (T) s;
         } else if (value instanceof Boolean) {
@@ -177,6 +189,10 @@ public abstract class Key<T> extends TypeToken<T> implements Named, Comparable<K
     @Override
     public String toString() {
         return name;
+    }
+
+    public TypeToken<T> getType() {
+        return type;
     }
 
     @Override

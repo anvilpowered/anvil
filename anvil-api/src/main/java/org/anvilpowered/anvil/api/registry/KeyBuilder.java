@@ -18,14 +18,21 @@
 
 package org.anvilpowered.anvil.api.registry;
 
+import com.google.common.base.Preconditions;
+import com.google.common.reflect.TypeToken;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.function.Function;
 
+@SuppressWarnings("UnstableApiUsage")
 class KeyBuilder<T> implements Key.Builder<T> {
 
-    private final String name;
-    private final T fallbackValue;
+    private final TypeToken<T> type;
+    @MonotonicNonNull
+    private String name;
+    @Nullable
+    private T fallbackValue;
     private boolean userImmutable;
     private boolean sensitive;
     @Nullable
@@ -35,10 +42,21 @@ class KeyBuilder<T> implements Key.Builder<T> {
     @Nullable
     private Function<T, String> toStringer;
 
-    KeyBuilder(String name, T fallbackValue) {
-        this.name = name;
-        this.fallbackValue = fallbackValue;
+    KeyBuilder(TypeToken<T> type) {
+        this.type = Preconditions.checkNotNull(type, "type");
         this.sensitive = false;
+    }
+
+    @Override
+    public Key.Builder<T> name(String name) {
+        this.name = Preconditions.checkNotNull(name, "name");
+        return this;
+    }
+
+    @Override
+    public Key.Builder<T> fallback(@Nullable T fallbackValue) {
+        this.fallbackValue = fallbackValue;
+        return this;
     }
 
     @Override
@@ -73,7 +91,8 @@ class KeyBuilder<T> implements Key.Builder<T> {
 
     @Override
     public Key<T> build() {
-        return new Key<T>(getClass(), name, fallbackValue, userImmutable, sensitive, description, parser, toStringer) {
+        Preconditions.checkNotNull(name, "name");
+        return new Key<T>(type, name, fallbackValue, userImmutable, sensitive, description, parser, toStringer) {
         };
     }
 }
