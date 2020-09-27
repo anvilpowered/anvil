@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 
 public class SpigotCommandService extends CommonCommandService<Command, CommandExecutor, TextComponent, CommandSender> {
 
-    private static class WrapperCommand implements CommandExecutor {
+    private static class WrapperCommand implements CommandExecutor, TabCompleter {
         private final CommandExecutorWrapper<Command, CommandSender> wrapper;
 
         public WrapperCommand(CommandExecutorWrapper<Command, CommandSender> wrapper) {
@@ -43,6 +43,11 @@ public class SpigotCommandService extends CommonCommandService<Command, CommandE
         public boolean onCommand(CommandSender source, Command command, String label, String[] args) {
             wrapper.execute(command, source, label, args);
             return true;
+        }
+
+        @Override
+        public List<String> onTabComplete(CommandSender source, Command command, String label, String[] args) {
+            return wrapper.suggest(command, source, label, args);
         }
     }
 
