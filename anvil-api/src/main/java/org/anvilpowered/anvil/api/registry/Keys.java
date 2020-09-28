@@ -197,21 +197,25 @@ public final class Keys {
         Key.builder(TypeTokens.BOOLEAN)
             .name("USE_SHARED_ENVIRONMENT")
             .fallback(false)
+            .sensitive()
             .build();
     public static final Key<Boolean> USE_SHARED_CREDENTIALS =
         Key.builder(TypeTokens.BOOLEAN)
             .name("USE_SHARED_CREDENTIALS")
             .fallback(false)
+            .sensitive()
             .build();
     public static final Key<String> DATA_DIRECTORY =
         Key.builder(TypeTokens.STRING)
             .name("DATA_DIRECTORY")
             .fallback("anvil")
+            .sensitive()
             .build();
     public static final Key<String> DATA_STORE_NAME =
         Key.builder(TypeTokens.STRING)
             .name("DATA_STORE_NAME")
             .fallback("xodus")
+            .sensitive()
             .build();
     public static final Key<String> MONGODB_CONNECTION_STRING =
         Key.builder(TypeTokens.STRING)
