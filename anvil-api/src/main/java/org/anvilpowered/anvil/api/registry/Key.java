@@ -163,12 +163,11 @@ public abstract class Key<T> implements Named, Comparable<Key<T>> {
         return parser.apply(value);
     }
 
-    @Nullable
-    public String toString(T value) {
+    public String toString(@Nullable T value) {
         if (toStringer == null) {
-            return value.toString();
+            return String.valueOf(value);
         }
-        return toStringer.apply(value);
+        return String.valueOf(toStringer.apply(value));
     }
 
     @Override
@@ -210,6 +209,10 @@ public abstract class Key<T> implements Named, Comparable<Key<T>> {
 
     public boolean isSensitive() {
         return sensitive;
+    }
+
+    public boolean isSensitive(Registry registry) {
+        return isSensitive() && !registry.get(Keys.REGEDIT_ALLOW_SENSITIVE).orElse(false);
     }
 
     @Nullable
