@@ -18,15 +18,18 @@
 
 package org.anvilpowered.anvil.nukkit.module;
 
+import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import com.google.inject.TypeLiteral;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.api.command.CommandNode;
+import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditRootCommand;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.nukkit.command.NukkitAnvilCommandNode;
+import org.anvilpowered.anvil.nukkit.command.regedit.NukkitRegistryEditRootCommand;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -45,5 +48,7 @@ public class NukkitModule extends CommonModule<String, CommandSender> {
         }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
         bind(new TypeLiteral<CommandNode<CommandSender>>() {
         }).to(NukkitAnvilCommandNode.class);
+        bind(new TypeLiteral<CommonRegistryEditRootCommand<Player, Player, String, CommandSender>>() {
+        }).to(NukkitRegistryEditRootCommand.class);
     }
 }

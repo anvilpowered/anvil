@@ -20,11 +20,15 @@ package org.anvilpowered.anvil.sponge.module;
 
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.command.CommandNode;
+import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditRootCommand;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.registry.CommonConfigurationService;
 import org.anvilpowered.anvil.sponge.command.SpongeAnvilCommandNode;
+import org.anvilpowered.anvil.sponge.command.regedit.SpongeRegistryEditRootCommand;
 import org.anvilpowered.anvil.sponge.registry.SpongeConfigurationService;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 
 public class SpongeModule extends CommonModule<Text, CommandSource> {
@@ -36,5 +40,7 @@ public class SpongeModule extends CommonModule<Text, CommandSource> {
         bind(CommonConfigurationService.class).to(SpongeConfigurationService.class);
         bind(new TypeLiteral<CommandNode<CommandSource>>() {
         }).to(SpongeAnvilCommandNode.class);
+        bind(new TypeLiteral<CommonRegistryEditRootCommand<User, Player, Text, CommandSource>>() {
+        }).to(SpongeRegistryEditRootCommand.class);
     }
 }

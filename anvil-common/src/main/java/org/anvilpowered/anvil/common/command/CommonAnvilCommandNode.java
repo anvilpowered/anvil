@@ -40,6 +40,7 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
 
     protected static final List<String> PLUGINS_ALIAS = Collections.singletonList("plugins");
     protected static final List<String> RELOAD_ALIAS = Collections.singletonList("reload");
+    protected static final List<String> REGEDIT_ALIAS = Collections.singletonList("regedit");
     protected static final List<String> HELP_ALIAS = Collections.singletonList("help");
     protected static final List<String> VERSION_ALIAS = Collections.singletonList("version");
 
@@ -47,6 +48,8 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
         = String.format("%s plugins command", AnvilPluginInfo.name);
     protected static final String RELOAD_DESCRIPTION
         = String.format("%s reload command", AnvilPluginInfo.name);
+    protected static final String REGEDIT_DESCRIPTION
+        = String.format("%s regedit command", AnvilPluginInfo.name);
     protected static final String HELP_DESCRIPTION
         = String.format("%s help command", AnvilPluginInfo.name);
     protected static final String VERSION_DESCRIPTION
@@ -55,6 +58,8 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
         = String.format("%s root command", AnvilPluginInfo.name);
 
     protected static final String RELOAD_USAGE = "[-a|--all|-r|--regex] [<plugin>]";
+    protected static final String REGEDIT_USAGE
+        = "[cancel|select|commit|start|key] [<reg>|<env>|<key>] [info|set|unset|unstage] [<value>]";
 
     protected static final String HELP_COMMAND = "/anvil help";
 
@@ -84,9 +89,11 @@ public abstract class CommonAnvilCommandNode<TCommandExecutor, TCommandSource>
         usages = new HashMap<>();
         descriptions.put(PLUGINS_ALIAS, c -> PLUGINS_DESCRIPTION);
         descriptions.put(RELOAD_ALIAS, c -> RELOAD_DESCRIPTION);
+        descriptions.put(REGEDIT_ALIAS, c -> REGEDIT_DESCRIPTION);
         descriptions.put(HELP_ALIAS, c -> HELP_DESCRIPTION);
         descriptions.put(VERSION_ALIAS, c -> VERSION_DESCRIPTION);
         usages.put(RELOAD_ALIAS, c -> RELOAD_USAGE);
+        usages.put(REGEDIT_ALIAS, c -> REGEDIT_USAGE);
     }
 
     protected abstract void loadCommands();

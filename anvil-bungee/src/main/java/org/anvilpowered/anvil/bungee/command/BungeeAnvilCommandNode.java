@@ -25,6 +25,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.bungee.AnvilBungee;
+import org.anvilpowered.anvil.bungee.command.regedit.BungeeRegistryEditCommandNode;
+import org.anvilpowered.anvil.bungee.command.regedit.BungeeRegistryEditRootCommand;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.common.command.CommonAnvilPluginsCommand;
 import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
@@ -48,6 +50,12 @@ public class BungeeAnvilCommandNode
     private CommonCallbackCommand<TextComponent, CommandSender> callbackCommand;
 
     @Inject
+    private BungeeRegistryEditRootCommand registryEditRootCommand;
+
+    @Inject
+    private BungeeRegistryEditCommandNode registryEditCommandNode;
+
+    @Inject
     private AnvilBungee plugin;
 
     private static final String HELP_COMMAND_PROXY = "/anvilb help";
@@ -63,6 +71,9 @@ public class BungeeAnvilCommandNode
 
         subCommands.put(PLUGINS_ALIAS, (source, context) -> anvilPluginsCommand.execute(source));
         subCommands.put(RELOAD_ALIAS, anvilReloadCommand::execute);
+        subCommands.put(REGEDIT_ALIAS, commandService.generateRoutingCommand(
+            registryEditRootCommand, registryEditCommandNode.getSubCommands(), false)
+        );
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND_PROXY));
 
@@ -71,12 +82,7 @@ public class BungeeAnvilCommandNode
 
         ProxyServer.getInstance().getPluginManager()
             .registerCommand(plugin,
-                new Command("anvilb", null, "ab", "anvilb:ab", "anvilb:anvilb") {
-                    @Override
-                    public void execute(CommandSender source, String[] context) {
-                        root.accept(source, context);
-                    }
-                }
+                new BungeeCommand("anvilb", null, root, "ab", "anvilb:ab", "anvilb:anvilb")
             );
 
         ProxyServer.getInstance().getPluginManager()

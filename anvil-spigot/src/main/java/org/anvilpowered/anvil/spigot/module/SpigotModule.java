@@ -25,11 +25,14 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
+import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditRootCommand;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.spigot.command.SpigotAnvilCommandNode;
 import org.anvilpowered.anvil.spigot.command.SpigotCallbackCommand;
+import org.anvilpowered.anvil.spigot.command.regedit.SpigotRegistryEditRootCommand;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -51,5 +54,7 @@ public class SpigotModule extends CommonModule<TextComponent, CommandSender> {
         }).to(SpigotAnvilCommandNode.class);
         bind(new TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>>() {
         }).to(SpigotCallbackCommand.class);
+        bind(new TypeLiteral<CommonRegistryEditRootCommand<Player, Player, TextComponent, CommandSender>>() {
+        }).to(SpigotRegistryEditRootCommand.class);
     }
 }

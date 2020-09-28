@@ -20,16 +20,19 @@ package org.anvilpowered.anvil.velocity.module;
 
 import com.google.inject.TypeLiteral;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.TextComponent;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
+import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditRootCommand;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.velocity.command.VelocityAnvilCommandNode;
 import org.anvilpowered.anvil.velocity.command.VelocityCallbackCommand;
+import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditRootCommand;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -51,5 +54,7 @@ public class VelocityModule extends CommonModule<TextComponent, CommandSource> {
         }).to(VelocityAnvilCommandNode.class);
         bind(new TypeLiteral<CommonCallbackCommand<TextComponent, CommandSource>>() {
         }).to(VelocityCallbackCommand.class);
+        bind(new TypeLiteral<CommonRegistryEditRootCommand<Player, Player, TextComponent, CommandSource>>() {
+        }).to(VelocityRegistryEditRootCommand.class);
     }
 }

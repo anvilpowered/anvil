@@ -23,6 +23,8 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.spigot.AnvilSpigot;
+import org.anvilpowered.anvil.spigot.command.regedit.SpigotRegistryEditCommandNode;
+import org.anvilpowered.anvil.spigot.command.regedit.SpigotRegistryEditRootCommand;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -44,6 +46,12 @@ public class SpigotAnvilCommandNode
     private SpigotCallbackCommand callbackCommand;
 
     @Inject
+    private SpigotRegistryEditRootCommand registryEditRootCommand;
+
+    @Inject
+    private SpigotRegistryEditCommandNode registryEditCommandNode;
+
+    @Inject
     private AnvilSpigot plugin;
 
     @Inject
@@ -57,6 +65,9 @@ public class SpigotAnvilCommandNode
 
         subCommands.put(PLUGINS_ALIAS, anvilPluginsCommand);
         subCommands.put(RELOAD_ALIAS, anvilReloadCommand);
+        subCommands.put(REGEDIT_ALIAS, commandService.generateRoutingCommand(
+            registryEditRootCommand, registryEditCommandNode.getSubCommands(), false)
+        );
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND));
 

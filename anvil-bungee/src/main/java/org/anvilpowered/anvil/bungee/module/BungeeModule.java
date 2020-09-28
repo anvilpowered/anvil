@@ -21,11 +21,14 @@ package org.anvilpowered.anvil.bungee.module;
 import com.google.inject.TypeLiteral;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.bungee.command.BungeeAnvilCommandNode;
+import org.anvilpowered.anvil.bungee.command.regedit.BungeeRegistryEditRootCommand;
+import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditRootCommand;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 
@@ -48,5 +51,7 @@ public class BungeeModule extends CommonModule<TextComponent, CommandSender> {
         }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
         bind(new TypeLiteral<CommandNode<CommandSender>>() {
         }).to(BungeeAnvilCommandNode.class);
+        bind(new TypeLiteral<CommonRegistryEditRootCommand<ProxiedPlayer, ProxiedPlayer, TextComponent, CommandSender>>() {
+        }).to(BungeeRegistryEditRootCommand.class);
     }
 }

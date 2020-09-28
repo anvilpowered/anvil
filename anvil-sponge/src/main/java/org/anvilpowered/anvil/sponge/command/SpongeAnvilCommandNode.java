@@ -23,7 +23,10 @@ import com.google.inject.Singleton;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
+import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCommandNode;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
+import org.anvilpowered.anvil.sponge.command.regedit.SpongeRegistryEditCommandNode;
+import org.anvilpowered.anvil.sponge.command.regedit.SpongeRegistryEditRootCommand;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandSource;
@@ -45,6 +48,12 @@ public class SpongeAnvilCommandNode
 
     @Inject
     private SpongeAnvilReloadCommand anvilReloadCommand;
+
+    @Inject
+    private SpongeRegistryEditRootCommand registryEditRootCommand;
+
+    @Inject
+    private SpongeRegistryEditCommandNode registryEditCommandNode;
 
     @Inject
     public SpongeAnvilCommandNode(Registry registry) {
@@ -75,6 +84,13 @@ public class SpongeAnvilCommandNode
                     ))
             )
             .executor(anvilReloadCommand)
+            .build());
+
+        subCommands.put(REGEDIT_ALIAS, CommandSpec.builder()
+            .description(Text.of(CommonRegistryEditCommandNode.ROOT_DESCRIPTION))
+            .permission(registry.getOrDefault(Keys.REGEDIT_PERMISSION))
+            .executor(registryEditRootCommand)
+            .children(registryEditCommandNode.getSubCommands())
             .build());
 
         subCommands.put(HELP_ALIAS, CommandSpec.builder()

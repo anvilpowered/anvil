@@ -24,6 +24,8 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
+import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditCommandNode;
+import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditRootCommand;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +44,12 @@ public class VelocityAnvilCommandNode
     private VelocityCallbackCommand callbackCommand;
 
     @Inject
+    private VelocityRegistryEditRootCommand registryEditRootCommand;
+
+    @Inject
+    private VelocityRegistryEditCommandNode registryEditCommandNode;
+
+    @Inject
     private ProxyServer proxyServer;
 
     private static final String HELP_COMMAND_PROXY = "/anvilv help";
@@ -57,6 +65,9 @@ public class VelocityAnvilCommandNode
 
         subCommands.put(PLUGINS_ALIAS, anvilPluginsCommand);
         subCommands.put(RELOAD_ALIAS, anvilReloadCommand);
+        subCommands.put(REGEDIT_ALIAS, commandService.generateRoutingCommand(
+            registryEditRootCommand, registryEditCommandNode.getSubCommands(), false)
+        );
         subCommands.put(HELP_ALIAS, commandService.generateHelpCommand(this));
         subCommands.put(VERSION_ALIAS, commandService.generateVersionCommand(HELP_COMMAND_PROXY));
 
