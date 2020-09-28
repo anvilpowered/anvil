@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.common.command.CommonCommandService;
 
@@ -32,7 +33,7 @@ import java.util.function.Predicate;
 public class BungeeCommandService extends CommonCommandService<Command,
     BiConsumer<CommandSender, String[]>, TextComponent, CommandSender> {
 
-    private static class WrapperCommand implements BiConsumer<CommandSender, String[]> {
+    private static class WrapperCommand implements BiConsumer<CommandSender, String[]>, TabExecutor {
         private final CommandExecutorWrapper<Command, CommandSender> wrapper;
 
         public WrapperCommand(CommandExecutorWrapper<Command, CommandSender> wrapper) {
@@ -42,6 +43,11 @@ public class BungeeCommandService extends CommonCommandService<Command,
         @Override
         public void accept(CommandSender source, String[] context) {
             wrapper.execute(null, source, null, context);
+        }
+
+        @Override
+        public Iterable<String> onTabComplete(CommandSender source, String[] context) {
+            return wrapper.suggest(null, source, null, context);
         }
     }
 
@@ -115,10 +121,18 @@ public class BungeeCommandService extends CommonCommandService<Command,
     protected List<String> getSuggestions(
         BiConsumer<CommandSender, String[]> executor,
         Command command,
-        CommandSender commandSender,
+        CommandSender source,
         String alias,
         String[] context
     ) {
+        if (executor instanceof TabExecutor) {
+            Iterable<String> result = ((TabExecutor) executor).onTabComplete(source, context);
+            if (result instanceof List) {
+                return (List<String>) result;
+            } else {
+                return ImmutableList.copyOf(result);
+            }
+        }
         return ImmutableList.of();
     }
 
