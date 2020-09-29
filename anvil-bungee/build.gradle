@@ -25,9 +25,7 @@ dependencies {
     implementation kotlinx_serialization
     implementation microutils_logging
     implementation mongo_java_driver
-    implementation morphia
     implementation typesafe_config
-    implementation xodus_entity_store
 }
 
 shadowJar {

@@ -18,7 +18,6 @@ dependencies {
         implementation project(':Anvil:anvil-common')
     }
 
-    implementation guice
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
@@ -27,10 +26,8 @@ dependencies {
     implementation kotlinx_serialization
     implementation microutils_logging
     implementation mongo_java_driver
-    implementation morphia
     implementation velocity
     annotationProcessor velocity
-    implementation xodus_entity_store
 }
 
 shadowJar {

@@ -3,7 +3,7 @@ version = rootProject.apiVersion
 dependencies {
     api bson
     api configurate_core
-    api guice
+    api(guice + ":" + guice_version)
     api hikari
     api jedis
     api jetbrains_annotations

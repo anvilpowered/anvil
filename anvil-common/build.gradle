@@ -12,14 +12,10 @@ dependencies {
         implementation project(':Anvil:anvil-api')
     }
 
-    implementation configurate_core
-    implementation guice
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)
-    implementation morphia
     implementation reflections
-    implementation xodus_entity_store
 }
 
 blossom {
