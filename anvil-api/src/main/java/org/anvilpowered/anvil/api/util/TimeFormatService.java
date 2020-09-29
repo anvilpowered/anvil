@@ -40,9 +40,35 @@ public interface TimeFormatService {
 
     Optional<Instant> parseInstant(String input);
 
+    /**
+     * Interprets the provided {@link Instant} as UTC and converts it into the time zone defined in the config.
+     *
+     * @param instant The {@link Instant} in UTC to convert
+     * @return An {@link Instant} converted to the time zone defined in the config
+     */
+    Instant fromUTC(Instant instant);
+
     FormatResult format(Duration duration);
 
-    FormatResult format(Instant instant);
+    /**
+     * Formats the provided {@link Instant} without converting it to the time zone defined in the config. Use this only if
+     * the provided {@link Instant} is already in the correct time zone (otherwise use {@link #format(Instant)})
+     *
+     * @param instant The {@link Instant} to format
+     * @return A {@link FormatResult}
+     */
+    FormatResult formatDirect(Instant instant);
+
+    /**
+     * Formats the provided {@link Instant} and converts it to the time zone defined in the config. The provided
+     * {@link Instant} must be in UTC.
+     *
+     * @param instant The {@link Instant} in UTC to format
+     * @return A {@link FormatResult}
+     */
+    default FormatResult format(Instant instant) {
+        return formatDirect(fromUTC(instant));
+    }
 
     FormatResult formatDurationUnsafe(String input);
 

@@ -18,12 +18,15 @@
 
 package org.anvilpowered.anvil.common.util;
 
+import org.anvilpowered.anvil.api.Anvil;
+import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
 
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -57,6 +60,14 @@ public class CommonTimeFormatService implements TimeFormatService {
             "\\s*((?<minutes>-?[0-9]*)\\s*m)?" +
             "\\s*((?<seconds>-?[0-9]*)\\s*[sS])?\\s*"
     );
+
+    private ZoneId getZone() {
+        return Anvil.getRegistry().getOrDefault(Keys.TIME_ZONE);
+    }
+
+    private Instant zonedNow() {
+        return OffsetDateTime.now(getZone()).toInstant();
+    }
 
     @Override
     public long parseSecondsUnsafe(String input) {
@@ -101,12 +112,12 @@ public class CommonTimeFormatService implements TimeFormatService {
 
     @Override
     public Instant parseFutureInstantUnsafe(String input) {
-        return OffsetDateTime.now(ZoneOffset.UTC).toInstant().plusSeconds(parseSecondsUnsafe(input));
+        return zonedNow().plusSeconds(parseSecondsUnsafe(input));
     }
 
     @Override
     public Optional<Instant> parseFutureInstant(String input) {
-        return parseSeconds(input).map(s -> OffsetDateTime.now(ZoneOffset.UTC).toInstant().plusSeconds(s));
+        return parseSeconds(input).map(s -> zonedNow().plusSeconds(s));
     }
 
     @Override
@@ -124,12 +135,17 @@ public class CommonTimeFormatService implements TimeFormatService {
     }
 
     @Override
+    public Instant fromUTC(Instant instant) {
+        return instant.atZone(getZone()).toInstant();
+    }
+
+    @Override
     public FormatResult format(Duration duration) {
         return new DurationFormatResult(duration);
     }
 
     @Override
-    public FormatResult format(Instant instant) {
+    public FormatResult formatDirect(Instant instant) {
         return new InstantFormatResult(instant);
     }
 
