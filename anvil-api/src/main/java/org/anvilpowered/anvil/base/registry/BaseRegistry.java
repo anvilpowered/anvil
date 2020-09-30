@@ -48,7 +48,7 @@ public class BaseRegistry implements Registry {
     @Inject
     protected Logger logger;
 
-    private final Map<Key<?>, Object> defaultMap, valueMap;
+    final Map<Key<?>, Object> defaultMap, valueMap;
     private final Map<Integer, Map<Runnable, RegistryScope>> listeners;
     private Registry coreRegistry;
     @Nullable
@@ -62,12 +62,7 @@ public class BaseRegistry implements Registry {
 
     @Override
     public <T> T getUnsafe(Key<T> key) {
-        T t;
-        try {
-            t = (T) valueMap.get(key);
-        } catch (ClassCastException e) {
-            throw new NoSuchElementException("Value for key " + key + " is of the wrong type!");
-        }
+        T t = (T) valueMap.get(key);
         if (t == null) {
             throw new NoSuchElementException("Could not find value for key " + key);
         }
@@ -76,22 +71,12 @@ public class BaseRegistry implements Registry {
 
     @Override
     public <T> Optional<T> get(Key<T> key) {
-        try {
-            return Optional.ofNullable((T) valueMap.get(key));
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        return Optional.ofNullable((T) valueMap.get(key));
     }
 
     @Override
     public <T> T getDefault(Key<T> key) {
-        T result = null;
-        try {
-            result = (T) defaultMap.get(key);
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+        T result = (T) defaultMap.get(key);
         return result == null ? key.getFallbackValue() : result;
     }
 

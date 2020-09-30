@@ -30,6 +30,7 @@ import java.util.Optional;
  * A registry that is backed by the configuration service
  */
 @Singleton
+@SuppressWarnings("unchecked")
 public class BaseExtendedRegistry extends BaseRegistry {
 
     @Inject
@@ -43,12 +44,7 @@ public class BaseExtendedRegistry extends BaseRegistry {
 
     @Override
     public <T> T getDefault(Key<T> key) {
-        T result = null;
-        try {
-            result = super.getDefault(key);
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+        T result = (T) defaultMap.get(key);
         return result == null ? configurationService.getDefault(key) : result;
     }
 
