@@ -18,13 +18,27 @@
 
 package org.anvilpowered.anvil.sponge.command;
 
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.scheduler.Task;
 
 public class SpongeCommandExecuteService implements CommandExecuteService {
 
+    @Inject
+    private PluginContainer pluginContainer;
+
+    private void executeDirect(String command) {
+        Sponge.getCommandManager().process(Sponge.getServer().getConsole(), command);
+    }
+
     @Override
     public void execute(String command) {
-        Sponge.getCommandManager().process(Sponge.getServer().getConsole(), command);
+        if (Sponge.getServer().isMainThread()) {
+            executeDirect(command);
+        } else {
+            Task.builder().execute(() -> executeDirect(command)).submit(pluginContainer);
+        }
     }
 }

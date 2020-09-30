@@ -18,13 +18,30 @@
 
 package org.anvilpowered.anvil.spigot.command;
 
+import com.google.inject.Inject;
+import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
 public class SpigotCommandExecuteService implements CommandExecuteService {
 
+    @Inject(optional = true)
+    private Plugin plugin;
+
+    private void executeDirect(String command) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+    }
+
     @Override
     public void execute(String command) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        if (Bukkit.isPrimaryThread()) {
+            executeDirect(command);
+        } else if (plugin != null) {
+            Bukkit.getScheduler().runTask(plugin, () -> executeDirect(command));
+        } else {
+            AnvilImpl.getLogger()
+                .error("You must bind org.bukkit.plugin.Plugin to your plugin instance to be able to run commands async");
+        }
     }
 }
