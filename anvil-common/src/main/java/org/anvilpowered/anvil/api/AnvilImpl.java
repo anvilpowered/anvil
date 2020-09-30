@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.api;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
+import org.slf4j.Logger;
 
 public class AnvilImpl extends Anvil {
 
@@ -31,5 +32,9 @@ public class AnvilImpl extends Anvil {
     @Override
     protected void applyToBuilder(Environment.Builder builder) {
         builder.withRootCommand();
+    }
+
+    public static Logger getLogger() {
+        return environment.getInjector().getInstance(Logger.class);
     }
 }

@@ -99,14 +99,12 @@ public class AnvilSpigot extends JavaPlugin {
             boolean anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE);
 
             if (serverProxyMode && !anvilProxyMode) {
-                getLogger().log(
-                    Level.SEVERE,
+                getLogger().error(
                     "It looks like you are running this server behind a proxy. " +
                         "If this is the case, set server.proxyMode=true in the anvil config"
                 );
             } else if (anvilProxyMode && !serverProxyMode) {
-                getLogger().log(
-                    Level.SEVERE,
+                getLogger().error(
                     "It looks like you are not running this server behind a proxy. " +
                         "If this is the case, set server.proxyMode=false in the anvil config"
                 );
