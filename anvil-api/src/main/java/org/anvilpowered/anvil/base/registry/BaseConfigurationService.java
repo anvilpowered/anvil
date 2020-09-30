@@ -294,7 +294,9 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     }
 
     private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
-        node.setValue(key.getType(), getDefault(key));
+        T def = getDefault(key);
+        node.setValue(key.getType(), def);
+        set(key, def);
     }
 
     private <T> void setNodeValue(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
