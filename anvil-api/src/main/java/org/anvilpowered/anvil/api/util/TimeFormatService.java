@@ -20,8 +20,21 @@ package org.anvilpowered.anvil.api.util;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.Optional;
 
+/**
+ * A service that deals with transforming times and durations to and from human-readable formats.
+ *
+ * <p>
+ * In general, times are interpreted in the following way:
+ * </p>
+ * <ul>
+ *     <li>{@link String} and {@link ZonedDateTime} - In the end user's time zone (as defined in the config)</li>
+ *     <li>{@link Instant} - In UTC</li>
+ * </ul>
+ */
 public interface TimeFormatService {
 
     long parseSecondsUnsafe(String input);
@@ -46,29 +59,18 @@ public interface TimeFormatService {
      * @param instant The {@link Instant} in UTC to convert
      * @return An {@link Instant} converted to the time zone defined in the config
      */
-    Instant fromUTC(Instant instant);
+    ZonedDateTime fromUTC(Instant instant);
 
     FormatResult format(Duration duration);
 
     /**
-     * Formats the provided {@link Instant} without converting it to the time zone defined in the config. Use this only if
-     * the provided {@link Instant} is already in the correct time zone (otherwise use {@link #format(Instant)})
+     * Formats the provided {@link TemporalAccessor} and converts it to the time zone defined in the config if it does
+     * not already have timezone data.
      *
-     * @param instant The {@link Instant} to format
+     * @param temporal The {@link TemporalAccessor} to format
      * @return A {@link FormatResult}
      */
-    FormatResult formatDirect(Instant instant);
-
-    /**
-     * Formats the provided {@link Instant} and converts it to the time zone defined in the config. The provided
-     * {@link Instant} must be in UTC.
-     *
-     * @param instant The {@link Instant} in UTC to format
-     * @return A {@link FormatResult}
-     */
-    default FormatResult format(Instant instant) {
-        return formatDirect(fromUTC(instant));
-    }
+    FormatResult format(TemporalAccessor temporal);
 
     FormatResult formatDurationUnsafe(String input);
 

@@ -28,7 +28,9 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,6 +53,8 @@ public class CommonTimeFormatService implements TimeFormatService {
         DateTimeFormatter.ofPattern("uuuu-MM-dd-HH:mm:ss").withZone(ZoneOffset.UTC)
     };
 
+    private static final DateTimeFormatter[] dateTimeFormatZoned = dateTimeFormat.clone();
+
     private static final Pattern timePattern = Pattern.compile(
         "\\s*((?<years>-?[0-9]*)\\s*[yY])?" +
             "\\s*((?<months>-?[0-9]*)\\s*M)?" +
@@ -61,12 +65,21 @@ public class CommonTimeFormatService implements TimeFormatService {
             "\\s*((?<seconds>-?[0-9]*)\\s*[sS])?\\s*"
     );
 
-    private ZoneId getZone() {
+    private static DateTimeFormatter getZonedFormatter(int index) {
+        DateTimeFormatter result = dateTimeFormatZoned[index];
+        ZoneId zone = getZone();
+        if (result.getZone().equals(zone)) {
+            return result;
+        }
+        return dateTimeFormatZoned[index] = dateTimeFormat[index].withZone(zone);
+    }
+
+    private static ZoneId getZone() {
         return Anvil.getRegistry().getOrDefault(Keys.TIME_ZONE);
     }
 
-    private Instant zonedNow() {
-        return OffsetDateTime.now(getZone()).toInstant();
+    private static Instant utcNow() {
+        return OffsetDateTime.now(ZoneOffset.UTC).toInstant();
     }
 
     @Override
@@ -112,17 +125,17 @@ public class CommonTimeFormatService implements TimeFormatService {
 
     @Override
     public Instant parseFutureInstantUnsafe(String input) {
-        return zonedNow().plusSeconds(parseSecondsUnsafe(input));
+        return utcNow().plusSeconds(parseSecondsUnsafe(input));
     }
 
     @Override
     public Optional<Instant> parseFutureInstant(String input) {
-        return parseSeconds(input).map(s -> zonedNow().plusSeconds(s));
+        return parseSeconds(input).map(s -> utcNow().plusSeconds(s));
     }
 
     @Override
     public Instant parseInstantUnsafe(String input) {
-        return Instant.from(dateTimeFormat[5].parse(input));
+        return Instant.from(getZonedFormatter(5).parse(input));
     }
 
     @Override
@@ -135,8 +148,8 @@ public class CommonTimeFormatService implements TimeFormatService {
     }
 
     @Override
-    public Instant fromUTC(Instant instant) {
-        return instant.atZone(getZone()).toInstant();
+    public ZonedDateTime fromUTC(Instant instant) {
+        return instant.atZone(getZone());
     }
 
     @Override
@@ -145,8 +158,8 @@ public class CommonTimeFormatService implements TimeFormatService {
     }
 
     @Override
-    public FormatResult formatDirect(Instant instant) {
-        return new InstantFormatResult(instant);
+    public FormatResult format(TemporalAccessor temporal) {
+        return new TemporalFormatResult(temporal);
     }
 
     @Override
@@ -290,14 +303,14 @@ public class CommonTimeFormatService implements TimeFormatService {
         }
     }
 
-    private static final class InstantFormatResult implements FormatResult {
+    private static final class TemporalFormatResult implements FormatResult {
 
-        private final Instant instant;
+        private final TemporalAccessor temporal;
         int maxUnits;
         boolean withoutNano;
 
-        private InstantFormatResult(Instant instant) {
-            this.instant = instant;
+        private TemporalFormatResult(TemporalAccessor temporal) {
+            this.temporal = temporal;
             maxUnits = -1;
             withoutNano = false;
         }
@@ -339,9 +352,9 @@ public class CommonTimeFormatService implements TimeFormatService {
                 return "";
             }
             if (maxUnits < 0 || maxUnits > 6) {
-                return dateTimeFormat[5].format(instant);
+                return getZonedFormatter(5).format(temporal);
             }
-            return dateTimeFormat[maxUnits - 1].format(instant);
+            return getZonedFormatter(maxUnits - 1).format(temporal);
         }
     }
 }
