@@ -51,6 +51,7 @@ import java.util.stream.StreamSupport;
 public class EnvironmentBuilderImpl implements Environment.Builder {
 
     private String name;
+    @Nullable
     private Injector rootInjector;
     private Object plugin;
     private boolean withRootCommand = false;
@@ -234,6 +235,9 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
 
     @Override
     public Environment.Builder setName(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalStateException("Name may not be null or empty");
+        }
         this.name = name;
         return this;
     }
