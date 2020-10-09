@@ -23,11 +23,9 @@ import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
-import org.anvilpowered.anvil.api.util.CurrentWorldService;
 import org.anvilpowered.anvil.api.util.KickService;
+import org.anvilpowered.anvil.api.util.LocationService;
 import org.anvilpowered.anvil.api.util.PermissionService;
-import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.entity.EntityUtils;
@@ -35,11 +33,9 @@ import org.anvilpowered.anvil.common.module.ApiCommonModule;
 import org.anvilpowered.anvil.sponge.command.SpongeCommandExecuteService;
 import org.anvilpowered.anvil.sponge.command.SpongeCommandService;
 import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils;
-import org.anvilpowered.anvil.sponge.util.SpongeCurrentServerService;
-import org.anvilpowered.anvil.sponge.util.SpongeCurrentWorldService;
 import org.anvilpowered.anvil.sponge.util.SpongeKickService;
+import org.anvilpowered.anvil.sponge.util.SpongeLocationService;
 import org.anvilpowered.anvil.sponge.util.SpongePermissionService;
-import org.anvilpowered.anvil.sponge.util.SpongeTeleportationService;
 import org.anvilpowered.anvil.sponge.util.SpongeTextService;
 import org.anvilpowered.anvil.sponge.util.SpongeUserService;
 import org.spongepowered.api.command.CommandSource;
@@ -56,15 +52,13 @@ public class ApiSpongeModule extends ApiCommonModule {
         bind(CommandExecuteService.class).to(SpongeCommandExecuteService.class);
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSource>>() {
         }).to(SpongeCommandService.class);
-        bind(CurrentServerService.class).to(SpongeCurrentServerService.class);
-        bind(CurrentWorldService.class).to(SpongeCurrentWorldService.class);
         bind(EntityUtils.class).to(SpongeEntityUtils.class);
         bind(KickService.class).to(SpongeKickService.class);
+        bind(LocationService.class).to(SpongeLocationService.class);
         bind(PermissionService.class).to(SpongePermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(false, "sponge"));
         bind(new TypeLiteral<TextService<Text, CommandSource>>() {
         }).to(SpongeTextService.class);
-        bind(TeleportationService.class).to(SpongeTeleportationService.class);
         bind(new TypeLiteral<UserService<User, Player>>() {
         }).to(SpongeUserService.class);
     }

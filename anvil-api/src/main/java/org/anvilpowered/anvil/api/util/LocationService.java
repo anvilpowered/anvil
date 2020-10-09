@@ -16,28 +16,27 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.util;
+package org.anvilpowered.anvil.api.util;
 
-import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.registry.Keys;
-import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
+import com.flowpowered.math.vector.Vector3d;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class SpongeCurrentServerService implements CurrentServerService {
+public interface LocationService {
 
-    @Inject
-    protected Registry registry;
+    Optional<String> getServerName(UUID userUUID);
 
-    @Override
-    public Optional<String> getName(UUID userUUID) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
+    Optional<String> getServerName(String userName);
 
-    @Override
-    public Optional<String> getName(String userName) {
-        return Optional.of(registry.getOrDefault(Keys.SERVER_NAME));
-    }
+    Optional<String> getWorldName(UUID userUUID);
+
+    Optional<String> getWorldName(String userName);
+
+    Optional<Vector3d> getPosition(UUID userUUID);
+
+    Optional<Vector3d> getPosition(String userName);
+
+    CompletableFuture<Boolean> teleport(UUID teleportingUserUUID, UUID targetUserUUID);
 }

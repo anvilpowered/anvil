@@ -16,30 +16,29 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.bungee.util;
+package org.anvilpowered.anvil.velocity.util
 
-import com.google.inject.Inject;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
-import org.anvilpowered.anvil.api.util.UserService;
+import com.google.inject.Inject
+import com.velocitypowered.api.proxy.Player
+import org.anvilpowered.anvil.api.util.UserService
+import org.anvilpowered.anvil.common.util.CommonLocationService
+import java.util.Optional
+import java.util.UUID
 
-import java.util.Optional;
-import java.util.UUID;
-
-public class BungeeCurrentServerService implements CurrentServerService {
+class VelocityLocationService : CommonLocationService() {
 
     @Inject
-    private UserService<ProxiedPlayer, ProxiedPlayer> userService;
+    private lateinit var userService: UserService<Player, Player>
 
-    @Override
-    public Optional<String> getName(UUID userUUID) {
+    override fun getServerName(userUUID: UUID): Optional<String> {
         return userService.getPlayer(userUUID)
-            .map(proxiedPlayer -> proxiedPlayer.getServer().getInfo().getName());
+            .flatMap { it.currentServer }
+            .map { it.serverInfo.name }
     }
 
-    @Override
-    public Optional<String> getName(String userName) {
+    override fun getServerName(userName: String): Optional<String> {
         return userService.getPlayer(userName)
-            .map(proxiedPlayer -> proxiedPlayer.getServer().getInfo().getName());
+            .flatMap { it.currentServer }
+            .map { it.serverInfo.name }
     }
 }

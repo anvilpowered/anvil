@@ -25,8 +25,8 @@ import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
 import org.anvilpowered.anvil.api.util.KickService;
+import org.anvilpowered.anvil.api.util.LocationService;
 import org.anvilpowered.anvil.api.util.PermissionService;
-import org.anvilpowered.anvil.api.util.TeleportationService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
 import org.anvilpowered.anvil.common.entity.EntityUtils;
@@ -35,8 +35,8 @@ import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandService;
 import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils;
 import org.anvilpowered.anvil.spigot.util.SpigotKickService;
+import org.anvilpowered.anvil.spigot.util.SpigotLocationService;
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService;
-import org.anvilpowered.anvil.spigot.util.SpigotTeleportationService;
 import org.anvilpowered.anvil.spigot.util.SpigotTextService;
 import org.anvilpowered.anvil.spigot.util.SpigotUserService;
 import org.bukkit.command.CommandExecutor;
@@ -53,11 +53,11 @@ public class ApiSpigotModule extends ApiCommonModule {
         }).to(SpigotCommandService.class);
         bind(KickService.class).to(SpigotKickService.class);
         bind(EntityUtils.class).to(SpigotEntityUtils.class);
+        bind(LocationService.class).to(SpigotLocationService.class);
         bind(PermissionService.class).to(SpigotPermissionService.class);
         bind(Platform.class).toInstance(new PlatformImpl(false, "spigot"));
         bind(new TypeLiteral<TextService<TextComponent, CommandSender>>() {
         }).to(SpigotTextService.class);
-        bind(TeleportationService.class).to(SpigotTeleportationService.class);
         bind(new TypeLiteral<UserService<Player, Player>>() {
         }).to(SpigotUserService.class);
     }

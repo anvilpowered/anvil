@@ -16,28 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.util;
+package org.anvilpowered.anvil.bungee.util
 
-import com.google.inject.Inject;
-import com.velocitypowered.api.proxy.Player;
-import org.anvilpowered.anvil.api.util.CurrentServerService;
-import org.anvilpowered.anvil.api.util.UserService;
+import com.google.inject.Inject
+import net.md_5.bungee.api.connection.ProxiedPlayer
+import org.anvilpowered.anvil.api.util.UserService
+import org.anvilpowered.anvil.common.util.CommonLocationService
+import java.util.Optional
+import java.util.UUID
 
-import java.util.Optional;
-import java.util.UUID;
-
-public class VelocityCurrentServerService implements CurrentServerService {
+class BungeeLocationService : CommonLocationService() {
 
     @Inject
-    protected UserService<Player, Player> userService;
+    private lateinit var userService: UserService<ProxiedPlayer, ProxiedPlayer>
 
-    @Override
-    public Optional<String> getName(UUID userUUID) {
-        return userService.get(userUUID).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
+    override fun getServerName(userUUID: UUID): Optional<String> {
+        return userService.getPlayer(userUUID).map { it.server.info.name }
     }
 
-    @Override
-    public Optional<String> getName(String userName) {
-        return userService.get(userName).flatMap(Player::getCurrentServer).map(s -> s.getServerInfo().getName());
+    override fun getServerName(userName: String): Optional<String> {
+        return userService.getPlayer(userName).map { it.server.info.name }
     }
 }
