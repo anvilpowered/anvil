@@ -27,6 +27,7 @@ import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.google.inject.util.Modules;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.registry.Registry;
@@ -63,11 +64,11 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
     private static final Collection<EnvironmentBuilderImpl> builders = new ArrayList<>();
     private static boolean alreadyCompleted = false;
 
-    public static void completeInitialization(Module platformModule) {
-        completeInitialization(platformModule, false);
+    public static void completeInitialization(Module platformModule, Module fallbackModule) {
+        completeInitialization(platformModule, fallbackModule, false);
     }
 
-    public static void completeInitialization(Module platformModule, boolean bindLogger) {
+    public static void completeInitialization(Module platformModule, Module fallbackModule, boolean bindLogger) {
         if (alreadyCompleted) {
             throw new IllegalStateException("This method should only be called exactly once (in Anvil Common)");
         }
@@ -80,12 +81,14 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
             loadedListeners.put(name, builder.loadedListeners);
             readyListeners.put(name, builder.readyListeners);
             reloadedListeners.put(name, builder.reloadedListeners);
+            List<Module> modules = new ArrayList<>();
+            modules.add(Modules.override(fallbackModule).with(builder.modules));
             return new EnvironmentImpl(
                 builder.rootInjector,
                 name,
                 builder.plugin,
                 builder.withRootCommand,
-                builder.modules,
+                modules,
                 builder.earlyServices
             );
         }).collect(Collectors.toList());

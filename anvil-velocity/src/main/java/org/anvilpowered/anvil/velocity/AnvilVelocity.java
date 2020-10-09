@@ -30,6 +30,7 @@ import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.velocity.listener.VelocityPlayerListener;
 import org.anvilpowered.anvil.velocity.module.ApiVelocityModule;
+import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule;
 import org.anvilpowered.anvil.velocity.module.VelocityModule;
 
 @Plugin(
@@ -52,7 +53,7 @@ public class AnvilVelocity extends AnvilImpl {
 
     @Subscribe(order = PostOrder.EARLY)
     public void onInit(ProxyInitializeEvent event) {
-        EnvironmentBuilderImpl.completeInitialization(new ApiVelocityModule());
+        EnvironmentBuilderImpl.completeInitialization(new ApiVelocityModule(), new VelocityFallbackModule());
         proxyServer.getEventManager().register(this,
             environment.getInjector().getInstance(VelocityPlayerListener.class));
     }

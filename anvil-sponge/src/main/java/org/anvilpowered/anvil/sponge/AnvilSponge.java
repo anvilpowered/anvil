@@ -25,6 +25,7 @@ import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.sponge.listener.SpongePlayerListener;
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule;
+import org.anvilpowered.anvil.sponge.module.SpongeFallbackModule;
 import org.anvilpowered.anvil.sponge.module.SpongeModule;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
@@ -49,7 +50,7 @@ public class AnvilSponge extends AnvilImpl {
 
     @Listener(order = Order.EARLY)
     public void onInit(GameInitializationEvent event) {
-        EnvironmentBuilderImpl.completeInitialization(new ApiSpongeModule());
+        EnvironmentBuilderImpl.completeInitialization(new ApiSpongeModule(), new SpongeFallbackModule());
         Sponge.getEventManager().registerListeners(this,
             environment.getInjector().getInstance(SpongePlayerListener.class));
     }

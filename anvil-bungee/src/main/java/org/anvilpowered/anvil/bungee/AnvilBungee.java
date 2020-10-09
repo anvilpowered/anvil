@@ -28,6 +28,7 @@ import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.bungee.listener.BungeePlayerListener;
 import org.anvilpowered.anvil.bungee.module.ApiBungeeModule;
+import org.anvilpowered.anvil.bungee.module.BungeeFallbackModule;
 import org.anvilpowered.anvil.bungee.module.BungeeModule;
 
 public class AnvilBungee extends Plugin {
@@ -63,7 +64,7 @@ public class AnvilBungee extends Plugin {
 
     @Override
     public void onEnable() {
-        EnvironmentBuilderImpl.completeInitialization(new ApiBungeeModule(), true);
+        EnvironmentBuilderImpl.completeInitialization(new ApiBungeeModule(), new BungeeFallbackModule(), true);
         getProxy().getPluginManager().registerListener(this,
             AnvilImpl.getEnvironment().getInjector().getInstance(BungeePlayerListener.class)
         );

@@ -29,6 +29,7 @@ import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.nukkit.listener.NukkitPlayerListener;
 import org.anvilpowered.anvil.nukkit.module.ApiNukkitModule;
+import org.anvilpowered.anvil.nukkit.module.NukkitFallbackModule;
 import org.anvilpowered.anvil.nukkit.module.NukkitModule;
 
 public class AnvilNukkit extends PluginBase {
@@ -57,7 +58,7 @@ public class AnvilNukkit extends PluginBase {
 
     @Override
     public void onEnable() {
-        EnvironmentBuilderImpl.completeInitialization(new ApiNukkitModule());
+        EnvironmentBuilderImpl.completeInitialization(new ApiNukkitModule(), new NukkitFallbackModule());
         Server.getInstance().getPluginManager().registerEvents(
             AnvilImpl.getEnvironment().getInjector().getInstance(NukkitPlayerListener.class),
             this

@@ -28,6 +28,7 @@ import org.anvilpowered.anvil.api.registry.ConfigurationService;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.spigot.listener.SpigotPlayerListener;
 import org.anvilpowered.anvil.spigot.module.ApiSpigotModule;
+import org.anvilpowered.anvil.spigot.module.SpigotFallbackModule;
 import org.anvilpowered.anvil.spigot.module.SpigotModule;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -118,7 +119,7 @@ public class AnvilSpigot extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onLoad(ServerLoadEvent event) {
-                EnvironmentBuilderImpl.completeInitialization(new ApiSpigotModule(), true);
+                EnvironmentBuilderImpl.completeInitialization(new ApiSpigotModule(), new SpigotFallbackModule(), true);
             }
         }, this);
     }
