@@ -27,6 +27,7 @@ import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A helper class for quickly creating an environment. While not strictly necessary, it can
@@ -39,8 +40,8 @@ public abstract class BasePlugin {
 
     protected BasePlugin(
         String name,
-        Injector rootInjector,
-        Module module,
+        @Nullable Injector rootInjector,
+        @Nullable Module module,
         Key<?>... earlyServices
     ) {
         createDefaultBuilder(name, rootInjector, module)
@@ -50,8 +51,8 @@ public abstract class BasePlugin {
 
     protected BasePlugin(
         String name,
-        Injector rootInjector,
-        Module module,
+        @Nullable Injector rootInjector,
+        @Nullable Module module,
         Class<?>... earlyServices
     ) {
         createDefaultBuilder(name, rootInjector, module)
@@ -61,8 +62,8 @@ public abstract class BasePlugin {
 
     protected BasePlugin(
         String name,
-        Injector rootInjector,
-        Module module,
+        @Nullable Injector rootInjector,
+        @Nullable Module module,
         TypeLiteral<?>... earlyServices
     ) {
         createDefaultBuilder(name, rootInjector, module)
@@ -72,8 +73,8 @@ public abstract class BasePlugin {
 
     protected BasePlugin(
         String name,
-        Injector rootInjector,
-        Module module,
+        @Nullable Injector rootInjector,
+        @Nullable Module module,
         TypeToken<?>... earlyServices
     ) {
         createDefaultBuilder(name, rootInjector, module)
@@ -83,8 +84,8 @@ public abstract class BasePlugin {
 
     protected BasePlugin(
         String name,
-        Injector rootInjector,
-        Module module
+        @Nullable Injector rootInjector,
+        @Nullable Module module
     ) {
         createDefaultBuilder(name, rootInjector, module)
             .register(this);
@@ -92,17 +93,19 @@ public abstract class BasePlugin {
 
     protected Environment.Builder createDefaultBuilder(
         String name,
-        Injector rootInjector,
-        Module module
+        @Nullable Injector rootInjector,
+        @Nullable Module module
     ) {
         Environment.Builder builder = Anvil.getEnvironmentBuilder()
             .setName(name)
             .setRootInjector(rootInjector)
-            .addModules(module)
             .whenLoaded(this::whenLoaded)
             .whenReady(e -> environment = e)
             .whenReady(this::whenReady)
             .whenReloaded(this::whenReloaded);
+        if (module != null) {
+            builder.addModules(module);
+        }
         applyToBuilder(builder);
         return builder;
     }
