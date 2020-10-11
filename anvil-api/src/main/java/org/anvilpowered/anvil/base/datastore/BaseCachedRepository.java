@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.base.datastore;
 
 import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.datastore.CachedRepository;
-import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 
 import java.util.Optional;
@@ -37,10 +36,6 @@ public abstract class BaseCachedRepository<
     TDataStore>
     extends BaseRepository<TKey, T, TDataStore>
     implements CachedRepository<TKey, T, C, TDataStore> {
-
-    protected BaseCachedRepository(DataStoreContext<TKey, TDataStore> dataStoreContext) {
-        super(dataStoreContext);
-    }
 
     @Override
     public <K> CompletableFuture<K> applyFromDBToCache(Supplier<K> fromDB, BiConsumer<C, K> toCache) {

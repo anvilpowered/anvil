@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.base.datastore;
 
 import org.anvilpowered.anvil.api.datastore.CacheService;
-import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
@@ -39,9 +38,8 @@ public abstract class BaseCacheService<
     TKey,
     T extends ObjectWithId<TKey>,
     TDataStore>
-    extends BaseComponent<TKey, TDataStore>
-    implements CacheService<TKey, T, TDataStore>,
-    BaseStorageService<TKey, T, TDataStore> {
+    extends BaseRepository<TKey, T, TDataStore>
+    implements CacheService<TKey, T, TDataStore> {
 
     protected Registry registry;
 
@@ -49,8 +47,7 @@ public abstract class BaseCacheService<
 
     private Integer timeoutSeconds;
 
-    protected BaseCacheService(DataStoreContext<TKey, TDataStore> dataStoreContext, Registry registry) {
-        super(dataStoreContext);
+    protected BaseCacheService(Registry registry) {
         this.registry = registry;
         registry.whenLoaded(this::registryLoaded).register();
         cache = new ConcurrentHashMap<>();

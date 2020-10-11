@@ -18,9 +18,7 @@
 
 package org.anvilpowered.anvil.common.coremember;
 
-import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.coremember.MongoCoreMemberRepository;
-import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.base.datastore.BaseMongoRepository;
 import org.bson.types.ObjectId;
@@ -40,11 +38,6 @@ public class CommonMongoCoreMemberRepository
     extends CommonCoreMemberRepository<ObjectId, Datastore>
     implements BaseMongoRepository<CoreMember<ObjectId>>,
     MongoCoreMemberRepository {
-
-    @Inject
-    public CommonMongoCoreMemberRepository(DataStoreContext<ObjectId, Datastore> dataStoreContext) {
-        super(dataStoreContext);
-    }
 
     @Override
     public CompletableFuture<Optional<CoreMember<ObjectId>>> getOneOrGenerateForUser(UUID userUUID, String userName, String ipAddress, boolean[] flags) {

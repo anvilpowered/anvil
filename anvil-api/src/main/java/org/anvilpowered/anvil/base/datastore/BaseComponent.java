@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 
@@ -28,11 +29,8 @@ public abstract class BaseComponent<
     TDataStore>
     implements Component<TKey, TDataStore> {
 
+    @Inject
     private DataStoreContext<TKey, TDataStore> dataStoreContext;
-
-    protected BaseComponent(DataStoreContext<TKey, TDataStore> dataStoreContext) {
-        this.dataStoreContext = dataStoreContext;
-    }
 
     @Override
     public DataStoreContext<TKey, TDataStore> getDataStoreContext() {

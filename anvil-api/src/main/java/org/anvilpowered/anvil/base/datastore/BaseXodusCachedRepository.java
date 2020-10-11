@@ -24,7 +24,7 @@ import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
 import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.datastore.CachedRepository;
-import org.anvilpowered.anvil.api.datastore.StorageService;
+import org.anvilpowered.anvil.api.datastore.Repository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 
 import java.util.ArrayList;
@@ -41,12 +41,12 @@ public interface BaseXodusCachedRepository<
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
-        return applyFromDBToCacheConditionally(() -> BaseXodusRepository.super.insertOne(item).join(), StorageService::insertOne);
+        return applyFromDBToCacheConditionally(() -> BaseXodusRepository.super.insertOne(item).join(), Repository::insertOne);
     }
 
     @Override
     default CompletableFuture<List<T>> insert(List<T> list) {
-        return applyFromDBToCache(() -> BaseXodusRepository.super.insert(list).join(), StorageService::insert);
+        return applyFromDBToCache(() -> BaseXodusRepository.super.insert(list).join(), Repository::insert);
     }
 
     @Override

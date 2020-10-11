@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.common.coremember;
 
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository;
-import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.base.datastore.BaseRepository;
 
@@ -34,10 +33,6 @@ public abstract class CommonCoreMemberRepository<
     TDataStore>
     extends BaseRepository<TKey, CoreMember<TKey>, TDataStore>
     implements CoreMemberRepository<TKey, TDataStore> {
-
-    protected CommonCoreMemberRepository(DataStoreContext<TKey, TDataStore> dataStoreContext) {
-        super(dataStoreContext);
-    }
 
     @Override
     @SuppressWarnings("unchecked")

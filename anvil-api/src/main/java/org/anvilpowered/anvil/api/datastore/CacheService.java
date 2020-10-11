@@ -29,8 +29,7 @@ public interface CacheService<
     TKey,
     T extends ObjectWithId<TKey>,
     TDataStore>
-    extends StorageService<TKey, T, TDataStore>,
-    Component<TKey, TDataStore> {
+    extends Repository<TKey, T, TDataStore> {
 
     /**
      * Starts cache invalidation task

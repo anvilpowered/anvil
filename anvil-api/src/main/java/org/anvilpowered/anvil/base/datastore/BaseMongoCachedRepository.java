@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.base.datastore;
 
 import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.datastore.CachedRepository;
-import org.anvilpowered.anvil.api.datastore.StorageService;
+import org.anvilpowered.anvil.api.datastore.Repository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
@@ -36,12 +36,12 @@ public interface BaseMongoCachedRepository<
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
-        return applyFromDBToCacheConditionally(() -> BaseMongoRepository.super.insertOne(item).join(), StorageService::insertOne);
+        return applyFromDBToCacheConditionally(() -> BaseMongoRepository.super.insertOne(item).join(), Repository::insertOne);
     }
 
     @Override
     default CompletableFuture<List<T>> insert(List<T> list) {
-        return applyFromDBToCache(() -> BaseMongoRepository.super.insert(list).join(), StorageService::insert);
+        return applyFromDBToCache(() -> BaseMongoRepository.super.insert(list).join(), Repository::insert);
     }
 
     @Override

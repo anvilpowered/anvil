@@ -18,11 +18,11 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
-import org.anvilpowered.anvil.api.datastore.DataStoreContext;
+import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.datastore.Repository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
+import org.anvilpowered.anvil.api.util.TimeFormatService;
 
-import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -31,15 +31,33 @@ public abstract class BaseRepository<
     T extends ObjectWithId<TKey>,
     TDataStore>
     extends BaseComponent<TKey, TDataStore>
-    implements Repository<TKey, T, TDataStore>,
-    BaseStorageService<TKey, T, TDataStore> {
+    implements Repository<TKey, T, TDataStore> {
 
-    protected BaseRepository(DataStoreContext<TKey, TDataStore> dataStoreContext) {
-        super(dataStoreContext);
+    @Override
+    public T generateEmpty() {
+        Class<T> tClass = getTClass();
+        try {
+            return tClass.getConstructor().newInstance();
+        } catch (Exception e) {
+            String message = "There was an error creating an instance of " + tClass.getName() + "! Make sure it has an accessible no-args constructor!";
+            System.err.println(message);
+            throw new IllegalStateException(message, e);
+        }
     }
 
     @Override
-    public CompletableFuture<Optional<Instant>> getCreatedUtc(TKey id) {
-        return getOne(id).thenApplyAsync(o -> o.map(ObjectWithId::getCreatedUtc));
+    public CompletableFuture<Optional<T>> parseAndGetOne(Object idOrTime) {
+        return parse(idOrTime).map(this::getOne).orElseGet(() ->
+            Anvil.getEnvironmentManager().getCoreEnvironment().getInjector()
+                .getInstance(TimeFormatService.class).parseInstant(idOrTime.toString())
+                .map(this::getOne).orElse(CompletableFuture.completedFuture(Optional.empty())));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> parseAndDeleteOne(Object idOrTime) {
+        return parse(idOrTime).map(this::deleteOne).orElseGet(() ->
+            Anvil.getEnvironmentManager().getCoreEnvironment().getInjector()
+                .getInstance(TimeFormatService.class).parseInstant(idOrTime.toString())
+                .map(this::deleteOne).orElse(CompletableFuture.completedFuture(false)));
     }
 }
