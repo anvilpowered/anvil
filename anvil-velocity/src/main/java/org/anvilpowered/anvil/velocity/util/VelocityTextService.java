@@ -222,7 +222,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
                 } else {
-                    elements.add(TextComponent.of(String.valueOf(o)));
+                    elements.add(Component.text(String.valueOf(o)));
                 }
             }
             return this;
@@ -232,7 +232,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
         public Builder<TextComponent, CommandSource> appendJoining(
             Object delimiter, Object... contents) {
             if (!(delimiter instanceof Builder || delimiter instanceof Component)) {
-                delimiter = TextComponent.of(delimiter.toString());
+                delimiter = Component.text(delimiter.toString());
             }
             final int indexOfLast = contents.length - 1;
             for (int i = 0; i <= indexOfLast; i++) {
@@ -240,7 +240,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
                 } else {
-                    elements.add(TextComponent.of(String.valueOf(o)));
+                    elements.add(Component.text(String.valueOf(o)));
                 }
                 if (i != indexOfLast) {
                     elements.add(delimiter);
@@ -291,7 +291,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
             boolean click = clickEvent != null;
 
             if (elements.isEmpty()) {
-                return TextComponent.empty();
+                return Component.empty();
             } else if (elements.size() == 1 && !hover && !click) {
                 Object o = elements.getFirst();
                 if (o instanceof Builder) {
@@ -332,7 +332,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
             components.offer(currentBuilder.build());
 
             // create new builder with all previous components
-            currentBuilder = TextComponent.builder().append(components);
+            currentBuilder = Component.text().append(components);
 
             if (hover) {
                 currentBuilder.hoverEvent(hoverEvent);
