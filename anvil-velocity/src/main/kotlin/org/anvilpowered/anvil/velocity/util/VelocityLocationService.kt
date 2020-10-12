@@ -20,15 +20,20 @@ package org.anvilpowered.anvil.velocity.util
 
 import com.google.inject.Inject
 import com.velocitypowered.api.proxy.Player
+import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.util.CommonLocationService
 import java.util.Optional
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 class VelocityLocationService : CommonLocationService() {
 
     @Inject
     private lateinit var userService: UserService<Player, Player>
+
+    @Inject
+    private lateinit var proxyServer: ProxyServer
 
     override fun getServerName(userUUID: UUID): Optional<String> {
         return userService.getPlayer(userUUID)
@@ -40,5 +45,23 @@ class VelocityLocationService : CommonLocationService() {
         return userService.getPlayer(userName)
             .flatMap { it.currentServer }
             .map { it.serverInfo.name }
+    }
+
+    private fun setServer(player: Player, serverName: String): CompletableFuture<Boolean> {
+        return proxyServer.getServer(serverName)
+            .map { player.createConnectionRequest(it).connect().thenApply { c -> c.isSuccessful } }
+            .orElse(CompletableFuture.completedFuture(false))
+    }
+
+    override fun setServer(userUUID: UUID, serverName: String): CompletableFuture<Boolean> {
+        return userService.getPlayer(userUUID)
+            .map { setServer(it, serverName) }
+            .orElse(CompletableFuture.completedFuture(false))
+    }
+
+    override fun setServer(userName: String, serverName: String): CompletableFuture<Boolean> {
+        return userService.getPlayer(userName)
+            .map { setServer(it, serverName) }
+            .orElse(CompletableFuture.completedFuture(false))
     }
 }

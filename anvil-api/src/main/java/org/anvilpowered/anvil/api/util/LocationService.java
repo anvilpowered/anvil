@@ -39,4 +39,8 @@ public interface LocationService {
     Optional<Vector3d> getPosition(String userName);
 
     CompletableFuture<Boolean> teleport(UUID teleportingUserUUID, UUID targetUserUUID);
+
+    CompletableFuture<Boolean> setServer(UUID userUUID, String serverName);
+
+    CompletableFuture<Boolean> setServer(String userName, String serverName);
 }

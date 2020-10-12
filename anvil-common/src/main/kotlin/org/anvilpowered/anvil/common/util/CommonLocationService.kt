@@ -53,4 +53,12 @@ abstract class CommonLocationService : LocationService {
     override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
         return CompletableFuture.completedFuture(false)
     }
+
+    override fun setServer(userUUID: UUID, serverName: String): CompletableFuture<Boolean> {
+        return CompletableFuture.completedFuture(false)
+    }
+
+    override fun setServer(userName: String, serverName: String): CompletableFuture<Boolean> {
+        return CompletableFuture.completedFuture(false)
+    }
 }
