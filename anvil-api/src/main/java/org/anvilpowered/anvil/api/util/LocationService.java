@@ -20,6 +20,8 @@ package org.anvilpowered.anvil.api.util;
 
 import com.flowpowered.math.vector.Vector3d;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -29,6 +31,8 @@ public interface LocationService {
     Optional<String> getServerName(UUID userUUID);
 
     Optional<String> getServerName(String userName);
+
+    List<String> getAvailableServerNames();
 
     Optional<String> getWorldName(UUID userUUID);
 

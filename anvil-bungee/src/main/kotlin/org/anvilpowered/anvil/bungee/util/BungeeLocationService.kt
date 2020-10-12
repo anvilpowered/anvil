@@ -40,6 +40,14 @@ class BungeeLocationService : CommonLocationService() {
         return userService.getPlayer(userName).map { it.server.info.name }
     }
 
+    override fun getAvailableServerNames(): MutableList<String> {
+        val serverNames = ArrayList<String>()
+        for (server in ProxyServer.getInstance().servers) {
+            serverNames.add(server.key)
+        }
+        return serverNames
+    }
+
     private fun setServer(player: ProxiedPlayer, serverName: String): CompletableFuture<Boolean> {
         val server = ProxyServer.getInstance().getServerInfo(serverName)
             ?: return CompletableFuture.completedFuture(false)

@@ -47,6 +47,14 @@ class VelocityLocationService : CommonLocationService() {
             .map { it.serverInfo.name }
     }
 
+    override fun getAvailableServerNames(): MutableList<String> {
+        val serverNames = ArrayList<String>()
+        for (server in proxyServer.allServers) {
+            serverNames.add(server.serverInfo.name)
+        }
+        return serverNames
+    }
+
     private fun setServer(player: Player, serverName: String): CompletableFuture<Boolean> {
         return proxyServer.getServer(serverName)
             .map { player.createConnectionRequest(it).connect().thenApply { c -> c.isSuccessful } }

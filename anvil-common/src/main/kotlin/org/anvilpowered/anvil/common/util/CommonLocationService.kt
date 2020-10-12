@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.util
 
 import com.flowpowered.math.vector.Vector3d
+import com.google.common.collect.ImmutableList
 import org.anvilpowered.anvil.api.util.LocationService
 import java.util.Optional
 import java.util.UUID
@@ -32,6 +33,10 @@ abstract class CommonLocationService : LocationService {
 
     override fun getServerName(userName: String): Optional<String> {
         return Optional.empty()
+    }
+
+    override fun getAvailableServerNames(): MutableList<String> {
+        return ImmutableList.of()
     }
 
     override fun getWorldName(userUUID: UUID): Optional<String> {
