@@ -19,11 +19,13 @@
 package org.anvilpowered.anvil.bungee.util
 
 import com.google.inject.Inject
+import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
+import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.util.CommonLocationService
-import java.util.Optional
-import java.util.UUID
 
 class BungeeLocationService : CommonLocationService() {
 
@@ -36,5 +38,28 @@ class BungeeLocationService : CommonLocationService() {
 
     override fun getServerName(userName: String): Optional<String> {
         return userService.getPlayer(userName).map { it.server.info.name }
+    }
+
+    private fun setServer(player: ProxiedPlayer, serverName: String): CompletableFuture<Boolean> {
+        if (player.server.info.name == serverName) {
+            return CompletableFuture.completedFuture(false)
+        }
+        var isSuccessful = false
+        player.connect(ProxyServer.getInstance().getServerInfo("hub")) { success, _ ->
+            isSuccessful = success
+        }
+        return CompletableFuture.completedFuture(isSuccessful)
+    }
+
+    override fun setServer(userUUID: UUID, serverName: String): CompletableFuture<Boolean> {
+        return userService.getPlayer(userUUID)
+            .map { setServer(it, serverName) }
+            .orElse(CompletableFuture.completedFuture(false))
+    }
+
+    override fun setServer(userName: String, serverName: String): CompletableFuture<Boolean> {
+        return userService.getPlayer(userName)
+            .map { setServer(it, serverName) }
+            .orElse(CompletableFuture.completedFuture(false))
     }
 }
