@@ -16,11 +16,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.redis;
+package org.anvilpowered.anvil.common.messaging;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.anvilpowered.anvil.api.redis.RedisService;
+import org.anvilpowered.anvil.api.messaging.RedisService;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.registry.RegistryScoped;

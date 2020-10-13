@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.redis;
+package org.anvilpowered.anvil.api.messaging;
 
 import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import redis.clients.jedis.JedisPool;
