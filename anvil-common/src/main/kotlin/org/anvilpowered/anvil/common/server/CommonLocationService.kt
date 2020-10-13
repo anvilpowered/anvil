@@ -16,22 +16,31 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.util
+package org.anvilpowered.anvil.common.server
 
 import com.flowpowered.math.vector.Vector3d
-import org.anvilpowered.anvil.api.util.LocationService
+import org.anvilpowered.anvil.api.server.BackendServer
+import org.anvilpowered.anvil.api.server.LocationService
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 abstract class CommonLocationService : LocationService {
 
-    override fun getServerName(userUUID: UUID): Optional<String> {
+    override fun getServer(userUUID: UUID): Optional<out BackendServer> {
         return Optional.empty()
     }
 
-    override fun getServerName(userName: String): Optional<String> {
+    override fun getServer(userName: String): Optional<out BackendServer> {
         return Optional.empty()
+    }
+
+    override fun getServerForName(serverName: String): Optional<out BackendServer> {
+        return Optional.empty()
+    }
+
+    override fun getServers(): List<out BackendServer> {
+        return listOf()
     }
 
     override fun getWorldName(userUUID: UUID): Optional<String> {
@@ -42,11 +51,11 @@ abstract class CommonLocationService : LocationService {
         return Optional.empty()
     }
 
-    override fun getPosition(userUUID: UUID): Optional<Vector3d>? {
+    override fun getPosition(userUUID: UUID): Optional<Vector3d> {
         return Optional.empty()
     }
 
-    override fun getPosition(userName: String): Optional<Vector3d>? {
+    override fun getPosition(userName: String): Optional<Vector3d> {
         return Optional.empty()
     }
 

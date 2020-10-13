@@ -15,42 +15,40 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.nukkit.util
+package org.anvilpowered.anvil.sponge.server
 
-import cn.nukkit.Player
 import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.util.CommonLocationService
+import org.anvilpowered.anvil.common.server.CommonLocationService
+import org.spongepowered.api.entity.living.player.Player
+import org.spongepowered.api.entity.living.player.User
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
-class NukkitLocationService : CommonLocationService() {
+class SpongeLocationService : CommonLocationService() {
 
     @Inject
-    private lateinit var userService: UserService<Player, Player>
+    private lateinit var userService: UserService<User, Player>
 
     override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
         val teleporter = userService[teleportingUserUUID]
         val target = userService[targetUserUUID]
         return CompletableFuture.completedFuture(
             if (teleporter.isPresent && target.isPresent) {
-                teleporter.get().teleport(target.get().location)
+                target.get().worldUniqueId
+                    .filter { teleporter.get().setLocation(target.get().position, it) }
+                    .isPresent
             } else false
         )
     }
 
-    private fun extractCoords(player: Player): Vector3d {
-        val pos = player.position
-        return Vector3d(pos.x, pos.y, pos.z)
-    }
-
     override fun getPosition(userUUID: UUID): Optional<Vector3d> {
-        return userService[userUUID].map(::extractCoords)
+        return userService[userUUID].map { it.position }
     }
 
     override fun getPosition(userName: String): Optional<Vector3d> {
-        return userService[userName].map(::extractCoords)
+        return userService[userName].map { it.position }
     }
 }

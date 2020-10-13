@@ -16,27 +16,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.util;
+package org.anvilpowered.anvil.api.server;
 
-import com.flowpowered.math.vector.Vector3d;
+import org.anvilpowered.anvil.api.misc.Named;
 
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+public interface Version extends Named {
 
-public interface LocationService {
-
-    Optional<String> getServerName(UUID userUUID);
-
-    Optional<String> getServerName(String userName);
-
-    Optional<String> getWorldName(UUID userUUID);
-
-    Optional<String> getWorldName(String userName);
-
-    Optional<Vector3d> getPosition(UUID userUUID);
-
-    Optional<Vector3d> getPosition(String userName);
-
-    CompletableFuture<Boolean> teleport(UUID teleportingUserUUID, UUID targetUserUUID);
+    int getProtocol();
 }

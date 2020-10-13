@@ -16,29 +16,36 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.util
+package org.anvilpowered.anvil.velocity.server
 
 import com.google.inject.Inject
 import com.velocitypowered.api.proxy.Player
+import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.util.CommonLocationService
+import org.anvilpowered.anvil.common.server.CommonLocationService
 import java.util.Optional
 import java.util.UUID
+import kotlin.streams.toList
 
 class VelocityLocationService : CommonLocationService() {
 
     @Inject
+    private lateinit var proxyServer: ProxyServer
+
+    @Inject
     private lateinit var userService: UserService<Player, Player>
 
-    override fun getServerName(userUUID: UUID): Optional<String> {
-        return userService.getPlayer(userUUID)
-            .flatMap { it.currentServer }
-            .map { it.serverInfo.name }
+    private fun Optional<Player>.getServer(): Optional<VelocityBackendServer> {
+        return flatMap { it.currentServer }.map { VelocityBackendServer(it.server, userService) }
     }
 
-    override fun getServerName(userName: String): Optional<String> {
-        return userService.getPlayer(userName)
-            .flatMap { it.currentServer }
-            .map { it.serverInfo.name }
+    override fun getServer(userUUID: UUID): Optional<VelocityBackendServer> = userService.getPlayer(userUUID).getServer()
+    override fun getServer(userName: String): Optional<VelocityBackendServer> = userService.getPlayer(userName).getServer()
+    override fun getServerForName(serverName: String): Optional<VelocityBackendServer> {
+        return proxyServer.getServer(serverName).map { VelocityBackendServer(it, userService) }
+    }
+
+    override fun getServers(): List<VelocityBackendServer> {
+        return proxyServer.allServers.stream().map { VelocityBackendServer(it, userService) }.toList()
     }
 }

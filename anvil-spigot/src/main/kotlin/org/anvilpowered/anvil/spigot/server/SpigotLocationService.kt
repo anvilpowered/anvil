@@ -15,12 +15,12 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.spigot.util
+package org.anvilpowered.anvil.spigot.server
 
 import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.util.CommonLocationService
+import org.anvilpowered.anvil.common.server.CommonLocationService
 import org.bukkit.entity.Player
 import java.util.Optional
 import java.util.UUID
@@ -46,11 +46,11 @@ class SpigotLocationService : CommonLocationService() {
         return Vector3d(pos.x, pos.y, pos.z)
     }
 
-    override fun getPosition(userUUID: UUID): Optional<Vector3d>? {
+    override fun getPosition(userUUID: UUID): Optional<Vector3d> {
         return userService[userUUID].map(::extractCoords)
     }
 
-    override fun getPosition(userName: String): Optional<Vector3d>? {
+    override fun getPosition(userName: String): Optional<Vector3d> {
         return userService[userName].map(::extractCoords)
     }
 }

@@ -16,25 +16,24 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.bungee.util
+package org.anvilpowered.anvil.api.server;
 
-import com.google.inject.Inject
-import net.md_5.bungee.api.connection.ProxiedPlayer
-import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.util.CommonLocationService
-import java.util.Optional
-import java.util.UUID
+import org.anvilpowered.anvil.api.misc.Named;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-class BungeeLocationService : CommonLocationService() {
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-    @Inject
-    private lateinit var userService: UserService<ProxiedPlayer, ProxiedPlayer>
+public interface BackendServer extends Named {
 
-    override fun getServerName(userUUID: UUID): Optional<String> {
-        return userService.getPlayer(userUUID).map { it.server.info.name }
-    }
+    CompletableFuture<? extends Version> getVersion();
+    
+    CompletableFuture<Boolean> connect(@Nullable Object player);
 
-    override fun getServerName(userName: String): Optional<String> {
-        return userService.getPlayer(userName).map { it.server.info.name }
-    }
+    CompletableFuture<Boolean> connect(UUID userUUID);
+
+    CompletableFuture<Boolean> connect(String userName);
+
+    List<UUID> getPlayerUUIDs();
 }
