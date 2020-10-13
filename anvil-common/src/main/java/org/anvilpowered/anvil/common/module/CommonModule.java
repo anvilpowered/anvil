@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.common.module;
 
 import com.google.common.reflect.TypeToken;
-import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;

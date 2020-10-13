@@ -21,7 +21,6 @@ import com.velocitypowered.api.command.Command
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.text.TextComponent
-import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditKeyCommand
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditSelectCommand
 
 class VelocityRegistryEditSelectCommand
