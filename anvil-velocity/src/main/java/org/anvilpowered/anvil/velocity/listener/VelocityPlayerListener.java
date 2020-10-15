@@ -23,6 +23,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
+import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
@@ -82,6 +83,7 @@ public class VelocityPlayerListener {
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setResult(PlayerChatEvent.ChatResult.denied());
                 player.sendMessage(
+                    Identity.nil(),
                     pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
                 );
             }

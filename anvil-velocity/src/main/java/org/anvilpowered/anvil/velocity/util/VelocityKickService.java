@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.velocity.util;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.api.util.KickService;
 
@@ -31,7 +32,7 @@ public class VelocityKickService implements KickService {
     private ProxyServer proxyServer;
 
     private TextComponent getReason(Object reason) {
-        return reason instanceof TextComponent ? (TextComponent) reason : TextComponent.of(reason.toString());
+        return reason instanceof TextComponent ? (TextComponent) reason : Component.text(reason.toString());
     }
 
     @Override

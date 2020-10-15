@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.velocity.util;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
+import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -49,7 +50,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
 
     @Override
     public void send(TextComponent text, CommandSource commandSource) {
-        commandSource.sendMessage(text);
+        commandSource.sendMessage(Identity.nil(), text);
     }
 
     @Override
@@ -305,7 +306,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
             final Deque<Component> components = new LinkedList<>();
 
             // create first builder
-            TextComponent.Builder currentBuilder = TextComponent.builder();
+            TextComponent.Builder currentBuilder = Component.text();
             Object firstColor = elements.peekFirst();
             if (firstColor instanceof TextColor) {
                 currentBuilder.color((TextColor) firstColor);
@@ -321,7 +322,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                     // build current builder
                     components.offer(currentBuilder.build());
                     // create new builder starting at this point until the next color
-                    currentBuilder = TextComponent.builder().color((TextColor) o);
+                    currentBuilder = Component.text().color((TextColor) o);
                 } else {
                     System.err.println("Skipping " + o
                         + " because it does not match any of the correct types");
