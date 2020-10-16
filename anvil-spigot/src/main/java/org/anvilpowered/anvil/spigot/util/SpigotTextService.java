@@ -26,8 +26,8 @@ import org.bukkit.command.CommandSender;
 public class SpigotTextService extends MD5TextService<CommandSender> {
 
     @Override
-    public void send(TextComponent text, CommandSender commandSender) {
-        commandSender.spigot().sendMessage(text);
+    public void send(TextComponent text, CommandSender receiver) {
+        receiver.spigot().sendMessage(text);
     }
 
     @Override

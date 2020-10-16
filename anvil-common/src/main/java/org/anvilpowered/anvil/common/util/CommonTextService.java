@@ -59,6 +59,16 @@ public abstract class CommonTextService<TString, TCommandSource>
     }
 
     @Override
+    public void send(TString text, TCommandSource receiver, UUID sourceUUID) {
+        send(text, receiver);
+    }
+
+    @Override
+    public void send(TString text, TCommandSource receiver, Object source) {
+        send(text, receiver);
+    }
+
+    @Override
     public String toPlain(String text) {
         return text.replaceAll("&[0-9a-fklmnor]", "");
     }
@@ -236,8 +246,8 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         @Override
-        public void sendTo(TCommandSource commandSource) {
-            send(build(), commandSource);
+        public void sendTo(TCommandSource receiver) {
+            send(build(), receiver);
         }
 
         @Override
@@ -491,14 +501,14 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         @Override
-        public void sendTo(TCommandSource commandSource) {
+        public void sendTo(TCommandSource receiver) {
             if (pages == null) {
                 buildPages();
             }
             if (pages.size() == 0) {
                 return;
             }
-            send(pages.get(0), commandSource);
+            send(pages.get(0), receiver);
         }
 
         @Override

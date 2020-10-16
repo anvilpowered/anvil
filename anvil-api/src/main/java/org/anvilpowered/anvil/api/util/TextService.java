@@ -22,6 +22,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.URL;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public interface TextService<TString, TCommandSource>
@@ -58,18 +59,38 @@ public interface TextService<TString, TCommandSource>
     }
 
     /**
-     * Send the provided {@link TString} to the
-     * provided {@link TCommandSource}
+     * Sends the provided {@link TString text} to the provided {@link TCommandSource receiver}.
      *
-     * @param text          {@link TString} text to send
-     * @param commandSource {@link TCommandSource} source to send text to
+     * @param text     The {@link TString text} to send
+     * @param receiver The {@link TCommandSource receiver} to send the provided text to
      */
-    void send(TString text, TCommandSource commandSource);
+    void send(TString text, TCommandSource receiver);
+
+    /**
+     * Sends the provided {@link TString text} to the provided {@link TCommandSource receiver},
+     * originating from the provided {@link UUID sourceUUID}.
+     *
+     * @param text       The {@link TString text} to send
+     * @param receiver   The {@link TCommandSource receiver} to send the provided text to
+     * @param sourceUUID The {@link UUID} of the source of the message
+     */
+    void send(TString text, TCommandSource receiver, UUID sourceUUID);
+
+    /**
+     * Sends the provided {@link TString text} to the provided {@link TCommandSource receiver},
+     * originating from the provided source. Attempts to extract a {@link UUID}
+     * from the provided source to server as the identity.
+     *
+     * @param text     The {@link TString text} to send
+     * @param receiver The {@link TCommandSource receiver} source to send the provided text to
+     * @param source   The source of the message
+     */
+    void send(TString text, TCommandSource receiver, Object source);
 
     /**
      * Send the provided {@link TString text} to the console
      *
-     * @param text {@link TString} text to send
+     * @param text The {@link TString text} to send
      */
     default void sendToConsole(TString text) {
         send(text, getConsole());
@@ -907,12 +928,11 @@ public interface TextService<TString, TCommandSource>
         TString build();
 
         /**
-         * Creates a {@link TString} from this builder and sends
-         * it to the provided {@link TCommandSource}
+         * Creates a {@link TString text} from this builder and sends it to the provided {@link TCommandSource receiver}
          *
-         * @param commandSource The {@link TCommandSource} to send the {@link TString} to
+         * @param receiver The {@link TCommandSource receiver} to send the {@link TString text} to
          */
-        void sendTo(TCommandSource commandSource);
+        void sendTo(TCommandSource receiver);
 
         /**
          * Creates a {@link TString} from this builder and sends
@@ -1084,11 +1104,11 @@ public interface TextService<TString, TCommandSource>
         int getLinesPerPage();
 
         /**
-         * Sends this {@link Pagination} to the provided {@link TCommandSource}
+         * Sends this {@link Pagination} to the provided {@link TCommandSource receiver}
          *
-         * @param commandSource The {@link TCommandSource} to send the {@link Pagination} to
+         * @param receiver The {@link TCommandSource receiver} to send this {@link Pagination} to
          */
-        void sendTo(TCommandSource commandSource);
+        void sendTo(TCommandSource receiver);
 
         /**
          * Sends this {@link Pagination} to the console

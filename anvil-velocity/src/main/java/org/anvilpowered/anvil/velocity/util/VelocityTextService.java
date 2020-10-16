@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.velocity.util;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
+import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -37,6 +38,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.UUID;
 
 public class VelocityTextService extends CommonTextService<TextComponent, CommandSource> {
 
@@ -49,8 +51,22 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
     }
 
     @Override
-    public void send(TextComponent text, CommandSource commandSource) {
-        commandSource.sendMessage(Identity.nil(), text);
+    public void send(TextComponent text, CommandSource receiver) {
+        receiver.sendMessage(Identity.nil(), text);
+    }
+
+    @Override
+    public void send(TextComponent text, CommandSource receiver, UUID sourceUUID) {
+        receiver.sendMessage(Identity.identity(sourceUUID), text);
+    }
+
+    @Override
+    public void send(TextComponent text, CommandSource receiver, Object source) {
+        if (source instanceof Identified) {
+            receiver.sendMessage((Identified) source, text);
+        } else {
+            send(text, receiver);
+        }
     }
 
     @Override

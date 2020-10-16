@@ -30,8 +30,8 @@ public class NukkitTextService extends StringTextService<CommandSender> {
     }
 
     @Override
-    public void send(String result, CommandSender commandSender) {
-        commandSender.sendMessage(result);
+    public void send(String result, CommandSender receiver) {
+        receiver.sendMessage(result);
     }
 
     @Override

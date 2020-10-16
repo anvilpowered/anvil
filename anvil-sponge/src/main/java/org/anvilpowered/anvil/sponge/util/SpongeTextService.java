@@ -54,8 +54,8 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
     }
 
     @Override
-    public void send(Text text, CommandSource commandSource) {
-        commandSource.sendMessage(text);
+    public void send(Text text, CommandSource receiver) {
+        receiver.sendMessage(text);
     }
 
     @Override
@@ -423,8 +423,8 @@ public class SpongeTextService extends CommonTextService<Text, CommandSource> {
         }
 
         @Override
-        public void sendTo(CommandSource commandSource) {
-            paginationList.sendTo(commandSource);
+        public void sendTo(CommandSource receiver) {
+            paginationList.sendTo(receiver);
         }
 
         @Override
