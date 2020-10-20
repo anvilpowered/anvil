@@ -57,8 +57,9 @@ public class JavaUtilLoggingAdapter extends MarkerIgnoringBase implements Locati
                 break;
         }
 
-        String message0 = color + "[" + name + "] " + message + "\033[0m"; //Always reset the color
+        String message0 = color + message + "\033[0m"; //Always reset the color
         LogRecord record = new LogRecord(level, message0);
+        record.setLoggerName(name);
         record.setThrown(throwable);
         logger.log(record);
     }
