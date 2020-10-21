@@ -49,6 +49,7 @@ shadowJar {
         include dependency(bson)
         include dependency(configurate_core)
         include dependency(configurate_hocon)
+        include dependency(flow_math)
         include dependency(guice)
         include dependency(javax)
         include dependency(javasisst)
