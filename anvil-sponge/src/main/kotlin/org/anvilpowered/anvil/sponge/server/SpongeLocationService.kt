@@ -21,6 +21,7 @@ import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonLocationService
+import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
 import java.util.Optional
@@ -50,5 +51,17 @@ class SpongeLocationService : CommonLocationService() {
 
     override fun getPosition(userName: String): Optional<Vector3d> {
         return userService[userName].map { it.position }
+    }
+
+    override fun getWorldName(userName: String): Optional<String> {
+        return userService[userName].flatMap { it.worldUniqueId }
+            .flatMap { Sponge.getServer().getWorld(it) }
+            .map { it.name }
+    }
+
+    override fun getWorldName(userUUID: UUID): Optional<String> {
+        return userService[userUUID].flatMap { it.worldUniqueId }
+            .flatMap { Sponge.getServer().getWorld(it) }
+            .map { it.name }
     }
 }

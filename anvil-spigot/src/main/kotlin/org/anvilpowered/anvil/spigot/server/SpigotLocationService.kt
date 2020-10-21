@@ -53,4 +53,12 @@ class SpigotLocationService : CommonLocationService() {
     override fun getPosition(userName: String): Optional<Vector3d> {
         return userService[userName].map(::extractCoords)
     }
+
+    override fun getWorldName(userUUID: UUID): Optional<String> {
+        return userService[userUUID].map { it.world }.map { it.name }
+    }
+
+    override fun getWorldName(userName: String): Optional<String> {
+        return userService[userName].map { it.world }.map { it.name }
+    }
 }
