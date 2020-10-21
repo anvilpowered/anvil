@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.nukkit;
 import cn.nukkit.Server;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.utils.Logger;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -42,6 +43,7 @@ public class AnvilNukkit extends PluginBase {
             protected void configure() {
                 bind(Plugin.class).toInstance(AnvilNukkit.this);
                 bind(AnvilNukkit.class).toInstance(AnvilNukkit.this);
+                bind(Logger.class).toProvider(AnvilNukkit.this::getLogger);
             }
         };
         Injector injector = Guice.createInjector(module);

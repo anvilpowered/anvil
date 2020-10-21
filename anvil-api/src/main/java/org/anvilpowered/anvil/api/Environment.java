@@ -34,6 +34,7 @@ import org.anvilpowered.anvil.api.util.TextService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @SuppressWarnings({"UnstableApiUsage", "unchecked"})
 public interface Environment extends Named, Comparable<Environment> {
@@ -136,6 +137,23 @@ public interface Environment extends Named, Comparable<Environment> {
          * @return {@code this}
          */
         Builder setRootInjector(@Nullable Injector rootInjector);
+
+        /**
+         * Sets the logger, currently only necessary on Nukkit.
+         *
+         * <p>
+         * The provided logger is adapted to the {@link org.slf4j.Logger}.
+         * If no logger is provided on Nukkit, Anvil's logger will be used.
+         * (This means logs will be prefixed with "Anvil" instead of your plugin name)
+         * </p>
+         *
+         * <pre><code>
+         *     setLoggerSupplier(MyNukkitPlugin.this::getLogger);
+         * </code></pre>
+         *
+         * @param logger to set.
+         */
+        Builder setLoggerSupplier(Supplier<?> logger);
 
         /**
          * This will load your root {@link CommandNode} as

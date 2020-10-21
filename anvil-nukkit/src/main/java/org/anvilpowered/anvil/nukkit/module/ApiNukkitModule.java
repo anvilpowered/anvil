@@ -42,7 +42,7 @@ import org.anvilpowered.anvil.nukkit.util.NukkitUserService;
 public class ApiNukkitModule extends PlatformModule {
 
     public ApiNukkitModule() {
-        super(new PlatformImpl(false, "nukkit"));
+        super(new PlatformImpl(false, "nukkit", NukkitLoggerAdapter::bindLogger));
     }
 
     @Override

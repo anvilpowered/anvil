@@ -28,12 +28,14 @@ import org.anvilpowered.anvil.api.util.TextService;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-class EnvironmentImpl implements Environment {
+public class EnvironmentImpl implements Environment {
 
     private Injector injector;
     private final String name;
     private final Object plugin;
+    private final Supplier<?> loggerSupplier;
     private final boolean withRootCommand;
     private final Collection<Module> modules;
     private final Map<Key<?>, Consumer<?>> earlyServices;
@@ -42,6 +44,7 @@ class EnvironmentImpl implements Environment {
         Injector injector,
         String name,
         Object plugin,
+        Supplier<?> loggerSupplier,
         boolean withRootCommand,
         Collection<Module> modules,
         Map<Key<?>, Consumer<?>> earlyServices
@@ -49,6 +52,7 @@ class EnvironmentImpl implements Environment {
         this.injector = injector;
         this.name = name;
         this.plugin = plugin;
+        this.loggerSupplier = loggerSupplier;
         this.withRootCommand = withRootCommand;
         this.modules = modules;
         this.earlyServices = earlyServices;
@@ -56,6 +60,10 @@ class EnvironmentImpl implements Environment {
 
     void setInjector(Injector injector) {
         this.injector = injector;
+    }
+
+    public Supplier<?> getLoggerSupplier() {
+        return loggerSupplier;
     }
 
     boolean withRootCommand() {
