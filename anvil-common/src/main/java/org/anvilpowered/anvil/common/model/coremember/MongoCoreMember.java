@@ -24,6 +24,8 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity("coreMembers")
@@ -31,6 +33,7 @@ public class MongoCoreMember extends MongoDbo implements CoreMember<ObjectId> {
 
     private UUID userUUID;
     private String userName;
+    private List<String> previousNames;
     private String ipAddress;
     private Instant lastJoinedUtc;
     private String nickName;
@@ -59,6 +62,19 @@ public class MongoCoreMember extends MongoDbo implements CoreMember<ObjectId> {
     @Override
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @Override
+    public List<String> getPreviousNames() {
+        if (previousNames == null) {
+            previousNames = new ArrayList<>();
+        }
+        return previousNames;
+    }
+
+    @Override
+    public void setPreviousNames(List<String> previousNames) {
+        this.previousNames = previousNames;
     }
 
     @Override

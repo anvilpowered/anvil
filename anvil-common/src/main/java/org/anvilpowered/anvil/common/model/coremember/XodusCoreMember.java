@@ -20,11 +20,16 @@ package org.anvilpowered.anvil.common.model.coremember;
 
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
+import jetbrains.exodus.util.ByteArraySizedInputStream;
 import org.anvilpowered.anvil.api.datastore.XodusEntity;
+import org.anvilpowered.anvil.api.model.Mappable;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.base.model.XodusDbo;
 
+import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @XodusEntity
@@ -32,6 +37,7 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
 
     private String userUUID;
     private String userName;
+    private List<String> previousNames;
     private String ipAddress;
     private long lastJoinedUtcSeconds;
     private int lastJoinedUtcNanos;
@@ -63,6 +69,19 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
     @Override
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @Override
+    public List<String> getPreviousNames() {
+        if (previousNames == null) {
+            previousNames = new ArrayList<>();
+        }
+        return previousNames;
+    }
+
+    @Override
+    public void setPreviousNames(List<String> previousNames) {
+        this.previousNames = previousNames;
     }
 
     @Override
@@ -175,6 +194,13 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
         if (nickName != null) {
             object.setProperty("nickname", nickName);
         }
+        if (previousNames != null) {
+            try {
+                object.setBlob("previousNames", new ByteArraySizedInputStream(Mappable.serializeUnsafe(previousNames)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         object.setProperty("banned", banned);
         object.setProperty("muted", muted);
         object.setProperty("banEndUtcSeconds", banEndUtcSeconds);
@@ -201,6 +227,8 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
         if (userName instanceof String) {
             this.userName = (String) userName;
         }
+        this.previousNames = Mappable.<List<String>>deserialize(object.getBlob("previousNames"))
+            .orElse(new ArrayList<>());
         Comparable<?> ipAddress = object.getProperty("ipAddress");
         if (ipAddress instanceof String) {
             this.ipAddress = (String) ipAddress;

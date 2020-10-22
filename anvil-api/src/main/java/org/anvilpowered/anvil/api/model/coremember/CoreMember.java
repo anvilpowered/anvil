@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.api.model.coremember;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public interface CoreMember<TKey> extends ObjectWithId<TKey> {
@@ -30,6 +31,9 @@ public interface CoreMember<TKey> extends ObjectWithId<TKey> {
 
     String getUserName();
     void setUserName(String userName);
+
+    List<String> getPreviousNames();
+    void setPreviousNames(List<String> previousName);
 
     String getIpAddress();
     void setIpAddress(String ipAddress);

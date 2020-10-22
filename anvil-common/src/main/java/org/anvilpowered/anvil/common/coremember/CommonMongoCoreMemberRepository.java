@@ -61,6 +61,7 @@ public class CommonMongoCoreMemberRepository
             boolean updateName = false;
             boolean updateIpAddress = false;
             if (!userName.equals(optionalMember.get().getUserName())) {
+                updateOperations.addToSet("previousNames", optionalMember.get().getUserName());
                 updateOperations.set("userName", userName);
                 updateName = true;
             }

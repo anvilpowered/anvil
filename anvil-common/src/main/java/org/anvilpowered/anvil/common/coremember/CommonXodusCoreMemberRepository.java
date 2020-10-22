@@ -18,15 +18,19 @@
 
 package org.anvilpowered.anvil.common.coremember;
 
+import com.google.inject.Inject;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.StoreTransaction;
+import jetbrains.exodus.util.ByteArraySizedInputStream;
 import org.anvilpowered.anvil.api.coremember.XodusCoreMemberRepository;
 import org.anvilpowered.anvil.api.model.Mappable;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.base.datastore.BaseXodusRepository;
+import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -41,6 +45,9 @@ public class CommonXodusCoreMemberRepository
     extends CommonCoreMemberRepository<EntityId, PersistentEntityStore>
     implements BaseXodusRepository<CoreMember<EntityId>>,
     XodusCoreMemberRepository {
+
+    @Inject
+    private Logger logger;
 
     @Override
     public CompletableFuture<Optional<CoreMember<EntityId>>> getOneOrGenerateForUser(UUID userUUID, String userName, String ipAddress, boolean[] flags) {
@@ -70,6 +77,13 @@ public class CommonXodusCoreMemberRepository
                 boolean updateIPAddress = false;
 
                 if (!item.getUserName().equals(userName)) {
+                    item.getPreviousNames().add(item.getUserName());
+                    try {
+                        entity.setBlob("previousNames",
+                            new ByteArraySizedInputStream(Mappable.serializeUnsafe(item.getPreviousNames())));
+                    } catch (IOException e) {
+                        logger.error(e.getMessage());
+                    }
                     entity.setProperty("userName", userName);
                     updateUsername = true;
                 }
