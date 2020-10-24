@@ -41,6 +41,14 @@ class SpigotLocationService : CommonLocationService() {
         )
     }
 
+    override fun getWorldName(userUUID: UUID): Optional<String> {
+        return userService[userUUID].map { it.world }.map { it.name }
+    }
+
+    override fun getWorldName(userName: String): Optional<String> {
+        return userService[userName].map { it.world }.map { it.name }
+    }
+
     private fun extractCoords(player: Player): Vector3d {
         val pos = player.location
         return Vector3d(pos.x, pos.y, pos.z)
