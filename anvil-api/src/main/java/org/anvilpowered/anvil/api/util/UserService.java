@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.api.util;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +38,14 @@ public interface UserService<TUser, TPlayer> {
     Optional<TPlayer> getPlayer(UUID userUUID);
 
     Optional<TPlayer> getPlayer(TUser user);
+
+    /**
+     * Attempts to find all matching userNames that start with the provided String (case-insensitive).
+     *
+     *
+     * @return A list of matching player names
+     */
+    List<String> getPlayerNames(String startsWith);
 
     Collection<TPlayer> getOnlinePlayers();
 

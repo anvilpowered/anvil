@@ -24,9 +24,11 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.anvilpowered.anvil.common.util.CommonUserService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class VelocityUserService extends CommonUserService<Player, Player> {
 
@@ -61,6 +63,15 @@ public class VelocityUserService extends CommonUserService<Player, Player> {
     @Override
     public Optional<Player> getPlayer(Player player) {
         return Optional.of(player);
+    }
+
+    @Override
+    public List<String> getPlayerNames(String startsWith) {
+        String startsWithLowerCase = startsWith.toLowerCase();
+        return getOnlinePlayers().stream()
+            .map(Player::getUsername)
+            .filter(name -> name.toLowerCase().startsWith(startsWithLowerCase))
+            .collect(Collectors.toList());
     }
 
     @Override
