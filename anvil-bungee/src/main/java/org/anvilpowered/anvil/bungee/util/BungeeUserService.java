@@ -24,9 +24,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.anvilpowered.anvil.common.util.CommonUserService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class BungeeUserService extends CommonUserService<ProxiedPlayer, ProxiedPlayer> {
 
@@ -58,6 +60,13 @@ public class BungeeUserService extends CommonUserService<ProxiedPlayer, ProxiedP
     @Override
     public Optional<ProxiedPlayer> getPlayer(ProxiedPlayer proxiedPlayer) {
         return Optional.of(proxiedPlayer);
+    }
+
+    @Override
+    public List<String> matchPlayerNames(String startsWith) {
+        return ProxyServer.getInstance().matchPlayer(startsWith).stream()
+            .map(ProxiedPlayer::getName)
+            .collect(Collectors.toList());
     }
 
     @Override

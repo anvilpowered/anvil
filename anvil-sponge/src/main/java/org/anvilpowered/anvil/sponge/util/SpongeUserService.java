@@ -23,12 +23,15 @@ import org.anvilpowered.anvil.common.util.CommonUserService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.user.UserStorageService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class SpongeUserService extends CommonUserService<User, Player> {
 
@@ -60,6 +63,15 @@ public class SpongeUserService extends CommonUserService<User, Player> {
     @Override
     public Optional<Player> getPlayer(User user) {
         return user.getPlayer();
+    }
+
+    @Override
+    public List<String> matchPlayerNames(String lastKnownName) {
+        return Sponge.getServiceManager().provideUnchecked(UserStorageService.class).match(lastKnownName).stream()
+            .map(GameProfile::getName)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
     }
 
     @Override

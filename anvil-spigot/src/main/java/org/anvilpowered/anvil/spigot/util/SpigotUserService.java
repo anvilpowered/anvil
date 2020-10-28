@@ -21,12 +21,17 @@ package org.anvilpowered.anvil.spigot.util;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.common.util.CommonUserService;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SpigotUserService extends CommonUserService<Player, Player> {
 
@@ -58,6 +63,16 @@ public class SpigotUserService extends CommonUserService<Player, Player> {
     @Override
     public Optional<Player> getPlayer(Player player) {
         return Optional.of(player);
+    }
+
+    @Override
+    public List<String> matchPlayerNames(String startsWith) {
+        String startsWithLowerCase = startsWith.toLowerCase();
+        return Stream.of(Bukkit.getOfflinePlayers())
+            .map(OfflinePlayer::getName)
+            .filter(Objects::nonNull)
+            .filter(name -> name.toLowerCase().startsWith(startsWithLowerCase))
+            .collect(Collectors.toList());
     }
 
     @Override

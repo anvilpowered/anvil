@@ -24,9 +24,12 @@ import com.google.inject.Inject;
 import org.anvilpowered.anvil.common.util.CommonUserService;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class NukkitUserService extends CommonUserService<Player, Player> {
 
@@ -58,6 +61,16 @@ public class NukkitUserService extends CommonUserService<Player, Player> {
     @Override
     public Optional<Player> getPlayer(Player player) {
         return Optional.ofNullable(player);
+    }
+
+    @Override
+    public List<String> matchPlayerNames(String startsWith) {
+        String startsWithLowerCase = startsWith.toLowerCase();
+        return getOnlinePlayers().stream()
+            .map(Player::getName)
+            .filter(Objects::nonNull)
+            .filter(name -> name.toLowerCase().startsWith(startsWithLowerCase))
+            .collect(Collectors.toList());
     }
 
     @Override
