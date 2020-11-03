@@ -41,22 +41,22 @@ public interface BaseXodusCachedRepository<
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
-        return applyFromDBToCacheConditionally(() -> BaseXodusRepository.super.insertOne(item).join(), Repository::insertOne);
+        return applyFromDBToCacheConditionally(BaseXodusRepository.super.insertOne(item), Repository::insertOne);
     }
 
     @Override
     default CompletableFuture<List<T>> insert(List<T> list) {
-        return applyFromDBToCache(() -> BaseXodusRepository.super.insert(list).join(), Repository::insert);
+        return applyFromDBToCache(BaseXodusRepository.super.insert(list), Repository::insert);
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(EntityId id) {
-        return applyToBothConditionally(c -> c.getOne(id).join(), () -> BaseXodusRepository.super.getOne(id).join());
+        return applyToBothConditionally(c -> c.getOne(id).join(), BaseXodusRepository.super.getOne(id));
     }
 
     @Override
     default CompletableFuture<Boolean> delete(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
-        return applyFromDBToCache(() ->
+        return applyFromDBToCache(CompletableFuture.supplyAsync(() ->
             getDataStoreContext().getDataStore().computeInTransaction(txn -> {
                 List<EntityId> toDelete = new ArrayList<>();
                 query.apply(txn).forEach(entity -> {
@@ -64,13 +64,13 @@ public interface BaseXodusCachedRepository<
                     entity.delete();
                 });
                 return txn.commit() ? toDelete : Collections.<EntityId>emptyList();
-            }), (c, toDelete) -> toDelete.forEach(id -> c.deleteOne(id).join()))
+            })), (c, toDelete) -> toDelete.forEach(id -> c.deleteOne(id).join()))
             .thenApplyAsync(result -> !result.isEmpty());
     }
 
     @Override
     default CompletableFuture<Boolean> deleteOne(EntityId id) {
-        return applyFromDBToCache(() -> BaseXodusRepository.super.deleteOne(id).join(), (c, b) -> {
+        return applyFromDBToCache(BaseXodusRepository.super.deleteOne(id), (c, b) -> {
             if (b) {
                 c.deleteOne(id).join();
             }

@@ -27,7 +27,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public abstract class BaseCachedRepository<
     TKey,
@@ -38,49 +37,64 @@ public abstract class BaseCachedRepository<
     implements CachedRepository<TKey, T, C, TDataStore> {
 
     @Override
-    public <K> CompletableFuture<K> applyFromDBToCache(Supplier<K> fromDB, BiConsumer<C, K> toCache) {
-        return CompletableFuture.supplyAsync(fromDB).thenApplyAsync(k -> {
+    public <K> CompletableFuture<K> applyFromDBToCache(CompletableFuture<K> fromDB, BiConsumer<C, K> toCache) {
+        return fromDB.thenApplyAsync(k -> {
             getRepositoryCacheService().ifPresent(c -> toCache.accept(c, k));
             return k;
         });
     }
 
     @Override
-    public <K> CompletableFuture<Optional<K>> applyFromDBToCacheConditionally(Supplier<Optional<K>> fromDB, BiConsumer<C, K> toCache) {
-        return CompletableFuture.supplyAsync(fromDB).thenApplyAsync(optionalK -> {
+    public <K> CompletableFuture<Optional<K>> applyFromDBToCacheConditionally(
+        CompletableFuture<Optional<K>> fromDB,
+        BiConsumer<C, K> toCache
+    ) {
+        return fromDB.thenApplyAsync(optionalK -> {
             optionalK.ifPresent(k -> getRepositoryCacheService().ifPresent(c -> toCache.accept(c, k)));
             return optionalK;
         });
     }
 
     @Override
-    public <K> CompletableFuture<K> applyFromDBThroughCache(Supplier<K> fromDB, BiFunction<C, K, K> cacheTransformer) {
-        return CompletableFuture.supplyAsync(fromDB).thenApplyAsync(k -> getRepositoryCacheService().map(c -> cacheTransformer.apply(c, k)).orElse(k));
+    public <K> CompletableFuture<K> applyFromDBThroughCache(CompletableFuture<K> fromDB, BiFunction<C, K, K> cacheTransformer) {
+        return fromDB.thenApplyAsync(k -> getRepositoryCacheService().map(c -> cacheTransformer.apply(c, k)).orElse(k));
     }
 
     @Override
-    public <K> CompletableFuture<Optional<K>> applyFromDBThroughCacheConditionally(Supplier<Optional<K>> fromDB, BiFunction<C, K, Optional<K>> cacheTransformer) {
-        return CompletableFuture.supplyAsync(fromDB).thenApplyAsync(optionalK -> optionalK.flatMap(k -> getRepositoryCacheService().flatMap(c -> cacheTransformer.apply(c, k))));
+    public <K> CompletableFuture<Optional<K>> applyFromDBThroughCacheConditionally(
+        CompletableFuture<Optional<K>> fromDB, BiFunction<C, K,
+        Optional<K>> cacheTransformer
+    ) {
+        return fromDB.thenApplyAsync(optionalK ->
+            optionalK.flatMap(k -> getRepositoryCacheService().flatMap(c -> cacheTransformer.apply(c, k))));
     }
 
     @Override
-    public <K> CompletableFuture<K> applyThroughBoth(Function<C, K> cacheTransformer, Function<Optional<K>, K> dbTransformer) {
-        return CompletableFuture.supplyAsync(() -> dbTransformer.apply(getRepositoryCacheService().map(cacheTransformer)));
+    public <K> CompletableFuture<K> applyThroughBoth(
+        Function<C, K> cacheTransformer,
+        Function<Optional<K>, CompletableFuture<K>> dbTransformer
+    ) {
+        return dbTransformer.apply(getRepositoryCacheService().map(cacheTransformer));
     }
 
     @Override
-    public <K> CompletableFuture<Optional<K>> applyThroughBothConditionally(Function<C, Optional<K>> cacheTransformer, Function<K, K> dbTransformer) {
-        return CompletableFuture.supplyAsync(() -> getRepositoryCacheService().flatMap(cacheTransformer).map(dbTransformer));
+    public <K> CompletableFuture<Optional<K>> applyThroughBothConditionally(
+        Function<C, Optional<K>> cacheTransformer,
+        Function<K, CompletableFuture<Optional<K>>> dbTransformer
+    ) {
+        return getRepositoryCacheService().flatMap(cacheTransformer).map(dbTransformer)
+            .orElse(CompletableFuture.completedFuture(Optional.empty()));
     }
 
     @Override
-    public <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer, Supplier<Optional<K>> dbSupplier) {
-        return CompletableFuture.supplyAsync(() -> {
-            Optional<K> optionalK = getRepositoryCacheService().flatMap(cacheTransformer);
-            if (!optionalK.isPresent()) {
-                return dbSupplier.get();
-            }
-            return optionalK;
-        });
+    public <K> CompletableFuture<Optional<K>> applyToBothConditionally(
+        Function<C, Optional<K>> cacheTransformer,
+        CompletableFuture<Optional<K>> dbSupplier
+    ) {
+        Optional<K> optionalK = getRepositoryCacheService().flatMap(cacheTransformer);
+        if (optionalK.isPresent()) {
+            return CompletableFuture.completedFuture(optionalK);
+        }
+        return dbSupplier;
     }
 }

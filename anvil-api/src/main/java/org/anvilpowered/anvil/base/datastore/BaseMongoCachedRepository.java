@@ -36,16 +36,16 @@ public interface BaseMongoCachedRepository<
 
     @Override
     default CompletableFuture<Optional<T>> insertOne(T item) {
-        return applyFromDBToCacheConditionally(() -> BaseMongoRepository.super.insertOne(item).join(), Repository::insertOne);
+        return applyFromDBToCacheConditionally(BaseMongoRepository.super.insertOne(item), Repository::insertOne);
     }
 
     @Override
     default CompletableFuture<List<T>> insert(List<T> list) {
-        return applyFromDBToCache(() -> BaseMongoRepository.super.insert(list).join(), Repository::insert);
+        return applyFromDBToCache(BaseMongoRepository.super.insert(list), Repository::insert);
     }
 
     @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
-        return applyToBothConditionally(c -> c.getOne(id).join(), () -> BaseMongoRepository.super.getOne(id).join());
+        return applyToBothConditionally(c -> c.getOne(id).join(), BaseMongoRepository.super.getOne(id));
     }
 }

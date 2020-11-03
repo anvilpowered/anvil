@@ -50,11 +50,11 @@ public interface CachedRepository<
      * </ul>
      *
      * @param <K>     The type returned from the cache and database
-     * @param fromDB  {@link Supplier} retrieving data from DB
+     * @param fromDB  {@link CompletableFuture} retrieving data from DB
      * @param toCache {@link BiConsumer} applying DB data to cache
      * @return Result from DB after it has (optionally) been applied to cache
      */
-    <K> CompletableFuture<K> applyFromDBToCache(Supplier<K> fromDB, BiConsumer<C, K> toCache);
+    <K> CompletableFuture<K> applyFromDBToCache(CompletableFuture<K> fromDB, BiConsumer<C, K> toCache);
 
     /**
      * <p>
@@ -69,11 +69,12 @@ public interface CachedRepository<
      * </ul>
      *
      * @param <K>     The type returned from the cache and database
-     * @param fromDB  {@link Supplier} retrieving data from DB
+     * @param fromDB  {@link CompletableFuture} retrieving data from DB
      * @param toCache {@link BiConsumer} applying DB data to cache.
      * @return Result from DB after it has (optionally) been applied to cache
      */
-    <K> CompletableFuture<Optional<K>> applyFromDBToCacheConditionally(Supplier<Optional<K>> fromDB, BiConsumer<C, K> toCache);
+    <K> CompletableFuture<Optional<K>> applyFromDBToCacheConditionally(CompletableFuture<Optional<K>> fromDB,
+                                                                       BiConsumer<C, K> toCache);
 
     /**
      * <p>
@@ -87,11 +88,11 @@ public interface CachedRepository<
      * </ul>
      *
      * @param <K>              The type returned from the cache and database
-     * @param fromDB           {@link Supplier} retrieving data from DB
+     * @param fromDB           {@link CompletableFuture} retrieving data from DB
      * @param cacheTransformer {@link BiFunction} applying DB data to cache
      * @return Result from cache
      */
-    <K> CompletableFuture<K> applyFromDBThroughCache(Supplier<K> fromDB, BiFunction<C, K, K> cacheTransformer);
+    <K> CompletableFuture<K> applyFromDBThroughCache(CompletableFuture<K> fromDB, BiFunction<C, K, K> cacheTransformer);
 
     /**
      * <p>
@@ -106,11 +107,12 @@ public interface CachedRepository<
      * </ul>
      *
      * @param <K>              The type returned from the cache and database
-     * @param fromDB           {@link Supplier} retrieving data from DB
+     * @param fromDB           {@link CompletableFuture} retrieving data from DB
      * @param cacheTransformer {@link BiFunction} applying DB data to cache. Will only be run if {@link Optional} is present
      * @return Result from cache if result and cache are present, otherwise from DB
      */
-    <K> CompletableFuture<Optional<K>> applyFromDBThroughCacheConditionally(Supplier<Optional<K>> fromDB, BiFunction<C, K, Optional<K>> cacheTransformer);
+    <K> CompletableFuture<Optional<K>> applyFromDBThroughCacheConditionally(CompletableFuture<Optional<K>> fromDB,
+                                                                            BiFunction<C, K, Optional<K>> cacheTransformer);
 
     /**
      * <p>
@@ -129,7 +131,8 @@ public interface CachedRepository<
      *                         {@link Optional} is the result of the cache function (will be empty if the cache or the result is not present)
      * @return Result from DB
      */
-    <K> CompletableFuture<K> applyThroughBoth(Function<C, K> cacheTransformer, Function<Optional<K>, K> dbTransformer);
+    <K> CompletableFuture<K> applyThroughBoth(Function<C, K> cacheTransformer,
+                                              Function<Optional<K>, CompletableFuture<K>> dbTransformer);
 
     /**
      * <p>
@@ -149,11 +152,12 @@ public interface CachedRepository<
      * </ul>
      *
      * @param <K>              The type returned by the cache and database
-     * @param cacheTransformer {@link Function} applying transformation to data in cache and returning new data
+     * @param cacheTransformer {@link CompletableFuture} applying transformation to data in cache and returning new data
      * @param dbTransformer    {@link Function} applying transformation to data in db
      * @return {@link K} result from cache
      */
-    <K> CompletableFuture<Optional<K>> applyThroughBothConditionally(Function<C, Optional<K>> cacheTransformer, Function<K, K> dbTransformer);
+    <K> CompletableFuture<Optional<K>> applyThroughBothConditionally(Function<C, Optional<K>> cacheTransformer,
+                                                                     Function<K, CompletableFuture<Optional<K>>> dbTransformer);
 
     /**
      * <p>
@@ -172,8 +176,9 @@ public interface CachedRepository<
      *
      * @param <K>              The type returned by the cache and database
      * @param cacheTransformer {@link Function} applying transformation to data in cache and returning new data
-     * @param dbSupplier       {@link Supplier} retrieving data from db. Will only be run if {@link Optional} is not present
+     * @param dbSupplier       {@link CompletableFuture} retrieving data from db. Will only be run if {@link Optional} is not present
      * @return {@link K} result from cache if present, otherwise from db
      */
-    <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer, Supplier<Optional<K>> dbSupplier);
+    <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer,
+                                                                CompletableFuture<Optional<K>> dbSupplier);
 }
