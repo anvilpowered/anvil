@@ -51,7 +51,7 @@ public interface BaseXodusCachedRepository<
 
     @Override
     default CompletableFuture<Optional<T>> getOne(EntityId id) {
-        return applyToBothConditionally(c -> c.getOne(id).join(), BaseXodusRepository.super.getOne(id));
+        return applyToBothConditionally(c -> c.getOne(id).join(), () -> BaseXodusRepository.super.getOne(id));
     }
 
     @Override

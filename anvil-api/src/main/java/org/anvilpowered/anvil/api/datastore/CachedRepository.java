@@ -180,5 +180,5 @@ public interface CachedRepository<
      * @return {@link K} result from cache if present, otherwise from db
      */
     <K> CompletableFuture<Optional<K>> applyToBothConditionally(Function<C, Optional<K>> cacheTransformer,
-                                                                CompletableFuture<Optional<K>> dbSupplier);
+                                                                Supplier<CompletableFuture<Optional<K>>> dbSupplier);
 }

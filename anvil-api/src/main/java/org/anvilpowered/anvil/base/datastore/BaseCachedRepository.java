@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class BaseCachedRepository<
     TKey,
@@ -89,12 +90,12 @@ public abstract class BaseCachedRepository<
     @Override
     public <K> CompletableFuture<Optional<K>> applyToBothConditionally(
         Function<C, Optional<K>> cacheTransformer,
-        CompletableFuture<Optional<K>> dbSupplier
+        Supplier<CompletableFuture<Optional<K>>> dbSupplier
     ) {
         Optional<K> optionalK = getRepositoryCacheService().flatMap(cacheTransformer);
         if (optionalK.isPresent()) {
             return CompletableFuture.completedFuture(optionalK);
         }
-        return dbSupplier;
+        return dbSupplier.get();
     }
 }

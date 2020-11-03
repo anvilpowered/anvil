@@ -46,6 +46,6 @@ public interface BaseMongoCachedRepository<
 
     @Override
     default CompletableFuture<Optional<T>> getOne(ObjectId id) {
-        return applyToBothConditionally(c -> c.getOne(id).join(), BaseMongoRepository.super.getOne(id));
+        return applyToBothConditionally(c -> c.getOne(id).join(), () -> BaseMongoRepository.super.getOne(id));
     }
 }
