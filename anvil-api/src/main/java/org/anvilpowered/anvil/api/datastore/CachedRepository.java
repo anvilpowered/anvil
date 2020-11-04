@@ -35,7 +35,7 @@ public interface CachedRepository<
     TDataStore>
     extends Repository<TKey, T, TDataStore> {
 
-    default Optional<C> getRepositoryCacheService() {
+    default Optional<C> getCacheService() {
         return Optional.empty();
     }
 

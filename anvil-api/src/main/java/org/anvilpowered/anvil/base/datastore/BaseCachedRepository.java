@@ -41,7 +41,7 @@ public abstract class BaseCachedRepository<
     @Override
     public <K> CompletableFuture<K> applyFromDBToCache(CompletableFuture<K> fromDB, BiConsumer<C, K> toCache) {
         return fromDB.thenApplyAsync(k -> {
-            getRepositoryCacheService().ifPresent(c -> toCache.accept(c, k));
+            getCacheService().ifPresent(c -> toCache.accept(c, k));
             return k;
         });
     }
@@ -52,7 +52,7 @@ public abstract class BaseCachedRepository<
         BiConsumer<C, K> toCache
     ) {
         return fromDB.thenApplyAsync(optionalK -> {
-            optionalK.ifPresent(k -> getRepositoryCacheService().ifPresent(c -> toCache.accept(c, k)));
+            optionalK.ifPresent(k -> getCacheService().ifPresent(c -> toCache.accept(c, k)));
             return optionalK;
         });
     }
@@ -71,7 +71,7 @@ public abstract class BaseCachedRepository<
 
     @Override
     public <K> CompletableFuture<K> applyFromDBThroughCache(CompletableFuture<K> fromDB, BiFunction<C, K, K> cacheTransformer) {
-        return fromDB.thenApplyAsync(k -> getRepositoryCacheService().map(c -> cacheTransformer.apply(c, k)).orElse(k));
+        return fromDB.thenApplyAsync(k -> getCacheService().map(c -> cacheTransformer.apply(c, k)).orElse(k));
     }
 
     @Override
@@ -80,7 +80,7 @@ public abstract class BaseCachedRepository<
         Optional<K>> cacheTransformer
     ) {
         return fromDB.thenApplyAsync(optionalK ->
-            optionalK.flatMap(k -> getRepositoryCacheService().flatMap(c -> cacheTransformer.apply(c, k))));
+            optionalK.flatMap(k -> getCacheService().flatMap(c -> cacheTransformer.apply(c, k))));
     }
 
     @Override
@@ -88,7 +88,7 @@ public abstract class BaseCachedRepository<
         Function<C, K> cacheTransformer,
         Function<Optional<K>, CompletableFuture<K>> dbTransformer
     ) {
-        return dbTransformer.apply(getRepositoryCacheService().map(cacheTransformer));
+        return dbTransformer.apply(getCacheService().map(cacheTransformer));
     }
 
     @Override
@@ -96,7 +96,7 @@ public abstract class BaseCachedRepository<
         Function<C, Optional<K>> cacheTransformer,
         Function<K, CompletableFuture<Optional<K>>> dbTransformer
     ) {
-        return getRepositoryCacheService().flatMap(cacheTransformer).map(dbTransformer)
+        return getCacheService().flatMap(cacheTransformer).map(dbTransformer)
             .orElse(CompletableFuture.completedFuture(Optional.empty()));
     }
 
@@ -105,7 +105,7 @@ public abstract class BaseCachedRepository<
         Function<C, Optional<K>> cacheTransformer,
         Supplier<CompletableFuture<Optional<K>>> dbSupplier
     ) {
-        Optional<K> optionalK = getRepositoryCacheService().flatMap(cacheTransformer);
+        Optional<K> optionalK = getCacheService().flatMap(cacheTransformer);
         if (optionalK.isPresent()) {
             return CompletableFuture.completedFuture(optionalK);
         }
