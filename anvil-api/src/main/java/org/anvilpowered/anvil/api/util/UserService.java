@@ -45,7 +45,7 @@ public interface UserService<TUser, TPlayer> {
      *
      * @return A list of matching player names
      */
-    List<String> getPlayerNames(String startsWith);
+    List<String> matchPlayerNames(String startsWith);
 
     Collection<TPlayer> getOnlinePlayers();
 

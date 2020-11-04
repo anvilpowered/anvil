@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -75,6 +76,10 @@ public interface CachedRepository<
      */
     <K> CompletableFuture<Optional<K>> applyFromDBToCacheConditionally(CompletableFuture<Optional<K>> fromDB,
                                                                        BiConsumer<C, K> toCache);
+
+    <K> CompletableFuture<Boolean> updateCache(CompletableFuture<Boolean> fromDB,
+                                               Function<C, CompletableFuture<Optional<K>>> cacheSupplier,
+                                               Consumer<K> cacheSetter);
 
     /**
      * <p>

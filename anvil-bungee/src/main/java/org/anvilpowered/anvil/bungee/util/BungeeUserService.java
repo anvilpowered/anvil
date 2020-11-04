@@ -63,7 +63,7 @@ public class BungeeUserService extends CommonUserService<ProxiedPlayer, ProxiedP
     }
 
     @Override
-    public List<String> getPlayerNames(String startsWith) {
+    public List<String> matchPlayerNames(String startsWith) {
         return ProxyServer.getInstance().matchPlayer(startsWith).stream()
             .map(ProxiedPlayer::getName)
             .collect(Collectors.toList());

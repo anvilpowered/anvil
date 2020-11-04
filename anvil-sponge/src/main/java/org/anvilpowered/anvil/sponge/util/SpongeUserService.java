@@ -66,7 +66,7 @@ public class SpongeUserService extends CommonUserService<User, Player> {
     }
 
     @Override
-    public List<String> getPlayerNames(String lastKnownName) {
+    public List<String> matchPlayerNames(String lastKnownName) {
         return Sponge.getServiceManager().provideUnchecked(UserStorageService.class).match(lastKnownName).stream()
             .map(GameProfile::getName)
             .filter(Optional::isPresent)

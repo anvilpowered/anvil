@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -53,6 +54,18 @@ public abstract class BaseCachedRepository<
         return fromDB.thenApplyAsync(optionalK -> {
             optionalK.ifPresent(k -> getRepositoryCacheService().ifPresent(c -> toCache.accept(c, k)));
             return optionalK;
+        });
+    }
+
+    public <K> CompletableFuture<Boolean> updateCache(
+        CompletableFuture<Boolean> fromDB,
+        Function<C, CompletableFuture<Optional<K>>> cacheSupplier,
+        Consumer<K> cacheSetter
+    ) {
+        return applyFromDBToCache(fromDB, (cache, dbResult) -> {
+            if (dbResult) {
+                cacheSupplier.apply(cache).join().ifPresent(cacheSetter);
+            }
         });
     }
 

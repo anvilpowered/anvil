@@ -66,7 +66,7 @@ public class VelocityUserService extends CommonUserService<Player, Player> {
     }
 
     @Override
-    public List<String> getPlayerNames(String startsWith) {
+    public List<String> matchPlayerNames(String startsWith) {
         String startsWithLowerCase = startsWith.toLowerCase();
         return getOnlinePlayers().stream()
             .map(Player::getUsername)

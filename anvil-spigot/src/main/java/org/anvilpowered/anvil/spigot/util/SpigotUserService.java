@@ -66,7 +66,7 @@ public class SpigotUserService extends CommonUserService<Player, Player> {
     }
 
     @Override
-    public List<String> getPlayerNames(String startsWith) {
+    public List<String> matchPlayerNames(String startsWith) {
         String startsWithLowerCase = startsWith.toLowerCase();
         return Stream.of(Bukkit.getOfflinePlayers())
             .map(OfflinePlayer::getName)
