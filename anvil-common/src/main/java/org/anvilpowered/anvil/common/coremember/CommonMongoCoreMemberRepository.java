@@ -57,27 +57,28 @@ public class CommonMongoCoreMemberRepository
                 return insertOne(member).join();
             }
 
+            CoreMember<ObjectId> member = optionalMember.get();
             UpdateOperations<CoreMember<ObjectId>> updateOperations = createUpdateOperations();
             boolean updateName = false;
             boolean updateIpAddress = false;
-            if (!userName.equals(optionalMember.get().getUserName())) {
+            if (!userName.equals(member.getUserName())) {
                 updateOperations.set("userName", userName);
                 updateName = true;
             }
-            if (!optionalMember.get().getIpAddress().equals(ipAddress)) {
+            if (!ipAddress.equals(member.getIpAddress())) {
                 updateOperations.set("ipAddress", ipAddress);
                 updateIpAddress = true;
             }
             updateOperations.set("lastJoinedUtc", OffsetDateTime.now(ZoneOffset.UTC).toInstant());
             if (getDataStoreContext().getDataStore()
-                .update(asQuery(optionalMember.get().getId()), updateOperations)
+                .update(asQuery(member.getId()), updateOperations)
                 .getUpdatedCount() > 0) {
                 if (updateName) {
-                    optionalMember.get().setUserName(userName);
+                    member.setUserName(userName);
                     flags[1] = true;
                 }
                 if (updateIpAddress) {
-                    optionalMember.get().setIpAddress(ipAddress);
+                    member.setIpAddress(ipAddress);
                     flags[2] = true;
                 }
             }

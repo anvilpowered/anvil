@@ -62,19 +62,19 @@ public class CommonXodusCoreMemberRepository
                     return insertOne(member).join();
                 }
 
-                CoreMember<EntityId> item = generateEmpty();
+                CoreMember<EntityId> member = generateEmpty();
                 Entity entity = iterator.next();
-                ((Mappable<Entity>) item).readFrom(entity);
+                ((Mappable<Entity>) member).readFrom(entity);
 
                 boolean updateUsername = false;
                 boolean updateIPAddress = false;
 
-                if (!item.getUserName().equals(userName)) {
+                if (!userName.equals(member.getUserName())) {
                     entity.setProperty("userName", userName);
                     updateUsername = true;
                 }
 
-                if (!item.getIpAddress().equals(ipAddress)) {
+                if (!ipAddress.equals(member.getIpAddress())) {
                     entity.setProperty("ipAddress", ipAddress);
                     updateIPAddress = true;
                 }
@@ -87,15 +87,15 @@ public class CommonXodusCoreMemberRepository
                 entity.setProperty("updatedUtcNanos", nowNanos);
                 if (txn.commit()) {
                     if (updateUsername) {
-                        item.setUserName(userName);
+                        member.setUserName(userName);
                         flags[1] = true;
                     }
                     if (updateIPAddress) {
-                        item.setIpAddress(ipAddress);
+                        member.setIpAddress(ipAddress);
                         flags[2] = true;
                     }
-                    item.setLastJoinedUtc(now);
-                    return Optional.of(item);
+                    member.setLastJoinedUtc(now);
+                    return Optional.of(member);
                 }
                 System.err.println("Failed to update " + userName + " please report this on github!");
                 return Optional.empty();
