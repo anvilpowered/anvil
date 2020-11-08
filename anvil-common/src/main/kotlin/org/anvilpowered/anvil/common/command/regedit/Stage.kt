@@ -41,14 +41,13 @@ class Stage<TString, TCommandSource>(
         .dark_gray().append(" ] ").appendCount(15, '=')
         .build()
 
-    private val view
-        get() = textService.builder()
-            .aqua().append("[ Key ]")
-            .onHoverShowText(textService.builder()
-                .aqua().append("Key\n")
-                .gray().append("/$alias regedit key <key> [info|set|unset|unstage]")
-            ).onClickSuggestCommand("/$alias regedit key ")
-            .build()
+    private val view = textService.builder()
+        .aqua().append("[ Key ]")
+        .onHoverShowText(textService.builder()
+            .aqua().append("Key\n")
+            .gray().append("/$alias regedit key <key> [info|set|unset|unstage]")
+        ).onClickSuggestCommand("/$alias regedit key ")
+        .build()
 
     private val cancel = textService.builder()
         .red().append("[ Cancel ]")

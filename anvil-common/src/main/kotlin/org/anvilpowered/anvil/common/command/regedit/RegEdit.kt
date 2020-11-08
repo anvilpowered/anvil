@@ -23,7 +23,7 @@ import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 
-val alias get() = CommonAnvilCommandNode.getAlias()!!
+val alias by lazy { CommonAnvilCommandNode.getAlias()!! }
 
 val whitespace = "\\s+".toRegex()
 

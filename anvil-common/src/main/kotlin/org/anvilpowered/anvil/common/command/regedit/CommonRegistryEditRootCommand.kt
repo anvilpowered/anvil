@@ -25,11 +25,12 @@ open class CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource
 
     val stages: MutableMap<UUID, Stage<TString, TCommandSource>> = HashMap()
 
-    val notInStage: TString
-        get() = textService.builder()
+    val notInStage: TString by lazy {
+        textService.builder()
             .append(pluginInfo.prefix)
             .red().append("You are not currently in a regedit session. Use /$alias regedit help")
             .build()
+    }
 
     fun execute(source: TCommandSource, context: Array<String>? = null) {
         if (hasNoPerms(source)) return

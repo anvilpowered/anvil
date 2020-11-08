@@ -27,6 +27,13 @@ open class CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSour
     @Inject
     private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource>
 
+    private val usage: TString by lazy {
+        textService.builder()
+            .append(pluginInfo.prefix)
+            .red().append("Please provide exactly one argument!\nUsage: /$alias regedit select <reg>")
+            .build()
+    }
+
     open fun execute(source: TCommandSource, context: Array<String>) {
         if (hasNoPerms(source)) return
         val uuid = userService.getUUIDSafe(source)
@@ -34,10 +41,7 @@ open class CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSour
         textService.send(when {
             stage == null -> registryEditRootCommand.notInStage
             context.size == 1 -> stage.setRegistry(context[0])
-            else -> textService.builder()
-                .append(pluginInfo.prefix)
-                .red().append("Please provide exactly one argument!\nUsage: /$alias regedit select <reg>")
-                .build()
+            else -> usage
         }, source)
     }
 

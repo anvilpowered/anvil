@@ -28,14 +28,15 @@ class Change<T, TString, TCommandSource>(
     var newValue: T? = null,
 ) {
 
-    private val remove: TString
-        get() = textService.builder()
+    private val remove: TString by lazy {
+        textService.builder()
             .red().append("[R]")
             .onHoverShowText(textService.builder()
                 .red().append("Remove this change\n")
                 .gray().append("/$alias regedit key $key unstage")
             ).onClickRunCommand("/$alias regedit key $key unstage")
             .build()
+    }
 
     constructor(stage: Stage<TString, TCommandSource>, key: Key<T>, newValue: T? = null)
         : this(stage.registry.second, stage.textService, key, newValue)

@@ -30,16 +30,18 @@ open class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>
 
     private val keyActions = listOf("info", "set", "unset", "unstage")
 
-    private val usage: TString
-        get() = textService.builder()
+    private val usage: TString by lazy {
+        textService.builder()
             .red().append("Usage: /$alias regedit key <key> [info|set|unset|unstage] [<value>]")
             .build()
+    }
 
-    private val setUsage: TString
-        get() = textService.builder()
+    private val setUsage: TString by lazy {
+        textService.builder()
             .append(pluginInfo.prefix)
             .red().append("Value required for set subcommand. Usage: /$alias regedit key <key> set <value>")
             .build()
+    }
 
     private fun unknownKey(keyName: String) = textService.builder()
         .append(pluginInfo.prefix)
