@@ -32,13 +32,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 // TODO: extract to interface
 public abstract class DataStoreContext<TKey, TDataStore> {
 
     private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
-    private final List<ConnectionOpenedListener<TDataStore>> connectionOpenedListeners;
-    private final List<ConnectionClosedListener<TDataStore>> connectionClosedListeners;
+    private final List<Consumer<TDataStore>> connectionOpenedListeners;
+    private final List<Consumer<TDataStore>> connectionClosedListeners;
     protected final Registry registry;
 
     @Nullable
@@ -136,26 +137,26 @@ public abstract class DataStoreContext<TKey, TDataStore> {
     }
 
     private void notifyConnectionOpenedListeners(TDataStore dataStore) {
-        connectionOpenedListeners.forEach(listener -> listener.loaded(dataStore));
+        connectionOpenedListeners.forEach(listener -> listener.accept(dataStore));
     }
 
-    public final void addConnectionOpenedListener(ConnectionOpenedListener<TDataStore> connectionOpenedListener) {
+    public final void addConnectionOpenedListener(Consumer<TDataStore> connectionOpenedListener) {
         connectionOpenedListeners.add(connectionOpenedListener);
     }
 
-    public final void removeConnectionOpenedListener(ConnectionOpenedListener<TDataStore> connectionOpenedListener) {
+    public final void removeConnectionOpenedListener(Consumer<TDataStore> connectionOpenedListener) {
         connectionOpenedListeners.remove(connectionOpenedListener);
     }
 
     private void notifyConnectionClosedListeners(TDataStore dataStore) {
-        connectionClosedListeners.forEach(listener -> listener.closed(dataStore));
+        connectionClosedListeners.forEach(listener -> listener.accept(dataStore));
     }
 
-    public final void addConnectionClosedListener(ConnectionClosedListener<TDataStore> connectionClosedListener) {
+    public final void addConnectionClosedListener(Consumer<TDataStore> connectionClosedListener) {
         connectionClosedListeners.add(connectionClosedListener);
     }
 
-    public final void removeConnectionClosedListener(ConnectionClosedListener<TDataStore> connectionClosedListener) {
+    public final void removeConnectionClosedListener(Consumer<TDataStore> connectionClosedListener) {
         connectionClosedListeners.remove(connectionClosedListener);
     }
 }
