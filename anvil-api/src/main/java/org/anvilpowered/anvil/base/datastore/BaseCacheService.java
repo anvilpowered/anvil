@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Deprecated // will probably break in 0.4
 public abstract class BaseCacheService<
     TKey,
     T extends ObjectWithId<TKey>,

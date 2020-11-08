@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.UUID;
 
+@Deprecated // will probably break in 0.4
 public final class SqlContext extends DataStoreContext<UUID, HikariDataSource> {
 
     @Inject

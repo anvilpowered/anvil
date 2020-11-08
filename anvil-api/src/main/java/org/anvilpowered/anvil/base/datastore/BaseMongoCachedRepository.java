@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+@Deprecated // will probably break in 0.4
 public interface BaseMongoCachedRepository<
     T extends ObjectWithId<ObjectId>,
     C extends CacheService<ObjectId, T, Datastore>>

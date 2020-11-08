@@ -23,6 +23,7 @@ import org.anvilpowered.anvil.api.model.ObjectWithId;
 
 import java.util.UUID;
 
+@Deprecated // will probably break in 0.4
 public interface SqlRepository<
     T extends ObjectWithId<UUID>>
     extends Repository<UUID, T, HikariDataSource> {

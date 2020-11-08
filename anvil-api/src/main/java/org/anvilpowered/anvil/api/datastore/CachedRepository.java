@@ -27,6 +27,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated // will probably break in 0.4
 public interface CachedRepository<
     TKey,
     T extends ObjectWithId<TKey>,

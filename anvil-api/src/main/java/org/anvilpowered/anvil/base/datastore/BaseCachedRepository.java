@@ -29,6 +29,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated // will probably break in 0.4
 public abstract class BaseCachedRepository<
     TKey,
     T extends ObjectWithId<TKey>,

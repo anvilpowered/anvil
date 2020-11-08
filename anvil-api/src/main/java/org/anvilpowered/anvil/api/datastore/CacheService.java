@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+@Deprecated // will probably break in 0.4
 public interface CacheService<
     TKey,
     T extends ObjectWithId<TKey>,

@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
+@Deprecated // will probably break in 0.4
 public interface BaseXodusCachedRepository<
     T extends ObjectWithId<EntityId>,
     C extends CacheService<EntityId, T, PersistentEntityStore>>
