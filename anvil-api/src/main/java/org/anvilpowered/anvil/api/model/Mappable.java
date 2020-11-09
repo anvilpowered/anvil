@@ -18,6 +18,9 @@
 
 package org.anvilpowered.anvil.api.model;
 
+import com.google.common.collect.ImmutableList;
+import jetbrains.exodus.util.ByteArraySizedInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +28,12 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public interface Mappable<T> {
 
@@ -85,5 +93,58 @@ public interface Mappable<T> {
         } catch (IOException | ClassNotFoundException | ClassCastException ignored) {
             return Optional.empty();
         }
+    }
+
+    static <T> boolean addToCollection(InputStream inputStream, Consumer<InputStream> callback, Collection<T> elements) {
+        Collection<T> collection;
+        try {
+            collection = deserializeUnsafe(inputStream);
+        } catch (IOException | ClassNotFoundException ignored) {
+            return false;
+        }
+        try {
+            collection.addAll(elements);
+        } catch (UnsupportedOperationException ignored) {
+            Collection<T> temp = new ArrayList<>(collection.size() + elements.size());
+            temp.addAll(collection);
+            temp.addAll(elements);
+            collection = temp;
+        }
+        byte[] data;
+        try {
+            data = serializeUnsafe(collection);
+        } catch (IOException ignored) {
+            return false;
+        }
+        callback.accept(new ByteArraySizedInputStream(data));
+        return true;
+    }
+
+    @SafeVarargs
+    static <T> boolean addToCollection(InputStream inputStream, Consumer<InputStream> callback, T... elements) {
+        return addToCollection(inputStream, callback, ImmutableList.copyOf(elements));
+    }
+
+    static <T> boolean removeFromCollection(InputStream inputStream, Consumer<InputStream> callback,
+                                            Predicate<? super T> filter) {
+        Collection<T> collection;
+        try {
+            collection = deserializeUnsafe(inputStream);
+        } catch (IOException | ClassNotFoundException ignored) {
+            return false;
+        }
+        try {
+            collection.removeIf(filter);
+        } catch (UnsupportedOperationException ignored) {
+            collection = collection.stream().filter(filter.negate()).collect(Collectors.toList());
+        }
+        byte[] data;
+        try {
+            data = serializeUnsafe(collection);
+        } catch (IOException ignored) {
+            return false;
+        }
+        callback.accept(new ByteArraySizedInputStream(data));
+        return true;
     }
 }
