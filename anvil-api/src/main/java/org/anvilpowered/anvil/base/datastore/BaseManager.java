@@ -90,8 +90,8 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
             return Preconditions.checkNotNull(currentComponent,
                 "An error occurred while loading current component");
         } catch (RuntimeException e) {
-            String message = "Anvil: DataStoreName has not been loaded yet!" +
-                "Make sure your Registry and ConfigurationService implementations" +
+            String message = "Anvil: DataStoreName has not been loaded yet! " +
+                "Make sure your Registry and ConfigurationService implementations " +
                 "are annotated with @Singleton!";
             System.err.println(message);
             throw new IllegalStateException(message, e);

@@ -23,6 +23,7 @@ import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +32,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -47,6 +51,10 @@ public abstract class BaseCacheService<
 
     private Integer timeoutSeconds;
 
+    private ScheduledExecutorService executorService;
+
+    private boolean isActive;
+
     protected BaseCacheService(Registry registry) {
         this.registry = registry;
         registry.whenLoaded(this::registryLoaded).register();
@@ -54,10 +62,29 @@ public abstract class BaseCacheService<
     }
 
     private void registryLoaded() {
-        stopCacheInvalidationTask();
+        if (isActive) {
+            stopCacheInvalidationTask();
+        }
+        executorService = Executors.newScheduledThreadPool(2);
         Integer intervalSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_INTERVAL_SECONDS);
         timeoutSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_TIMOUT_SECONDS);
-        startCacheInvalidationTask(intervalSeconds);
+        this.startCacheInvalidationTask(intervalSeconds);
+    }
+
+    @Override
+    public void startCacheInvalidationTask(Integer intervalSeconds) {
+        isActive = true;
+        executorService.scheduleAtFixedRate(
+            getCacheInvalidationTask(),
+            0,
+            Long.valueOf(intervalSeconds),
+            TimeUnit.SECONDS
+        );
+    }
+
+    @Override
+    public void stopCacheInvalidationTask() {
+        executorService.shutdownNow();
     }
 
     @Override
@@ -98,13 +125,38 @@ public abstract class BaseCacheService<
     }
 
     @Override
+    public CompletableFuture<Optional<T>> getOne(Instant createdUtc) {
+        for (T entry : getAllAsSet()) {
+            if (entry.getCreatedUtc().equals(createdUtc)) {
+                return CompletableFuture.completedFuture(Optional.of(entry));
+            }
+        }
+        return CompletableFuture.completedFuture(Optional.empty());
+    }
+
+    @Override
     public CompletableFuture<Boolean> deleteOne(TKey id) {
         return CompletableFuture.supplyAsync(() -> deleteOne(dbo -> dbo.getId().equals(id)).isPresent());
     }
 
     @Override
+    public CompletableFuture<Boolean> deleteOne(Instant createdUtc) {
+        for (T entry : getAllAsSet()) {
+            if (entry.getCreatedUtc().equals(createdUtc)) {
+                return deleteOne(entry.getId());
+            }
+        }
+        return CompletableFuture.completedFuture(false);
+    }
+
+    @Override
     public CompletableFuture<List<TKey>> getAllIds() {
         return CompletableFuture.supplyAsync(() -> cache.keySet().stream().map(ObjectWithId::getId).collect(Collectors.toList()));
+    }
+
+    @Override
+    public CompletableFuture<List<T>> getAll() {
+        return CompletableFuture.supplyAsync(() -> new ArrayList<>(cache.keySet()));
     }
 
     @Override
@@ -130,5 +182,15 @@ public abstract class BaseCacheService<
     @Override
     public Optional<T> getOne(Predicate<? super T> predicate) {
         return getAll(predicate).stream().findAny();
+    }
+
+    @Override
+    public CompletableFuture<Optional<Instant>> getCreatedUtc(TKey id) {
+        for (T entry : getAllAsSet()) {
+            if (entry.getId().equals(id)) {
+                return CompletableFuture.completedFuture(Optional.of(entry.getCreatedUtc()));
+            }
+        }
+        return CompletableFuture.completedFuture(Optional.empty());
     }
 }
