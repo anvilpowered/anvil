@@ -18,13 +18,13 @@
 
 package org.anvilpowered.anvil.common.coremember;
 
+import dev.morphia.Datastore;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateOperations;
 import org.anvilpowered.anvil.api.coremember.MongoCoreMemberRepository;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.base.datastore.BaseMongoRepository;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -88,17 +88,17 @@ public class CommonMongoCoreMemberRepository
 
     @Override
     public CompletableFuture<Optional<CoreMember<ObjectId>>> getOneForUser(UUID userUUID) {
-        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(asQuery(userUUID).get()));
+        return getOne(asQuery(userUUID));
     }
 
     @Override
     public CompletableFuture<Optional<CoreMember<ObjectId>>> getOneForUser(String userName) {
-        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(asQuery(userName).get()));
+        return getOne(asQuery(userName));
     }
 
     @Override
     public CompletableFuture<List<CoreMember<ObjectId>>> getForIpAddress(String ipAddress) {
-        return CompletableFuture.supplyAsync(() -> asQueryForIpAddress(ipAddress).asList());
+        return getAll(asQueryForIpAddress(ipAddress));
     }
 
     @Override

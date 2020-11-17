@@ -22,14 +22,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.mapping.MapperOptions;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.mapping.DefaultCreator;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -90,12 +90,9 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         morphia.map(calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE), Entity.class, Embedded.class));
 
         /* === Set class loader to prevent morphia from breaking === */
-        morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {
-            @Override
-            protected ClassLoader getClassLoaderForClass() {
-                return MongoContext.this.getClass().getClassLoader();
-            }
-        });
+        morphia.getMapper().setOptions(MapperOptions.legacy()
+            .classLoader(getClass().getClassLoader())
+            .build());
 
         setTKeyClass(ObjectId.class);
         return dataStore;

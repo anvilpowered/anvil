@@ -18,13 +18,16 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
+import com.google.common.collect.ImmutableList;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateOperations;
+import kotlin.collections.CollectionsKt;
+import kotlin.sequences.SequencesKt;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.datastore.MongoRepository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
 
 import java.time.Instant;
 import java.util.List;
@@ -72,7 +75,7 @@ public interface BaseMongoRepository<
 
     @Override
     default CompletableFuture<Optional<T>> getOne(Query<T> query) {
-        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(query.get()));
+        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(query.first()));
     }
 
     @Override
@@ -88,9 +91,9 @@ public interface BaseMongoRepository<
     @Override
     default CompletableFuture<List<ObjectId>> getAllIds() {
         return CompletableFuture.supplyAsync(() ->
-            asQuery().project("_id", true)
-                .asList().stream().map(ObjectWithId::getId)
-                .collect(Collectors.toList())
+            ImmutableList.copyOf(
+                SequencesKt.map(CollectionsKt.asSequence(asQuery().project("_id", true)),
+                    ObjectWithId::getId).iterator())
         );
     }
 

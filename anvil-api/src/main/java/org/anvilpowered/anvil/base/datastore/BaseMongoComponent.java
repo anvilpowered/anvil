@@ -18,9 +18,9 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
+import dev.morphia.Datastore;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 
 import java.util.Optional;
 

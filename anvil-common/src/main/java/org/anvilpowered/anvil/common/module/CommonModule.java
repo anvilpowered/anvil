@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.common.module;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.name.Names;
+import dev.morphia.Datastore;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
@@ -39,7 +40,6 @@ import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages;
 import org.anvilpowered.anvil.common.registry.CommonConfigurationService;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 
 @SuppressWarnings("UnstableApiUsage")
 public class CommonModule<TString, TCommandSource> extends ApiCommonModule {

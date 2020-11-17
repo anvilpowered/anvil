@@ -25,6 +25,7 @@ import jetbrains.exodus.entitystore.StoreTransaction;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 
 import java.time.Instant;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -34,6 +35,9 @@ import java.util.function.Function;
 public interface XodusRepository<
     T extends ObjectWithId<EntityId>>
     extends Repository<EntityId, T, PersistentEntityStore> {
+
+    Iterator<T> iterator(
+        Function<? super StoreTransaction, ? extends Iterable<Entity>> query);
 
     CompletableFuture<List<T>> getAll(
         Function<? super StoreTransaction, ? extends Iterable<Entity>> query);

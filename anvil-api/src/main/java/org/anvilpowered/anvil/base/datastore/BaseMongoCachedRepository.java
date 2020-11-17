@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
+import dev.morphia.Datastore;
 import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.datastore.CachedRepository;
 import org.anvilpowered.anvil.api.datastore.Repository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 
 import java.util.List;
 import java.util.Optional;

@@ -18,10 +18,10 @@
 
 package org.anvilpowered.anvil.base.model;
 
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.PrePersist;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.PrePersist;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;

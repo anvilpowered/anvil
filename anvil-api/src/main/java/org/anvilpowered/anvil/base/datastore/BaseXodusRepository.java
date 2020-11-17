@@ -18,12 +18,15 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
+import com.google.common.collect.ImmutableList;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.EntityIterable;
 import jetbrains.exodus.entitystore.EntityIterator;
 import jetbrains.exodus.entitystore.EntityRemovedInDatabaseException;
 import jetbrains.exodus.entitystore.StoreTransaction;
+import kotlin.collections.CollectionsKt;
+import kotlin.sequences.SequencesKt;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.datastore.XodusRepository;
 import org.anvilpowered.anvil.api.model.Mappable;
@@ -41,8 +44,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public interface BaseXodusRepository<
     T extends ObjectWithId<EntityId>>
@@ -76,21 +77,28 @@ public interface BaseXodusRepository<
     }
 
     @Override
-    default CompletableFuture<List<T>> getAll(
-        Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
-        return CompletableFuture.supplyAsync(() ->
-            getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn ->
-                StreamSupport.stream(query.apply(txn).spliterator(), false).map(e -> {
-                    T item = generateEmpty();
-                    ((Mappable<Entity>) item).readFrom(e);
-                    return item;
-                }).collect(Collectors.toList()))
+    default Iterator<T> iterator(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+        return getDataStoreContext().getDataStore().computeInReadonlyTransaction(txn ->
+            SequencesKt.map(CollectionsKt.asSequence(query.apply(txn)), entity -> {
+                T item = generateEmpty();
+                ((Mappable<Entity>) item).readFrom(entity);
+                return item;
+            }).iterator()
         );
+    }
+
+    default Iterator<T> iterator() {
+        return iterator(txn -> txn.getAll(getTClass().getSimpleName()));
+    }
+
+    @Override
+    default CompletableFuture<List<T>> getAll(Function<? super StoreTransaction, ? extends Iterable<Entity>> query) {
+        return CompletableFuture.supplyAsync(() -> ImmutableList.copyOf(iterator(query)));
     }
 
     @Override
     default CompletableFuture<List<T>> getAll() {
-        return getAll(txn -> txn.getAll(getTClass().getSimpleName()));
+        return CompletableFuture.supplyAsync(() -> ImmutableList.copyOf(iterator()));
     }
 
     @Override

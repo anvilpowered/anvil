@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.common.misc;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
+import dev.morphia.Datastore;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import org.anvilpowered.anvil.api.datastore.Component;
@@ -29,7 +30,6 @@ import org.anvilpowered.anvil.api.datastore.MongoContext;
 import org.anvilpowered.anvil.api.datastore.XodusContext;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 
 import java.lang.annotation.Annotation;
 

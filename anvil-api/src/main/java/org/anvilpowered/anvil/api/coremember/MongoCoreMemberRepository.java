@@ -18,11 +18,11 @@
 
 package org.anvilpowered.anvil.api.coremember;
 
+import dev.morphia.Datastore;
+import dev.morphia.query.Query;
 import org.anvilpowered.anvil.api.datastore.MongoRepository;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
 
 import java.time.Instant;
 import java.util.UUID;
