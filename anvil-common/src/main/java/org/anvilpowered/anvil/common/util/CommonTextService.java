@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.common.util;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
+import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -39,6 +40,9 @@ public abstract class CommonTextService<TString, TCommandSource>
     implements TextService<TString, TCommandSource> {
 
     private static final int LINE_WIDTH = 91;
+
+    @Inject
+    private PluginInfo<TString> pluginInfo;
 
     @Inject
     protected CommonCallbackCommand<TString, TCommandSource> callbackCommand;
@@ -211,6 +215,11 @@ public abstract class CommonTextService<TString, TCommandSource>
         public Builder<TString, TCommandSource> appendJoiningIf(
             boolean condition, Object delimiter, CharSequence... contents) {
             return condition ? appendJoining(delimiter, contents) : this;
+        }
+
+        @Override
+        public Builder<TString, TCommandSource> appendPrefix() {
+            return append(pluginInfo.getPrefix());
         }
 
         @Override

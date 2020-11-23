@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api.util;
 
+import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.URL;
@@ -853,6 +854,13 @@ public interface TextService<TString, TCommandSource>
          */
         Builder<TString, TCommandSource> appendJoiningIf(
             boolean condition, Object delimiter, CharSequence... contents);
+
+        /**
+         * Fetches the plugin prefix from the bound {@link PluginInfo} and appends it to this builder.
+         *
+         * @return {@code this}
+         */
+        Builder<TString, TCommandSource> appendPrefix();
 
         /**
          * Show the provided text as a tooltip while
