@@ -18,10 +18,12 @@
 
 package org.anvilpowered.anvil.common.util;
 
+import com.google.common.collect.ImmutableList;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.util.UserService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -35,6 +37,14 @@ public abstract class CommonUserService<TUser, TPlayer> implements UserService<T
 
     protected CommonUserService(Class<TUser> userClass) {
         this.userClass = userClass;
+    }
+
+    @Override
+    public List<String> matchPlayerNames(String[] context, int index, int length) {
+        if (context.length == length) {
+            return matchPlayerNames(context[index]);
+        }
+        return ImmutableList.of();
     }
 
     @Override

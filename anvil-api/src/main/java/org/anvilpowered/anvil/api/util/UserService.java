@@ -46,6 +46,15 @@ public interface UserService<TUser, TPlayer> {
      */
     List<String> matchPlayerNames(String startsWith);
 
+    /**
+     * Attempts to find all matching userNames that start with the String at the provided index
+     * of the provided array when it has the provided length.
+     *
+     * @param length The length of {@code context} for which to match the String at {@code index}
+     * @return A list of matching player names
+     */
+    List<String> matchPlayerNames(String[] context, int index, int length);
+
     Collection<TPlayer> getOnlinePlayers();
 
     CompletableFuture<Optional<UUID>> getUUID(String userName);
