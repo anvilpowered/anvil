@@ -21,4 +21,8 @@ package org.anvilpowered.anvil.api
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 
+val whitespace = "\\s+".toRegex()
+
+fun String.splitContext(): Array<String> = if (isEmpty()) arrayOf() else split(whitespace).toTypedArray()
+
 fun <T> CompletableFuture<Optional<T>>.asNullable(): CompletableFuture<T?> = thenApplyAsync { it.orElse(null) }
