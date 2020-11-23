@@ -20,11 +20,12 @@ package org.anvilpowered.anvil.spigot.util;
 
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.bukkit.permissions.Permissible;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SpigotPermissionService implements PermissionService {
 
     @Override
-    public boolean hasPermission(Object subject, String permission) {
+    public boolean hasPermission(@Nullable Object subject, String permission) {
         return subject instanceof Permissible && ((Permissible) subject).hasPermission(permission);
     }
 }

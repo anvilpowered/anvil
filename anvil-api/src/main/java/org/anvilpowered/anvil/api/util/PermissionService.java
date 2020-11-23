@@ -18,6 +18,8 @@
 
 package org.anvilpowered.anvil.api.util;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public interface PermissionService {
 
     /**
@@ -30,10 +32,14 @@ public interface PermissionService {
      * If the provided {@code subject} is the console, returns {@code true}
      * </p>
      *
+     * <p>
+     * If the provided {@code subject} is {@code null}, returns {@code false}
+     * </p>
+     *
      * @param subject    The {@code subject} to test
      * @param permission The {@code permission} to check
      * @return Whether the provided {@code subject} has
      * the provided {@code permission} or is the console.
      */
-    boolean hasPermission(Object subject, String permission);
+    boolean hasPermission(@Nullable Object subject, String permission);
 }

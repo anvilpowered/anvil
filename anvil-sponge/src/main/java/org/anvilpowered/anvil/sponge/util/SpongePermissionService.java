@@ -19,11 +19,12 @@
 package org.anvilpowered.anvil.sponge.util;
 
 import org.anvilpowered.anvil.api.util.PermissionService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.api.service.permission.Subject;
 
 public class SpongePermissionService implements PermissionService {
     @Override
-    public boolean hasPermission(Object subject, String permission) {
+    public boolean hasPermission(@Nullable Object subject, String permission) {
         return subject instanceof Subject && ((Subject) subject).hasPermission(permission);
     }
 }

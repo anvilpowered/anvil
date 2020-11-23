@@ -20,11 +20,12 @@ package org.anvilpowered.anvil.velocity.util;
 
 import com.velocitypowered.api.permission.PermissionSubject;
 import org.anvilpowered.anvil.api.util.PermissionService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class VelocityPermissionService implements PermissionService {
 
     @Override
-    public boolean hasPermission(Object subject, String permission) {
+    public boolean hasPermission(@Nullable Object subject, String permission) {
         return subject instanceof PermissionSubject
             && ((PermissionSubject) subject).hasPermission(permission);
     }

@@ -20,11 +20,12 @@ package org.anvilpowered.anvil.nukkit.util;
 
 import cn.nukkit.permission.Permissible;
 import org.anvilpowered.anvil.api.util.PermissionService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class NukkitPermissionService implements PermissionService {
 
     @Override
-    public boolean hasPermission(Object subject, String permission) {
+    public boolean hasPermission(@Nullable Object subject, String permission) {
         return subject instanceof Permissible && ((Permissible) subject).hasPermission(permission);
     }
 }

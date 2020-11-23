@@ -20,11 +20,12 @@ package org.anvilpowered.anvil.bungee.util;
 
 import net.md_5.bungee.api.CommandSender;
 import org.anvilpowered.anvil.api.util.PermissionService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BungeePermissionService implements PermissionService {
 
     @Override
-    public boolean hasPermission(Object subject, String permission) {
+    public boolean hasPermission(@Nullable Object subject, String permission) {
         return subject instanceof CommandSender
             && ((CommandSender) subject).hasPermission(permission);
     }
