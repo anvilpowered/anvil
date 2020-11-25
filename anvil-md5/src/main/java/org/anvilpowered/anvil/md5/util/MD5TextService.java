@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.md5.util;
 
+import com.google.inject.Inject;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -26,6 +27,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.common.util.CommonTextService;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
 
 import java.net.URL;
 import java.util.Deque;
@@ -33,6 +35,9 @@ import java.util.LinkedList;
 
 public abstract class MD5TextService<TCommandSource>
     extends CommonTextService<TextComponent, TCommandSource> {
+
+    @Inject
+    private Logger logger;
 
     @Override
     public Builder<TextComponent, TCommandSource> builder() {
@@ -308,8 +313,7 @@ public abstract class MD5TextService<TCommandSource>
                     currentBuilder = new TextComponent();
                     currentBuilder.setColor((ChatColor) o);
                 } else {
-                    System.err.println("Skipping " + o
-                        + " because it does not match any of the correct types");
+                    logger.error("Skipping {} because it does not match any of the correct types.", o);
                 }
             }
 

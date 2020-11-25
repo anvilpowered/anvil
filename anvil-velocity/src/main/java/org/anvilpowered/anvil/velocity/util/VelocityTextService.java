@@ -34,6 +34,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.common.util.CommonTextService;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
 
 import java.net.URL;
 import java.util.Deque;
@@ -41,6 +42,9 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 public class VelocityTextService extends CommonTextService<TextComponent, CommandSource> {
+
+    @Inject
+    private Logger logger;
 
     @Inject
     protected ProxyServer proxyServer;
@@ -340,8 +344,7 @@ public class VelocityTextService extends CommonTextService<TextComponent, Comman
                     // create new builder starting at this point until the next color
                     currentBuilder = Component.text().color((TextColor) o);
                 } else {
-                    System.err.println("Skipping " + o
-                        + " because it does not match any of the correct types");
+                    logger.error("Skipping {} because it does not match any of the correct types.", o);
                 }
             }
 

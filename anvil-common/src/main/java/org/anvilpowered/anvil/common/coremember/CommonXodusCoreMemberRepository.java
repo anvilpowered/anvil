@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.common.coremember;
 
+import com.google.inject.Inject;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
@@ -26,6 +27,7 @@ import org.anvilpowered.anvil.api.coremember.XodusCoreMemberRepository;
 import org.anvilpowered.anvil.api.model.Mappable;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.base.datastore.BaseXodusRepository;
+import org.slf4j.Logger;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -41,6 +43,9 @@ public class CommonXodusCoreMemberRepository
     extends CommonCoreMemberRepository<EntityId, PersistentEntityStore>
     implements BaseXodusRepository<CoreMember<EntityId>>,
     XodusCoreMemberRepository {
+
+    @Inject
+    private Logger logger;
 
     @Override
     public CompletableFuture<Optional<CoreMember<EntityId>>> getOneOrGenerateForUser(UUID userUUID, String userName, String ipAddress, boolean[] flags) {
@@ -97,7 +102,7 @@ public class CommonXodusCoreMemberRepository
                     member.setLastJoinedUtc(now);
                     return Optional.of(member);
                 }
-                System.err.println("Failed to update " + userName + " please report this on github!");
+                logger.error("Failed to update {} please report this on github!", userName);
                 return Optional.empty();
             })
         );

@@ -18,10 +18,12 @@
 
 package org.anvilpowered.anvil.base.datastore;
 
+import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.datastore.Repository;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
+import org.slf4j.Logger;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -33,6 +35,9 @@ public abstract class BaseRepository<
     extends BaseComponent<TKey, TDataStore>
     implements Repository<TKey, T, TDataStore> {
 
+    @Inject
+    private Logger logger;
+
     @Override
     public T generateEmpty() {
         Class<T> tClass = getTClass();
@@ -40,7 +45,7 @@ public abstract class BaseRepository<
             return tClass.getConstructor().newInstance();
         } catch (Exception e) {
             String message = "There was an error creating an instance of " + tClass.getName() + "! Make sure it has an accessible no-args constructor!";
-            System.err.println(message);
+            logger.error(message);
             throw new IllegalStateException(message, e);
         }
     }

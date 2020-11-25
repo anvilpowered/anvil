@@ -32,6 +32,7 @@ import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
 
 import java.util.Locale;
 import java.util.Map;
@@ -52,6 +53,9 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
 
     @Inject
     private Injector injector;
+
+    @Inject
+    private Logger logger;
 
     @Nullable
     @RegistryScoped
@@ -76,8 +80,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
         }
         String message = "Anvil: Could not find requested data store: \"" + dataStoreName
             + "\". Did you bind it correctly?";
-        System.err.println(message);
-        throw new IllegalStateException(message);
+        logger.error(message, new IllegalStateException(message));
     }
 
     @Override
@@ -93,7 +96,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
             String message = "Anvil: DataStoreName has not been loaded yet!" +
                 "Make sure your Registry and ConfigurationService implementations" +
                 "are annotated with @Singleton!";
-            System.err.println(message);
+            logger.error(message);
             throw new IllegalStateException(message, e);
         }
     }
