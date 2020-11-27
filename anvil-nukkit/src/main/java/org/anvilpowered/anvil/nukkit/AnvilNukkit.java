@@ -27,6 +27,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.anvilpowered.anvil.api.AnvilImpl;
+import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
 import org.anvilpowered.anvil.nukkit.listener.NukkitPlayerListener;
 import org.anvilpowered.anvil.nukkit.module.ApiNukkitModule;
@@ -50,11 +51,17 @@ public class AnvilNukkit extends PluginBase {
         inner = injector.getInstance(Inner.class);
     }
 
-    private static final class Inner extends AnvilImpl {
+    private final class Inner extends AnvilImpl {
 
         @Inject
         public Inner(Injector injector) {
             super(injector, new NukkitModule());
+        }
+
+        @Override
+        protected void applyToBuilder(Environment.Builder builder) {
+            super.applyToBuilder(builder);
+            builder.setLoggerSupplier(AnvilNukkit.this::getLogger);
         }
     }
 
