@@ -52,7 +52,11 @@ public class EnvironmentImpl implements Environment {
         this.injector = injector;
         this.name = name;
         this.plugin = plugin;
-        this.loggerSupplier = loggerSupplier;
+        if (loggerSupplier == null) {
+            this.loggerSupplier = () -> null;
+        } else {
+            this.loggerSupplier = loggerSupplier;
+        }
         this.withRootCommand = withRootCommand;
         this.modules = modules;
         this.earlyServices = earlyServices;
