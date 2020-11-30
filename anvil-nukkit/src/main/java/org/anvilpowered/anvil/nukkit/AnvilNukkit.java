@@ -48,7 +48,7 @@ public class AnvilNukkit extends PluginBase {
             }
         };
         Injector injector = Guice.createInjector(module);
-        inner = injector.getInstance(Inner.class);
+        inner = new Inner(injector);
     }
 
     private final class Inner extends AnvilImpl {
