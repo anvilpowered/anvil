@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.common.util;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.api.Anvil;
+import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
@@ -39,7 +40,8 @@ import java.util.regex.Pattern;
 public abstract class CommonTextService<TString, TCommandSource>
     implements TextService<TString, TCommandSource> {
 
-    private static final int LINE_WIDTH = 91;
+    @Inject
+    private Platform platform;
 
     @Inject
     private PluginInfo<TString> pluginInfo;
@@ -454,6 +456,12 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         protected void buildPages() {
+            final int LINE_WIDTH;
+            if (platform.getName().equals("sponge")) {
+                LINE_WIDTH = 91;
+            } else {
+                LINE_WIDTH = 51;
+            }
             pages = new ArrayList<>();
             int contentsIndex = 0; // index in contents list
             final int contentsSize = contents.size();
