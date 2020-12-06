@@ -30,9 +30,11 @@ import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.entity.EntityUtils;
 import org.anvilpowered.anvil.common.module.PlatformModule;
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandExecuteService;
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandService;
+import org.anvilpowered.anvil.nukkit.entity.NukkitEntityUtils;
 import org.anvilpowered.anvil.nukkit.server.NukkitLocationService;
 import org.anvilpowered.anvil.nukkit.util.NukkitKickService;
 import org.anvilpowered.anvil.nukkit.util.NukkitPermissionService;
@@ -52,6 +54,7 @@ public class ApiNukkitModule extends PlatformModule {
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>() {
         }).to(NukkitCommandService.class);
         bind(KickService.class).to(NukkitKickService.class);
+        bind(EntityUtils.class).to(NukkitEntityUtils.class);
         bind(LocationService.class).to(NukkitLocationService.class);
         bind(PermissionService.class).to(NukkitPermissionService.class);
         bind(new TypeLiteral<TextService<String, CommandSender>>() {
