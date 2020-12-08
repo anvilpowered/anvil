@@ -31,7 +31,6 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.registry.ConfigurationService;
 import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.base.registry.BaseExtendedRegistry;
 import org.anvilpowered.anvil.common.coremember.CommonCoreMemberManager;
 import org.anvilpowered.anvil.common.coremember.CommonMongoCoreMemberRepository;
 import org.anvilpowered.anvil.common.coremember.CommonXodusCoreMemberRepository;
@@ -86,8 +85,6 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
         be.withMongoDB();
         be.withXodus();
 
-        bind(Registry.class).to(BaseExtendedRegistry.class);
-
-        bind(ConfigurationService.class).to(CommonConfigurationService.class);
+        bind(Registry.class).to(CommonConfigurationService.class);
     }
 }
