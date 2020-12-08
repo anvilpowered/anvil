@@ -33,9 +33,17 @@ open class CommonConfigurationService @Inject constructor(
     init {
         withDataStoreCore()
         withDefault()
-        withProxyMode()
-        setName(Keys.REGEDIT_ALLOW_SENSITIVE, "server.regeditAllowSensitive")
-        setName(Keys.TIME_ZONE, "server.timezone")
+        setName(Keys.SERVER_NAME, "general.name")
+        setName(Keys.PROXY_MODE, "general.proxyMode")
+        setName(Keys.REGEDIT_ALLOW_SENSITIVE, "general.regeditAllowSensitive")
+        setName(Keys.TIME_ZONE, "general.timezone")
+        setDescription(Keys.SERVER_NAME, """
+The server name.
+""")
+        setDescription(Keys.PROXY_MODE, """
+Enable this if your server is running behind a proxy.
+If true, this setting disables the join and chat listeners to prevent conflicts with the proxy's listeners.
+""")
         setDescription(Keys.REGEDIT_ALLOW_SENSITIVE, """
 Whether the regedit command should have access to sensitive settings such as connection details.
 """)

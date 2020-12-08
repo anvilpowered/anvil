@@ -87,11 +87,6 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         this.options = options;
     }
 
-    protected void withCore() {
-        setName(Keys.SERVER_NAME, "server.name");
-        setDescription(Keys.SERVER_NAME, "\nServer name");
-    }
-
     private void withDataStoreCore0() {
         setName(Keys.DATA_DIRECTORY, "datastore.dataDirectory");
         setName(Keys.DATA_STORE_NAME, "datastore.dataStoreName");
@@ -172,22 +167,13 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         setDescription(Keys.REDIS_USE_AUTH, "\nWhether to use authentication (password) for Redis connection");
     }
 
-    protected void withProxyMode() {
-        setName(Keys.PROXY_MODE, "server.proxyMode");
-        setDescription(Keys.PROXY_MODE, "\nEnable this if your server is running behind a proxy"
-            + "\nIf true, this setting disables the join and chat listeners"
-            + "\nto prevent conflicts with the proxy's listeners.");
-    }
-
     protected void withDefault() {
-        withCore();
         withMongoDB();
     }
 
     protected void withAll() {
         withDefault();
         withRedis();
-        withProxyMode();
     }
 
     protected <T> void setVerification(Key<T> key,
