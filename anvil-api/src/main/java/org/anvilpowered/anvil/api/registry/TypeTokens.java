@@ -32,5 +32,6 @@ public final class TypeTokens {
     public static final TypeToken<Boolean> BOOLEAN = TypeToken.of(Boolean.class);
     public static final TypeToken<Integer> INTEGER = TypeToken.of(Integer.class);
     public static final TypeToken<String> STRING = TypeToken.of(String.class);
+    public static final TypeToken<Void> VOID = TypeToken.of(Void.class);
     public static final TypeToken<ZoneId> ZONE_ID = TypeToken.of(ZoneId.class);
 }

@@ -133,6 +133,10 @@ public abstract class Key<T> implements Named, Comparable<Key<T>> {
         return new KeyBuilder<>(type);
     }
 
+    public static Key<Void> ofVoid(String name) {
+        return builder(TypeTokens.VOID).name(name).build();
+    }
+
     @Nullable
     private Function<String, T> extractParser(@Nullable T value) {
         if (value instanceof String) {
