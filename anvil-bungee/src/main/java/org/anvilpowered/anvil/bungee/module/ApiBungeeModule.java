@@ -25,6 +25,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
+import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.server.LocationService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
@@ -37,6 +38,7 @@ import org.anvilpowered.anvil.bungee.util.BungeeKickService;
 import org.anvilpowered.anvil.bungee.util.BungeePermissionService;
 import org.anvilpowered.anvil.bungee.util.BungeeTextService;
 import org.anvilpowered.anvil.bungee.util.BungeeUserService;
+import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter;
 import org.anvilpowered.anvil.common.module.PlatformModule;
 
@@ -51,6 +53,10 @@ public class ApiBungeeModule extends PlatformModule {
     @Override
     protected void configure() {
         super.configure();
+        TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>> callbackCommandType =
+            new TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>>() {
+            };
+        bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType));
         bind(CommandExecuteService.class).to(BungeeCommandExecuteService.class);
         bind(new TypeLiteral<CommandService<BiConsumer<CommandSender, String[]>, CommandSender>>() {
         }).to(BungeeCommandService.class);

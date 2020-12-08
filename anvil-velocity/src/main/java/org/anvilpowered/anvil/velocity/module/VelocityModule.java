@@ -26,12 +26,10 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.api.command.CommandNode;
-import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditRootCommand;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.anvilpowered.anvil.velocity.command.VelocityAnvilCommandNode;
-import org.anvilpowered.anvil.velocity.command.VelocityCallbackCommand;
 import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditRootCommand;
 
 import java.io.File;
@@ -52,8 +50,6 @@ public class VelocityModule extends CommonModule<TextComponent, CommandSource> {
         }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
         bind(new TypeLiteral<CommandNode<CommandSource>>() {
         }).to(VelocityAnvilCommandNode.class);
-        bind(new TypeLiteral<CommonCallbackCommand<TextComponent, CommandSource>>() {
-        }).to(VelocityCallbackCommand.class);
         bind(new TypeLiteral<CommonRegistryEditRootCommand<Player, Player, TextComponent, CommandSource>>() {
         }).to(VelocityRegistryEditRootCommand.class);
     }

@@ -26,12 +26,15 @@ import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
+import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.server.LocationService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.anvilpowered.anvil.common.module.PlatformModule;
+import org.anvilpowered.anvil.velocity.command.VelocityCallbackCommand;
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService;
 import org.anvilpowered.anvil.velocity.command.VelocityCommandService;
 import org.anvilpowered.anvil.velocity.server.VelocityLocationService;
@@ -49,6 +52,8 @@ public class ApiVelocityModule extends PlatformModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(new TypeLiteral<CommonCallbackCommand<TextComponent, CommandSource>>() {
+        }).toProvider(BindingExtensions.asInternalProvider(VelocityCallbackCommand.class));
         bind(CommandExecuteService.class).to(VelocityCommandExecuteService.class);
         bind(new TypeLiteral<CommandService<Command, CommandSource>>() {
         }).to(VelocityCommandService.class);

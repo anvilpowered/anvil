@@ -23,14 +23,17 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.anvilpowered.anvil.api.PlatformImpl;
 import org.anvilpowered.anvil.api.command.CommandExecuteService;
 import org.anvilpowered.anvil.api.command.CommandService;
+import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.server.LocationService;
 import org.anvilpowered.anvil.api.util.KickService;
 import org.anvilpowered.anvil.api.util.PermissionService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.api.util.UserService;
+import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
 import org.anvilpowered.anvil.common.entity.EntityUtils;
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter;
 import org.anvilpowered.anvil.common.module.PlatformModule;
+import org.anvilpowered.anvil.spigot.command.SpigotCallbackCommand;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService;
 import org.anvilpowered.anvil.spigot.command.SpigotCommandService;
 import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils;
@@ -52,6 +55,8 @@ public class ApiSpigotModule extends PlatformModule {
     @Override
     protected void configure() {
         super.configure();
+        bind(new TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>>() {
+        }).toProvider(BindingExtensions.asInternalProvider(SpigotCallbackCommand.class));
         bind(CommandExecuteService.class).to(SpigotCommandExecuteService.class);
         bind(new TypeLiteral<CommandService<CommandExecutor, CommandSender>>() {
         }).to(SpigotCommandService.class);
