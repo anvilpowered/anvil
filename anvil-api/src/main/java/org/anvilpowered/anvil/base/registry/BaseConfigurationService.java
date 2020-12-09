@@ -75,6 +75,23 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     @Nullable
     private ConfigurationOptions options;
 
+    public static String frameTitle(String name) {
+        int width = Math.max(name.length(), 60);
+        int spacingLeft = (width - name.length()) / 2;
+        int spacingRight = (width - name.length() + 1) / 2;
+        StringBuilder sb = new StringBuilder();
+        sb.append('|');
+        for (int i = 0; i < width; i++) sb.append("-");
+        sb.append("|\n|");
+        for (int i = 0; i < spacingLeft; i++) sb.append(' ');
+        sb.append(name);
+        for (int i = 0; i < spacingRight; i++) sb.append(' ');
+        sb.append("|\n|");
+        for (int i = 0; i < width; i++) sb.append("-");
+        sb.append('|');
+        return sb.toString();
+    }
+
     @Inject
     public BaseConfigurationService(ConfigurationLoader<CommentedConfigurationNode> configLoader) {
         this.configLoader = configLoader;
