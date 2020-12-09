@@ -3,7 +3,7 @@ version: "${version}"
 main: org.anvilpowered.anvil.spigot.AnvilSpigot
 api-version: 1.15
 description: A cross-platform Minecraft plugin framework
-website: https://anvilpowered.org
+website: https://www.anvilpowered.org
 commands:
   anvil:
     description: Anvil root command
