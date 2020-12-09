@@ -184,6 +184,12 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         setDescription(Keys.REDIS_USE_AUTH, "\nWhether to use authentication (password) for Redis connection");
     }
 
+    protected void withRootCommandAliases() {
+        setName(Keys.ROOT_COMMAND_ALIASES, "general.rootCommandAliases");
+        setDescription(Keys.ROOT_COMMAND_ALIASES, "\nThe aliases to use for the root command."
+        + "\nThe first one is the primary alias.");
+    }
+
     protected void withDefault() {
         withMongoDB();
     }

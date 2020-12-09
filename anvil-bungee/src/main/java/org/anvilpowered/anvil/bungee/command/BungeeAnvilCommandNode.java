@@ -23,6 +23,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.bungee.AnvilBungee;
 import org.anvilpowered.anvil.bungee.command.regedit.BungeeRegistryEditCommandNode;
@@ -80,9 +81,19 @@ public class BungeeAnvilCommandNode
         BiConsumer<CommandSender, String[]> root = commandService.generateRoutingCommand(
             commandService.generateRootCommand(HELP_COMMAND_PROXY), subCommands, false);
 
+        List<String> aliases = registry.getOrDefault(Keys.ROOT_COMMAND_ALIASES);
+        String primaryAlias = aliases.get(0);
+        String[] allAliases = new String[aliases.size() * 2 - 1];
+        int i = aliases.size() - 1;
+        allAliases[i] = primaryAlias + ":" + primaryAlias;
+        while (i > 0) {
+            String alias = aliases.get(i);
+            allAliases[--i] = alias;
+            allAliases[i + aliases.size()] = primaryAlias + ":" + alias;
+        }
         ProxyServer.getInstance().getPluginManager()
             .registerCommand(plugin,
-                new BungeeCommand("anvilb", null, root, "ab", "anvilb:ab", "anvilb:anvilb")
+                new BungeeCommand(primaryAlias, null, root, allAliases)
             );
 
         ProxyServer.getInstance().getPluginManager()

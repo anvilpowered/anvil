@@ -23,16 +23,19 @@ import ninja.leaping.configurate.ConfigurationOptions
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.loader.ConfigurationLoader
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection
+import org.anvilpowered.anvil.api.Platform
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.base.registry.BaseConfigurationService
 
 @Singleton
 open class CommonConfigurationService @Inject constructor(
     configLoader: ConfigurationLoader<CommentedConfigurationNode>,
+    platform: Platform,
 ) : BaseConfigurationService(configLoader) {
     init {
         withDataStoreCore()
         withDefault()
+        withRootCommandAliases()
         setName(Keys.SERVER_NAME, "general.name")
         setName(Keys.PROXY_MODE, "general.proxyMode")
         setName(Keys.REGEDIT_ALLOW_SENSITIVE, "general.regeditAllowSensitive")
@@ -56,6 +59,12 @@ This option is useful if your server machine and community are based in differen
         serializers.register(Keys.TIME_ZONE.type, CommonZoneIdSerializer())
         val options = ConfigurationOptions.defaults()
         setOptions(options.withSerializers(serializers))
+        val cmdSuffix = when (platform.name) {
+            "bungee" -> "b"
+            "velocity" -> "v"
+            else -> ""
+        }
+        setDefault(Keys.ROOT_COMMAND_ALIASES, listOf("anvil$cmdSuffix", "a$cmdSuffix"))
 
         setName(Keys.DATASTORE_ROOT, "datastore")
         setName(Keys.GENERAL_ROOT, "general")

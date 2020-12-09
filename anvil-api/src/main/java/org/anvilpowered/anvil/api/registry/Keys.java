@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.api.registry;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Table;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -27,6 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -170,6 +172,11 @@ public final class Keys {
         Key.builder(TypeTokens.BOOLEAN)
             .name("PROXY_MODE")
             .fallback(false)
+            .build();
+    public static final Key<List<String>> ROOT_COMMAND_ALIASES =
+        Key.builder(TypeTokens.LIST_STRING)
+            .name("ROOT_COMMAND_ALIASES")
+            .fallback(ImmutableList.of("notimplemented"))
             .build();
     public static final Key<Boolean> REGEDIT_ALLOW_SENSITIVE =
         Key.builder(TypeTokens.BOOLEAN)

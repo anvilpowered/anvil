@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.api.registry;
 import com.google.common.reflect.TypeToken;
 
 import java.time.ZoneId;
+import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
 public final class TypeTokens {
@@ -34,4 +35,6 @@ public final class TypeTokens {
     public static final TypeToken<String> STRING = TypeToken.of(String.class);
     public static final TypeToken<Void> VOID = TypeToken.of(Void.class);
     public static final TypeToken<ZoneId> ZONE_ID = TypeToken.of(ZoneId.class);
+    public static final TypeToken<List<String>> LIST_STRING = new TypeToken<List<String>>() {
+    };
 }
