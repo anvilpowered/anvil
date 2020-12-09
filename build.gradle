@@ -50,6 +50,9 @@ subprojects {
     if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
         version = version.replace("-SNAPSHOT", "-RC${buildNumber}")
     }
+    processResources {
+        expand project.properties
+    }
     nexusStaging {
         packageGroup = 'org.anvilpowered'
         username = _username
