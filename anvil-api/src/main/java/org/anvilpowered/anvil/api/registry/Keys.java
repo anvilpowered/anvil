@@ -302,6 +302,9 @@ public final class Keys {
             .sensitive()
             .build();
 
+    public static final Key<Void> DATASTORE_ROOT = Key.ofVoid("DATASTORE_ROOT");
+    public static final Key<Void> GENERAL_ROOT = Key.ofVoid("GENERAL_ROOT");
+
     public static final Key<String> PLUGINS_PERMISSION =
         Key.builder(TypeTokens.STRING)
             .name("PLUGINS_PERMISSION")

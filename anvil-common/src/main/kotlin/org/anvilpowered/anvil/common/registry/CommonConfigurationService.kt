@@ -56,5 +56,10 @@ This option is useful if your server machine and community are based in differen
         serializers.register(Keys.TIME_ZONE.type, CommonZoneIdSerializer())
         val options = ConfigurationOptions.defaults()
         setOptions(options.withSerializers(serializers))
+
+        setName(Keys.DATASTORE_ROOT, "datastore")
+        setName(Keys.GENERAL_ROOT, "general")
+        setDescription(Keys.DATASTORE_ROOT, frameTitle("Datastore"))
+        setDescription(Keys.GENERAL_ROOT, frameTitle("General"))
     }
 }
