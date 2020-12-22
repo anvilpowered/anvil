@@ -31,7 +31,6 @@ allprojects {
     }
 }
 
-String _name = project.hasProperty("name") ? name : ""
 String _username = project.hasProperty("username") ? username : ""
 String _password = project.hasProperty("password") ? password : ""
 String _keyId = project.hasProperty("keyId") ? keyId : ""
@@ -49,6 +48,9 @@ subprojects {
     }
     if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
         version = version.replace("-SNAPSHOT", "-RC${buildNumber}")
+    }
+    processResources {
+        expand project.properties
     }
     nexusStaging {
         packageGroup = 'org.anvilpowered'
@@ -111,9 +113,14 @@ project(':anvil-api') {
 
                         developers {
                             developer {
-                                id = _username
-                                name = _name
-                                organization = 'AnvilPowered'
+                                id = "alexstaeding"
+                                name = "Alexander Staeding"
+                                organization = "AnvilPowered"
+                            }
+                            developer {
+                                id = "STG-Allen"
+                                name = "Jacob Allen"
+                                organization = "AnvilPowered"
                             }
                         }
                     }
