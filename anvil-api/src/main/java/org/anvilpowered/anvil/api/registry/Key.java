@@ -174,6 +174,10 @@ public abstract class Key<T> implements Named, Comparable<Key<T>> {
         return String.valueOf(toStringer.apply(value));
     }
 
+    public String toString(Function<Key<T>, T> valueFunction) {
+        return toString(valueFunction.apply(this));
+    }
+
     @Override
     public int compareTo(Key<T> o) {
         return name.compareToIgnoreCase(o.name);
