@@ -41,24 +41,14 @@ class NukkitLocationService : CommonLocationService() {
         )
     }
 
-    override fun getWorldName(userUUID: UUID): Optional<String> {
-        return userService[userUUID].map { it.getLevel().name }
-    }
-
-    override fun getWorldName(userName: String): Optional<String> {
-        return userService[userName].map { it.getLevel().name }
-    }
+    override fun getWorldName(userUUID: UUID): Optional<String> = userService[userUUID].map { it.getLevel().name }
+    override fun getWorldName(userName: String): Optional<String> = userService[userName].map { it.getLevel().name }
 
     private fun extractCoords(player: Player): Vector3d {
         val pos = player.position
         return Vector3d(pos.x, pos.y, pos.z)
     }
 
-    override fun getPosition(userUUID: UUID): Optional<Vector3d> {
-        return userService[userUUID].map(::extractCoords)
-    }
-
-    override fun getPosition(userName: String): Optional<Vector3d> {
-        return userService[userName].map(::extractCoords)
-    }
+    override fun getPosition(userUUID: UUID): Optional<Vector3d> = userService[userUUID].map(::extractCoords)
+    override fun getPosition(userName: String): Optional<Vector3d> = userService[userName].map(::extractCoords)
 }

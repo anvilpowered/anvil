@@ -35,17 +35,15 @@ class VelocityLocationService : CommonLocationService() {
     @Inject
     private lateinit var userService: UserService<Player, Player>
 
-    private fun Optional<Player>.getServer(): Optional<VelocityBackendServer> {
-        return flatMap { it.currentServer }.map { VelocityBackendServer(it.server, userService) }
-    }
+    private fun Optional<Player>.getServer(): Optional<VelocityBackendServer> =
+        flatMap { it.currentServer }.map { VelocityBackendServer(it.server, userService) }
+
 
     override fun getServer(userUUID: UUID): Optional<VelocityBackendServer> = userService.getPlayer(userUUID).getServer()
     override fun getServer(userName: String): Optional<VelocityBackendServer> = userService.getPlayer(userName).getServer()
-    override fun getServerForName(serverName: String): Optional<VelocityBackendServer> {
-        return proxyServer.getServer(serverName).map { VelocityBackendServer(it, userService) }
-    }
 
-    override fun getServers(): List<VelocityBackendServer> {
-        return proxyServer.allServers.stream().map { VelocityBackendServer(it, userService) }.toList()
-    }
+    override fun getServerForName(serverName: String): Optional<VelocityBackendServer> =
+        proxyServer.getServer(serverName).map { VelocityBackendServer(it, userService) }
+
+    override fun getServers(): List<VelocityBackendServer> = proxyServer.allServers.stream().map { VelocityBackendServer(it, userService) }.toList()
 }

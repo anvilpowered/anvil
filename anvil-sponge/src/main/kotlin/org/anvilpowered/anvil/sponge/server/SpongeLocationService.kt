@@ -47,21 +47,16 @@ class SpongeLocationService : CommonLocationService() {
 
     override fun getWorldName(userName: String): Optional<String> {
         return userService[userName].flatMap { it.worldUniqueId }
-                .flatMap { Sponge.getServer().getWorld(it) }
-                .map { it.name }
+            .flatMap { Sponge.getServer().getWorld(it) }
+            .map { it.name }
     }
 
     override fun getWorldName(userUUID: UUID): Optional<String> {
         return userService[userUUID].flatMap { it.worldUniqueId }
-                .flatMap { Sponge.getServer().getWorld(it) }
-                .map { it.name }
+            .flatMap { Sponge.getServer().getWorld(it) }
+            .map { it.name }
     }
 
-    override fun getPosition(userUUID: UUID): Optional<Vector3d> {
-        return userService[userUUID].map { it.position }
-    }
-
-    override fun getPosition(userName: String): Optional<Vector3d> {
-        return userService[userName].map { it.position }
-    }
+    override fun getPosition(userUUID: UUID): Optional<Vector3d> = userService[userUUID].map { it.position }
+    override fun getPosition(userName: String): Optional<Vector3d> = userService[userName].map { it.position }
 }
