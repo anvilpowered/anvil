@@ -18,6 +18,7 @@ dependencies {
         implementation project(':Anvil:anvil-common')
     }
 
+    implementation(gson_extras)
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
@@ -28,6 +29,12 @@ dependencies {
     implementation mongo_java_driver
     implementation velocity
     annotationProcessor velocity
+}
+
+tasks.register("copyJars", Copy) {
+    dependsOn(tasks.shadowJar)
+    from(tasks.shadowJar)
+    into("C:\\Users\\alexa\\Desktop\\TestServers\\Velocity\\plugins")
 }
 
 shadowJar {
@@ -46,6 +53,8 @@ shadowJar {
 
         include dependency(apache_commons)
         include dependency(bson)
+        include dependency(gson_extras)
+        include dependency(guice_assistedinject)
         include dependency(javasisst)
         include dependency(jedis)
         include dependency(kotlin_reflect)

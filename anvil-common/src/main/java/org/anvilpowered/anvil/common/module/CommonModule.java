@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.module;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import dev.morphia.Datastore;
 import jetbrains.exodus.entitystore.EntityId;
@@ -32,6 +33,7 @@ import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.registry.ConfigurationService;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.base.registry.BaseExtendedRegistry;
+import org.anvilpowered.anvil.common.anvilnet.listener.BaseListeners;
 import org.anvilpowered.anvil.common.coremember.CommonCoreMemberManager;
 import org.anvilpowered.anvil.common.coremember.CommonMongoCoreMemberRepository;
 import org.anvilpowered.anvil.common.coremember.CommonXodusCoreMemberRepository;
@@ -89,5 +91,9 @@ public class CommonModule<TString, TCommandSource> extends ApiCommonModule {
         bind(Registry.class).to(BaseExtendedRegistry.class);
 
         bind(ConfigurationService.class).to(CommonConfigurationService.class);
+
+        install(new FactoryModuleBuilder()
+            .implement(BaseListeners.class, BaseListeners.class)
+            .build(BaseListeners.Factory.class));
     }
 }

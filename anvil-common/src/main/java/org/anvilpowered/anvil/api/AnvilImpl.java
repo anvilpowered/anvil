@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.api;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import org.anvilpowered.anvil.api.anvilnet.AnvilNetService;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.slf4j.Logger;
 
@@ -32,6 +33,7 @@ public class AnvilImpl extends Anvil {
     @Override
     protected void applyToBuilder(Environment.Builder builder) {
         builder.withRootCommand();
+        builder.addEarlyServices(AnvilNetService.class);
     }
 
     public static Logger getLogger() {

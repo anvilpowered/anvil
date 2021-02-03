@@ -30,8 +30,12 @@ import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.common.anvilnet.CommonAnvilNetService;
 
 public class VelocityPlayerListener {
+
+    @Inject
+    private CommonAnvilNetService anvilNetService;
 
     @Inject
     private CoreMemberManager coreMemberManager;
@@ -44,6 +48,7 @@ public class VelocityPlayerListener {
 
     @Subscribe
     public void onPlayerJoin(LoginEvent event) {
+        //anvilNetService.onPlayerJoin(event.getPlayer().getUniqueId());
         if (registry.getOrDefault(Keys.PROXY_MODE)) {
             return;
         }

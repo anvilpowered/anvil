@@ -20,9 +20,9 @@ package org.anvilpowered.anvil.api.model;
 
 import com.google.common.collect.ImmutableList;
 import jetbrains.exodus.util.ByteArraySizedInputStream;
+import jetbrains.exodus.util.LightByteArrayOutputStream;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -60,46 +60,58 @@ public interface Mappable<T> {
      */
     void readFrom(T object);
 
-    static byte[] serializeUnsafe(Object object) throws IOException {
+    static byte[] serializeUnsafe(Object object) {
         try (
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ByteArrayOutputStream baos = new LightByteArrayOutputStream();
             ObjectOutput oos = new ObjectOutputStream(baos)
         ) {
             oos.writeObject(object);
             return baos.toByteArray();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not serialize object", e);
         }
     }
 
     static Optional<byte[]> serialize(Object object) {
         try {
             return Optional.of(serializeUnsafe(object));
-        } catch (IOException ignored) {
+        } catch (Exception ignored) {
             return Optional.empty();
         }
     }
 
     @SuppressWarnings("unchecked")
-    static <T> T deserializeUnsafe(InputStream inputStream) throws IOException, ClassNotFoundException {
+    static <T> T deserializeUnsafe(InputStream inputStream) {
         try (
             ObjectInput objectInputStream = new ObjectInputStream(inputStream)
         ) {
             return (T) objectInputStream.readObject();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not deserialize object", e);
         }
     }
 
     static <T> Optional<T> deserialize(InputStream inputStream) {
         try {
             return Optional.of(deserializeUnsafe(inputStream));
-        } catch (IOException | ClassNotFoundException | ClassCastException ignored) {
+        } catch (Exception ignored) {
             return Optional.empty();
         }
+    }
+
+    static <T> T deserializeUnsafe(byte[] bytes) {
+        return deserializeUnsafe(new ByteArraySizedInputStream(bytes));
+    }
+
+    static <T> Optional<T> deserialize(byte[] bytes) {
+        return deserialize(new ByteArraySizedInputStream(bytes));
     }
 
     static <T> boolean addToCollection(InputStream inputStream, Consumer<InputStream> callback, Collection<T> elements) {
         Collection<T> collection;
         try {
             collection = deserializeUnsafe(inputStream);
-        } catch (IOException | ClassNotFoundException ignored) {
+        } catch (Exception ignored) {
             return false;
         }
         try {
@@ -113,7 +125,7 @@ public interface Mappable<T> {
         byte[] data;
         try {
             data = serializeUnsafe(collection);
-        } catch (IOException ignored) {
+        } catch (Exception ignored) {
             return false;
         }
         callback.accept(new ByteArraySizedInputStream(data));
@@ -130,7 +142,7 @@ public interface Mappable<T> {
         Collection<T> collection;
         try {
             collection = deserializeUnsafe(inputStream);
-        } catch (IOException | ClassNotFoundException ignored) {
+        } catch (Exception ignored) {
             return false;
         }
         try {
@@ -141,7 +153,7 @@ public interface Mappable<T> {
         byte[] data;
         try {
             data = serializeUnsafe(collection);
-        } catch (IOException ignored) {
+        } catch (Exception ignored) {
             return false;
         }
         callback.accept(new ByteArraySizedInputStream(data));

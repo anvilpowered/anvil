@@ -23,6 +23,8 @@ import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.entity.RestrictionService;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.common.anvilnet.CommonAnvilNetService;
+import org.anvilpowered.anvil.common.anvilnet.CommonPacketBus;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Cancellable;
@@ -41,6 +43,9 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 public class SpongePlayerListener {
 
     @Inject
+    private CommonPacketBus packetBus;
+
+    @Inject
     private CoreMemberManager coreMemberManager;
 
     @Inject
@@ -51,6 +56,7 @@ public class SpongePlayerListener {
 
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
+        packetBus.onPlayerJoin(event.getTargetEntity().getUniqueId());
         if (registry.getOrDefault(Keys.PROXY_MODE)) {
             return;
         }

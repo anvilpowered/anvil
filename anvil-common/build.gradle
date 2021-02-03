@@ -12,6 +12,8 @@ dependencies {
         implementation project(':Anvil:anvil-api')
     }
 
+    api(gson_extras)
+    api(guice_assistedinject + ":" + guice_version)
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)

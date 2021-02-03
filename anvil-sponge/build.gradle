@@ -26,6 +26,12 @@ dependencies {
     annotationProcessor sponge
 }
 
+tasks.register("copyJars", Copy) {
+    dependsOn(tasks.shadowJar)
+    from(tasks.shadowJar)
+    into("C:\\Users\\alexa\\Desktop\\TestServers\\Sponge2\\mods")
+}
+
 shadowJar {
     String jarName = "Anvil-Sponge-${project.version}.jar"
     println "Building: " + jarName
@@ -44,6 +50,8 @@ shadowJar {
         relocate("org.apache.commons", "relocated.apache")
         include dependency(apache_commons)
         include dependency(bson)
+        include dependency(gson_extras)
+        include dependency(guice_assistedinject)
         include dependency(javasisst)
         include dependency(jedis)
         include dependency(kotlin_reflect)
