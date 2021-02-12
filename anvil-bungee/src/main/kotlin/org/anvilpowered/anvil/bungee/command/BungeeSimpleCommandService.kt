@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.bungee.command
 
 import com.google.inject.Inject
+import kotlinx.coroutines.runBlocking
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.plugin.Command
@@ -39,7 +40,9 @@ class BungeeSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
   ) : Command(primaryAlias, null, *otherAliases) {
     override fun execute(source: CommandSender, context: Array<String>) {
       if (delegate.canExecute(source)) {
-        delegate.execute(source, context)
+        runBlocking {
+          delegate.execute(source, context)
+        }
       } else {
         source.sendNoPermission()
       }

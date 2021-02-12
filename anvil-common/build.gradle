@@ -11,6 +11,8 @@ dependencies {
     api("net.kyori:adventure-text-serializer-legacy:4.5.0")
     api("net.kyori:adventure-text-serializer-plain:4.5.0")
     api(configurate_hocon)
+    api(ktor_core)
+    api(ktor_cio)
     api(kotlin_reflect + ":" + kotlin_version)
     api(kotlin_stdlib + ":" + kotlin_version)
     api(kotlin_stdlib8 + ":" + kotlin_version)

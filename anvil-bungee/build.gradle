@@ -18,7 +18,19 @@ dependencies {
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
+    implementation(kotlin_stdlib7 + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)
+    implementation(kotlinx_coroutines)
+    implementation(kotlinx_coroutines_core)
+    implementation(kotlinx_coroutines_jvm)
+    implementation(kotlinx_serialization)
+    implementation(ktor_cio)
+    implementation(ktor_core)
+    implementation(ktor_http)
+    implementation(ktor_http_jvm)
+    implementation(ktor_network)
+    implementation(ktor_network_jvm)
+    implementation(ktor_utils)
     implementation(kyori_api)
     implementation(kyori_bungee_serializer)
     implementation(kyori_examination)
@@ -26,8 +38,6 @@ dependencies {
     implementation(kyori_legacy_serializer)
     implementation(kyori_gson_serializer)
     implementation(kyori_plain_serializer)
-    implementation kotlinx_coroutines
-    implementation kotlinx_serialization
     implementation microutils_logging
     implementation mongo_java_driver
     implementation typesafe_config
@@ -59,7 +69,7 @@ shadowJar {
         include dependency(kotlin_reflect)
         include dependency(kotlin_stdlib)
         include dependency(kotlin_stdlib8)
-        include dependency(kotlinx_coroutines)
+        include dependency(kotlinx_coroutines_core)
         include dependency(kotlinx_serialization)
         include dependency(kyori_api)
         include dependency(kyori_examination)
