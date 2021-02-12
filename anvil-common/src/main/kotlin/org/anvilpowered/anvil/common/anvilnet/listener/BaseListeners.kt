@@ -35,86 +35,83 @@ import java.util.UUID
  * The listeners required to setup and maintain the AnvilNet
  */
 class BaseListeners @Inject constructor(
-    /**
-     * Uses assisted injection to avoid a circular dependency.
-     */
-    @Assisted private val anvilNetService: CommonAnvilNetService
+  /**
+   * Uses assisted injection to avoid a circular dependency.
+   */
+  @Assisted private val anvilNetService: CommonAnvilNetService
 ) {
-    interface Factory {
-        fun construct(anvilNetService: CommonAnvilNetService): BaseListeners
+  interface Factory {
+    fun construct(anvilNetService: CommonAnvilNetService): BaseListeners
+  }
+
+  @Inject
+  private lateinit var logger: Logger
+
+  @Inject
+  private lateinit var broadcastNetwork: BroadcastNetwork
+
+  @Inject
+  private lateinit var pluginMessageNetwork: PluginMessageNetwork
+
+  @Inject
+  private lateinit var packetTranslator: CommonPacketTranslator
+
+  fun registerAll() {
+    packetTranslator.registerPacketType(InitialPingPacket::class.java)
+    packetTranslator.registerPacketType(InitialResponsePacket::class.java)
+    packetTranslator.registerPacketType(DeadNodePacket::class.java)
+    logger.info("[AnvilNet] Successfully registered {} packet types", packetTranslator.packetTypesSize)
+    anvilNetService.register(InitialPingPacket::class.java) { onInitialPing(it) }
+    anvilNetService.nextPacketFuture(InitialResponsePacket::class.java)
+      .thenAcceptAsync { onInitialResponse(it) }
+  }
+
+  private fun received(packet: AnvilNetPacket) {
+    logger.info("[Receive] $packet")
+  }
+
+  private fun timeout() {
+    logger.debug(
+      "Did not receive a response from the network within {}ms, assuming alone",
+      CommonAnvilNetService.TIMEOUT_MILLIS
+    )
+  }
+
+  private fun onInitialPing(packet: InitialPingPacket) {
+    received(packet)
+    // check whether requested name conflicts with this node
+    requireNotNull(packet.header) { "packet header" }
+    val userUUID: UUID = packet.playerData.userUUID
+    val source = packet.header.path.sourceId
+    val name = packet.baseData.nodeName
+    println("Sending back to source: ${source.format()}")
+    val idOk = pluginMessageNetwork.nodeRefs.find { it.id == source }
+      ?: broadcastNetwork.nodeRefs.find { it.id == source } == null
+    val nameOk = pluginMessageNetwork.nodeRefs.find { it.name == name }
+      ?: broadcastNetwork.nodeRefs.find { it.name == name } == null
+    println("idOk: $idOk, nameOk: $nameOk")
+    anvilNetService.prepareSend(
+      InitialResponsePacket(userUUID, broadcastNetwork, pluginMessageNetwork)
+    ).target(source).send()
+    /*if (idOk && nameOk) {
+        return
     }
+    val reason = if (!idOk && nameOk) {
+        "Invalid id"
+    } else if (idOk && !nameOk) {
+        "Invalid name"
+    } else {
+        "Invalid id and name"
+    }*/
+    //anvilNetService.prepare(JoinRequestDeniedPacket(reason)).target(source).send()
+  }
 
-    @Inject
-    private lateinit var logger: Logger
-
-    @Inject
-    private lateinit var broadcastNetwork: BroadcastNetwork
-
-    @Inject
-    private lateinit var pluginMessageNetwork: PluginMessageNetwork
-
-    @Inject
-    private lateinit var packetTranslator: CommonPacketTranslator
-
-    fun registerAll() {
-        packetTranslator.registerPacketTypeBegin()
-        // NetworkPreJoinPacket must be type 0; This is assumed by the communicator.
-        // It will check for nodeId conflicts if the packet type is 0.
-        packetTranslator.registerPacketType(InitialPingPacket::class.java)
-        packetTranslator.registerPacketType(InitialResponsePacket::class.java)
-        packetTranslator.registerPacketType(DeadNodePacket::class.java)
-        logger.info("[AnvilNet] Successfully registered {} packet types", packetTranslator.packetTypesSize)
-        anvilNetService.register(InitialPingPacket::class.java) { onInitialPing(it) }
-        anvilNetService.nextPacketFuture(InitialResponsePacket::class.java)
-            .thenAcceptAsync { onInitialResponse(it) }
+  private fun onInitialResponse(packet: InitialResponsePacket?) {
+    if (packet == null) {
+      timeout()
+      return
     }
-
-    private fun received(packet: AnvilNetPacket) {
-        logger.info("[Receive] $packet")
-    }
-
-    private fun timeout() {
-        logger.debug(
-            "Did not receive a response from the network within {}ms, assuming alone",
-            CommonAnvilNetService.TIMEOUT_MILLIS
-        )
-    }
-
-    private fun onInitialPing(packet: InitialPingPacket) {
-        received(packet)
-        // check whether requested name conflicts with this node
-        requireNotNull(packet.header) { "packet header" }
-        val userUUID: UUID = packet.playerData.userUUID ?: return
-        val source = packet.header.path.source
-        val name = packet.baseData.nodeName
-        println("Sending back to source: ${source.format()}")
-        val idOk = pluginMessageNetwork.nodes.find { it.id == source }
-            ?: broadcastNetwork.nodes.find { it.id == source } == null
-        val nameOk = pluginMessageNetwork.nodes.find { it.name == name }
-            ?: broadcastNetwork.nodes.find { it.name == name } == null
-        println("idOk: $idOk, nameOk: $nameOk")
-        anvilNetService.prepare(
-            InitialResponsePacket(userUUID, broadcastNetwork, pluginMessageNetwork)
-        ).target(source).send()
-        /*if (idOk && nameOk) {
-            return
-        }
-        val reason = if (!idOk && nameOk) {
-            "Invalid id"
-        } else if (idOk && !nameOk) {
-            "Invalid name"
-        } else {
-            "Invalid id and name"
-        }*/
-        //anvilNetService.prepare(JoinRequestDeniedPacket(reason)).target(source).send()
-    }
-
-    private fun onInitialResponse(packet: InitialResponsePacket?) {
-        if (packet == null) {
-            timeout()
-            return
-        }
-        println("Denied: ${packet.playerData.userUUID}")
-        received(packet)
-    }
+    println("Denied: ${packet.playerData.userUUID}")
+    received(packet)
+  }
 }

@@ -24,30 +24,21 @@ import org.anvilpowered.anvil.common.anvilnet.packet.data.BaseData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.PlayerData
 import java.util.UUID
 
-class InitialPingPacket(
-    header: NetworkHeader?,
-    input: ByteArrayDataInput?,
-    userUUID: UUID? = null,
-) : AnvilNetPacket(
-    header,
-    BaseData(input),
-    // the player that caused this packet
-    PlayerData(input, userUUID),
-) {
+class InitialPingPacket : AnvilNetPacket {
 
-    constructor(header: NetworkHeader, input: ByteArrayDataInput) : this(header, input, null)
+  constructor(userUUID: UUID) : super(BaseData(), PlayerData(userUUID))
 
-    constructor(userUUID: UUID) : this(null, null, userUUID)
+  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, BaseData(input), PlayerData(input))
 
-    val baseData: BaseData = getContainer(BaseData::class)!!
-    val playerData: PlayerData = getContainer(PlayerData::class)!!
+  val baseData: BaseData = getContainer(BaseData::class)!!
+  val playerData: PlayerData = getContainer(PlayerData::class)!!
 
-    private val stringRepresentation: String by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("baseData", this.baseData)
-            .add("playerData", this.playerData)
-            .toString()
-    }
+  private val stringRepresentation: String by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("baseData", this.baseData)
+      .add("playerData", this.playerData)
+      .toString()
+  }
 
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

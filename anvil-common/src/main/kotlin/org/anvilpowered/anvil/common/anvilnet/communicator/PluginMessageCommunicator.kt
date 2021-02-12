@@ -19,80 +19,67 @@ package org.anvilpowered.anvil.common.anvilnet.communicator
 
 import org.anvilpowered.anvil.common.anvilnet.ConnectionType
 import java.io.ByteArrayInputStream
-import java.util.ArrayList
-import java.util.Collections
-import java.util.HashMap
-import java.util.TreeSet
+import java.util.Random
 import java.util.UUID
 
-abstract class PluginMessageCommunicator : BaseCommunicator("PluginMessage", ConnectionType.LATERAL) {
+abstract class PluginMessageCommunicator : BaseCommunicator("PluginMessage", ConnectionType.VERTICAL) {
 
-    private val sinksOrdered: MutableMap<Int, MutableSet<UUID>>
-    private val sinksShuffled: MutableMap<Int, MutableList<UUID>>
-
-    init {
-        sinksOrdered = HashMap()
-        sinksShuffled = HashMap()
+  protected fun putSink(nodeId: Int, userUUID: UUID) {
+    val connectionRef = pluginMessageNetwork.getConnectionRefTo(nodeId)
+    pluginMessageNetwork.connectionRefs.forEach {
+      if (it.connection.userUUIDs.remove(userUUID)) {
+        logger.info("Moving $userUUID from $it to ${connectionRef.toStringCompact()}")
+      }
     }
+    connectionRef.connection.userUUIDs.add(userUUID)
+    logger.info("Added $userUUID to ${connectionRef.toStringCompact()}")
+  }
 
-    protected fun putSink(nodeId: Int, userUUID: UUID) {
-        var uuidsOrdered = sinksOrdered[nodeId]
-        if (uuidsOrdered == null) {
-            uuidsOrdered = TreeSet()
-            uuidsOrdered.add(userUUID)
-            sinksOrdered[nodeId] = uuidsOrdered
-            val uuidsShuffled: MutableList<UUID> = ArrayList()
-            uuidsShuffled.add(userUUID)
-            sinksShuffled[nodeId] = uuidsShuffled
-        } else {
-            if (uuidsOrdered.add(userUUID)) {
-                sinksShuffled[nodeId]!!.add(userUUID)
-            }
-        }
+  protected fun remove(nodeId: Int, userUUID: UUID) {
+    val connectionRef = pluginMessageNetwork.getConnectionRefTo(nodeId)
+    connectionRef.connection.userUUIDs.remove(userUUID)
+    logger.info("Removed $userUUID to ${connectionRef.toStringCompact()}")
+  }
+
+  protected fun getSinks(nodeId: Int): MutableIterator<UUID> {
+    return object : MutableIterator<UUID> {
+      var lastIndex = -1
+      val userUUIDs = pluginMessageNetwork.getConnectionRefTo(nodeId).connection.userUUIDs
+
+      override fun hasNext(): Boolean = userUUIDs.isNotEmpty()
+
+      override fun next(): UUID {
+        lastIndex = Random().nextInt(userUUIDs.size)
+        return userUUIDs[lastIndex]
+      }
+
+      override fun remove() {
+        require(lastIndex != -1)
+        userUUIDs.removeAt(lastIndex)
+      }
     }
+  }
 
-    protected fun MutableIterator<UUID>.remove(nodeId: Int, userUUID: UUID) {
-        logger.info("Removing sink $nodeId for user $userUUID")
-        val uuidsOrdered = sinksOrdered[nodeId] ?: return
-        if (uuidsOrdered.size == 1) {
-            sinksOrdered.remove(nodeId)
-            sinksShuffled.remove(nodeId)
-        } else if (uuidsOrdered.remove(userUUID)) {
-            remove()
-        }
+  protected fun isNotSink(nodeId: Int, uuid: UUID): Boolean {
+    return !pluginMessageNetwork.getConnectionRefTo(nodeId).connection.userUUIDs.contains(uuid)
+  }
+
+  protected fun forward(header: NetworkHeader, inputStream: ByteArrayInputStream) {
+    val data = getData(header, inputStream)
+    when (header.path.forwardingType) {
+      ForwardingType.DirectForwarded -> sendDirect(header, data)
+      ForwardingType.Broadcast -> sendToAll(header, data)
     }
+  }
 
-    protected fun getSinks(nodeId: Int): MutableIterator<UUID> {
-        val uuids = sinksShuffled[nodeId] ?: return Collections.emptyIterator()
-        uuids.shuffle()
-        return uuids.iterator()
+  protected abstract fun sendDirect(header: NetworkHeader, data: ByteArray, sinkUUID: UUID? = null): Boolean
+  protected abstract fun sendToAll(header: NetworkHeader, data: ByteArray): Boolean
+
+  override fun send(header: NetworkHeader, data: ByteArray): Boolean {
+    return when (val forwardingType = header.path.forwardingType) {
+      is ForwardingType.DirectForwarded -> sendDirect(header, data)
+      is ForwardingType.DirectUUID -> sendDirect(header, data, forwardingType.uuid)
+      else -> sendToAll(header, data)
     }
-
-    /**
-     * @return `false` only if the provided player is known to be from the provided nodeId
-     */
-    protected fun isNotSink(nodeId: Int, uuid: UUID): Boolean {
-        val uuids = sinksOrdered[nodeId] ?: return true
-        return !uuids.contains(uuid)
-    }
-
-    protected fun forward(header: NetworkHeader, inputStream: ByteArrayInputStream) {
-        val data = getData(header, inputStream)
-        //logger.info("[Forward] {} {}", forwardingType, header)
-        when (header.path.forwardingType) {
-            ForwardingType.DirectForwarded -> sendDirect(header, data)
-            ForwardingType.Broadcast -> sendToAll(header, data)
-        }
-    }
-
-    protected abstract fun sendDirect(header: NetworkHeader, data: ByteArray, sinkUUID: UUID? = null): Boolean
-    protected abstract fun sendToAll(header: NetworkHeader, data: ByteArray): Boolean
-
-    override fun send(header: NetworkHeader, data: ByteArray): Boolean {
-        return when (val forwardingType = header.path.forwardingType) {
-            is ForwardingType.DirectForwarded -> sendDirect(header, data)
-            is ForwardingType.DirectUUID -> sendDirect(header, data, forwardingType.uuid)
-            else -> sendToAll(header, data)
-        }
-    }
+  }
 }

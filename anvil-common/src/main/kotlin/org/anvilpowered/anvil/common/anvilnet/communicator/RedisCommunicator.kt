@@ -29,47 +29,47 @@ import java.io.ByteArrayInputStream
 @Singleton
 class RedisCommunicator @Inject constructor(registry: Registry) : BroadcastCommunicator("Redis") {
 
-    @Inject
-    private lateinit var redisService: RedisService
+  @Inject
+  private lateinit var redisService: RedisService
 
-    private val redisListener = object : BinaryJedisPubSub() {
-        override fun onMessage(channel: ByteArray, message: ByteArray) {
-            accept(ByteArrayInputStream(message))
-        }
+  private val redisListener = object : BinaryJedisPubSub() {
+    override fun onMessage(channel: ByteArray, message: ByteArray) {
+      accept(ByteArrayInputStream(message))
     }
+  }
 
-    init {
-        registry.whenLoaded { loaded() }.order(-5).register()
-        isAvailable = false
-    }
+  init {
+    registry.whenLoaded { loaded() }.order(-5).register()
+    isAvailable = false
+  }
 
-    @RegistryScoped
-    private fun loaded() {
-        isAvailable = try {
-            redisService.jedisPool.resource.subscribe(redisListener, channel)
-            true
-        } catch (e: Exception) {
-            logger.warn("Unable to connect to redis, falling back to plugin messaging only.")
-            false
-        }
+  @RegistryScoped
+  private fun loaded() {
+    isAvailable = try {
+      redisService.jedisPool.resource.subscribe(redisListener, channel)
+      true
+    } catch (e: Exception) {
+      logger.warn("Unable to connect to redis, falling back to plugin messaging only.")
+      false
     }
+  }
 
-    override fun setListener(nodeId: Int, listener: ((AnvilNetPacket) -> Unit)?) {
-        if (!isAvailable) {
-            return
-        }
-        val newTarget = this.nodeId != nodeId
-        if (newTarget && this.nodeId != 0) {
-            redisListener.unsubscribe(getChannel(this.nodeId))
-        }
-        super.setListener(nodeId, listener)
-        if (newTarget && nodeId != 0) {
-            redisListener.subscribe(getChannel(nodeId))
-        }
+  override fun setListener(nodeId: Int, listener: ((AnvilNetPacket) -> Unit)?) {
+    if (!isAvailable) {
+      return
     }
+    val newTarget = this.nodeId != nodeId
+    if (newTarget && this.nodeId != 0) {
+      redisListener.unsubscribe(getChannel(this.nodeId))
+    }
+    super.setListener(nodeId, listener)
+    if (newTarget && nodeId != 0) {
+      redisListener.subscribe(getChannel(nodeId))
+    }
+  }
 
-    public override fun send(header: NetworkHeader, data: ByteArray): Boolean {
-        redisService.jedisPool.resource.publish(getChannel(header.path.target), data)
-        return true
-    }
+  public override fun send(header: NetworkHeader, data: ByteArray): Boolean {
+    redisService.jedisPool.resource.publish(getChannel(header.path.targetId), data)
+    return true
+  }
 }

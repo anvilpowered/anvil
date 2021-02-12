@@ -32,89 +32,88 @@ import java.util.UUID
 
 @Singleton
 class VelocityPluginMessageCommunicator @Inject constructor(
-    private val proxyServer: ProxyServer,
-    plugin: PluginContainer
+  private val proxyServer: ProxyServer,
+  plugin: PluginContainer,
 ) : PluginMessageCommunicator() {
 
-    companion object {
-        private val CHANNEL: ChannelIdentifier = LegacyChannelIdentifier(CHANNEL_NAME)
-    }
+  companion object {
+    private val CHANNEL: ChannelIdentifier = LegacyChannelIdentifier(CHANNEL_NAME)
+  }
 
-    init {
-        proxyServer.channelRegistrar.register(CHANNEL)
-        proxyServer.eventManager.register(plugin, PluginMessageEvent::class.java, ::onMessage)
-    }
+  init {
+    proxyServer.channelRegistrar.register(CHANNEL)
+    proxyServer.eventManager.register(plugin, PluginMessageEvent::class.java, ::onMessage)
+  }
 
-    private fun onMessage(event: PluginMessageEvent) {
-        if (event.identifier != CHANNEL) {
-            return
-        }
-        val inputStream = event.dataAsInputStream()
-        val header = accept(inputStream) ?: return
-        val source = header.path.source
-        if (source != 0) {
-            val messageSource = event.source
-            if (messageSource is ServerConnection) {
-                putSink(source, messageSource.player.uniqueId)
-            }
-        }
-        forward(header, inputStream)
+  private fun onMessage(event: PluginMessageEvent) {
+    if (event.identifier != CHANNEL) {
+      return
     }
+    val inputStream = event.dataAsInputStream()
+    val header = accept(inputStream) ?: return
+    val source = header.path.sourceId
+    if (source != 0) {
+      val messageSource = event.source
+      if (messageSource is ServerConnection) {
+        putSink(source, messageSource.player.uniqueId)
+      }
+    }
+    forward(header, inputStream)
+  }
 
-    override fun sendDirect(header: NetworkHeader, data: ByteArray, sinkUUID: UUID?): Boolean {
-        val target = header.path.target
-        if (sinkUUID != null) {
-            if (proxyServer.getPlayer(sinkUUID).flatMap { it.currentServer }
-                    .filter { it.sendPluginMessage(CHANNEL, data) }
-                    .isPresent
-            ) {
-                if (target != 0) {
-                    putSink(target, sinkUUID)
-                }
-                logSent(header, data)
-                return true
-            }
-        }
-        if (target != 0) {
-            val sinks = getSinks(target)
-            while (sinks.hasNext()) {
-                val userUUID = sinks.next()
-                val connection = proxyServer.getPlayer(userUUID).flatMap { it.currentServer }
-                if (!connection.isPresent) {
-                    sinks.remove(target, userUUID)
-                    continue
-                }
-                if (connection.get().sendPluginMessage(CHANNEL, data)) {
-                    logSent(header, data)
-                    return true
-                } else {
-                    sinks.remove(target, userUUID)
-                }
-            }
-        }
-        // cant find sink for target, just send to all
-        return sendToAll(header, data)
+  override fun sendDirect(header: NetworkHeader, data: ByteArray, sinkUUID: UUID?): Boolean {
+    val target = header.path.targetId
+    if (sinkUUID != null) {
+      if (proxyServer.getPlayer(sinkUUID).flatMap { it.currentServer }
+          .filter { it.sendPluginMessage(CHANNEL, data) }
+          .isPresent
+      ) {
+        // we *could* add sinkUUID to the sinks for this connection
+        // however, we'll just wait until we receive a response from this server before doing that
+        logSent(header, data)
+        return true
+      }
     }
+    if (target != 0) {
+      val sinks = getSinks(target)
+      while (sinks.hasNext()) {
+        val userUUID = sinks.next()
+        val connection = proxyServer.getPlayer(userUUID).flatMap { it.currentServer }
+        if (!connection.isPresent) {
+          sinks.remove()
+          continue
+        }
+        if (connection.get().sendPluginMessage(CHANNEL, data)) {
+          logSent(header, data)
+          return true
+        } else {
+          sinks.remove()
+        }
+      }
+    }
+    // cant find sink for target, just send to all
+    return sendToAll(header, data)
+  }
 
-    override fun sendToAll(header: NetworkHeader, data: ByteArray): Boolean {
-        val source = header.path.source
-        val alreadySent: MutableSet<ServerInfo> = mutableSetOf()
-        var result = false
-        for (player in proxyServer.allPlayers) {
-            val optionalConnection = player.currentServer
-            if (!optionalConnection.isPresent) {
-                continue
-            }
-            val connection = optionalConnection.get()
-            val info = connection.serverInfo
-            if (!alreadySent.contains(info) && isNotSink(source, player.uniqueId)
-                && connection.sendPluginMessage(CHANNEL, data)
-            ) {
-                logSent(header, data)
-                alreadySent.add(info)
-                result = true
-            }
-        }
-        return result
+  override fun sendToAll(header: NetworkHeader, data: ByteArray): Boolean {
+    val source = header.path.sourceId
+    val alreadySent: MutableSet<ServerInfo> = mutableSetOf()
+    var result = false
+    for (player in proxyServer.allPlayers) {
+      val optionalConnection = player.currentServer
+      if (!optionalConnection.isPresent) {
+        continue
+      }
+      val connection = optionalConnection.get()
+      val info = connection.serverInfo
+      if (!alreadySent.contains(info) && isNotSink(source, player.uniqueId)
+        && connection.sendPluginMessage(CHANNEL, data)
+      ) {
+        logSent(header, data)
+        alreadySent.add(info)
+        result = true
+      }
     }
+    return result
+  }
 }

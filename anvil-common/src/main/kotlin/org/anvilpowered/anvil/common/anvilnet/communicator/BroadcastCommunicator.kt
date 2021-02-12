@@ -21,10 +21,10 @@ import org.anvilpowered.anvil.common.anvilnet.ConnectionType
 import org.anvilpowered.anvil.common.anvilnet.packet.AnvilNetPacket
 
 abstract class BroadcastCommunicator protected constructor(name: String) : BaseCommunicator(name, ConnectionType.HUB) {
-    protected var isAvailable: Boolean = false
-    override fun send(target: Int, type: Int, packet: AnvilNetPacket): Boolean {
-        return if (!isAvailable) {
-            false
-        } else super.send(target, type, packet)
-    }
+  protected var isAvailable: Boolean = false
+  override fun send(target: Int, type: Int, packet: AnvilNetPacket): Boolean {
+    return if (!isAvailable) {
+      false
+    } else super.send(target, type, packet)
+  }
 }

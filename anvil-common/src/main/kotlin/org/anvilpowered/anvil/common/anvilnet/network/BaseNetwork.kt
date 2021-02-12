@@ -21,60 +21,59 @@ import com.google.common.graph.ElementOrder
 import com.google.common.graph.MutableNetwork
 import com.google.common.graph.NetworkBuilder
 import org.anvilpowered.anvil.api.AnvilImpl
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.anvilnet.ConnectionType
-import org.anvilpowered.anvil.common.anvilnet.communicator.node.Connection
-import org.anvilpowered.anvil.common.anvilnet.communicator.node.Node
 import org.anvilpowered.anvil.common.anvilnet.communicator.format
+import org.anvilpowered.anvil.common.anvilnet.communicator.node.ConnectionRef
+import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 
 @Suppress("UnstableApiUsage")
 abstract class BaseNetwork(
-    registry: Registry,
-    private val connectionType: ConnectionType
+  private val connectionType: ConnectionType
 ) {
-    val network: MutableNetwork<Node, Connection> = NetworkBuilder.undirected()
-        .nodeOrder(ElementOrder.natural<Node>())
-        .edgeOrder(ElementOrder.natural<Connection>())
-        .build()
+  val network: MutableNetwork<NodeRef, ConnectionRef> = NetworkBuilder.undirected()
+    .nodeOrder(ElementOrder.natural<NodeRef>())
+    .edgeOrder(ElementOrder.natural<ConnectionRef>())
+    .build()
 
-    val nodes: Set<Node> = network.nodes()
-    val connections: Set<Connection> = network.edges()
-    var current: Node? = null
+  val nodeRefs: Set<NodeRef> = network.nodes()
+  val connectionRefs: Set<ConnectionRef> = network.edges()
+  lateinit var current: NodeRef
 
-    fun initCurrentNode(nodeId: Int, nodeName: String) {
-        require(current == null) { "current node already initialized" }
-        current = ensureNode(nodeId, nodeName)
+  fun initCurrentNode(nodeId: Int, nodeName: String) {
+    require(!this::current.isInitialized) { "current node already initialized" }
+    current = ensureNode(nodeId, nodeName)
+  }
+
+  fun getAdjacentConnections(nodeRef: NodeRef = current): Set<ConnectionRef> = network.incidentEdges(nodeRef)
+  fun getAdjacentNodes(nodeRef: NodeRef = current): Set<NodeRef> = network.adjacentNodes(nodeRef)
+
+  fun ensureNode(nodeId: Int, nodeName: String): NodeRef {
+    AnvilImpl.getLogger().info("Ensuring node $nodeName with nodeId ${nodeId.format()}")
+    return nodeRefs.find { it.id == nodeId }
+      ?: NodeRef(nodeId, nodeName).also { network.addNode(it) }
+  }
+
+  fun ensureConnection(nodeRefA: NodeRef, nodeRefB: NodeRef = current): ConnectionRef {
+    AnvilImpl.getLogger().info("Ensuring connection $connectionType between $nodeRefA and $nodeRefB")
+    return network.edgesConnecting(nodeRefA, nodeRefB).firstOrNull()
+      ?: ConnectionRef(nodeRefA, nodeRefB, connectionType).also { network.addEdge(nodeRefA, nodeRefB, it) }
+  }
+
+  fun removeNode(nodeRef: NodeRef) {
+    AnvilImpl.getLogger().info("Removing nodeId ${nodeRef.id} from $connectionType")
+    network.removeNode(nodeRef)
+  }
+
+  fun removeConnection(connectionRef: ConnectionRef) {
+    AnvilImpl.getLogger().info(
+      "Removing connection $connectionType between ${connectionRef.nodes.first} and ${connectionRef.nodes.second}"
+    )
+    network.removeEdge(connectionRef)
+    if (network.adjacentEdges(connectionRef.nodes.first).isEmpty()) {
+      network.removeNode(connectionRef.nodes.first)
     }
-
-    fun getConnections(node: Node): Set<Connection> = network.incidentEdges(node)
-
-    fun ensureNode(nodeId: Int, nodeName: String): Node {
-        AnvilImpl.getLogger().info("Ensuring node $nodeName with nodeId ${nodeId.format()}")
-        return nodes.find { it.name == nodeName }
-            ?: Node(nodeId, nodeName).also { network.addNode(it) }
+    if (network.adjacentEdges(connectionRef.nodes.second).isEmpty()) {
+      network.removeNode(connectionRef.nodes.second)
     }
-
-    fun ensureConnection(nodeA: Node, nodeB: Node = current!!): Connection {
-        AnvilImpl.getLogger().info("Ensuring connection $connectionType between $nodeA and $nodeB")
-        return network.edgesConnecting(nodeA, nodeB).firstOrNull()
-            ?: Connection(nodeA, nodeB, connectionType).also { network.addEdge(nodeA, nodeB, it) }
-    }
-
-    fun removeNode(node: Node) {
-        AnvilImpl.getLogger().info("Removing nodeId ${node.id} from $connectionType")
-        network.removeNode(node)
-    }
-
-    fun removeConnection(connection: Connection) {
-        AnvilImpl.getLogger().info(
-            "Removing connection $connectionType between ${connection.nodes.first} and ${connection.nodes.second}"
-        )
-        network.removeEdge(connection)
-        if (network.adjacentEdges(connection.nodes.first).isEmpty()) {
-            network.removeNode(connection.nodes.first)
-        }
-        if (network.adjacentEdges(connection.nodes.second).isEmpty()) {
-            network.removeNode(connection.nodes.second)
-        }
-    }
+  }
 }

@@ -21,31 +21,31 @@ import java.util.UUID
 
 sealed class ForwardingType {
 
-    /**
-     * A player's UUID was used to determine the destination of this packet
-     */
-    data class DirectUUID(val uuid: UUID) : ForwardingType() {
-        private val stringRepresentation: String = "DirectUUID{$uuid}"
-        override fun toString(): String = stringRepresentation
-    }
+  /**
+   * A player's UUID was used to determine the destination of this packet
+   */
+  data class DirectUUID(val uuid: UUID) : ForwardingType() {
+    private val stringRepresentation: String = "DirectUUID{$uuid}"
+    override fun toString(): String = stringRepresentation
+  }
 
-    /**
-     * A direct message meant to be received by this node
-     */
-    object DirectReceived : ForwardingType()
+  /**
+   * A direct message meant to be received by this node
+   */
+  object DirectReceived : ForwardingType()
 
-    /**
-     * A direct message meant for another node, to be forwarded
-     */
-    object DirectForwarded : ForwardingType()
+  /**
+   * A direct message meant for another node, to be forwarded
+   */
+  object DirectForwarded : ForwardingType()
 
-    /**
-     * A broadcast message meant for every node
-     */
-    object Broadcast : ForwardingType()
+  /**
+   * A broadcast message meant for every node
+   */
+  object Broadcast : ForwardingType()
 
-    val isForMe: Boolean
-        get() = this !is DirectForwarded
+  val isForMe: Boolean
+    get() = this !is DirectForwarded
 
-    override fun toString(): String = javaClass.simpleName
+  override fun toString(): String = javaClass.simpleName
 }

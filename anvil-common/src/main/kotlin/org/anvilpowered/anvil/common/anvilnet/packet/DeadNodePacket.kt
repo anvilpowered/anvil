@@ -25,24 +25,19 @@ import org.anvilpowered.anvil.common.anvilnet.packet.data.DeadNodeData
 
 class DeadNodePacket : AnvilNetPacket {
 
-    var nodeId: Int = 0
-        private set
+  constructor(nodeId: Int) : super(DeadNodeData(nodeId))
 
-    constructor(nodeId: Int) : super(DeadNodeData(nodeId)) {
-        this.nodeId = nodeId
-    }
+  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, DeadNodeData(input)) {
+    read(input)
+  }
 
-    constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, DeadNodeData(input)) {
-        read(input)
-    }
+  val deadNodeData: DeadNodeData = getContainer(DeadNodeData::class)!!
 
-    val deadNodeData: DeadNodeData = getContainer(DeadNodeData::class)!!
+  private val stringRepresentation: String by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("deadNodeData", deadNodeData)
+      .toString()
+  }
 
-    private val stringRepresentation: String by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("deadNodeData", this.deadNodeData)
-            .toString()
-    }
-
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

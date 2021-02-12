@@ -18,7 +18,16 @@
 
 package org.anvilpowered.anvil.api.event;
 
-public interface EventListener<E extends Event> {
+import org.anvilpowered.anvil.api.misc.Named;
 
-    void handle(E event) throws Exception;
+public interface EventListener<E extends Event> extends Named {
+
+  /**
+   * @return A unique identifier for this listener
+   */
+  default String getName() {
+    return getClass().getName();
+  }
+
+  void handle(E event) throws Exception;
 }

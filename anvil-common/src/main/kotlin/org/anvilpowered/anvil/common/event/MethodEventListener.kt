@@ -19,17 +19,31 @@ package org.anvilpowered.anvil.common.event
 
 import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.EventListener
-import java.lang.reflect.Method
-import java.util.function.BiFunction
-import java.util.function.Supplier
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
 
 class MethodEventListener<E : Event?>(
-    private val method: Method, private val parser: BiFunction<Method?, E, Array<Any>>,
-    private val instanceSupplier: Supplier<*>
+  private val enclosingType: KClass<*>,
+  /**
+   * The method
+   */
+  private val method: KCallable<Unit>,
+  /**
+   * Produces the correct parameters for an invokation of [method] for a given event [E]
+   */
+  private val parser: (KCallable<Unit>, E) -> Array<Any>,
+  /**
+   * The
+   */
+  private val instanceSupplier: () -> Any,
 ) : EventListener<E> {
 
-    @Throws(Exception::class)
-    override fun handle(event: E) {
-        method.invoke(instanceSupplier.get(), *parser.apply(method, event))
-    }
+  override fun getName(): String {
+    return enclosingType.qualifiedName + ">" + method.name
+  }
+
+  @Throws(Exception::class)
+  override fun handle(event: E) {
+    method.call(instanceSupplier(), *parser(method, event))
+  }
 }

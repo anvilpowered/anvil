@@ -18,5 +18,4 @@
 
 package org.anvilpowered.anvil.common.anvilnet.packet
 
-class KeepAlivePacket {
-}
+class KeepAlivePacket

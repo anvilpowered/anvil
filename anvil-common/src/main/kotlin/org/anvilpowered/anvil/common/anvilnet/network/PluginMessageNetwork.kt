@@ -20,22 +20,24 @@ package org.anvilpowered.anvil.common.anvilnet.network
 import com.google.common.graph.ElementOrder
 import com.google.common.graph.GraphBuilder
 import com.google.common.graph.MutableGraph
-import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.anvilnet.ConnectionType
-import org.anvilpowered.anvil.common.anvilnet.communicator.node.Node
+import org.anvilpowered.anvil.common.anvilnet.communicator.node.ConnectionRef
+import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 
 @Singleton
 @Suppress("UnstableApiUsage")
-class PluginMessageNetwork @Inject constructor(
-    registry: Registry,
-) : BaseNetwork(registry, ConnectionType.LATERAL) {
+class PluginMessageNetwork : BaseNetwork(ConnectionType.VERTICAL) {
 
-    private val hierarchy: MutableGraph<Node> = GraphBuilder.directed()
-        .nodeOrder(ElementOrder.natural<Node>())
-        .build()
+  private val hierarchy: MutableGraph<NodeRef> = GraphBuilder.directed()
+    .nodeOrder(ElementOrder.natural<NodeRef>())
+    .build()
 
-    fun getChildren(node: Node): Set<Node> = hierarchy.successors(node)
-    fun getParent(node: Node): Node? = hierarchy.predecessors(node).firstOrNull()
+  fun getChildren(nodeRef: NodeRef): Set<NodeRef> = hierarchy.successors(nodeRef)
+  fun getParent(nodeRef: NodeRef): NodeRef? = hierarchy.predecessors(nodeRef).firstOrNull()
+  fun getConnectionRefTo(nodeId: Int): ConnectionRef {
+    return getAdjacentConnections().asSequence()
+      .filter { it.containsNodeId(nodeId) }.firstOrNull()
+      ?: throw AssertionError("Connection to $nodeId is missing")
+  }
 }

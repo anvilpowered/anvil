@@ -24,30 +24,30 @@ import com.google.common.io.ByteArrayDataOutput
 
 class ReasonData : DataContainer {
 
-    lateinit var reason: String
-        private set
+  lateinit var reason: String
+    private set
 
-    constructor(reason: String) {
-        this.reason = reason
-    }
+  constructor(reason: String) {
+    this.reason = reason
+  }
 
-    constructor(input: ByteArrayDataInput) {
-        read(input)
-    }
+  constructor(input: ByteArrayDataInput) {
+    read(input)
+  }
 
-    override fun read(input: ByteArrayDataInput) {
-        reason = input.readUTF()
-    }
+  override fun read(input: ByteArrayDataInput) {
+    reason = input.readUTF()
+  }
 
-    override fun write(output: ByteArrayDataOutput) {
-        output.writeUTF(reason)
-    }
+  override fun write(output: ByteArrayDataOutput) {
+    output.writeUTF(reason)
+  }
 
-    private val stringRepresentation: String by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("reason", reason)
-            .toString()
-    }
+  private val stringRepresentation: String by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("reason", reason)
+      .toString()
+  }
 
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

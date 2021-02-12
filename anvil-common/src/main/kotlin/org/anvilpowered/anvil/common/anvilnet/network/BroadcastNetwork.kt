@@ -17,15 +17,9 @@
  */
 package org.anvilpowered.anvil.common.anvilnet.network
 
-import com.google.inject.Inject
-import com.google.inject.Injector
 import com.google.inject.Singleton
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.anvilnet.ConnectionType
 
 @Singleton
 @Suppress("UnstableApiUsage")
-class BroadcastNetwork @Inject constructor(
-    registry: Registry,
-) : BaseNetwork(registry, ConnectionType.HUB) {
-}
+class BroadcastNetwork : BaseNetwork(ConnectionType.HUB)

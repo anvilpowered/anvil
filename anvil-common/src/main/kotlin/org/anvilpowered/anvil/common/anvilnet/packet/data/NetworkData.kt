@@ -24,9 +24,9 @@ import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 
 interface NetworkData {
 
-    fun updateNetwork(
-        header: NetworkHeader,
-        broadcastNetwork: BroadcastNetwork,
-        pluginMessageNetwork: PluginMessageNetwork,
-    )
+  fun updateNetwork(
+    header: NetworkHeader,
+    broadcastNetwork: BroadcastNetwork,
+    pluginMessageNetwork: PluginMessageNetwork,
+  )
 }

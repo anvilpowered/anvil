@@ -21,8 +21,8 @@ import com.google.inject.Singleton
 
 @Singleton
 class CommonSequenceGenerator {
-    private var seq = 0
-    operator fun next(): Short {
-        return (if (++seq ushr 16 == 1) 0.also { seq = it } else seq).toShort()
-    }
+  private var seq = 0
+  operator fun next(): Short {
+    return (if (++seq ushr 16 == 1) 0.also { seq = it } else seq).toShort()
+  }
 }

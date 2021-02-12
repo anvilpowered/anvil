@@ -18,21 +18,32 @@
 
 package org.anvilpowered.anvil.common.anvilnet.packet
 
+import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.Order
 import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
+import org.anvilpowered.anvil.common.anvilnet.packet.data.BaseData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.EventData
 
 /**
  * Represents a single cycle of event execution
  */
-class EventPacket<E : Event> : AnvilNetPacket {
+class EventPostPacket<E : Event> : AnvilNetPacket {
 
-    constructor(event: E, order: Order) : super(null, EventData(event, order)) {
+  constructor(event: E, order: Order) : super(BaseData(), EventData(event, order))
 
-    }
+  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, BaseData(), EventData<E>(input))
 
-    constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, EventData<E>(input)) {
-    }
+  val baseData: BaseData = getContainer(BaseData::class)!!
+  val eventData: EventData<E> = getContainer(EventData::class) as EventData<E>
+
+  private val stringRepresentation: String by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("baseData", baseData)
+      .add("eventData", eventData)
+      .toString()
+  }
+
+  override fun toString(): String = stringRepresentation
 }

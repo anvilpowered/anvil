@@ -30,49 +30,49 @@ import java.util.concurrent.CompletableFuture
 
 class CommonPacketBus {
 
-    @Inject
-    private lateinit var anvilNetService: CommonAnvilNetService
+  @Inject
+  private lateinit var anvilNetService: CommonAnvilNetService
 
-    @Inject
-    private lateinit var broadcastNetwork: BroadcastNetwork
+  @Inject
+  private lateinit var broadcastNetwork: BroadcastNetwork
 
-    @Inject
-    private lateinit var pluginMessageNetwork: PluginMessageNetwork
+  @Inject
+  private lateinit var pluginMessageNetwork: PluginMessageNetwork
 
-    @Inject
-    private lateinit var logger: Logger
+  @Inject
+  private lateinit var logger: Logger
 
-    fun send(packet: AnvilNetPacket, connectionType: ConnectionType? = null) {
-        try {
-            val result = anvilNetService.prepare(packet)
-                .connectionType(connectionType)
-                .send().join()
-            if (!result) {
-                logger.error("[Send] failed")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+  fun send(packet: AnvilNetPacket, connectionType: ConnectionType? = null) {
+    try {
+      val result = anvilNetService.prepareSend(packet)
+        .connectionType(connectionType)
+        .send().join()
+      if (!result) {
+        logger.error("[Send] failed")
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
     }
+  }
 
-    fun sendAsync(packet: AnvilNetPacket, connectionType: ConnectionType? = null, delay: Long = 4000) {
-        CompletableFuture.runAsync {
-            try {
-                Thread.sleep(delay)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-            send(packet, connectionType)
-        }
+  fun sendAsync(packet: AnvilNetPacket, connectionType: ConnectionType? = null, delay: Long = 4000) {
+    CompletableFuture.runAsync {
+      try {
+        Thread.sleep(delay)
+      } catch (e: InterruptedException) {
+        e.printStackTrace()
+      }
+      send(packet, connectionType)
     }
+  }
 
-    fun onPlayerJoin(userUUID: UUID) {
-        sendAsync(InitialPingPacket(userUUID), ConnectionType.LATERAL)
-    }
+  fun onPlayerJoin(userUUID: UUID) {
+    sendAsync(InitialPingPacket(userUUID), ConnectionType.VERTICAL)
+  }
 
-    fun onServerStop() {
-        println("Sending server stop stuff")
-        broadcastNetwork.current?.id?.also { send(DeadNodePacket(it), ConnectionType.HUB) }
-        pluginMessageNetwork.current?.id?.also { send(DeadNodePacket(it), ConnectionType.LATERAL) }
-    }
+  fun onServerStop() {
+    println("Sending server stop stuff")
+    send(DeadNodePacket(broadcastNetwork.current.id), ConnectionType.HUB)
+    send(DeadNodePacket(pluginMessageNetwork.current.id), ConnectionType.VERTICAL)
+  }
 }

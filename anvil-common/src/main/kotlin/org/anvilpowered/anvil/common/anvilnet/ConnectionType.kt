@@ -18,17 +18,17 @@
 package org.anvilpowered.anvil.common.anvilnet
 
 enum class ConnectionType {
-    /**
-     * Hub 'n spoke
-     *
-     * E.g: Redis
-     */
-    HUB,
+  /**
+   * Hub 'n spoke
+   *
+   * E.g: Redis
+   */
+  HUB,
 
-    /**
-     * Direct 1-on-1 connections between servers
-     *
-     * E.g: Plugin Messaging
-     */
-    LATERAL,
+  /**
+   * Direct 1-on-1 connections between servers
+   *
+   * E.g: Plugin Messaging
+   */
+  VERTICAL,
 }

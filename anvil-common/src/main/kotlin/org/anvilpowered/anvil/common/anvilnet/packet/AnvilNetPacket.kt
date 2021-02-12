@@ -28,27 +28,30 @@ import org.anvilpowered.anvil.common.anvilnet.packet.data.Preparable
 import kotlin.reflect.KClass
 
 open class AnvilNetPacket(
-    val header: NetworkHeader?,
-    vararg containerInstances: DataContainer,
+  val header: NetworkHeader?,
+  vararg containerInstances: DataContainer,
 ) : DataContainer, Preparable {
 
-    constructor(vararg containerInstances: DataContainer) : this(null, *containerInstances)
+  val containers: Map<KClass<out DataContainer>, DataContainer> =
+    containerInstances.asSequence().map { it::class to it }.toMap()
 
-    val containers: Map<KClass<out DataContainer>, DataContainer> =
-        containerInstances.asSequence().map { it::class to it }.toMap()
+  constructor(vararg containerInstances: DataContainer) : this(null, *containerInstances)
 
-    inline fun <reified T : DataContainer> getContainer(type: KClass<T>): T? = containers[type] as? T
+  inline fun <reified T : DataContainer> getContainer(type: KClass<T>): T? = containers[type] as? T
 
-    /**
-     * Updates provided networks with information from this packet.
-     * Precondition: header != null
-     */
-    open fun updateNetwork(
-        broadcastNetwork: BroadcastNetwork,
-        pluginMessageNetwork: PluginMessageNetwork,
-    ) = containers.forEach { (it.value as? NetworkData)?.updateNetwork(header!!, broadcastNetwork, pluginMessageNetwork) }
+  /**
+   * Updates provided networks with information from this packet.
+   * Precondition: header != null
+   */
+  open fun updateNetwork(
+    broadcastNetwork: BroadcastNetwork,
+    pluginMessageNetwork: PluginMessageNetwork,
+  ) {
+    requireNotNull(header) { "header is null, updateNetwork must be called on a received packet" }
+    containers.forEach { (it.value as? NetworkData)?.updateNetwork(header, broadcastNetwork, pluginMessageNetwork) }
+  }
 
-    override fun prepare(nodeName: String) = containers.forEach { (it.value as? Preparable)?.prepare(nodeName) }
-    override fun write(output: ByteArrayDataOutput) = containers.forEach { it.value.write(output) }
-    override fun read(input: ByteArrayDataInput) = containers.forEach { it.value.read(input) }
+  override fun prepare(nodeName: String) = containers.forEach { (it.value as? Preparable)?.prepare(nodeName) }
+  override fun write(output: ByteArrayDataOutput) = containers.forEach { it.value.write(output) }
+  override fun read(input: ByteArrayDataInput) = containers.forEach { it.value.read(input) }
 }

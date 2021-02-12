@@ -27,30 +27,30 @@ import java.util.UUID
  */
 class PlayerData : DataContainer {
 
-    lateinit var userUUID: UUID
-        private set
+  lateinit var userUUID: UUID
+    private set
 
-    constructor(userUUID: UUID) {
-        this.userUUID = userUUID
-    }
+  constructor(userUUID: UUID) {
+    this.userUUID = userUUID
+  }
 
-    constructor(input: ByteArrayDataInput) {
-        read(input)
-    }
+  constructor(input: ByteArrayDataInput) {
+    read(input)
+  }
 
-    override fun read(input: ByteArrayDataInput) {
-        userUUID = input.readUUID()
-    }
+  override fun read(input: ByteArrayDataInput) {
+    userUUID = input.readUUID()
+  }
 
-    override fun write(output: ByteArrayDataOutput) {
-        output.writeUUID(userUUID)
-    }
+  override fun write(output: ByteArrayDataOutput) {
+    output.writeUUID(userUUID)
+  }
 
-    private val stringRepresentation: String by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("userUUID", this.userUUID)
-            .toString()
-    }
+  private val stringRepresentation: String by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("userUUID", this.userUUID)
+      .toString()
+  }
 
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

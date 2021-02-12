@@ -29,90 +29,86 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class BaseData(
-    input: ByteArrayDataInput?,
-) : DataContainer, NetworkData, Preparable {
+class BaseData : DataContainer, NetworkData, Preparable {
 
-    /**
-     * The creation time of this packet, used to calculate latency
-     */
-    lateinit var createdUtc: Instant
-        private set
+  /**
+   * The creation time of this packet, used to calculate latency
+   */
+  lateinit var createdUtc: Instant
+    private set
 
-    /**
-     * The name of the node that sent the packet
-     */
-    lateinit var nodeName: String
-        private set
+  /**
+   * The name of the node that sent the packet
+   */
+  lateinit var nodeName: String
+    private set
 
-    @Transient
-    private var travelTime = 0
+  @Transient
+  private var travelTime = 0
 
-    @Transient
-    private val live: Boolean
+  @Transient
+  private val live: Boolean
 
-    init {
-        if (input == null) {
-            live = false
-            travelTime = -1
-        } else {
-            live = true
-            read(input)
-        }
+  constructor() {
+    live = false
+    travelTime = -1
+  }
+
+  constructor(input: ByteArrayDataInput) {
+    live = true
+    read(input)
+  }
+
+  fun getTravelTime(): Int {
+    if (travelTime == -1) {
+      travelTime = aliveTime
     }
+    return travelTime
+  }
 
-    fun getTravelTime(): Int {
-        if (travelTime == -1) {
-            travelTime = aliveTime
-        }
-        return travelTime
-    }
+  val aliveTime: Int
+    get() = if (!live) {
+      -1
+    } else Duration.between(
+      createdUtc,
+      OffsetDateTime.now(ZoneOffset.UTC).toInstant()
+    ).toMillis().toInt()
 
-    val aliveTime: Int
-        get() = if (!live) {
-            -1
-        } else Duration.between(
-            createdUtc,
-            OffsetDateTime.now(ZoneOffset.UTC).toInstant()
-        ).toMillis().toInt()
+  override fun write(output: ByteArrayDataOutput) {
+    output.writeUTF(nodeName)
+    output.writeInstant(createdUtc)
+  }
 
-    override fun write(output: ByteArrayDataOutput) {
-        output.writeUTF(nodeName)
-        output.writeInstant(createdUtc)
-    }
+  override fun read(input: ByteArrayDataInput) {
+    nodeName = input.readUTF()
+    createdUtc = input.readInstant()
+    travelTime = -1
+  }
 
-    override fun read(input: ByteArrayDataInput) {
-        nodeName = input.readUTF()
-        createdUtc = input.readInstant()
-        travelTime = -1
-    }
+  override fun prepare(nodeName: String) {
+    this.nodeName = nodeName
+    this.createdUtc = OffsetDateTime.now(ZoneOffset.UTC).toInstant()
+  }
 
-    override fun prepare(nodeName: String) {
-        this.nodeName = nodeName
-        this.createdUtc = OffsetDateTime.now(ZoneOffset.UTC).toInstant()
-    }
+  override fun updateNetwork(
+    header: NetworkHeader,
+    broadcastNetwork: BroadcastNetwork,
+    pluginMessageNetwork: PluginMessageNetwork,
+  ) {
+    println("Updating network from received packet $this")
+    val pluginMessageNode = pluginMessageNetwork.ensureNode(header.path.sourceId, nodeName)
+    println("Updating network from remote node $pluginMessageNode")
+    val pluginMessageConnection = pluginMessageNetwork.ensureConnection(pluginMessageNode)
+  }
 
-    override fun updateNetwork(
-        header: NetworkHeader,
-        broadcastNetwork: BroadcastNetwork,
-        pluginMessageNetwork: PluginMessageNetwork,
-    ) {
-        println("Updating network from received packet $this")
-        val pluginMessageNode = pluginMessageNetwork.ensureNode(header.path.source, nodeName)
-        println("Updating network from remote node $pluginMessageNode")
-        val pluginMessageConnection = pluginMessageNetwork.ensureConnection(pluginMessageNode)
+  private val stringRepresentation by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("createdUtc", createdUtc)
+      .add("nodeName", nodeName)
+      .add("travelTime", getTravelTime())
+      .add("aliveTime", aliveTime)
+      .toString()
+  }
 
-        pluginMessageConnection.update(getTravelTime())
-    }
-
-    private val stringRepresentation by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("createdUtc", createdUtc)
-            .add("nodeName", nodeName)
-            .add("travelTime", getTravelTime())
-            .add("aliveTime", aliveTime)
-            .toString()
-    }
-
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

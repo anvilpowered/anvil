@@ -22,50 +22,53 @@ import com.google.common.collect.HashBiMap
 import com.google.common.io.ByteArrayDataInput
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
 import org.anvilpowered.anvil.common.anvilnet.packet.AnvilNetPacket
 import org.slf4j.Logger
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.reflect.KClass
+import kotlin.reflect.jvm.jvmErasure
 
 @Singleton
 class CommonPacketTranslator {
 
-    @Inject
-    private lateinit var logger: Logger
+  @Inject
+  private lateinit var logger: Logger
 
-    private val packetTypes: BiMap<Int, Class<out AnvilNetPacket>> = HashBiMap.create()
+  private val packetTypes: BiMap<Int, KClass<out AnvilNetPacket>> = HashBiMap.create()
 
-    fun registerPacketType(clazz: Class<out AnvilNetPacket>, id: Int? = packetTypesSize++) {
-        packetTypes[id] = clazz
+  var packetTypesSize = AtomicInteger(0)
+    private set
+
+  fun registerPacketType(clazz: KClass<out AnvilNetPacket>) {
+    packetTypes[packetTypesSize.getAndIncrement()] = clazz
+  }
+
+  fun toPacketType(type: Int): KClass<out AnvilNetPacket> {
+    return packetTypes[type]
+      ?: throw NoSuchElementException("Packet class $type has not been registered!")
+  }
+
+  fun fromPacketType(packetClass: KClass<out AnvilNetPacket>): Int {
+    return packetTypes.inverse()[packetClass]
+      ?: throw NoSuchElementException("Packet class ${packetClass.simpleName} has not been registered!")
+  }
+
+  fun parse(header: NetworkHeader, input: ByteArrayDataInput): AnvilNetPacket? {
+    val packetClass = packetTypes[header.type]
+    if (packetClass == null) {
+      logger.error("Could not find packet class for received type ${header.type}")
+      return null
     }
-
-    var packetTypesSize = 0
-        private set
-
-    fun registerPacketTypeBegin() {
-        packetTypesSize = 0
+    val parameterTypes = listOf(NetworkHeader::class, ByteArrayDataInput::class)
+    val packet = packetClass.constructors
+      .find { c -> c.parameters.map { it.type.jvmErasure } == parameterTypes }
+      ?.call(header, input)
+    if (packet == null) {
+      logger.error(
+        "${packetClass.simpleName} does not have the required (NetworkHeader, ByteArrayDataOutput) constructor",
+        NoSuchMethodException("Could not find matching constructor")
+      )
     }
-
-    fun getPacketType(packetClass: Class<out AnvilNetPacket>): Int {
-        return packetTypes.inverse()[packetClass]
-            ?: throw NoSuchElementException("Packet class " + packetClass.name + " has not been registered!")
-    }
-
-    fun parse(header: NetworkHeader, input: ByteArrayDataInput): AnvilNetPacket? {
-        val packetClass = packetTypes[header.type]
-        if (packetClass == null) {
-            logger.error("Could not find packet class for received type ${header.type}")
-            return null
-        }
-        return try {
-            packetClass.getConstructor(NetworkHeader::class.java, ByteArrayDataInput::class.java).newInstance(header, input)
-        } catch (e: Exception) {
-            val className = packetClass.simpleName
-            when (e) {
-                is IllegalAccessException, is NoSuchMethodException ->
-                    logger.error("$className does not have the required (NetworkHeader, ByteArrayDataOutput) constructor", e)
-                else -> logger.error("An unknown error occurred while deserializing $className", e)
-            }
-            null
-        }
-    }
+    return packet
+  }
 }

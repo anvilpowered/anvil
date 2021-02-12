@@ -22,7 +22,8 @@ import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
 import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
-import org.anvilpowered.anvil.common.anvilnet.communicator.node.Node
+import org.anvilpowered.anvil.common.anvilnet.communicator.format
+import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 import org.anvilpowered.anvil.common.anvilnet.network.BroadcastNetwork
 import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 
@@ -31,40 +32,40 @@ import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
  */
 class DeadNodeData : DataContainer, NetworkData {
 
-    var nodeId: Int = 0
-        private set
+  var nodeId: Int = 0
+    private set
 
-    constructor(nodeId: Int) {
-        this.nodeId = nodeId
-    }
+  constructor(nodeId: Int) {
+    this.nodeId = nodeId
+  }
 
-    constructor(input: ByteArrayDataInput) {
-        read(input)
-    }
+  constructor(input: ByteArrayDataInput) {
+    read(input)
+  }
 
-    override fun read(input: ByteArrayDataInput) {
-        nodeId = input.readInt()
-    }
+  override fun read(input: ByteArrayDataInput) {
+    nodeId = input.readInt()
+  }
 
-    override fun write(output: ByteArrayDataOutput) {
-        output.writeInt(nodeId)
-    }
+  override fun write(output: ByteArrayDataOutput) {
+    output.writeInt(nodeId)
+  }
 
-    override fun updateNetwork(
-        header: NetworkHeader,
-        broadcastNetwork: BroadcastNetwork,
-        pluginMessageNetwork: PluginMessageNetwork
-    ) {
-        val node = Node(nodeId)
-        broadcastNetwork.removeNode(node)
-        pluginMessageNetwork.removeNode(node)
-    }
+  override fun updateNetwork(
+    header: NetworkHeader,
+    broadcastNetwork: BroadcastNetwork,
+    pluginMessageNetwork: PluginMessageNetwork
+  ) {
+    val node = NodeRef(nodeId)
+    broadcastNetwork.removeNode(node)
+    pluginMessageNetwork.removeNode(node)
+  }
 
-    private val stringRepresentation: String by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("nodeId", nodeId)
-            .toString()
-    }
+  private val stringRepresentation: String by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("nodeId", nodeId.format())
+      .toString()
+  }
 
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

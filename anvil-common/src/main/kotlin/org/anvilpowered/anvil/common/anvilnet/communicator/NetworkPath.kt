@@ -20,109 +20,110 @@ package org.anvilpowered.anvil.common.anvilnet.communicator
 import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import java.util.UUID
+
 // TODO: user DataContainer
 class NetworkPath {
-    val source: Int
-    val target: Int
-    val hops: IntArray
+  val sourceId: Int
+  val targetId: Int
+  val hops: IntArray
 
-    @Transient
-    private val hopCount: Int
+  @Transient
+  private val hopCount: Int
 
-    @Transient
-    private val nodeId: Int
+  @Transient
+  private val nodeId: Int
 
-    @Transient
-    lateinit var forwardingType: ForwardingType
+  @Transient
+  lateinit var forwardingType: ForwardingType
 
-    @Transient
-    val sourcePretty: String
+  @Transient
+  val sourcePretty: String
 
-    @Transient
-    val targetPretty: String
+  @Transient
+  val targetPretty: String
 
-    @Transient
-    val hopsPretty: String
+  @Transient
+  val hopsPretty: String
 
-    constructor(source: Int, target: Int, hops: IntArray = IntArray(0), nodeId: Int = source) {
-        this.source = source
-        sourcePretty = source.format()
-        this.target = target
-        targetPretty = target.format()
-        hopCount = hops.size
-        this.hops = hops
-        hopsPretty = hops.format()
-        this.nodeId = nodeId
+  constructor(source: Int, target: Int, hops: IntArray = IntArray(0), nodeId: Int = source) {
+    this.sourceId = source
+    sourcePretty = source.format()
+    this.targetId = target
+    targetPretty = target.format()
+    hopCount = hops.size
+    this.hops = hops
+    hopsPretty = hops.format()
+    this.nodeId = nodeId
+  }
+
+  constructor(input: ByteArrayDataInput, nodeId: Int) {
+    val prevHopCount = input.readUnsignedByte()
+    sourceId = input.readInt()
+    sourcePretty = sourceId.format()
+    targetId = input.readInt()
+    targetPretty = targetId.format()
+    hopCount = prevHopCount + 1
+    hops = IntArray(hopCount)
+    for (i in 0 until prevHopCount) {
+      hops[i] = input.readInt()
     }
+    hops[prevHopCount] = nodeId
+    hopsPretty = hops.format()
+    this.nodeId = nodeId
+  }
 
-    constructor(input: ByteArrayDataInput, nodeId: Int) {
-        val prevHopCount = input.readUnsignedByte()
-        source = input.readInt()
-        sourcePretty = source.format()
-        target = input.readInt()
-        targetPretty = target.format()
-        hopCount = prevHopCount + 1
-        hops = IntArray(hopCount)
-        for (i in 0 until prevHopCount) {
-            hops[i] = input.readInt()
-        }
-        hops[prevHopCount] = nodeId
-        hopsPretty = hops.format()
-        this.nodeId = nodeId
+  fun setForwardingType(userUUID: UUID? = null) {
+    forwardingType = when {
+      userUUID != null -> ForwardingType.DirectUUID(userUUID)
+      targetId == 0 -> ForwardingType.Broadcast
+      targetId == nodeId -> ForwardingType.DirectReceived
+      else -> ForwardingType.DirectForwarded
     }
+  }
 
-    fun setForwardingType(userUUID: UUID? = null) {
-        forwardingType = when {
-            userUUID != null -> ForwardingType.DirectUUID(userUUID)
-            target == 0 -> ForwardingType.Broadcast
-            target == nodeId -> ForwardingType.DirectReceived
-            else -> ForwardingType.DirectForwarded
-        }
+  /**
+   * Finds the direct path back from this node to the source node
+   *
+   * @return The direct path back to the source
+   */
+  fun back(): NetworkPath {
+    val revHops = IntArray(hopCount)
+    val hopMax = hopCount - 1
+    for (i in 0 until hopCount) {
+      revHops[i] = hops[hopMax - i]
     }
+    return NetworkPath(nodeId, sourceId, revHops, nodeId)
+  }
 
-    /**
-     * Finds the direct path back from this node to the source node
-     *
-     * @return The direct path back to the source
-     */
-    fun back(): NetworkPath {
-        val revHops = IntArray(hopCount)
-        val hopMax = hopCount - 1
-        for (i in 0 until hopCount) {
-            revHops[i] = hops[hopMax - i]
-        }
-        return NetworkPath(nodeId, source, revHops, nodeId)
+  fun write(data: ByteArray, offset: Int): Int {
+    var offset = offset
+    data[offset++] = hopCount.toByte()
+    offset = data.write(offset, sourceId)
+    offset = data.write(offset, targetId)
+    for (hop in hops) {
+      offset = data.write(offset, hop)
     }
+    return offset
+  }
 
-    fun write(data: ByteArray, offset: Int): Int {
-        var offset = offset
-        data[offset++] = hopCount.toByte()
-        offset = data.write(offset, source)
-        offset = data.write(offset, target)
-        for (hop in hops) {
-            offset = data.write(offset, hop)
-        }
-        return offset
-    }
+  /**
+   * Checks whether a message that was sent along this path should be forwarded to the provided nodeId.
+   * This is to prevent loops in the network.
+   *
+   * @return Whether this
+   */
+  fun shouldForwardTo(nodeId: Int): Boolean {
+    return if (hopCount == 0) {
+      nodeId != sourceId
+    } else hops[hopCount - 1] != nodeId
+  }
 
-    /**
-     * Checks whether a message that was sent along this path should be forwarded to the provided nodeId.
-     * This is to prevent loops in the network.
-     *
-     * @return Whether this
-     */
-    fun shouldForwardTo(nodeId: Int): Boolean {
-        return if (hopCount == 0) {
-            nodeId != source
-        } else hops[hopCount - 1] != nodeId
-    }
-
-    override fun toString(): String {
-        return MoreObjects.toStringHelper(this)
-            .add("source", sourcePretty)
-            .add("target", targetPretty)
-            .add("forwardingType", forwardingType)
-            .add("hops", hopsPretty)
-            .toString()
-    }
+  override fun toString(): String {
+    return MoreObjects.toStringHelper(this)
+      .add("source", sourcePretty)
+      .add("target", targetPretty)
+      .add("forwardingType", forwardingType)
+      .add("hops", hopsPretty)
+      .toString()
+  }
 }

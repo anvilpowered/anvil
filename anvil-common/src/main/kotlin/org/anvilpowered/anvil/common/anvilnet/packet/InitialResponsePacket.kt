@@ -28,50 +28,36 @@ import org.anvilpowered.anvil.common.anvilnet.packet.data.NetworkTopographyData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.PlayerData
 import java.util.UUID
 
-class InitialResponsePacket(
-    header: NetworkHeader?,
-    input: ByteArrayDataInput?,
-    userUUID: UUID? = null,
-    broadcastNetwork: BroadcastNetwork? = null,
-    pluginMessageNetwork: PluginMessageNetwork? = null,
-) : AnvilNetPacket(
-    header,
-    BaseData(input),
-    // the player that caused the packet that caused this packet
-    PlayerData(input, userUUID),
-    NetworkTopographyData(input, broadcastNetwork, pluginMessageNetwork),
-) {
+class InitialResponsePacket : AnvilNetPacket {
 
-    constructor(header: NetworkHeader, input: ByteArrayDataInput) : this(header, input, null)
+  constructor(
+    userUUID: UUID,
+    broadcastNetwork: BroadcastNetwork,
+    pluginMessageNetwork: PluginMessageNetwork,
+  ) : super(
+    BaseData(), PlayerData(userUUID), NetworkTopographyData(broadcastNetwork, pluginMessageNetwork)
+  )
 
-    constructor(
-        userUUID: UUID,
-        broadcastNetwork: BroadcastNetwork,
-        pluginMessageNetwork: PluginMessageNetwork,
-    ) : super(
-        null,
-        null,
-        userUUID,
-        broadcastNetwork,
-        pluginMessageNetwork,
-    )
+  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(
+    header, BaseData(input), PlayerData(input), NetworkTopographyData(input),
+  )
 
-    val baseData: BaseData = getContainer(BaseData::class)!!
-    val playerData: PlayerData = getContainer(PlayerData::class)!!
-    val networkTopographyData: NetworkTopographyData = getContainer(NetworkTopographyData::class)!!
+  val baseData: BaseData = getContainer(BaseData::class)!!
+  val playerData: PlayerData = getContainer(PlayerData::class)!!
+  val networkTopographyData: NetworkTopographyData = getContainer(NetworkTopographyData::class)!!
 
-    // override to skip BaseData#updateNetwork as it is not needed
-    override fun updateNetwork(broadcastNetwork: BroadcastNetwork, pluginMessageNetwork: PluginMessageNetwork) {
-        networkTopographyData.updateNetwork(header!!, broadcastNetwork, pluginMessageNetwork)
-    }
+  // override to skip BaseData#updateNetwork as it is not needed
+  override fun updateNetwork(broadcastNetwork: BroadcastNetwork, pluginMessageNetwork: PluginMessageNetwork) {
+    networkTopographyData.updateNetwork(header!!, broadcastNetwork, pluginMessageNetwork)
+  }
 
-    private val stringRepresentation: String by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("baseData", baseData)
-            .add("playerData", playerData)
-            .add("networkTopographyData", networkTopographyData)
-            .toString()
-    }
+  private val stringRepresentation: String by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("baseData", baseData)
+      .add("playerData", playerData)
+      .add("networkTopographyData", networkTopographyData)
+      .toString()
+  }
 
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

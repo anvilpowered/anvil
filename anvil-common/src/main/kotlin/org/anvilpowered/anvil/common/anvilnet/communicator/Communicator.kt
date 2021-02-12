@@ -21,21 +21,21 @@ import org.anvilpowered.anvil.common.anvilnet.packet.AnvilNetPacket
 
 interface Communicator {
 
-    /**
-     * Sets the listener for messages received by this communicator
-     *
-     * @param nodeId   The nodeId of this node
-     * @param listener The listener to set
-     */
-    fun setListener(nodeId: Int, listener: ((AnvilNetPacket) -> Unit)?)
+  /**
+   * Sets the listener for messages received by this communicator
+   *
+   * @param nodeId   The nodeId of this node
+   * @param listener The listener to set
+   */
+  fun setListener(nodeId: Int, listener: ((AnvilNetPacket) -> Unit)?)
 
-    /**
-     * Sends a message to the network. This method will block until the message is sent.
-     *
-     * @param target       The nodeId of the target node (0 for broadcast)
-     * @param type         The message type
-     * @param packet  The stream containing the message to send
-     * @return whether the output was successfully sent to at least one receiver
-     */
-    fun send(target: Int, type: Int, packet: AnvilNetPacket): Boolean
+  /**
+   * Sends a message to the network. This method will block until the message is sent.
+   *
+   * @param target       The nodeId of the target node (0 for broadcast)
+   * @param type         The message type
+   * @param packet  The stream containing the message to send
+   * @return whether the output was successfully sent to at least one receiver
+   */
+  fun send(target: Int, type: Int, packet: AnvilNetPacket): Boolean
 }

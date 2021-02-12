@@ -18,5 +18,15 @@
 
 package org.anvilpowered.anvil.common.anvilnet.communicator.node
 
-class ConnectionEventData {
+import com.google.inject.Singleton
+
+@Singleton
+class NetworkStorage {
+
+  private val connections: MutableMap<ConnectionRef, Connection> = mutableMapOf()
+  private val nodes: MutableMap<NodeRef, Node> = mutableMapOf()
+
+  fun getConnection(ref: ConnectionRef): Connection = connections[ref] ?: Connection(ref).also { connections[ref] = it }
+  fun getNode(ref: NodeRef): Node = nodes[ref] ?: Node(ref).also { nodes[ref] = it }
+
 }

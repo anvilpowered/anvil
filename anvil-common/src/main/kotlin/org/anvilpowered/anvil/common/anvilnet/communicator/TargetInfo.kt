@@ -18,5 +18,4 @@
 
 package org.anvilpowered.anvil.common.anvilnet.communicator
 
-class TargetInfo {
-}
+class TargetInfo

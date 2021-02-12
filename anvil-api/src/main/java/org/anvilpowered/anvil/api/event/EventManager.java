@@ -26,26 +26,24 @@ import java.util.concurrent.CompletableFuture;
 
 public interface EventManager {
 
-    void register(Object listener);
+  void register(Object listener);
 
-    void register(Key<?> listener);
+  void register(Class<?> listener);
 
-    void register(Iterable<Key<?>> listeners);
+  void register(Key<?> listener);
 
-    void register(Class<?> listener);
+  void register(TypeLiteral<?> listener);
 
-    void register(TypeLiteral<?> listener);
+  void register(TypeToken<?> listener);
 
-    void register(TypeToken<?> listener);
+  /**
+   * Posts the provided event to all of its listeners
+   *
+   * @param event {@link Event} to post
+   * @return {@code true} if the listeners completed successfully
+   * and the event was not cancelled, otherwise {@code false}
+   */
+  CompletableFuture<PostEventResult> post(Event event);
 
-    /**
-     * Posts the provided event to all of its listeners
-     *
-     * @param event {@link Event} to post
-     * @return {@code true} if the listeners completed successfully
-     * and the event was not cancelled, otherwise {@code false}
-     */
-    CompletableFuture<Boolean> post(Event event);
-
-    <E extends Event> void register(Class<? super E> eventType, EventListener<E> listener, Order order);
+  <E extends Event> void register(Class<? super E> eventType, EventListener<E> listener, Order order);
 }

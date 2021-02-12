@@ -25,40 +25,37 @@ import org.anvilpowered.anvil.api.event.Order
 
 class EventData<E : Event> : DataContainer {
 
-    lateinit var event: E
-        private set
+  lateinit var event: E
+    private set
 
-    lateinit var order: Order
-        private set
+  lateinit var order: Order
+    private set
 
-    constructor(event: E, order: Order) {
-        this.event = event
-        this.order = order
-    }
+  constructor(event: E, order: Order) {
+    this.event = event
+    this.order = order
+  }
 
-    constructor(input: ByteArrayDataInput) {
-        read(input)
-    }
+  constructor(input: ByteArrayDataInput) {
+    read(input)
+  }
 
-    init {
-    }
+  override fun write(output: ByteArrayDataOutput) {
+    output.write(event)
+    output.writeOrder(order)
+  }
 
-    override fun write(output: ByteArrayDataOutput) {
-        output.write(event)
-        output.writeOrder(order)
-    }
+  override fun read(input: ByteArrayDataInput) {
+    event = input.read()
+    order = input.readOrder()
+  }
 
-    override fun read(input: ByteArrayDataInput) {
-        event = input.read()
-        order = input.readOrder()
-    }
+  private val stringRepresentation by lazy {
+    MoreObjects.toStringHelper(this)
+      .add("event", event)
+      .add("order", order)
+      .toString()
+  }
 
-    private val stringRepresentation by lazy {
-        MoreObjects.toStringHelper(this)
-            .add("event", event)
-            .add("order", order)
-            .toString()
-    }
-
-    override fun toString(): String = stringRepresentation
+  override fun toString(): String = stringRepresentation
 }

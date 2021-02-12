@@ -33,7 +33,6 @@ public class SpongeServerListener {
     @Listener
     public void onServerStop(GameStoppingEvent event) {
         System.out.println("In here");
-        Sponge.getServiceManager().provideUnchecked(UserStorageService.class)
         packetBus.onServerStop();
     }
 }

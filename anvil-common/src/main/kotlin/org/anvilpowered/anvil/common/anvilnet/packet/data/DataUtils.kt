@@ -25,59 +25,59 @@ import java.time.Instant
 import java.util.UUID
 
 fun <T> ByteArrayDataInput.read(): T {
-    val length = readInt()
-    val bytes = ByteArray(length)
-    for (i in 0 until length) {
-        bytes[i] = readByte()
-    }
-    return Mappable.deserializeUnsafe(bytes)
+  val length = readInt()
+  val bytes = ByteArray(length)
+  for (i in 0 until length) {
+    bytes[i] = readByte()
+  }
+  return Mappable.deserializeUnsafe(bytes)
 }
 
 fun ByteArrayDataOutput.write(obj: Any) {
-    val bytes = Mappable.serializeUnsafe(obj)
-    writeInt(bytes.size)
-    write(bytes)
+  val bytes = Mappable.serializeUnsafe(obj)
+  writeInt(bytes.size)
+  write(bytes)
 }
 
 fun <T : DataContainer> ByteArrayDataInput.readContainer(type: Class<T>): T {
-    return type.getConstructor(ByteArrayDataInput::class.java).newInstance(this)
+  return type.getConstructor(ByteArrayDataInput::class.java).newInstance(this)
 }
 
 fun ByteArrayDataOutput.writeContainer(dataContainer: DataContainer) {
-    dataContainer.write(this)
+  dataContainer.write(this)
 }
 
 inline fun <reified T : DataContainer> ByteArrayDataInput.readShortContainers(type: Class<T>): Array<T> {
-    return Array(readUnsignedShort()) { readContainer(type) }
+  return Array(readUnsignedShort()) { readContainer(type) }
 }
 
 fun ByteArrayDataOutput.writeShortContainers(containers: Array<out DataContainer>) {
-    writeShort(containers.size)
-    containers.forEach(::writeContainer)
+  writeShort(containers.size)
+  containers.forEach(::writeContainer)
 }
 
 fun ByteArrayDataInput.readInstant(): Instant {
-    return Instant.ofEpochSecond(readLong(), readInt().toLong())
+  return Instant.ofEpochSecond(readLong(), readInt().toLong())
 }
 
 fun ByteArrayDataOutput.writeInstant(instant: Instant) {
-    writeLong(instant.epochSecond)
-    writeInt(instant.nano)
+  writeLong(instant.epochSecond)
+  writeInt(instant.nano)
 }
 
 fun ByteArrayDataInput.readOrder(): Order {
-    return Order.values()[readUnsignedByte()]
+  return Order.values()[readUnsignedByte()]
 }
 
 fun ByteArrayDataOutput.writeOrder(order: Order) {
-    writeByte(order.ordinal)
+  writeByte(order.ordinal)
 }
 
 fun ByteArrayDataInput.readUUID(): UUID {
-    return UUID(readLong(), readLong())
+  return UUID(readLong(), readLong())
 }
 
 fun ByteArrayDataOutput.writeUUID(uuid: UUID) {
-    writeLong(uuid.mostSignificantBits)
-    writeLong(uuid.leastSignificantBits)
+  writeLong(uuid.mostSignificantBits)
+  writeLong(uuid.leastSignificantBits)
 }

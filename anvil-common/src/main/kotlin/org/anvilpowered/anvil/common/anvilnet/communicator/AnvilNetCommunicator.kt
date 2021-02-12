@@ -27,19 +27,19 @@ import org.anvilpowered.anvil.common.anvilnet.packet.AnvilNetPacket
 @Singleton
 class AnvilNetCommunicator : Communicator {
 
-    @Inject
-    private lateinit var pluginMessageCommunicator: PluginMessageCommunicator
+  @Inject
+  private lateinit var pluginMessageCommunicator: PluginMessageCommunicator
 
-    @Inject
-    private lateinit var redisCommunicator: RedisCommunicator
+  @Inject
+  private lateinit var redisCommunicator: RedisCommunicator
 
-    override fun setListener(nodeId: Int, listener: ((AnvilNetPacket) -> Unit)?) {
-        pluginMessageCommunicator.setListener(nodeId, listener)
-        redisCommunicator.setListener(nodeId, listener)
-    }
+  override fun setListener(nodeId: Int, listener: ((AnvilNetPacket) -> Unit)?) {
+    pluginMessageCommunicator.setListener(nodeId, listener)
+    redisCommunicator.setListener(nodeId, listener)
+  }
 
-    override fun send(target: Int, type: Int, packet: AnvilNetPacket): Boolean {
-        return (redisCommunicator.send(target, type, packet)
-            || pluginMessageCommunicator.send(target, type, packet))
-    }
+  override fun send(target: Int, type: Int, packet: AnvilNetPacket): Boolean {
+    return (redisCommunicator.send(target, type, packet)
+      || pluginMessageCommunicator.send(target, type, packet))
+  }
 }

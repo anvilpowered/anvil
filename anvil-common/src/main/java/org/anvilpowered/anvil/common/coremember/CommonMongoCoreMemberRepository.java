@@ -46,7 +46,6 @@ public class CommonMongoCoreMemberRepository
         for (int i = 0; i < length; i++) {
             flags[i] = false;
         }
-        asQuery().retrievedFields()
         return getOneForUser(userUUID).thenApplyAsync(optionalMember -> {
             if (!optionalMember.isPresent()) {
                 CoreMember<ObjectId> member = generateEmpty();

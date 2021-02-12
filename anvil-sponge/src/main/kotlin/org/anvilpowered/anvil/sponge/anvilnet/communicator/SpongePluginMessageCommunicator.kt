@@ -29,79 +29,77 @@ import org.spongepowered.api.network.RemoteConnection
 import org.spongepowered.api.plugin.PluginContainer
 import java.io.ByteArrayInputStream
 import java.net.InetSocketAddress
-import java.util.Comparator
 import java.util.TreeSet
 import java.util.UUID
 import java.util.function.Consumer
 
 @Singleton
 class SpongePluginMessageCommunicator @Inject constructor(
-    plugin: PluginContainer
+  plugin: PluginContainer,
 ) : PluginMessageCommunicator() {
 
-    private var rawDataChannel: RawDataChannel = Sponge.getChannelRegistrar().getOrCreateRaw(plugin, CHANNEL_NAME)
+  private var rawDataChannel: RawDataChannel = Sponge.getChannelRegistrar().getOrCreateRaw(plugin, CHANNEL_NAME)
 
-    init {
-        rawDataChannel.addListener(::onMessage)
-    }
+  init {
+    rawDataChannel.addListener(::onMessage)
+  }
 
-    private fun onMessage(data: ChannelBuf, connection: RemoteConnection, side: Platform.Type) {
-        val inputStream: ByteArrayInputStream = ChannelBufByteArrayInputStream(data)
-        val header = accept(inputStream) ?: return
-        val source = header.path.source
-        if (source != 0) {
-            for (player in Sponge.getServer().onlinePlayers) {
-                if (player.connection.address == connection.address) {
-                    putSink(source, player.uniqueId)
-                }
-            }
+  private fun onMessage(data: ChannelBuf, connection: RemoteConnection, side: Platform.Type) {
+    val inputStream: ByteArrayInputStream = ChannelBufByteArrayInputStream(data)
+    val header = accept(inputStream) ?: return
+    val source = header.path.sourceId
+    if (source != 0) {
+      for (player in Sponge.getServer().onlinePlayers) {
+        if (player.connection.address == connection.address) {
+          putSink(source, player.uniqueId)
         }
-        forward(header, inputStream)
+      }
     }
+    forward(header, inputStream)
+  }
 
-    private fun write(data: ByteArray): Consumer<ChannelBuf> = Consumer { it.writeBytes(data) }
+  private fun write(data: ByteArray): Consumer<ChannelBuf> = Consumer { it.writeBytes(data) }
 
-    override fun sendDirect(header: NetworkHeader, data: ByteArray, sinkUUID: UUID?): Boolean {
-        val target = header.path.target
-        if (sinkUUID != null) {
-            Sponge.getServer().getPlayer(sinkUUID).ifPresent { rawDataChannel.sendTo(it, write(data)) }
-            if (target != 0) {
-                putSink(target, sinkUUID)
-            }
-            logSent(header, data)
-            return true
-        }
-        if (target != 0) {
-            val sinks = getSinks(target)
-            while (sinks.hasNext()) {
-                val userUUID = sinks.next()
-                val player = Sponge.getServer().getPlayer(userUUID)
-                if (!player.isPresent) {
-                    sinks.remove(nodeId, userUUID)
-                    continue
-                }
-                rawDataChannel.sendTo(player.get(), write(data))
-                logSent(header, data)
-                return true
-            }
-        }
-        // cant find sink for target, just send to all
-        return sendToAll(header, data)
+  override fun sendDirect(header: NetworkHeader, data: ByteArray, sinkUUID: UUID?): Boolean {
+    val target = header.path.targetId
+    if (sinkUUID != null) {
+      Sponge.getServer().getPlayer(sinkUUID).ifPresent { rawDataChannel.sendTo(it, write(data)) }
+      // we *could* add sinkUUID to the sinks for this connection
+      // however, we'll just wait until we receive a response from this server before doing that
+      logSent(header, data)
+      return true
     }
-
-    override fun sendToAll(header: NetworkHeader, data: ByteArray): Boolean {
-        val source = header.path.source
-        val alreadySent: MutableSet<InetSocketAddress> = TreeSet(Comparator.comparing { it.hostString })
-        var result = false
-        for (player in Sponge.getServer().onlinePlayers) {
-            val address = player.connection.address
-            if (!alreadySent.contains(address) && isNotSink(source, player.uniqueId)) {
-                rawDataChannel.sendTo(player, write(data))
-                logSent(header, data)
-                alreadySent.add(address)
-                result = true
-            }
+    if (target != 0) {
+      val sinks = getSinks(target)
+      while (sinks.hasNext()) {
+        val userUUID = sinks.next()
+        val player = Sponge.getServer().getPlayer(userUUID)
+        if (!player.isPresent) {
+          sinks.remove()
+          continue
         }
-        return result
+        rawDataChannel.sendTo(player.get(), write(data))
+        logSent(header, data)
+        return true
+      }
     }
+    // cant find sink for target, just send to all
+    return sendToAll(header, data)
+  }
+
+  override fun sendToAll(header: NetworkHeader, data: ByteArray): Boolean {
+    val source = header.path.sourceId
+    val alreadySent: MutableSet<InetSocketAddress> = TreeSet(Comparator.comparing { it.hostString })
+    var result = false
+    for (player in Sponge.getServer().onlinePlayers) {
+      val address = player.connection.address
+      if (!alreadySent.contains(address) && isNotSink(source, player.uniqueId)) {
+        rawDataChannel.sendTo(player, write(data))
+        logSent(header, data)
+        alreadySent.add(address)
+        result = true
+      }
+    }
+    return result
+  }
 }

@@ -28,7 +28,7 @@ import com.google.common.io.ByteArrayDataOutput
  */
 interface DataContainer {
 
-    fun read(input: ByteArrayDataInput)
+  fun read(input: ByteArrayDataInput)
 
-    fun write(output: ByteArrayDataOutput)
+  fun write(output: ByteArrayDataOutput)
 }

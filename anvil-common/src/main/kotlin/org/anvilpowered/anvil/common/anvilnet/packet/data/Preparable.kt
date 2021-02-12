@@ -20,5 +20,5 @@ package org.anvilpowered.anvil.common.anvilnet.packet.data
 
 interface Preparable {
 
-    fun prepare(nodeName: String)
+  fun prepare(nodeName: String)
 }

@@ -36,61 +36,61 @@ import org.anvilpowered.anvil.common.anvilnet.ConnectionType
  */
 class NetworkHeader {
 
-    companion object {
-        private const val HEADER_BASE_LENGTH: Int = 20
-        private const val MESSAGE_VERSION: Byte = 0
-    }
+  companion object {
+    private const val HEADER_BASE_LENGTH: Int = 20
+    private const val MESSAGE_VERSION: Byte = 0
+  }
 
-    val version: Byte
-    val sequence: Short
-    val path: NetworkPath
-    val type: Int
-    val payloadLength: Int
+  val version: Byte
+  val sequence: Short
+  val path: NetworkPath
+  val type: Int
+  val payloadLength: Int
 
-    @Transient
-    val length: Int
+  @Transient
+  val length: Int
 
-    @Transient
-    val connectionType: ConnectionType
+  @Transient
+  val connectionType: ConnectionType
 
-    constructor(sequence: Short, source: Int, target: Int, type: Int, payloadLength: Int, connectionType: ConnectionType) {
-        version = MESSAGE_VERSION
-        this.sequence = sequence
-        path = NetworkPath(source, target)
-        this.type = type
-        this.payloadLength = payloadLength
-        length = HEADER_BASE_LENGTH + 4 * path.hops.size
-        this.connectionType = connectionType
-    }
+  constructor(sequence: Short, source: Int, target: Int, type: Int, payloadLength: Int, connectionType: ConnectionType) {
+    version = MESSAGE_VERSION
+    this.sequence = sequence
+    path = NetworkPath(source, target)
+    this.type = type
+    this.payloadLength = payloadLength
+    length = HEADER_BASE_LENGTH + 4 * path.hops.size
+    this.connectionType = connectionType
+  }
 
-    constructor(input: ByteArrayDataInput, nodeId: Int, connectionType: ConnectionType) {
-        version = input.readByte()
-        check(version == MESSAGE_VERSION) { "Message has unsupported version $version" }
-        sequence = input.readShort()
-        path = NetworkPath(input, nodeId)
-        type = input.readInt()
-        payloadLength = input.readInt()
-        length = HEADER_BASE_LENGTH + 4 * path.hops.size
-        this.connectionType = connectionType
-    }
+  constructor(input: ByteArrayDataInput, nodeId: Int, connectionType: ConnectionType) {
+    version = input.readByte()
+    check(version == MESSAGE_VERSION) { "Message has unsupported version $version" }
+    sequence = input.readShort()
+    path = NetworkPath(input, nodeId)
+    type = input.readInt()
+    payloadLength = input.readInt()
+    length = HEADER_BASE_LENGTH + 4 * path.hops.size
+    this.connectionType = connectionType
+  }
 
-    fun write(data: ByteArray, offset: Int): Int {
-        var offset = offset
-        data[offset++] = MESSAGE_VERSION
-        offset = data.write(offset, sequence)
-        offset = data.write(offset, path)
-        offset = data.write(offset, type)
-        offset = data.write(offset, payloadLength)
-        return offset
-    }
+  fun write(data: ByteArray, offset: Int): Int {
+    var offset = offset
+    data[offset++] = MESSAGE_VERSION
+    offset = data.write(offset, sequence)
+    offset = data.write(offset, path)
+    offset = data.write(offset, type)
+    offset = data.write(offset, payloadLength)
+    return offset
+  }
 
-    override fun toString(): String {
-        return MoreObjects.toStringHelper(this)
-            .add("version", version)
-            .add("path", path)
-            .add("type", type.format())
-            .add("length", payloadLength)
-            .add("connectionType", connectionType)
-            .toString()
-    }
+  override fun toString(): String {
+    return MoreObjects.toStringHelper(this)
+      .add("version", version)
+      .add("path", path)
+      .add("type", type.format())
+      .add("length", payloadLength)
+      .add("connectionType", connectionType)
+      .toString()
+  }
 }
