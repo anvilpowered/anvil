@@ -302,6 +302,11 @@ public final class Keys {
             .sensitive()
             .build();
 
+    public static final Key<String> DUMP_PERMISSION =
+        Key.builder(TypeTokens.STRING)
+            .name("DUMP_PERMISSION")
+            .fallback("anvil.admin.dump")
+            .build();
     public static final Key<String> PLUGINS_PERMISSION =
         Key.builder(TypeTokens.STRING)
             .name("PLUGINS_PERMISSION")
@@ -345,6 +350,7 @@ public final class Keys {
             .register(REDIS_USE_AUTH);
 
         startRegistration("anvil")
+            .register(DUMP_PERMISSION)
             .register(PLUGINS_PERMISSION)
             .register(REGEDIT_PERMISSION)
             .register(RELOAD_PERMISSION)

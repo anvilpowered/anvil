@@ -1,8 +1,10 @@
 version = rootProject.apiVersion
 
 dependencies {
+    api(asynchttp)
     api bson
     api configurate_core
+    api(gson)
     api(guice + ":" + guice_version)
     api hikari
     api jedis
