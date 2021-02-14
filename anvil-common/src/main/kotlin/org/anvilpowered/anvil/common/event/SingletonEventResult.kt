@@ -16,18 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.anvilnet.communicator.node
+package org.anvilpowered.anvil.common.event
 
-import org.anvilpowered.anvil.api.Platform
-import org.anvilpowered.anvil.api.event.Event
-import org.anvilpowered.anvil.api.event.Order
-import java.util.EnumSet
-import kotlin.reflect.KClass
-
-class Node(val ref: NodeRef) {
-
-  lateinit var platform: Platform
-
-  val eventListeners: Map<KClass<out Event>, EnumSet<Order>> = mutableMapOf()
-
+class SingletonEventResult {
 }

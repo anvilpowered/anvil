@@ -40,10 +40,20 @@ public interface EventManager {
    * Posts the provided event to all of its listeners
    *
    * @param event {@link Event} to post
+   * @param maxWait How long to wait to collect results at end (only relevant if {@link Event#isExternallyBlockable()} is false)
    * @return {@code true} if the listeners completed successfully
    * and the event was not cancelled, otherwise {@code false}
    */
-  CompletableFuture<PostEventResult> post(Event event);
+  <E extends Event> CompletableFuture<EventResult<E>> post(E event, Class<E> eventType, long maxWait);
+
+  /**
+   * Posts the provided event to all of its listeners
+   *
+   * @param event {@link Event} to post
+   * @return {@code true} if the listeners completed successfully
+   * and the event was not cancelled, otherwise {@code false}
+   */
+  <E extends Event> CompletableFuture<EventResult<E>> post(E event, Class<E> eventType);
 
   <E extends Event> void register(Class<? super E> eventType, EventListener<E> listener, Order order);
 }

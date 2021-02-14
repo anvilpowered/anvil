@@ -15,30 +15,22 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package org.anvilpowered.anvil.common.anvilnet.packet.data
 
-import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
 import org.anvilpowered.anvil.api.event.Event
-import org.anvilpowered.anvil.api.event.Order
-import kotlin.reflect.KClass
+import org.anvilpowered.anvil.api.event.EventResult
+import org.anvilpowered.anvil.common.event.EventResultImpl
 
-class EventData<E : Event> : DataContainer {
+class EventResultData<E : Event> : DataContainer {
 
-  lateinit var eventType: KClass<E>
+  lateinit var tree: EventResultImpl.Tree<E>
     private set
 
-  lateinit var order: Order
-    private set
-
-  lateinit var event: E
-    private set
-
-  constructor(eventType: KClass<E>, order: Order, event: E) {
-    this.eventType = eventType
-    this.order = order
-    this.event = event
+  constructor(tree: EventResultImpl.Tree<E>) {
+    this.tree = tree
   }
 
   constructor(input: ByteArrayDataInput) {
@@ -46,24 +38,10 @@ class EventData<E : Event> : DataContainer {
   }
 
   override fun write(output: ByteArrayDataOutput) {
-    output.write(eventType)
-    output.writeOrder(order)
-    output.write(event)
+
   }
 
   override fun read(input: ByteArrayDataInput) {
-    eventType = input.read()
-    order = input.readOrder()
-    event = input.read()
-  }
 
-  private val stringRepresentation by lazy {
-    MoreObjects.toStringHelper(this)
-      .add("eventType", eventType)
-      .add("order", order)
-      .add("event", event)
-      .toString()
   }
-
-  override fun toString(): String = stringRepresentation
 }

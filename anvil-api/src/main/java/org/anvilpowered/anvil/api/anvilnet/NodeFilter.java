@@ -33,6 +33,10 @@ public interface NodeFilter extends Predicate<AnvilNetNode> {
         return builder().build();
     }
 
+    static NodeFilter proxyOnly() {
+
+    }
+
     static Builder builder() {
         return Anvil.getServiceManager().provide(Builder.class);
     }
@@ -48,13 +52,13 @@ public interface NodeFilter extends Predicate<AnvilNetNode> {
 
         Matcher all();
 
-        Matcher platform(String platform);
+        Matcher platformName(String platform);
 
-        Matcher platform(boolean isProxy);
+        Matcher platformIsProxy(boolean isProxy);
 
-        Matcher name(String name);
+        Matcher nodeName(String name);
 
-        Matcher name(Pattern name);
+        Matcher nodeName(Pattern name);
 
         NodeFilter build();
     }

@@ -18,6 +18,8 @@
 package org.anvilpowered.anvil.common.anvilnet
 
 import com.google.common.collect.HashBasedTable
+import com.google.common.collect.HashMultimap
+import com.google.common.collect.Multimap
 import com.google.common.collect.Table
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -77,18 +79,35 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
   private val connected: Boolean
   private val gson: Gson
 
-  private lateinit var listeners: Table<Int, KClass<out AnvilNetPacket>, MutableList<(AnvilNetPacket) -> Unit>>
+  private lateinit var listeners: Table<Int, KClass<out AnvilNetPacket>, Multimap<((AnvilNetPacket) -> Boolean)?, (AnvilNetPacket) -> Unit>>
 
-  private lateinit var blockingListeners: Table<Int, KClass<out AnvilNetPacket>, MutableList<(AnvilNetPacket) -> Unit>>
+  private lateinit var blockingListeners: Table<Int, KClass<out AnvilNetPacket>, Multimap<((AnvilNetPacket) -> Boolean)?, (AnvilNetPacket) -> Unit>>
+
+  private fun runListeners(
+    packet: AnvilNetPacket,
+    nodeId: Int,
+    removeIfRan: Boolean,
+    listeners: Table<Int, KClass<out AnvilNetPacket>, Multimap<((AnvilNetPacket) -> Boolean)?, (AnvilNetPacket) -> Unit>>,
+  ) {
+    val it = listeners[nodeId, packet::class].entries().iterator()
+    while (it.hasNext()) {
+      val next = it.next()
+      if (next.key != null && next.key!!(packet)) {
+        next.value(packet)
+        if (removeIfRan) {
+          it.remove()
+        }
+      }
+    }
+  }
 
   private val primaryListener = { packet: AnvilNetPacket ->
     requireNotNull(packet.header) { "packet header" }
     val nodeId = packet.header.path.sourceId
-    val packetType = packetTranslator.toPacketType(packet.header.type)
-    for (listener in blockingListeners[0, packetType]) listener(packet)
-    for (listener in blockingListeners[nodeId, packetType]) listener(packet)
-    for (listener in listeners[0, packetType]) listener(packet)
-    for (listener in listeners[nodeId, packetType]) listener(packet)
+    runListeners(packet, 0, true, blockingListeners)
+    runListeners(packet, nodeId, true, blockingListeners)
+    runListeners(packet, 0, false, listeners)
+    runListeners(packet, nodeId, false, listeners)
   }
 
   companion object {
@@ -187,32 +206,48 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
     return RegisterEnd(T::class, listener)
   }
 
-  inner class RegisterEnd<T : AnvilNetPacket>(private val packetType: KClass<T>, private val listener: (T) -> Unit) {
+  inner class RegisterEnd<T : AnvilNetPacket>(
+    private val packetType: KClass<T>,
+    private val listener: (T) -> Unit,
+  ) {
     private var nodeId: Int = 0
     private var blocking: Boolean = false
+    private var timeoutFuture: CompletableFuture<*>? = null
+    private var predicate: ((T) -> Boolean)? = null
 
     fun nodeId(nodeId: Int): RegisterEnd<T> {
       this.nodeId = nodeId
       return this
     }
 
-    fun blocking(): RegisterEnd<T> {
+    fun blocking(timeoutFuture: CompletableFuture<*>? = null): RegisterEnd<T> {
+      this.timeoutFuture = timeoutFuture
       this.blocking = true
       return this
     }
 
+    fun predicate(predicate: ((T) -> Boolean)?): RegisterEnd<T> {
+      this.predicate = predicate
+      return this
+    }
+
     fun register() {
+      val pair = Pair(predicate as? (AnvilNetPacket) -> Boolean, listener as (AnvilNetPacket) -> Unit)
       (if (blocking) blockingListeners else listeners).row(nodeId)
-        .computeIfAbsent(packetType) { mutableListOf() }
-        .add(listener as (AnvilNetPacket) -> Unit)
+        .computeIfAbsent(packetType) { HashMultimap.create() }
+        .put(pair.first, pair.second)
+      timeoutFuture?.thenAccept { blockingListeners.row(nodeId)[packetType]?.remove(pair.first, pair.second) }
     }
   }
 
-  inline fun <reified T : AnvilNetPacket> prepareNext(): NextPacketEnd<T> {
-    return NextPacketEnd(T::class)
+  inline fun <reified T : AnvilNetPacket> prepareNext(noinline predicate: ((T) -> Boolean)? = null): NextPacketEnd<T> {
+    return NextPacketEnd(T::class, predicate)
   }
 
-  inner class NextPacketEnd<T : AnvilNetPacket>(private val packetType: KClass<T>) {
+  inner class NextPacketEnd<T : AnvilNetPacket>(
+    private val packetType: KClass<T>,
+    private val predicate: ((T) -> Boolean)? = null,
+  ) {
     private var nodeId: Int = 0
     private var timeout: Long = 3000
 
@@ -227,7 +262,7 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
     }
 
     fun run(): CompletableFuture<T?> {
-      val completableFuture: CompletableFuture<T?> = CompletableFuture.supplyAsync {
+      val timeoutFuture: CompletableFuture<T?> = CompletableFuture.supplyAsync {
         try {
           Thread.sleep(timeout)
         } catch (e: InterruptedException) {
@@ -235,8 +270,8 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
         }
         null
       }
-      RegisterEnd(packetType, completableFuture::complete).blocking().register()
-      return completableFuture
+      RegisterEnd(packetType, timeoutFuture::complete).blocking(timeoutFuture).predicate(predicate).register()
+      return timeoutFuture
     }
   }
 

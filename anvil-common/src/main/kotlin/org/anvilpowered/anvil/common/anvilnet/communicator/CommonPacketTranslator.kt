@@ -39,9 +39,11 @@ class CommonPacketTranslator {
   var packetTypesSize = AtomicInteger(0)
     private set
 
-  fun registerPacketType(clazz: KClass<out AnvilNetPacket>) {
-    packetTypes[packetTypesSize.getAndIncrement()] = clazz
+  fun registerPacketType(packetType: KClass<out AnvilNetPacket>) {
+    packetTypes[packetTypesSize.getAndIncrement()] = packetType
   }
+
+  inline fun <reified T : AnvilNetPacket> registerPacketType() = registerPacketType(T::class)
 
   fun toPacketType(type: Int): KClass<out AnvilNetPacket> {
     return packetTypes[type]

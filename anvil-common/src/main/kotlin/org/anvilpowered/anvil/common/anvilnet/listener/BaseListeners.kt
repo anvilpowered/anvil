@@ -57,13 +57,12 @@ class BaseListeners @Inject constructor(
   private lateinit var packetTranslator: CommonPacketTranslator
 
   fun registerAll() {
-    packetTranslator.registerPacketType(InitialPingPacket::class.java)
-    packetTranslator.registerPacketType(InitialResponsePacket::class.java)
-    packetTranslator.registerPacketType(DeadNodePacket::class.java)
+    packetTranslator.registerPacketType<InitialPingPacket>()
+    packetTranslator.registerPacketType<InitialResponsePacket>()
+    packetTranslator.registerPacketType<DeadNodePacket>()
     logger.info("[AnvilNet] Successfully registered {} packet types", packetTranslator.packetTypesSize)
-    anvilNetService.register(InitialPingPacket::class.java) { onInitialPing(it) }
-    anvilNetService.nextPacketFuture(InitialResponsePacket::class.java)
-      .thenAcceptAsync { onInitialResponse(it) }
+    anvilNetService.prepareRegister<InitialPingPacket> { onInitialPing(it) }.register()
+    anvilNetService.prepareRegister<InitialResponsePacket> { onInitialResponse(it) }.blocking().register()
   }
 
   private fun received(packet: AnvilNetPacket) {
@@ -71,10 +70,7 @@ class BaseListeners @Inject constructor(
   }
 
   private fun timeout() {
-    logger.debug(
-      "Did not receive a response from the network within {}ms, assuming alone",
-      CommonAnvilNetService.TIMEOUT_MILLIS
-    )
+    logger.info("Did not receive a response from the network within 3000ms, assuming alone")
   }
 
   private fun onInitialPing(packet: InitialPingPacket) {
