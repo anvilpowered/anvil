@@ -68,8 +68,8 @@ class NetworkTopographyData : DataContainer, NetworkData {
 
   override fun read(input: ByteArrayDataInput) {
     val logger = AnvilImpl.getLogger()
-    hub = input.readShortContainers(ConnectionRef::class.java)
-    lateral = input.readShortContainers(ConnectionRef::class.java)
+    hub = input.readShortContainersAsArray()
+    lateral = input.readShortContainersAsArray()
     logger.info("Read Hub:")
     for (con in hub) {
       logger.info(con.toString())

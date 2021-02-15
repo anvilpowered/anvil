@@ -25,11 +25,11 @@ import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
 import org.anvilpowered.anvil.common.anvilnet.packet.data.BaseData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.EventData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.EventResultData
-import org.anvilpowered.anvil.common.event.EventResultImpl
+import org.anvilpowered.anvil.common.event.EventPostResultImpl
 
 class EventResultPacket<E : Event> : AnvilNetPacket {
 
-  constructor(tree: EventResultImpl.Tree<E>, eventData: EventData<E>) : super(
+  constructor(tree: EventPostResultImpl.Tree<E>, eventData: EventData<E>) : super(
     BaseData(),
     EventResultData<E>(tree),
     eventData,

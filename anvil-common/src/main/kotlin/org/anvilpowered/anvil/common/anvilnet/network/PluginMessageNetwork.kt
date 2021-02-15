@@ -22,6 +22,7 @@ import com.google.common.graph.GraphBuilder
 import com.google.common.graph.MutableGraph
 import com.google.inject.Singleton
 import org.anvilpowered.anvil.common.anvilnet.ConnectionType
+import org.anvilpowered.anvil.common.anvilnet.communicator.format
 import org.anvilpowered.anvil.common.anvilnet.communicator.node.ConnectionRef
 import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 
@@ -38,6 +39,6 @@ class PluginMessageNetwork : BaseNetwork(ConnectionType.VERTICAL) {
   fun getConnectionRefTo(nodeId: Int): ConnectionRef {
     return getAdjacentConnections().asSequence()
       .filter { it.containsNodeId(nodeId) }.firstOrNull()
-      ?: throw AssertionError("Connection to $nodeId is missing")
+      ?: throw AssertionError("Connection to ${nodeId.format()} is missing")
   }
 }

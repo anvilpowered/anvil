@@ -44,7 +44,7 @@ public interface EventManager {
    * @return {@code true} if the listeners completed successfully
    * and the event was not cancelled, otherwise {@code false}
    */
-  <E extends Event> CompletableFuture<EventResult<E>> post(E event, Class<E> eventType, long maxWait);
+  <E extends Event> CompletableFuture<EventPostResult<E>> post(Class<E> eventType, E event, long maxWait);
 
   /**
    * Posts the provided event to all of its listeners
@@ -53,7 +53,7 @@ public interface EventManager {
    * @return {@code true} if the listeners completed successfully
    * and the event was not cancelled, otherwise {@code false}
    */
-  <E extends Event> CompletableFuture<EventResult<E>> post(E event, Class<E> eventType);
+  <E extends Event> CompletableFuture<EventPostResult<E>> post(Class<E> eventType, E event);
 
-  <E extends Event> void register(Class<? super E> eventType, EventListener<E> listener, Order order);
+  <E extends Event> void register(EventListener<E> listener);
 }

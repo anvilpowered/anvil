@@ -15,55 +15,48 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package org.anvilpowered.anvil.common.anvilnet.packet.data
 
-import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
 import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.Order
-import kotlin.reflect.KClass
+import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
+import org.anvilpowered.anvil.common.anvilnet.network.BroadcastNetwork
+import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
+import java.util.EnumSet
 
-class EventData<E : Event> : DataContainer {
+class EventListenerData : DataContainer, NetworkData {
 
-  lateinit var eventType: KClass<E>
+  lateinit var eventMetas: Array<EventListenerMetaImpl<out Event>>
     private set
 
-  lateinit var order: Order
-    private set
-
-  lateinit var event: E
-    private set
-
-  constructor(eventType: KClass<E>, order: Order, event: E) {
-    this.eventType = eventType
-    this.order = order
-    this.event = event
+  constructor(eventMetas: Array<EventListenerMetaImpl<out Event>>) {
+    this.eventMetas = eventMetas
   }
 
   constructor(input: ByteArrayDataInput) {
     read(input)
   }
 
-  override fun write(output: ByteArrayDataOutput) {
-    output.write(eventType)
-    output.writeOrder(order)
-    output.write(event)
-  }
-
   override fun read(input: ByteArrayDataInput) {
-    eventType = input.read()!!
-    order = input.readOrder()
-    event = input.read()!!
+    eventMetas = input.readShortContainersAsArray()
   }
 
-  private val stringRepresentation by lazy {
-    MoreObjects.toStringHelper(this)
-      .add("eventType", eventType)
-      .add("order", order)
-      .add("event", event)
-      .toString()
+  override fun write(output: ByteArrayDataOutput) {
+    output.writeShortContainers(eventMetas)
   }
 
-  override fun toString(): String = stringRepresentation
+  override fun updateNetwork(
+    header: NetworkHeader,
+    broadcastNetwork: BroadcastNetwork,
+    pluginMessageNetwork: PluginMessageNetwork
+  ) {
+    val local = pluginMessageNetwork.ensureNode(header.path.sourceId).node.eventListeners
+    for (meta in eventMetas) {
+      local.computeIfAbsent(meta.eventTypeKt) { EnumSet.noneOf(Order::class.java) }
+        .add(meta.order)
+    }
+  }
 }

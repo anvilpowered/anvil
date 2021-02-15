@@ -89,7 +89,7 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
     removeIfRan: Boolean,
     listeners: Table<Int, KClass<out AnvilNetPacket>, Multimap<((AnvilNetPacket) -> Boolean)?, (AnvilNetPacket) -> Unit>>,
   ) {
-    val it = listeners[nodeId, packet::class].entries().iterator()
+    val it = (listeners[nodeId, packet::class] ?: return).entries().iterator()
     while (it.hasNext()) {
       val next = it.next()
       if (next.key != null && next.key!!(packet)) {

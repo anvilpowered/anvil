@@ -94,38 +94,6 @@ public interface Event {
   boolean isExternallyBlockable();
 
   /**
-   * To be used as a guard condition for event listeners.
-   *
-   * <p>
-   * The following code is an example of a listener that will only run for events coming from
-   * the "minigames" server.
-   * </p>
-   * <pre><code>
-   * {@literal @}Listener
-   * public void myListener(SomeEvent event) {
-   *   NodeFilter filter = NodeFilter.builder()
-   *     // include only minigames server
-   *     .name("minigames").include()
-   *     .build();
-   *
-   *   // exit if its not from minigames
-   *   if (event.notFrom(filter) {
-   *     return;
-   *   }
-   * }
-   * </code></pre>
-   *
-   * <p>
-   * To listen to events coming from all servers <strong>except</strong> for the minigames
-   * server, use {@code .name("minigames").exclude()} instead.
-   * </p>
-   *
-   * @param filter The {@link Predicate} to test
-   * @return Whether the provided filter does not match this {@code event}
-   */
-  boolean notFrom(Predicate<Node> filter);
-
-  /**
    * Merges an event of the same origin into this event. Used when the results from parallel
    * listeners need to be combined.
    *

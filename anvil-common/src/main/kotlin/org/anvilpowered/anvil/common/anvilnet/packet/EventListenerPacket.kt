@@ -16,31 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.anvilnet.packet.data
+package org.anvilpowered.anvil.common.anvilnet.packet
 
 import com.google.common.io.ByteArrayDataInput
-import com.google.common.io.ByteArrayDataOutput
 import org.anvilpowered.anvil.api.event.Event
-import org.anvilpowered.anvil.common.event.EventPostResultImpl
+import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
+import org.anvilpowered.anvil.common.anvilnet.packet.data.BaseData
+import kotlin.reflect.KClass
 
-class EventResultData<E : Event> : DataContainer {
+class EventListenerPacket : AnvilNetPacket {
 
-  lateinit var tree: EventPostResultImpl.Tree<E>
-    private set
+  constructor(eventTypes: List<KClass<out Event>>) : super(BaseData())
 
-  constructor(tree: EventPostResultImpl.Tree<E>) {
-    this.tree = tree
-  }
-
-  constructor(input: ByteArrayDataInput) {
-    read(input)
-  }
-
-  override fun read(input: ByteArrayDataInput) {
-    tree = EventPostResultImpl.Tree(input)
-  }
-
-  override fun write(output: ByteArrayDataOutput) {
-    tree.write(output)
-  }
+  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, BaseData(input))
 }

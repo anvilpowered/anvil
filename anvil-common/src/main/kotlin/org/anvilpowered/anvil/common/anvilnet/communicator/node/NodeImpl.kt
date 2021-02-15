@@ -29,7 +29,7 @@ class NodeImpl(val ref: NodeRef) : Node {
 
   private lateinit var platform: Platform
 
-  val eventListeners: Map<KClass<out Event>, EnumSet<Order>> = mutableMapOf()
+  val eventListeners: MutableMap<KClass<out Event>, EnumSet<Order>> = mutableMapOf()
 
   override fun getId(): Int = ref.id
   override fun getName(): String = ref.name

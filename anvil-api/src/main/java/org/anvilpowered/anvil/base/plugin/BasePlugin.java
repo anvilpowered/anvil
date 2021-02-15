@@ -26,6 +26,12 @@ import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Environment;
+import org.anvilpowered.anvil.api.event.Event;
+import org.anvilpowered.anvil.api.event.EventListener;
+import org.anvilpowered.anvil.api.event.EventListenerMeta;
+import org.anvilpowered.anvil.api.event.EventListenerResult;
+import org.anvilpowered.anvil.api.event.EventManager;
+import org.anvilpowered.anvil.api.event.Order;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -129,6 +135,34 @@ public abstract class BasePlugin {
 
     protected void whenReady(Environment environment) {
         sendLoaded("Loaded");
+        environment.getInjector().getInstance(EventManager.class).register(new EventListener<Event>() {
+          @Override
+          public EventListenerMeta<Event> getMeta() {
+            return new EventListenerMeta<Event>() {
+
+              @Override
+              public Class<Event> getEventType() {
+                return Event.class;
+              }
+
+              @Override
+              public Order getOrder() {
+                return Order.DEFAULT;
+              }
+
+              @Override
+              public boolean isAsync() {
+                return false;
+              }
+            };
+          }
+
+          @Override
+          public EventListenerResult handle(Event event) {
+            System.out.println("HELLOOOO");
+            return EventListenerResult.success();
+          }
+        });
     }
 
     protected void whenReloaded(Environment environment) {

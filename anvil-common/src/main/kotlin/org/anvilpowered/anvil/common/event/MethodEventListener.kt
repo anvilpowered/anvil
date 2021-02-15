@@ -19,31 +19,35 @@ package org.anvilpowered.anvil.common.event
 
 import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.EventListener
+import org.anvilpowered.anvil.api.event.EventListenerResult
+import org.anvilpowered.anvil.common.anvilnet.packet.data.EventListenerMetaImpl
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 
-class MethodEventListener<E : Event?>(
+class MethodEventListener<E : Event>(
+  /**
+   * The type that contains the method
+   */
   private val enclosingType: KClass<*>,
   /**
    * The method
    */
-  private val method: KCallable<Unit>,
+  private val method: KCallable<EventListenerResult>,
   /**
    * Produces the correct parameters for an invokation of [method] for a given event [E]
    */
-  private val parser: (KCallable<Unit>, E) -> Array<Any>,
+  private val parser: (KCallable<EventListenerResult>, E) -> Array<Any>,
   /**
-   * The
+   * Get your instances here!
    */
   private val instanceSupplier: () -> Any,
+  private val meta: EventListenerMetaImpl<E>,
 ) : EventListener<E> {
 
-  override fun getName(): String {
-    return enclosingType.qualifiedName + ">" + method.name
-  }
+  override fun getMeta(): EventListenerMetaImpl<E> = meta
 
   @Throws(Exception::class)
-  override fun handle(event: E) {
-    method.call(instanceSupplier(), *parser(method, event))
+  override fun handle(event: E): EventListenerResult {
+    return method.call(instanceSupplier(), *parser(method, event))
   }
 }

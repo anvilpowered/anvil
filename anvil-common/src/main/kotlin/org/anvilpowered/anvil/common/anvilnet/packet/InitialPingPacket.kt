@@ -19,24 +19,38 @@ package org.anvilpowered.anvil.common.anvilnet.packet
 
 import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
+import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
 import org.anvilpowered.anvil.common.anvilnet.packet.data.BaseData
+import org.anvilpowered.anvil.common.anvilnet.packet.data.EventListenerData
+import org.anvilpowered.anvil.common.anvilnet.packet.data.EventListenerMetaImpl
 import org.anvilpowered.anvil.common.anvilnet.packet.data.PlayerData
 import java.util.UUID
 
 class InitialPingPacket : AnvilNetPacket {
 
-  constructor(userUUID: UUID) : super(BaseData(), PlayerData(userUUID))
-
-  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, BaseData(input), PlayerData(input))
-
   val baseData: BaseData = getContainer(BaseData::class)!!
   val playerData: PlayerData = getContainer(PlayerData::class)!!
+  val eventListenerData: EventListenerData = getContainer(EventListenerData::class)!!
+
+  constructor(userUUID: UUID, eventMetas: Array<EventListenerMetaImpl<out Event>>) : super(
+    BaseData(),
+    PlayerData(userUUID),
+    EventListenerData(eventMetas),
+  )
+
+  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(
+    header,
+    BaseData(input),
+    PlayerData(input),
+    EventListenerData(input),
+  )
 
   private val stringRepresentation: String by lazy {
     MoreObjects.toStringHelper(this)
-      .add("baseData", this.baseData)
-      .add("playerData", this.playerData)
+      .add("baseData", baseData)
+      .add("playerData", playerData)
+      .add("eventListenerData", eventListenerData)
       .toString()
   }
 

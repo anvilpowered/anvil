@@ -27,7 +27,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Listener {
 
-    boolean async() default false;
+  /**
+   * This option only has an effect on event events posted from the local node.
+   *
+   * If enabled,
+   */
+  boolean async() default false;
 
-    Order order() default Order.DEFAULT;
+  Order order() default Order.DEFAULT;
 }

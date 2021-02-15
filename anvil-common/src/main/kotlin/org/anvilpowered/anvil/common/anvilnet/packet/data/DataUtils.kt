@@ -23,9 +23,13 @@ import org.anvilpowered.anvil.api.event.Order
 import org.anvilpowered.anvil.api.model.Mappable
 import java.time.Instant
 import java.util.UUID
+import kotlin.reflect.KClass
 
-fun <T> ByteArrayDataInput.read(): T {
+fun <T> ByteArrayDataInput.read(): T? {
   val length = readInt()
+  if (length == 0) {
+    return null
+  }
   val bytes = ByteArray(length)
   for (i in 0 until length) {
     bytes[i] = readByte()
@@ -33,25 +37,43 @@ fun <T> ByteArrayDataInput.read(): T {
   return Mappable.deserializeUnsafe(bytes)
 }
 
-fun ByteArrayDataOutput.write(obj: Any) {
+fun ByteArrayDataOutput.write(obj: Any?) {
+  if (obj == null) {
+    writeInt(0)
+    return
+  }
   val bytes = Mappable.serializeUnsafe(obj)
   writeInt(bytes.size)
   write(bytes)
 }
 
-fun <T : DataContainer> ByteArrayDataInput.readContainer(type: Class<T>): T {
-  return type.getConstructor(ByteArrayDataInput::class.java).newInstance(this)
+inline fun <reified T : DataContainer> ByteArrayDataInput.readContainer(): T {
+  return T::class.java.getConstructor(ByteArrayDataInput::class.java).newInstance(this)
 }
 
 fun ByteArrayDataOutput.writeContainer(dataContainer: DataContainer) {
   dataContainer.write(this)
 }
 
-inline fun <reified T : DataContainer> ByteArrayDataInput.readShortContainers(type: Class<T>): Array<T> {
-  return Array(readUnsignedShort()) { readContainer(type) }
+inline fun <reified T : DataContainer> ByteArrayDataInput.readShortContainersAsArray(): Array<T> {
+  return Array(readUnsignedShort()) { readContainer() }
+}
+
+inline fun <reified T : DataContainer> ByteArrayDataInput.readShortContainersAsList(): MutableList<T> {
+  val size = readUnsignedShort()
+  val list = ArrayList<T>(size)
+  for (i in 0 until readUnsignedShort()) {
+    list.add(readContainer())
+  }
+  return list
 }
 
 fun ByteArrayDataOutput.writeShortContainers(containers: Array<out DataContainer>) {
+  writeShort(containers.size)
+  containers.forEach(::writeContainer)
+}
+
+fun ByteArrayDataOutput.writeShortContainers(containers: List<DataContainer>) {
   writeShort(containers.size)
   containers.forEach(::writeContainer)
 }
@@ -65,6 +87,13 @@ fun ByteArrayDataOutput.writeInstant(instant: Instant) {
   writeInt(instant.nano)
 }
 
+fun <T : Any> ByteArrayDataInput.readKClass(): KClass<T> {
+  return Class.forName(readUTF()).kotlin as KClass<T>
+}
+
+fun ByteArrayDataOutput.writeKClass(clazz: KClass<*>) {
+  writeUTF(clazz.qualifiedName!!)
+}
 fun ByteArrayDataInput.readOrder(): Order {
   return Order.values()[readUnsignedByte()]
 }

@@ -20,7 +20,9 @@ package org.anvilpowered.anvil.api;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Injector;
+import org.anvilpowered.anvil.api.event.EventListenerResult;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
+import org.anvilpowered.anvil.common.event.EventListenerResultImpl;
 import org.anvilpowered.anvil.common.misc.CommonBindingExtensions;
 
 import java.util.HashMap;
@@ -43,6 +45,7 @@ class ServiceManagerImpl implements ServiceManager {
         registerBinding(EnvironmentManager.class, () -> environmentManager);
         registerBinding(Environment.Builder.class, EnvironmentBuilderImpl::new);
         registerBinding(BindingExtensions.class, CommonBindingExtensions::new);
+        registerBinding(EventListenerResult.Builder.class, EventListenerResultImpl.Builder::new);
     }
 
     void setInjector(Injector injector) {

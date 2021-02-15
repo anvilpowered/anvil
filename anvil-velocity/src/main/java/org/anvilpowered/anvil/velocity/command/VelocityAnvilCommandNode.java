@@ -22,10 +22,15 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import org.anvilpowered.anvil.api.event.Event;
+import org.anvilpowered.anvil.api.event.EventManager;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditCommandNode;
 import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditRootCommand;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +57,9 @@ public class VelocityAnvilCommandNode
     @Inject
     private ProxyServer proxyServer;
 
+    @Inject
+    private EventManager eventManager;
+
     private static final String HELP_COMMAND_PROXY = "/anvilv help";
 
     @Inject
@@ -77,5 +85,29 @@ public class VelocityAnvilCommandNode
             "av", "anvilv:av", "anvilv:anvilv");
 
         proxyServer.getCommandManager().register("callback", callbackCommand, "anvilv:callback");
+
+        proxyServer.getCommandManager().register("testevent", new Command() {
+          @Override
+          public void execute(CommandSource source, String @NonNull [] args) {
+            source.sendMessage(Identity.nil(), Component.text("In command"));
+            eventManager.post(Event.class, new Event() {
+
+              @Override
+              public boolean isAsync() {
+                return true;
+              }
+
+              @Override
+              public boolean isExternallyBlockable() {
+                return true;
+              }
+
+              @Override
+              public <E extends Event> E merge(E event) {
+                return (E) this;
+              }
+            });
+          }
+        });
     }
 }

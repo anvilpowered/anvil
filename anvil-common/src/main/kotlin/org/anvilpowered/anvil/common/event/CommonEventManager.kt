@@ -27,8 +27,9 @@ import com.google.inject.Singleton
 import com.google.inject.TypeLiteral
 import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.EventListener
+import org.anvilpowered.anvil.api.event.EventListenerResult
 import org.anvilpowered.anvil.api.event.EventManager
-import org.anvilpowered.anvil.api.event.EventResult
+import org.anvilpowered.anvil.api.event.EventPostResult
 import org.anvilpowered.anvil.api.event.Listener
 import org.anvilpowered.anvil.api.event.Order
 import org.anvilpowered.anvil.api.misc.BindingExtensions
@@ -38,6 +39,8 @@ import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 import org.anvilpowered.anvil.common.anvilnet.packet.EventPostPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.EventResultPacket
+import org.anvilpowered.anvil.common.anvilnet.packet.InitialPingPacket
+import org.anvilpowered.anvil.common.anvilnet.packet.data.EventListenerMetaImpl
 import org.slf4j.Logger
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentLinkedDeque
@@ -84,27 +87,41 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     for (method in clazz.members) {
       val annotation = method.findAnnotation<Listener>() ?: continue
       val parameters = method.parameters
-      check(parameters.size == 1) { "Method annotated with @Listener must have exactly one parameter!" }
-      check(method.returnType.jvmErasure == Void::class) { "Method annotated with @Listener must have void return type" }
+      check(parameters.size == 1) {
+        "Method annotated with @Listener must have exactly one parameter!"
+      }
+      check(method.returnType.jvmErasure == EventListenerResult::class) {
+        "Method annotated with @Listener must have EventListenerResult return type"
+      }
       val eventType = parameters[0].type.jvmErasure
-      check(eventType.isSubclassOf(Event::class)) { "First parameter of listener must be an event type!" }
+      check(eventType.isSubclassOf(Event::class)) {
+        "First parameter of listener must be an event type!"
+      }
       method.isAccessible = true
       localListeners.row(annotation.order)
         .computeIfAbsent(eventType as KClass<out Event>) { ArrayList() }
-        .add(MethodEventListener(clazz, method as KCallable<Unit>, { _, e: Event -> arrayOf(e) }, supplier))
+        .add(
+          MethodEventListener(
+            clazz,
+            method as KCallable<EventListenerResult>,
+            { _, e: Event -> arrayOf(e) },
+            supplier,
+            EventListenerMetaImpl(eventType, annotation)
+          )
+        )
     }
   }
 
   private fun <E : Event> receiveEventPost(eventPostPacket: EventPostPacket<E>) {
     val eventData = eventPostPacket.eventData
-    val tree = postLocallySync(eventData.event, eventData.order, eventData.eventType)
+    val tree = postLocallySync(eventData.eventType, eventData.event, eventData.order)
     anvilNetService.prepareSend(EventResultPacket(tree, eventData)).target(eventPostPacket.header!!.path.sourceId).send()
   }
 
-  private fun <E : Event> postLocallySync(event: E, order: Order, eventType: KClass<E>): EventResultImpl.Tree<E> {
-    val tree = EventResultImpl.Tree(eventType)
-    for (listener in localListeners.get(order, eventType) as Collection<EventListener<E>>) {
-      val invocation = EventResultImpl.Invocation<E>()
+  private fun <E : Event> postLocallySync(eventType: KClass<E>, event: E, order: Order): EventPostResultImpl.Tree<E> {
+    val tree = EventPostResultImpl.Tree(eventType)
+    for (listener in (localListeners.get(order, eventType) as? Collection<EventListener<E>>) ?: return tree) {
+      val invocation = EventPostResultImpl.Invocation<E>()
       try {
         invocation.startInvoke()
         listener.handle(event)
@@ -117,24 +134,25 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     }
     for (superInterface in eventType.superclasses) {
       if (superInterface.isSubclassOf(Event::class)) {
-        tree.addChild(postLocallySync(event, order, superInterface as KClass<E>))
+        tree.addChild(postLocallySync(superInterface as KClass<E>, event, order))
       }
     }
     return tree
   }
 
   private fun <E : Event> post(
-    event: E,
     eventType: KClass<E>,
+    event: E,
     maxWait: Long,
     toWait: Map<Order, List<NodeRef>>,
-  ): EventResultImpl<E> {
-    val result = EventResultImpl(eventType)
+  ): EventPostResultImpl<E> {
+    logger.info("Foo")
+    val result = EventPostResultImpl(eventType)
     val allNextFutures: MutableList<CompletableFuture<EventResultPacket<E>?>> = mutableListOf()
     val allCombinedFutures: MutableList<CompletableFuture<Void>> = ArrayList(Order.values().size)
     for (order in Order.values()) {
-      val batch = EventResultImpl.Batch<E>(order)
-      batch.addTree(postLocallySync(event, order, eventType))
+      val batch = EventPostResultImpl.Batch<E>(order)
+      batch.addTree(postLocallySync(eventType, event, order))
       val receivedEvents = ConcurrentLinkedDeque<E>()
       val toActuallyWait = toWait[order] ?: continue
       anvilNetService.prepareSend(EventPostPacket(eventType, event, order)).send()
@@ -187,7 +205,7 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     return result
   }
 
-  override fun <E : Event> post(event: E, eventType: Class<E>, maxWait: Long): CompletableFuture<EventResult<E>> {
+  override fun <E : Event> post(eventType: Class<E>, event: E, maxWait: Long): CompletableFuture<EventPostResult<E>> {
     check(eventType.isInstance(event)) { "Event is not instance of $eventType" }
     val toWait: MutableMap<Order, MutableList<NodeRef>> = mutableMapOf()
     val eventTypeKt = eventType.kotlin
@@ -196,22 +214,36 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
         toWait.computeIfAbsent(order) { mutableListOf() }.add(nodeRef)
       }
     }
+    logger.info("ToWait: $toWait")
     return if (event.isAsync) {
-      CompletableFuture.supplyAsync { post(event, eventTypeKt, maxWait, toWait) }
+      CompletableFuture.completedFuture(post(eventTypeKt, event, maxWait, toWait))
+      //CompletableFuture.supplyAsync { post(eventTypeKt, event, maxWait, toWait) }
     } else {
-      CompletableFuture.completedFuture(post(event, eventTypeKt, maxWait, toWait))
+      CompletableFuture.completedFuture(post(eventTypeKt, event, maxWait, toWait))
     }
   }
 
-  override fun <E : Event> post(event: E, eventType: Class<E>): CompletableFuture<EventResult<E>> = post(event, eventType, 0)
+  override fun <E : Event> post(eventType: Class<E>, event: E): CompletableFuture<EventPostResult<E>> = post(eventType, event, 0)
   override fun register(listener: Any) = parseListener(listener::class) { listener }
   override fun register(type: Class<*>) = parseListener(type.kotlin) { injector.getInstance(type) }
   override fun register(key: Key<*>) = parseListener(key.typeLiteral.rawType.kotlin) { injector.getInstance(key) }
   override fun register(type: TypeLiteral<*>) = register(Key.get(type))
   override fun register(type: TypeToken<*>) = register(BindingExtensions.getKey(type))
-  override fun <T : Event> register(eventType: Class<in T>, listener: EventListener<T>, order: Order) {
-    localListeners.row(order)
-      .computeIfAbsent(eventType.kotlin as KClass<out Event>) { ArrayList() }
+  override fun <E : Event> register(listener: EventListener<E>) {
+    localListeners.row(listener.meta.order)
+      .computeIfAbsent(listener.meta.eventType.kotlin) { ArrayList() }
       .add(listener)
+  }
+
+  fun getRegisteredEvents(): Array<EventListenerMetaImpl<out Event>> {
+    val result = ArrayList<EventListenerMetaImpl<out Event>>(localListeners.size() * 2)
+    for (row in localListeners.rowMap().values) {
+      for (col in row.values) {
+        for (listener in col) {
+          result.add(EventListenerMetaImpl.from(listener.meta))
+        }
+      }
+    }
+    return result.toTypedArray()
   }
 }

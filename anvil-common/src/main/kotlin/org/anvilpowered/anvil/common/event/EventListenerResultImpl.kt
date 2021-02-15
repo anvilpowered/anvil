@@ -16,31 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.anvilnet.packet.data
+package org.anvilpowered.anvil.common.event
 
-import com.google.common.io.ByteArrayDataInput
-import com.google.common.io.ByteArrayDataOutput
-import org.anvilpowered.anvil.api.event.Event
-import org.anvilpowered.anvil.common.event.EventPostResultImpl
+import org.anvilpowered.anvil.api.event.EventListenerResult
 
-class EventResultData<E : Event> : DataContainer {
+class EventListenerResultImpl(private val success: Boolean) : EventListenerResult {
+  override fun isSuccess(): Boolean = success
+  class Builder : EventListenerResult.Builder {
+    private var success: Boolean? = null
+    override fun success(success: Boolean): Builder {
+      this.success = success
+      return this
+    }
 
-  lateinit var tree: EventPostResultImpl.Tree<E>
-    private set
-
-  constructor(tree: EventPostResultImpl.Tree<E>) {
-    this.tree = tree
-  }
-
-  constructor(input: ByteArrayDataInput) {
-    read(input)
-  }
-
-  override fun read(input: ByteArrayDataInput) {
-    tree = EventPostResultImpl.Tree(input)
-  }
-
-  override fun write(output: ByteArrayDataOutput) {
-    tree.write(output)
+    override fun build(): EventListenerResultImpl {
+      return EventListenerResultImpl(success!!)
+    }
   }
 }

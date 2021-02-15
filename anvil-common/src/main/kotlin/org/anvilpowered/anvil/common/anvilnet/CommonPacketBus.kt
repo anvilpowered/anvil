@@ -24,6 +24,7 @@ import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 import org.anvilpowered.anvil.common.anvilnet.packet.AnvilNetPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.DeadNodePacket
 import org.anvilpowered.anvil.common.anvilnet.packet.InitialPingPacket
+import org.anvilpowered.anvil.common.event.CommonEventManager
 import org.slf4j.Logger
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
@@ -35,6 +36,9 @@ class CommonPacketBus {
 
   @Inject
   private lateinit var broadcastNetwork: BroadcastNetwork
+
+  @Inject
+  private lateinit var eventManager: CommonEventManager
 
   @Inject
   private lateinit var pluginMessageNetwork: PluginMessageNetwork
@@ -67,7 +71,7 @@ class CommonPacketBus {
   }
 
   fun onPlayerJoin(userUUID: UUID) {
-    sendAsync(InitialPingPacket(userUUID), ConnectionType.VERTICAL)
+    sendAsync(InitialPingPacket(userUUID, eventManager.getRegisteredEvents()), ConnectionType.VERTICAL)
   }
 
   fun onServerStop() {

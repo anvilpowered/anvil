@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The result of a single call to {@link EventManager#post(Event, Class)}
+ * The result of a single call to {@link EventManager#post(Class, Event)}
  *
  * @param <E> The event type
- * @see EventManager#post(Event, Class)
+ * @see EventManager#post(Class, Event)
  * @see Event
  */
-public interface EventResult<E extends Event> {
+public interface EventPostResult<E extends Event> {
 
   Class<E> getEventType();
 
@@ -41,7 +41,7 @@ public interface EventResult<E extends Event> {
    * @param <E> The event type
    */
   interface Batch<E extends Event> {
-    EventResult<E> getParentResult();
+    EventPostResult<E> getParentResult();
 
     Order getOrder();
 
@@ -67,13 +67,13 @@ public interface EventResult<E extends Event> {
      */
     Class<E> getEventType();
 
+    List<? extends Invocation<E>> getInvocations();
+
     Batch<? extends E> getParentBatch();
 
     Optional<? extends Tree<? extends E>> getParent();
 
     List<? extends Tree<? super E>> getChildren();
-
-    List<? extends Invocation<E>> getInvocations();
   }
 
   /**

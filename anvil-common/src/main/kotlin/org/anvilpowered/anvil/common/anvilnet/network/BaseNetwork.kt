@@ -47,7 +47,7 @@ abstract class BaseNetwork(
   fun getAdjacentConnections(nodeRef: NodeRef = current): Set<ConnectionRef> = network.incidentEdges(nodeRef)
   fun getAdjacentNodes(nodeRef: NodeRef = current): Set<NodeRef> = network.adjacentNodes(nodeRef)
 
-  fun ensureNode(nodeId: Int, nodeName: String): NodeRef {
+  fun ensureNode(nodeId: Int, nodeName: String? = null): NodeRef {
     AnvilImpl.getLogger().info("Ensuring node $nodeName with nodeId ${nodeId.format()}")
     return nodeRefs.find { it.id == nodeId }
       ?: NodeRef(nodeId, nodeName).also { network.addNode(it) }
