@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered
- *   Copyright (C) 2020
+ *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -22,4 +22,4 @@ package org.anvilpowered.anvil.common.misc
  * in another plugin)
  */
 @Target(AnnotationTarget.CLASS)
-annotation class InternalInjectorOnly 
+annotation class InternalInjectorOnly
