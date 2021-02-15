@@ -21,12 +21,12 @@ package org.anvilpowered.anvil.api.anvilnet;
 public interface Connection {
 
   /**
-   * NodeA < NodeB (NodeA.id < NodeB.id)
+   * NodeA &lt; NodeB (NodeA.id &lt; NodeB.id)
    */
   Node getNodeA();
 
   /**
-   * NodeA < NodeB (NodeA.id < NodeB.id)
+   * NodeA &lt; NodeB (NodeA.id &lt; NodeB.id)
    */
   Node getNodeB();
 }

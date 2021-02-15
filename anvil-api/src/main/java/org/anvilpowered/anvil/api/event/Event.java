@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.api.event;
 
 import org.anvilpowered.anvil.api.anvilnet.Node;
 import org.anvilpowered.anvil.api.anvilnet.AnvilNetService;
-import org.anvilpowered.anvil.api.anvilnet.NodeFilter;
 
 import java.util.function.Predicate;
 
@@ -123,7 +122,6 @@ public interface Event {
    *
    * @param filter The {@link Predicate} to test
    * @return Whether the provided filter does not match this {@code event}
-   * @see NodeFilter
    */
   boolean notFrom(Predicate<Node> filter);
 

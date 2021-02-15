@@ -137,7 +137,7 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
       batch.addTree(postLocallySync(event, order, eventType))
       val receivedEvents = ConcurrentLinkedDeque<E>()
       val toActuallyWait = toWait[order] ?: continue
-      anvilNetService.prepareSend(EventPostPacket(event, order)).send()
+      anvilNetService.prepareSend(EventPostPacket(eventType, event, order)).send()
       logger.info("Waiting for ${toActuallyWait.joinToString(",")}")
       val combinedFuture = CompletableFuture.allOf(
         *Array(toActuallyWait.size) { index ->
