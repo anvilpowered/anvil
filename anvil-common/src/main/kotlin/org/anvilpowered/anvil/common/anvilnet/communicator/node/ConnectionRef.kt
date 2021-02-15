@@ -40,7 +40,7 @@ class ConnectionRef : DataContainer, Comparable<ConnectionRef> {
 
   private var hashcode: Int? = null
 
-  val connection: Connection by lazy {
+  val connection: ConnectionImpl by lazy {
     Anvil.getEnvironment().injector.getInstance(NetworkStorage::class.java).getConnection(this)
   }
 

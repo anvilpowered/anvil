@@ -16,31 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.anvilnet.packet.data
+package org.anvilpowered.anvil.api.anvilnet;
 
-import com.google.common.io.ByteArrayDataInput
-import com.google.common.io.ByteArrayDataOutput
-import org.anvilpowered.anvil.api.event.Event
-import org.anvilpowered.anvil.common.event.EventResultImpl
+public interface Connection {
 
-class EventResultData<E : Event> : DataContainer {
+  /**
+   * NodeA < NodeB (NodeA.id < NodeB.id)
+   */
+  Node getNodeA();
 
-  lateinit var tree: EventResultImpl.Tree<E>
-    private set
-
-  constructor(tree: EventResultImpl.Tree<E>) {
-    this.tree = tree
-  }
-
-  constructor(input: ByteArrayDataInput) {
-    read(input)
-  }
-
-  override fun write(output: ByteArrayDataOutput) {
-
-  }
-
-  override fun read(input: ByteArrayDataInput) {
-
-  }
+  /**
+   * NodeA < NodeB (NodeA.id < NodeB.id)
+   */
+  Node getNodeB();
 }

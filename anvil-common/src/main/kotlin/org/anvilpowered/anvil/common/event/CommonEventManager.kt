@@ -38,7 +38,6 @@ import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 import org.anvilpowered.anvil.common.anvilnet.packet.EventPostPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.EventResultPacket
-import org.anvilpowered.anvil.common.anvilnet.packet.data.EventData
 import org.slf4j.Logger
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentLinkedDeque
@@ -77,7 +76,7 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     if (alreadyLoaded) {
       return
     }
-    anvilNetService.prepareRegister<EventPostPacket<*>> { postLocallySync(it.eventData) }
+    anvilNetService.prepareRegister<EventPostPacket<*>> { receiveEventPost(it) }
     alreadyLoaded = true
   }
 
@@ -96,12 +95,10 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     }
   }
 
-  private fun <E : Event> postLocallySync(eventData: EventData<E>): EventResultImpl<E> {
-    val result = EventResultImpl(eventData.eventType)
-    val batch = EventResultImpl.Batch<E>(eventData.order)
-    batch.addTree(postLocallySync(eventData.event, eventData.order, eventData.eventType))
-    result.addBatch(batch)
-    return result
+  private fun <E : Event> receiveEventPost(eventPostPacket: EventPostPacket<E>) {
+    val eventData = eventPostPacket.eventData
+    val tree = postLocallySync(eventData.event, eventData.order, eventData.eventType)
+    anvilNetService.prepareSend(EventResultPacket(tree, eventData)).target(eventPostPacket.header!!.path.sourceId).send()
   }
 
   private fun <E : Event> postLocallySync(event: E, order: Order, eventType: KClass<E>): EventResultImpl.Tree<E> {

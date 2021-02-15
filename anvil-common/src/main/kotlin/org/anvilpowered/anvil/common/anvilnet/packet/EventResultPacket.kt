@@ -21,19 +21,18 @@ package org.anvilpowered.anvil.common.anvilnet.packet
 import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import org.anvilpowered.anvil.api.event.Event
-import org.anvilpowered.anvil.api.event.EventResult
-import org.anvilpowered.anvil.api.event.Order
 import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
 import org.anvilpowered.anvil.common.anvilnet.packet.data.BaseData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.EventData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.EventResultData
+import org.anvilpowered.anvil.common.event.EventResultImpl
 
 class EventResultPacket<E : Event> : AnvilNetPacket {
 
-  constructor(tree: EventResult.Tree<E>, event: E, order: Order) : super(
+  constructor(tree: EventResultImpl.Tree<E>, eventData: EventData<E>) : super(
     BaseData(),
-    EventResultData(tree),
-    EventData(event, order),
+    EventResultData<E>(tree),
+    eventData,
   )
 
   constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(

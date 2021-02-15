@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered
- *   Copyright (C) 2020-2021
+ *   Copyright (C) 2020
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -15,11 +15,18 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.common.anvilnet.communicator.node
 
-import java.util.UUID
+package org.anvilpowered.anvil.api.anvilnet;
 
-class Connection(val ref: ConnectionRef) {
+import org.anvilpowered.anvil.api.Platform;
+import org.anvilpowered.anvil.api.misc.Named;
 
-  val userUUIDs: MutableList<UUID> = mutableListOf()
+/**
+ * Represents a single server
+ */
+public interface Node extends Named, Comparable<Node> {
+
+  int getId();
+
+  Platform getPlatform();
 }

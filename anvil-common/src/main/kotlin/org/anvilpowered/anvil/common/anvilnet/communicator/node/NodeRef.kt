@@ -37,7 +37,7 @@ class NodeRef : DataContainer, Comparable<NodeRef> {
   lateinit var name: String
     private set
 
-  val node: Node by lazy { Anvil.getEnvironment().injector.getInstance(NetworkStorage::class.java).getNode(this) }
+  val node: NodeImpl by lazy { Anvil.getEnvironment().injector.getInstance(NetworkStorage::class.java).getNode(this) }
   private val pluginMessageNetwork by lazy { Anvil.getEnvironment().injector.getInstance(PluginMessageNetwork::class.java) }
   private val broadcastNetwork by lazy { Anvil.getEnvironment().injector.getInstance(BroadcastNetwork::class.java) }
 

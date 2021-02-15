@@ -23,10 +23,10 @@ import com.google.inject.Singleton
 @Singleton
 class NetworkStorage {
 
-  private val connections: MutableMap<ConnectionRef, Connection> = mutableMapOf()
-  private val nodes: MutableMap<NodeRef, Node> = mutableMapOf()
+  private val connections: MutableMap<ConnectionRef, ConnectionImpl> = mutableMapOf()
+  private val nodes: MutableMap<NodeRef, NodeImpl> = mutableMapOf()
 
-  fun getConnection(ref: ConnectionRef): Connection = connections[ref] ?: Connection(ref).also { connections[ref] = it }
-  fun getNode(ref: NodeRef): Node = nodes[ref] ?: Node(ref).also { nodes[ref] = it }
+  fun getConnection(ref: ConnectionRef): ConnectionImpl = connections[ref] ?: ConnectionImpl(ref).also { connections[ref] = it }
+  fun getNode(ref: NodeRef): NodeImpl = nodes[ref] ?: NodeImpl(ref).also { nodes[ref] = it }
 
 }

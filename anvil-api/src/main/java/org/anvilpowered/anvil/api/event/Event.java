@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.api.event;
 
-import org.anvilpowered.anvil.api.anvilnet.AnvilNetNode;
+import org.anvilpowered.anvil.api.anvilnet.Node;
 import org.anvilpowered.anvil.api.anvilnet.AnvilNetService;
 import org.anvilpowered.anvil.api.anvilnet.NodeFilter;
 
@@ -125,7 +125,7 @@ public interface Event {
    * @return Whether the provided filter does not match this {@code event}
    * @see NodeFilter
    */
-  boolean notFrom(Predicate<AnvilNetNode> filter);
+  boolean notFrom(Predicate<Node> filter);
 
   /**
    * Merges an event of the same origin into this event. Used when the results from parallel

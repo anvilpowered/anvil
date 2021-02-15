@@ -25,15 +25,23 @@ import org.anvilpowered.anvil.api.event.Order
 import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
 import org.anvilpowered.anvil.common.anvilnet.packet.data.BaseData
 import org.anvilpowered.anvil.common.anvilnet.packet.data.EventData
+import kotlin.reflect.KClass
 
 /**
  * Represents a single cycle of event execution
  */
 class EventPostPacket<E : Event> : AnvilNetPacket {
 
-  constructor(event: E, order: Order) : super(BaseData(), EventData(event, order))
+  constructor(eventType: KClass<E>, event: E, order: Order) : super(
+    BaseData(),
+    EventData(eventType, order, event),
+  )
 
-  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(header, BaseData(), EventData<E>(input))
+  constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(
+    header,
+    BaseData(),
+    EventData<E>(input),
+  )
 
   val baseData: BaseData = getContainer(BaseData::class)!!
   val eventData: EventData<E> = getContainer(EventData::class) as EventData<E>

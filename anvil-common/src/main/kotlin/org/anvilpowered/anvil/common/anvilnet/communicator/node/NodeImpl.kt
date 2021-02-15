@@ -19,15 +19,20 @@
 package org.anvilpowered.anvil.common.anvilnet.communicator.node
 
 import org.anvilpowered.anvil.api.Platform
+import org.anvilpowered.anvil.api.anvilnet.Node
 import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.Order
 import java.util.EnumSet
 import kotlin.reflect.KClass
 
-class Node(val ref: NodeRef) {
+class NodeImpl(val ref: NodeRef) : Node {
 
-  lateinit var platform: Platform
+  private lateinit var platform: Platform
 
   val eventListeners: Map<KClass<out Event>, EnumSet<Order>> = mutableMapOf()
 
+  override fun getId(): Int = ref.id
+  override fun getName(): String = ref.name
+  override fun getPlatform(): Platform = platform
+  override fun compareTo(other: Node): Int = id.compareTo(other.id)
 }
