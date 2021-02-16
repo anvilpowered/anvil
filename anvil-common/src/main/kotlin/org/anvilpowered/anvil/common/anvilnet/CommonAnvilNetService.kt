@@ -18,19 +18,10 @@
 package org.anvilpowered.anvil.common.anvilnet
 
 import com.google.common.collect.HashBasedTable
-import com.google.common.collect.HashMultimap
-import com.google.common.collect.Multimap
 import com.google.common.collect.Table
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.anvilpowered.anvil.api.anvilnet.AnvilNetService
-import org.anvilpowered.anvil.api.event.Cancellable
-import org.anvilpowered.anvil.api.event.Event
-import org.anvilpowered.anvil.api.event.network.ClientConnectionEvent
-import org.anvilpowered.anvil.api.event.network.ClientConnectionEvent.Auth.InnerAuth
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.anvilnet.communicator.AnvilNetCommunicator
@@ -45,6 +36,7 @@ import org.anvilpowered.anvil.common.misc.InternalInjectorOnly
 import org.slf4j.Logger
 import java.util.Random
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
 @Suppress("UnstableApiUsage")
@@ -77,23 +69,29 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
   private lateinit var pluginMessageNetwork: PluginMessageNetwork
 
   private val connected: Boolean
-  private val gson: Gson
 
-  private lateinit var listeners: Table<Int, KClass<out AnvilNetPacket>, Multimap<((AnvilNetPacket) -> Boolean)?, (AnvilNetPacket) -> Unit>>
+  private lateinit var listeners:
+    Table<Int, KClass<out AnvilNetPacket>, MutableMap<((AnvilNetPacket) -> Boolean)?, MutableList<(AnvilNetPacket) -> Unit>>>
 
-  private lateinit var blockingListeners: Table<Int, KClass<out AnvilNetPacket>, Multimap<((AnvilNetPacket) -> Boolean)?, (AnvilNetPacket) -> Unit>>
+  private lateinit var blockingListeners:
+    Table<Int, KClass<out AnvilNetPacket>, MutableMap<((AnvilNetPacket) -> Boolean)?, MutableList<(AnvilNetPacket) -> Unit>>>
 
   private fun runListeners(
     packet: AnvilNetPacket,
     nodeId: Int,
     removeIfRan: Boolean,
-    listeners: Table<Int, KClass<out AnvilNetPacket>, Multimap<((AnvilNetPacket) -> Boolean)?, (AnvilNetPacket) -> Unit>>,
+    listeners: Table<Int, KClass<out AnvilNetPacket>, MutableMap<((AnvilNetPacket) -> Boolean)?, MutableList<(AnvilNetPacket) -> Unit>>>,
   ) {
-    val it = (listeners[nodeId, packet::class] ?: return).entries().iterator()
+    val foo = listeners[nodeId, packet::class]
+    val it = (foo ?: return).iterator()
     while (it.hasNext()) {
       val next = it.next()
-      if (next.key != null && next.key!!(packet)) {
-        next.value(packet)
+      val pred = next.key
+      if (pred == null || pred(packet)) {
+        logger.info("Bar: $packet")
+        for (listener in next.value) {
+          listener(packet)
+        }
         if (removeIfRan) {
           it.remove()
         }
@@ -101,7 +99,7 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
     }
   }
 
-  private val primaryListener = { packet: AnvilNetPacket ->
+  private fun primaryListener(packet: AnvilNetPacket) {
     requireNotNull(packet.header) { "packet header" }
     val nodeId = packet.header.path.sourceId
     runListeners(packet, 0, true, blockingListeners)
@@ -112,39 +110,15 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
 
   companion object {
     const val MESSAGE_DELIMITER = ";"
+
+    /**
+     * Shared instance of packet predicate
+     */
+    val truePred: (AnvilNetPacket) -> Boolean = { true }
   }
 
   init {
     registry.whenLoaded(::registryLoaded).order(-5).register()
-    gson = GsonBuilder()
-      .registerTypeAdapterFactory(
-        RuntimeTypeAdapterFactory.of(Event::class.java, "className")
-          .registerSubtype(
-            Cancellable::class.java,
-            "Cancellable"
-          )
-          .registerSubtype(
-            ClientConnectionEvent::class.java,
-            "ClientConnectionEvent"
-          )
-          .registerSubtype(
-            ClientConnectionEvent.Auth::class.java,
-            "ClientConnectionEvent.Auth"
-          )
-          .registerSubtype(
-            InnerAuth::class.java,
-            "ClientConnectionEvent.Auth.InnerAuth"
-          )
-          .registerSubtype(
-            ClientConnectionEvent.Login::class.java,
-            "ClientConnectionEvent.Login"
-          )
-          .registerSubtype(
-            ClientConnectionEvent.Disconnect::class.java,
-            "ClientConnectionEvent.Disconnect"
-          )
-      )
-      .create()
     connected = false
   }
 
@@ -160,7 +134,7 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
     val nodeName = registry.getOrDefault(Keys.SERVER_NAME)
     broadcastNetwork.initCurrentNode(nodeId, nodeName)
     pluginMessageNetwork.initCurrentNode(nodeId, nodeName)
-    communicator.setListener(nodeId, primaryListener)
+    communicator.setListener(nodeId, ::primaryListener)
     alreadyLoaded = true
   }
 
@@ -184,10 +158,10 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
 
     fun send(): CompletableFuture<Boolean> {
       return CompletableFuture.supplyAsync {
-        val packetType = packetTranslator.fromPacketType(packet::class)
-        packet.prepare(registry.getOrDefault(Keys.SERVER_NAME))
-        logger.info("[Send] $packet")
         try {
+          val packetType = packetTranslator.fromPacketType(packet::class)
+          packet.prepare(registry.getOrDefault(Keys.SERVER_NAME))
+          logger.info("[Send] $packet")
           return@supplyAsync (if (connectionType == null) {
             this@CommonAnvilNetService.communicator
           } else when (connectionType!!) {
@@ -232,10 +206,11 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
     }
 
     fun register() {
-      val pair = Pair(predicate as? (AnvilNetPacket) -> Boolean, listener as (AnvilNetPacket) -> Unit)
+      val pair = Pair(predicate as? (AnvilNetPacket) -> Boolean ?: truePred, listener as (AnvilNetPacket) -> Unit)
       (if (blocking) blockingListeners else listeners).row(nodeId)
-        .computeIfAbsent(packetType) { HashMultimap.create() }
-        .put(pair.first, pair.second)
+        .computeIfAbsent(packetType) { ConcurrentHashMap() }
+        .computeIfAbsent(pair.first) { mutableListOf() }
+        .add(pair.second)
       timeoutFuture?.thenAccept { blockingListeners.row(nodeId)[packetType]?.remove(pair.first, pair.second) }
     }
   }
@@ -270,7 +245,10 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
         }
         null
       }
-      RegisterEnd(packetType, timeoutFuture::complete).blocking(timeoutFuture).predicate(predicate).register()
+      RegisterEnd(packetType) {
+        logger.info("Completing event with $it")
+        timeoutFuture.complete(it)
+      }.blocking(timeoutFuture).predicate(predicate).register()
       return timeoutFuture
     }
   }

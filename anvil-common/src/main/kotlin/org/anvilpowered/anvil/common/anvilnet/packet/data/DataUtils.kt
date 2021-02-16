@@ -19,8 +19,10 @@ package org.anvilpowered.anvil.common.anvilnet.packet.data
 
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
+import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.Order
 import org.anvilpowered.anvil.api.model.Mappable
+import org.anvilpowered.anvil.common.anvilnet.GsonFactory
 import java.time.Instant
 import java.util.UUID
 import kotlin.reflect.KClass
@@ -47,6 +49,16 @@ fun ByteArrayDataOutput.write(obj: Any?) {
   write(bytes)
 }
 
+val gson = GsonFactory.create()
+
+fun <E : Event> ByteArrayDataInput.readAsJson(): E {
+  return gson.fromJson(readUTF(), Event::class.java) as E
+}
+
+fun ByteArrayDataOutput.writeAsJson(obj: Any) {
+  writeUTF(gson.toJson(obj))
+}
+
 inline fun <reified T : DataContainer> ByteArrayDataInput.readContainer(): T {
   return T::class.java.getConstructor(ByteArrayDataInput::class.java).newInstance(this)
 }
@@ -62,7 +74,7 @@ inline fun <reified T : DataContainer> ByteArrayDataInput.readShortContainersAsA
 inline fun <reified T : DataContainer> ByteArrayDataInput.readShortContainersAsList(): MutableList<T> {
   val size = readUnsignedShort()
   val list = ArrayList<T>(size)
-  for (i in 0 until readUnsignedShort()) {
+  for (i in 0 until size) {
     list.add(readContainer())
   }
   return list
@@ -88,12 +100,15 @@ fun ByteArrayDataOutput.writeInstant(instant: Instant) {
 }
 
 fun <T : Any> ByteArrayDataInput.readKClass(): KClass<T> {
-  return Class.forName(readUTF()).kotlin as KClass<T>
+  val type = readUTF()
+  println("ReadKClass: $type")
+  return Class.forName(type).kotlin as KClass<T>
 }
 
 fun ByteArrayDataOutput.writeKClass(clazz: KClass<*>) {
-  writeUTF(clazz.qualifiedName!!)
+  writeUTF(clazz.java.name)
 }
+
 fun ByteArrayDataInput.readOrder(): Order {
   return Order.values()[readUnsignedByte()]
 }

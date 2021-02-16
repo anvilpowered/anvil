@@ -27,10 +27,12 @@ import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.event.Event;
 import org.anvilpowered.anvil.api.event.EventManager;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.common.MyEvent;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditCommandNode;
 import org.anvilpowered.anvil.velocity.command.regedit.VelocityRegistryEditRootCommand;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +61,9 @@ public class VelocityAnvilCommandNode
 
     @Inject
     private EventManager eventManager;
+
+    @Inject
+    private Logger logger;
 
     private static final String HELP_COMMAND_PROXY = "/anvilv help";
 
@@ -90,22 +95,9 @@ public class VelocityAnvilCommandNode
           @Override
           public void execute(CommandSource source, String @NonNull [] args) {
             source.sendMessage(Identity.nil(), Component.text("In command"));
-            eventManager.post(Event.class, new Event() {
 
-              @Override
-              public boolean isAsync() {
-                return true;
-              }
-
-              @Override
-              public boolean isExternallyBlockable() {
-                return true;
-              }
-
-              @Override
-              public <E extends Event> E merge(E event) {
-                return (E) this;
-              }
+            eventManager.post(Event.class, new MyEvent("foo")).thenAccept(result -> {
+                logger.info("Hello there: {}", result);
             });
           }
         });

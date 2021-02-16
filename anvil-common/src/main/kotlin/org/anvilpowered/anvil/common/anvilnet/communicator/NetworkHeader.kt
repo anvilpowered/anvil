@@ -88,7 +88,7 @@ class NetworkHeader {
     return MoreObjects.toStringHelper(this)
       .add("version", version)
       .add("path", path)
-      .add("type", type.format())
+      .add("type", type.formatHex())
       .add("length", payloadLength)
       .add("connectionType", connectionType)
       .toString()

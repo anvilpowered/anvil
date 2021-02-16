@@ -22,7 +22,7 @@ import com.google.common.graph.MutableNetwork
 import com.google.common.graph.NetworkBuilder
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.common.anvilnet.ConnectionType
-import org.anvilpowered.anvil.common.anvilnet.communicator.format
+import org.anvilpowered.anvil.common.anvilnet.communicator.formatHex
 import org.anvilpowered.anvil.common.anvilnet.communicator.node.ConnectionRef
 import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 
@@ -48,7 +48,7 @@ abstract class BaseNetwork(
   fun getAdjacentNodes(nodeRef: NodeRef = current): Set<NodeRef> = network.adjacentNodes(nodeRef)
 
   fun ensureNode(nodeId: Int, nodeName: String? = null): NodeRef {
-    AnvilImpl.getLogger().info("Ensuring node $nodeName with nodeId ${nodeId.format()}")
+    AnvilImpl.getLogger().info("Ensuring node $nodeName with nodeId ${nodeId.formatHex()}")
     return nodeRefs.find { it.id == nodeId }
       ?: NodeRef(nodeId, nodeName).also { network.addNode(it) }
   }

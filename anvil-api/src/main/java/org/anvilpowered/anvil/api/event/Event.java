@@ -18,10 +18,7 @@
 
 package org.anvilpowered.anvil.api.event;
 
-import org.anvilpowered.anvil.api.anvilnet.Node;
 import org.anvilpowered.anvil.api.anvilnet.AnvilNetService;
-
-import java.util.function.Predicate;
 
 public interface Event {
 
@@ -98,9 +95,8 @@ public interface Event {
    * listeners need to be combined.
    *
    * @param event The event to merge into {@code this}
-   * @param <E>   The Event type
-   * @return {@code this}
    * @throws IllegalArgumentException If the provided event is not the same original event
    */
-  <E extends Event> E merge(E event);
+  default void merge(Event event) {
+  }
 }

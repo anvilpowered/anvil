@@ -47,28 +47,28 @@ class NetworkPath {
 
   constructor(source: Int, target: Int, hops: IntArray = IntArray(0), nodeId: Int = source) {
     this.sourceId = source
-    sourcePretty = source.format()
+    sourcePretty = source.formatHex()
     this.targetId = target
-    targetPretty = target.format()
+    targetPretty = target.formatHex()
     hopCount = hops.size
     this.hops = hops
-    hopsPretty = hops.format()
+    hopsPretty = hops.formatHex()
     this.nodeId = nodeId
   }
 
   constructor(input: ByteArrayDataInput, nodeId: Int) {
     val prevHopCount = input.readUnsignedByte()
     sourceId = input.readInt()
-    sourcePretty = sourceId.format()
+    sourcePretty = sourceId.formatHex()
     targetId = input.readInt()
-    targetPretty = targetId.format()
+    targetPretty = targetId.formatHex()
     hopCount = prevHopCount + 1
     hops = IntArray(hopCount)
     for (i in 0 until prevHopCount) {
       hops[i] = input.readInt()
     }
     hops[prevHopCount] = nodeId
-    hopsPretty = hops.format()
+    hopsPretty = hops.formatHex()
     this.nodeId = nodeId
   }
 

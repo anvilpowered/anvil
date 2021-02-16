@@ -21,11 +21,13 @@ import com.google.inject.Inject
 import com.google.inject.assistedinject.Assisted
 import org.anvilpowered.anvil.common.anvilnet.CommonAnvilNetService
 import org.anvilpowered.anvil.common.anvilnet.communicator.CommonPacketTranslator
-import org.anvilpowered.anvil.common.anvilnet.communicator.format
+import org.anvilpowered.anvil.common.anvilnet.communicator.formatHex
 import org.anvilpowered.anvil.common.anvilnet.network.BroadcastNetwork
 import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 import org.anvilpowered.anvil.common.anvilnet.packet.AnvilNetPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.DeadNodePacket
+import org.anvilpowered.anvil.common.anvilnet.packet.EventPostPacket
+import org.anvilpowered.anvil.common.anvilnet.packet.EventResultPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.InitialPingPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.InitialResponsePacket
 import org.slf4j.Logger
@@ -60,6 +62,8 @@ class BaseListeners @Inject constructor(
     packetTranslator.registerPacketType<InitialPingPacket>()
     packetTranslator.registerPacketType<InitialResponsePacket>()
     packetTranslator.registerPacketType<DeadNodePacket>()
+    packetTranslator.registerPacketType<EventPostPacket<*>>()
+    packetTranslator.registerPacketType<EventResultPacket<*>>()
     logger.info("[AnvilNet] Successfully registered {} packet types", packetTranslator.packetTypesSize)
     anvilNetService.prepareRegister<InitialPingPacket> { onInitialPing(it) }.register()
     anvilNetService.prepareRegister<InitialResponsePacket> { onInitialResponse(it) }.blocking().register()
@@ -80,7 +84,7 @@ class BaseListeners @Inject constructor(
     val userUUID: UUID = packet.playerData.userUUID
     val source = packet.header.path.sourceId
     val name = packet.baseData.nodeName
-    println("Sending back to source: ${source.format()}")
+    println("Sending back to source: ${source.formatHex()}")
     val idOk = pluginMessageNetwork.nodeRefs.find { it.id == source }
       ?: broadcastNetwork.nodeRefs.find { it.id == source } == null
     val nameOk = pluginMessageNetwork.nodeRefs.find { it.name == name }

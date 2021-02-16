@@ -18,7 +18,7 @@ dependencies {
         implementation project(':Anvil:anvil-common')
     }
 
-    implementation(gson_extras)
+    implementation(gson)
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
@@ -53,7 +53,7 @@ shadowJar {
 
         include dependency(apache_commons)
         include dependency(bson)
-        include dependency(gson_extras)
+        include dependency(gson)
         include dependency(guice_assistedinject)
         include dependency(javasisst)
         include dependency(jedis)

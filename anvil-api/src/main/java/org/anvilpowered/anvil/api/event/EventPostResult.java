@@ -18,6 +18,8 @@
 
 package org.anvilpowered.anvil.api.event;
 
+import org.anvilpowered.anvil.api.anvilnet.Node;
+
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +68,8 @@ public interface EventPostResult<E extends Event> {
      * @return The listener's event type.
      */
     Class<E> getEventType();
+
+    Optional<? extends Node> getNode();
 
     List<? extends Invocation<E>> getInvocations();
 

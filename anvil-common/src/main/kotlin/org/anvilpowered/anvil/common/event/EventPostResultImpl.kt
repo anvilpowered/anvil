@@ -18,16 +18,22 @@
 
 package org.anvilpowered.anvil.common.event
 
+import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
+import org.anvilpowered.anvil.api.anvilnet.Node
 import org.anvilpowered.anvil.api.event.Event
 import org.anvilpowered.anvil.api.event.EventPostResult
 import org.anvilpowered.anvil.api.event.Order
+import org.anvilpowered.anvil.common.anvilnet.communicator.formatHex
+import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 import org.anvilpowered.anvil.common.anvilnet.packet.data.DataContainer
 import org.anvilpowered.anvil.common.anvilnet.packet.data.read
+import org.anvilpowered.anvil.common.anvilnet.packet.data.readKClass
 import org.anvilpowered.anvil.common.anvilnet.packet.data.readOrder
 import org.anvilpowered.anvil.common.anvilnet.packet.data.readShortContainersAsList
 import org.anvilpowered.anvil.common.anvilnet.packet.data.write
+import org.anvilpowered.anvil.common.anvilnet.packet.data.writeKClass
 import org.anvilpowered.anvil.common.anvilnet.packet.data.writeOrder
 import org.anvilpowered.anvil.common.anvilnet.packet.data.writeShortContainers
 import java.time.Duration
@@ -36,12 +42,14 @@ import kotlin.reflect.KClass
 
 class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
 
-  private lateinit var eventType: KClass<E>
-  private lateinit var eventTypeJava: Class<E>
+  private lateinit var eventTypeKt: KClass<E>
   private lateinit var batches: MutableList<Batch<E>>
 
+  @Transient
+  private lateinit var eventTypeJava: Class<E>
+
   constructor(eventType: KClass<E>) {
-    this.eventType = eventType
+    this.eventTypeKt = eventType
     this.eventTypeJava = eventType.java
     this.batches = mutableListOf()
   }
@@ -51,15 +59,15 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
   }
 
   override fun read(input: ByteArrayDataInput) {
-    eventType = input.read()!!
-    eventTypeJava = eventType.java
-    batches = input.readShortContainersAsList()
-    batches.forEach { it.parentResult = this }
+    eventTypeKt = input.readKClass()
+    eventTypeJava = eventTypeKt.java
+    //batches = input.readShortContainersAsList()
+    //batches.forEach { it.parentResult = this }
   }
 
   override fun write(output: ByteArrayDataOutput) {
-    output.write(eventType)
-    output.writeShortContainers(batches)
+    output.writeKClass(eventTypeKt)
+    //output.writeShortContainers(batches)
   }
 
   fun addBatch(batch: Batch<E>) {
@@ -70,8 +78,14 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
   override fun getEventType(): Class<E> = eventTypeJava
   override fun getBatches(): List<Batch<E>> = batches
 
-  class Batch<E : Event> : EventPostResult.Batch<E>, DataContainer {
+  override fun toString(): String {
+    return MoreObjects.toStringHelper(this)
+      .add("eventType", eventTypeJava.name)
+      .add("batches", batches.joinToString(", "))
+      .toString()
+  }
 
+  class Batch<E : Event> : EventPostResult.Batch<E>, DataContainer {
     private lateinit var order: Order
     private lateinit var trees: MutableList<Tree<E>>
 
@@ -112,14 +126,24 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
     override fun getParentResult(): EventPostResultImpl<E> = parentResult
     override fun getOrder(): Order = order
     override fun getTrees(): List<Tree<E>> = trees
+
+    override fun toString(): String {
+      return MoreObjects.toStringHelper(this)
+        .add("order", order)
+        .add("trees", trees.joinToString(", "))
+        .toString()
+    }
   }
 
   class Tree<E : Event> : EventPostResult.Tree<E>, DataContainer {
 
-    private lateinit var eventType: KClass<E>
-    private lateinit var eventTypeJava: Class<E>
+    lateinit var eventTypeKt: KClass<E>
+    private var nodeId: Int = 0
     private lateinit var invocations: MutableList<Invocation<E>>
     private lateinit var children: MutableList<Tree<in E>>
+
+    @Transient
+    private lateinit var eventTypeJava: Class<E>
 
     @Transient
     private lateinit var parentBatch: Batch<out E>
@@ -127,11 +151,12 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
     @Transient
     private var parentTree: Tree<out E>? = null
 
-    constructor(eventType: KClass<E>) {
-      this.eventType = eventType
+    constructor(eventType: KClass<E>, nodeId: Int = 0) {
+      this.eventTypeKt = eventType
       this.eventTypeJava = eventType.java
       this.invocations = mutableListOf()
       this.children = mutableListOf()
+      this.nodeId = nodeId
     }
 
     constructor(input: ByteArrayDataInput) {
@@ -139,8 +164,9 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
     }
 
     override fun read(input: ByteArrayDataInput) {
-      eventType = input.read()!!
-      eventTypeJava = eventType.java
+      eventTypeKt = input.readKClass()
+      nodeId = input.readInt()
+      eventTypeJava = eventTypeKt.java
       invocations = input.readShortContainersAsList()
       invocations.forEach { it.parentTree = this }
       children = input.readShortContainersAsList()
@@ -148,7 +174,8 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
     }
 
     override fun write(output: ByteArrayDataOutput) {
-      output.write(eventType)
+      output.writeKClass(eventTypeKt)
+      output.writeInt(nodeId)
       output.writeShortContainers(invocations)
       output.writeShortContainers(children)
     }
@@ -168,10 +195,27 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
     }
 
     override fun getEventType(): Class<E> = eventTypeJava
+    override fun getNode(): Optional<out Node> {
+      return if (nodeId == 0) {
+        Optional.empty()
+      } else {
+        Optional.of(NodeRef(nodeId).node)
+      }
+    }
+
     override fun getInvocations(): List<Invocation<E>> = invocations
     override fun getParentBatch(): Batch<out E> = parentBatch
     override fun getParent(): Optional<Tree<out E>> = Optional.ofNullable(parentTree)
     override fun getChildren(): List<Tree<in E>> = children
+
+    override fun toString(): String {
+      return MoreObjects.toStringHelper(this)
+        .add("eventType", eventTypeJava.name)
+        .add("nodeId", nodeId.formatHex())
+        .add("invocations", invocations.joinToString(", "))
+        .add("children", children.joinToString(", "))
+        .toString()
+    }
   }
 
   class Invocation<E : Event> : EventPostResult.Invocation<E>, DataContainer {
@@ -197,7 +241,7 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
     }
 
     override fun write(output: ByteArrayDataOutput) {
-      output.write(duration.toNanos())
+      output.writeLong(duration.toNanos())
       output.write(exception)
     }
 
@@ -221,5 +265,12 @@ class EventPostResultImpl<E : Event> : EventPostResult<E>, DataContainer {
     override fun getParentTree(): Tree<E> = parentTree
     override fun getDuration(): Duration = duration
     override fun getException(): Optional<out Exception> = Optional.ofNullable(exception)
+
+    override fun toString(): String {
+      return MoreObjects.toStringHelper(this)
+        .add("duration", duration)
+        .add("exception", exception)
+        .toString()
+    }
   }
 }

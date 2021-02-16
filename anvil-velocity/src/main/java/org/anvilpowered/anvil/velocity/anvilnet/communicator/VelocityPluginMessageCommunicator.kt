@@ -96,7 +96,6 @@ class VelocityPluginMessageCommunicator @Inject constructor(
   }
 
   override fun sendToAll(header: NetworkHeader, data: ByteArray): Boolean {
-    val source = header.path.sourceId
     val alreadySent: MutableSet<ServerInfo> = mutableSetOf()
     var result = false
     for (player in proxyServer.allPlayers) {
@@ -106,14 +105,17 @@ class VelocityPluginMessageCommunicator @Inject constructor(
       }
       val connection = optionalConnection.get()
       val info = connection.serverInfo
-      if (!alreadySent.contains(info) && isNotSink(source, player.uniqueId)
-        && connection.sendPluginMessage(CHANNEL, data)
-      ) {
-        logSent(header, data)
-        alreadySent.add(info)
-        result = true
+      if (!alreadySent.contains(info)) {
+        if (connection.sendPluginMessage(CHANNEL, data)) {
+          logSent(header, data)
+          alreadySent.add(info)
+          result = true
+        } else {
+          logger.error("Failed to send plugin message")
+        }
       }
     }
+    logger.info("Hello3: $result")
     return result
   }
 }

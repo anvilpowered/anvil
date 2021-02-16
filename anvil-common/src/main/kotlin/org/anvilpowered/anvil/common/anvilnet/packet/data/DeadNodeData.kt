@@ -22,7 +22,7 @@ import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
 import org.anvilpowered.anvil.common.anvilnet.communicator.NetworkHeader
-import org.anvilpowered.anvil.common.anvilnet.communicator.format
+import org.anvilpowered.anvil.common.anvilnet.communicator.formatHex
 import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 import org.anvilpowered.anvil.common.anvilnet.network.BroadcastNetwork
 import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
@@ -63,7 +63,7 @@ class DeadNodeData : DataContainer, NetworkData {
 
   private val stringRepresentation: String by lazy {
     MoreObjects.toStringHelper(this)
-      .add("nodeId", nodeId.format())
+      .add("nodeId", nodeId.formatHex())
       .toString()
   }
 

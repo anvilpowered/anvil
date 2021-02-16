@@ -20,16 +20,16 @@ package org.anvilpowered.anvil.common.anvilnet.communicator
 import java.util.stream.Collectors
 import java.util.stream.IntStream
 
-fun Byte.format(): String = String.format("0x%02X", this)
-fun Int.format(): String = String.format("0x%08X", this)
-fun IntArray.format(): String {
+fun Byte.formatHex(): String = String.format("0x%02X", this)
+fun Int.formatHex(): String = String.format("0x%08X", this)
+fun IntArray.formatHex(): String {
   return "[" + IntStream.of(*this)
-    .mapToObj { it.format() }
+    .mapToObj { it.formatHex() }
     .collect(Collectors.joining(", ")) + "]"
 }
 
 private val HEX_ARRAY = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
-fun ByteArray.format(): String {
+fun ByteArray.formatHex(): String {
   val hexChars = CharArray(size * 2 + (size - 1) / 4)
   for (i in indices) {
     val v: Int = this[i].toInt() and 0xFF

@@ -22,7 +22,7 @@ import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.common.anvilnet.ConnectionType
-import org.anvilpowered.anvil.common.anvilnet.communicator.format
+import org.anvilpowered.anvil.common.anvilnet.communicator.formatHex
 import org.anvilpowered.anvil.common.anvilnet.packet.data.DataContainer
 import org.anvilpowered.anvil.common.anvilnet.packet.data.writeContainer
 
@@ -101,7 +101,7 @@ class ConnectionRef : DataContainer, Comparable<ConnectionRef> {
   }
 
   private val stringRepresentationCompact: String by lazy {
-    "ConnectionRef{${nodes.first.id.format()}<->${nodes.second.id.format()}}"
+    "ConnectionRef{${nodes.first.id.formatHex()}<->${nodes.second.id.formatHex()}}"
   }
 
   override fun toString(): String = stringRepresentation

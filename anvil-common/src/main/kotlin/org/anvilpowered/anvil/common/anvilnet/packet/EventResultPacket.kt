@@ -37,7 +37,7 @@ class EventResultPacket<E : Event> : AnvilNetPacket {
 
   constructor(header: NetworkHeader, input: ByteArrayDataInput) : super(
     header,
-    BaseData(),
+    BaseData(input),
     EventResultData<E>(input),
     EventData<E>(input),
   )

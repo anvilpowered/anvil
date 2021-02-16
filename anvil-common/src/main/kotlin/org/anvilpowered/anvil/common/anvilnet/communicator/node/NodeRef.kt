@@ -21,7 +21,7 @@ import com.google.common.base.MoreObjects
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteArrayDataOutput
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.common.anvilnet.communicator.format
+import org.anvilpowered.anvil.common.anvilnet.communicator.formatHex
 import org.anvilpowered.anvil.common.anvilnet.network.BroadcastNetwork
 import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 import org.anvilpowered.anvil.common.anvilnet.packet.data.DataContainer
@@ -78,7 +78,7 @@ class NodeRef : DataContainer, Comparable<NodeRef> {
 
   private val stringRepresentation: String by lazy {
     MoreObjects.toStringHelper(this)
-      .add("id", this.id.format())
+      .add("id", this.id.formatHex())
       .add("name", this.name)
       .toString()
   }

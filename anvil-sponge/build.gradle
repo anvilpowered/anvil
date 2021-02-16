@@ -47,10 +47,11 @@ shadowJar {
         }
 
         exclude("META-INF/versions/**")
+        exclude("**/module-info.class")
         relocate("org.apache.commons", "relocated.apache")
         include dependency(apache_commons)
         include dependency(bson)
-        include dependency(gson_extras)
+        include dependency(gson)
         include dependency(guice_assistedinject)
         include dependency(javasisst)
         include dependency(jedis)

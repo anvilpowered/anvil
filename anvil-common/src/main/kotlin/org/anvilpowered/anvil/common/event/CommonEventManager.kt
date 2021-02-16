@@ -39,7 +39,6 @@ import org.anvilpowered.anvil.common.anvilnet.communicator.node.NodeRef
 import org.anvilpowered.anvil.common.anvilnet.network.PluginMessageNetwork
 import org.anvilpowered.anvil.common.anvilnet.packet.EventPostPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.EventResultPacket
-import org.anvilpowered.anvil.common.anvilnet.packet.InitialPingPacket
 import org.anvilpowered.anvil.common.anvilnet.packet.data.EventListenerMetaImpl
 import org.slf4j.Logger
 import java.util.concurrent.CompletableFuture
@@ -71,7 +70,7 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
 
   init {
     localListeners = HashBasedTable.create()
-    registry.whenLoaded(::registryLoaded)
+    registry.whenLoaded(::registryLoaded).register()
   }
 
   private var alreadyLoaded = false
@@ -79,7 +78,11 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     if (alreadyLoaded) {
       return
     }
-    anvilNetService.prepareRegister<EventPostPacket<*>> { receiveEventPost(it) }
+    println("Registering listener in eventmanager")
+    anvilNetService.prepareRegister<EventPostPacket<*>> {
+      logger.info("RECEIVED EVENT: ${it.eventData.event}")
+      receiveEventPost(it)
+    }.register()
     alreadyLoaded = true
   }
 
@@ -87,13 +90,13 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     for (method in clazz.members) {
       val annotation = method.findAnnotation<Listener>() ?: continue
       val parameters = method.parameters
-      check(parameters.size == 1) {
+      check(parameters.size == 2) {
         "Method annotated with @Listener must have exactly one parameter!"
       }
       check(method.returnType.jvmErasure == EventListenerResult::class) {
         "Method annotated with @Listener must have EventListenerResult return type"
       }
-      val eventType = parameters[0].type.jvmErasure
+      val eventType = parameters[1].type.jvmErasure
       check(eventType.isSubclassOf(Event::class)) {
         "First parameter of listener must be an event type!"
       }
@@ -115,11 +118,13 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
   private fun <E : Event> receiveEventPost(eventPostPacket: EventPostPacket<E>) {
     val eventData = eventPostPacket.eventData
     val tree = postLocallySync(eventData.eventType, eventData.event, eventData.order)
+    logger.info("EventData: $eventData")
+    logger.info("EventTree: $tree")
     anvilNetService.prepareSend(EventResultPacket(tree, eventData)).target(eventPostPacket.header!!.path.sourceId).send()
   }
 
   private fun <E : Event> postLocallySync(eventType: KClass<E>, event: E, order: Order): EventPostResultImpl.Tree<E> {
-    val tree = EventPostResultImpl.Tree(eventType)
+    val tree = EventPostResultImpl.Tree(eventType, pluginMessageNetwork.current.id)
     for (listener in (localListeners.get(order, eventType) as? Collection<EventListener<E>>) ?: return tree) {
       val invocation = EventPostResultImpl.Invocation<E>()
       try {
@@ -161,12 +166,16 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
         *Array(toActuallyWait.size) { index ->
           val node = toActuallyWait[index]
           val nextPacketFuture = anvilNetService.prepareNext<EventResultPacket<E>> { packet ->
-            packet.eventResultData.tree.parentBatch.parentResult.eventType == eventType
+            val type = packet.eventResultData.tree.eventTypeKt
+            val t = type == eventType
+            println("Comparing $type with $eventType : $t")
+            t
           }.nodeId(node.id).run()
           allNextFutures.add(nextPacketFuture)
           nextPacketFuture.thenAccept { packet ->
             if (packet == null) {
               logger.info("Timed out waiting for event result for $order from $node")
+              batch.addTree(EventPostResultImpl.Tree(eventType))
               return@thenAccept
             }
             val receivedEvent = packet.eventData.event

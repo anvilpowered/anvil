@@ -28,7 +28,8 @@ abstract class PluginMessageCommunicator : BaseCommunicator("PluginMessage", Con
     val connectionRef = pluginMessageNetwork.getConnectionRefTo(nodeId)
     pluginMessageNetwork.connectionRefs.forEach {
       if (it.connection.userUUIDs.remove(userUUID)) {
-        logger.info("Moving $userUUID from $it to ${connectionRef.toStringCompact()}")
+        //TODO: Make this smarter
+        logger.info("Moving $userUUID from ${it.toStringCompact()} to ${connectionRef.toStringCompact()}")
       }
     }
     connectionRef.connection.userUUIDs.add(userUUID)

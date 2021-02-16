@@ -115,7 +115,7 @@ abstract class BaseCommunicator protected constructor(
       "[Send] {} to {}: {}",
       header.path.forwardingType,
       header.path.targetPretty,
-      data.format()
+      data.formatHex()
     )
   }
 
@@ -124,7 +124,7 @@ abstract class BaseCommunicator protected constructor(
       "[Receive] {} from {}: {}",
       header.path.forwardingType,
       header.path.sourcePretty,
-      data.format()
+      data.formatHex()
     )
   }
 

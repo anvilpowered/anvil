@@ -46,15 +46,15 @@ class EventData<E : Event> : DataContainer {
   }
 
   override fun write(output: ByteArrayDataOutput) {
-    output.write(eventType)
+    output.writeKClass(eventType)
     output.writeOrder(order)
-    output.write(event)
+    output.writeAsJson(event)
   }
 
   override fun read(input: ByteArrayDataInput) {
-    eventType = input.read()!!
+    eventType = input.readKClass()
     order = input.readOrder()
-    event = input.read()!!
+    event = input.readAsJson()
   }
 
   private val stringRepresentation by lazy {
