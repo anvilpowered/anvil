@@ -75,7 +75,6 @@ class CommonPacketBus {
   }
 
   fun onServerStop() {
-    println("Sending server stop stuff")
     send(DeadNodePacket(broadcastNetwork.current.id), ConnectionType.HUB)
     send(DeadNodePacket(pluginMessageNetwork.current.id), ConnectionType.VERTICAL)
   }

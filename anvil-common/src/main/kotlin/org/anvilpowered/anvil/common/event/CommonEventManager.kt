@@ -78,9 +78,7 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     if (alreadyLoaded) {
       return
     }
-    println("Registering listener in eventmanager")
     anvilNetService.prepareRegister<EventPostPacket<*>> {
-      logger.info("RECEIVED EVENT: ${it.eventData.event}")
       receiveEventPost(it)
     }.register()
     alreadyLoaded = true
@@ -118,8 +116,6 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
   private fun <E : Event> receiveEventPost(eventPostPacket: EventPostPacket<E>) {
     val eventData = eventPostPacket.eventData
     val tree = postLocallySync(eventData.eventType, eventData.event, eventData.order)
-    logger.info("EventData: $eventData")
-    logger.info("EventTree: $tree")
     anvilNetService.prepareSend(EventResultPacket(tree, eventData)).target(eventPostPacket.header!!.path.sourceId).send()
   }
 
@@ -151,7 +147,6 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     maxWait: Long,
     toWait: Map<Order, List<NodeRef>>,
   ): EventPostResultImpl<E> {
-    logger.info("Foo")
     val result = EventPostResultImpl(eventType)
     val allNextFutures: MutableList<CompletableFuture<EventResultPacket<E>?>> = mutableListOf()
     val allCombinedFutures: MutableList<CompletableFuture<Void>> = ArrayList(Order.values().size)
@@ -161,25 +156,21 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
       val receivedEvents = ConcurrentLinkedDeque<E>()
       val toActuallyWait = toWait[order] ?: continue
       anvilNetService.prepareSend(EventPostPacket(eventType, event, order)).send()
-      logger.info("Waiting for ${toActuallyWait.joinToString(",")}")
       val combinedFuture = CompletableFuture.allOf(
         *Array(toActuallyWait.size) { index ->
           val node = toActuallyWait[index]
           val nextPacketFuture = anvilNetService.prepareNext<EventResultPacket<E>> { packet ->
             val type = packet.eventResultData.tree.eventTypeKt
             val t = type == eventType
-            println("Comparing $type with $eventType : $t")
             t
           }.nodeId(node.id).run()
           allNextFutures.add(nextPacketFuture)
           nextPacketFuture.thenAccept { packet ->
             if (packet == null) {
-              logger.info("Timed out waiting for event result for $order from $node")
               batch.addTree(EventPostResultImpl.Tree(eventType))
               return@thenAccept
             }
             val receivedEvent = packet.eventData.event
-            logger.info("Received event order $order from $node: $receivedEvent")
             receivedEvents.add(receivedEvent)
             batch.addTree(packet.eventResultData.tree)
           }
@@ -199,13 +190,10 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
           try {
             Thread.sleep(maxWait)
           } catch (ignored: InterruptedException) {
-            logger.info("Finished before timeout")
           }
-          logger.info("Timeout $maxWait reached, cancelling listeners")
           allNextFutures.forEach { it.complete(null) }
         }
         bigFuture.thenAccept {
-          logger.info("Big future finished, cancelling timeout")
           waitFuture.cancel(true)
         }
         waitFuture.join()
@@ -223,7 +211,6 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
         toWait.computeIfAbsent(order) { mutableListOf() }.add(nodeRef)
       }
     }
-    logger.info("ToWait: $toWait")
     return if (event.isAsync) {
       CompletableFuture.completedFuture(post(eventTypeKt, event, maxWait, toWait))
       //CompletableFuture.supplyAsync { post(eventTypeKt, event, maxWait, toWait) }
@@ -233,11 +220,31 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
   }
 
   override fun <E : Event> post(eventType: Class<E>, event: E): CompletableFuture<EventPostResult<E>> = post(eventType, event, 0)
-  override fun register(listener: Any) = parseListener(listener::class) { listener }
-  override fun register(type: Class<*>) = parseListener(type.kotlin) { injector.getInstance(type) }
-  override fun register(key: Key<*>) = parseListener(key.typeLiteral.rawType.kotlin) { injector.getInstance(key) }
-  override fun register(type: TypeLiteral<*>) = register(Key.get(type))
-  override fun register(type: TypeToken<*>) = register(BindingExtensions.getKey(type))
+  override fun register(vararg listener: Any) {
+    for (l in listener) {
+      parseListener(l::class) { l }
+    }
+  }
+  override fun register(vararg type: Class<*>){
+    for (t in type) {
+      parseListener(t.kotlin) {injector.getInstance(t)}
+    }
+  }
+  override fun register(vararg key: Key<*>) {
+    for (k in key) {
+      parseListener(k.typeLiteral.rawType.kotlin) {injector.getInstance(k)}
+    }
+  }
+  override fun register(vararg type: TypeLiteral<*>) {
+    for (t in type) {
+      register(Key.get(t))
+    }
+  }
+  override fun register(vararg type: TypeToken<*>) {
+   for (t in type) {
+     register(BindingExtensions.getKey(t))
+   }
+  }
   override fun <E : Event> register(listener: EventListener<E>) {
     localListeners.row(listener.meta.order)
       .computeIfAbsent(listener.meta.eventType.kotlin) { ArrayList() }

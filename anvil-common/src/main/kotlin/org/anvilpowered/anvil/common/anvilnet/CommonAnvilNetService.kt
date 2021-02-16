@@ -88,7 +88,6 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
       val next = it.next()
       val pred = next.key
       if (pred == null || pred(packet)) {
-        logger.info("Bar: $packet")
         for (listener in next.value) {
           listener(packet)
         }
@@ -161,7 +160,6 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
         try {
           val packetType = packetTranslator.fromPacketType(packet::class)
           packet.prepare(registry.getOrDefault(Keys.SERVER_NAME))
-          logger.info("[Send] $packet")
           return@supplyAsync (if (connectionType == null) {
             this@CommonAnvilNetService.communicator
           } else when (connectionType!!) {
@@ -246,7 +244,6 @@ class CommonAnvilNetService @Inject constructor(private val registry: Registry) 
         null
       }
       RegisterEnd(packetType) {
-        logger.info("Completing event with $it")
         timeoutFuture.complete(it)
       }.blocking(timeoutFuture).predicate(predicate).register()
       return timeoutFuture

@@ -90,16 +90,5 @@ public class VelocityAnvilCommandNode
             "av", "anvilv:av", "anvilv:anvilv");
 
         proxyServer.getCommandManager().register("callback", callbackCommand, "anvilv:callback");
-
-        proxyServer.getCommandManager().register("testevent", new Command() {
-          @Override
-          public void execute(CommandSource source, String @NonNull [] args) {
-            source.sendMessage(Identity.nil(), Component.text("In command"));
-
-            eventManager.post(Event.class, new MyEvent("foo")).thenAccept(result -> {
-                logger.info("Hello there: {}", result);
-            });
-          }
-        });
     }
 }

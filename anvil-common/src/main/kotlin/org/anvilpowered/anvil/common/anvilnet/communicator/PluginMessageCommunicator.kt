@@ -33,13 +33,11 @@ abstract class PluginMessageCommunicator : BaseCommunicator("PluginMessage", Con
       }
     }
     connectionRef.connection.userUUIDs.add(userUUID)
-    logger.info("Added $userUUID to ${connectionRef.toStringCompact()}")
   }
 
   protected fun remove(nodeId: Int, userUUID: UUID) {
     val connectionRef = pluginMessageNetwork.getConnectionRefTo(nodeId)
     connectionRef.connection.userUUIDs.remove(userUUID)
-    logger.info("Removed $userUUID to ${connectionRef.toStringCompact()}")
   }
 
   protected fun getSinks(nodeId: Int): MutableIterator<UUID> {

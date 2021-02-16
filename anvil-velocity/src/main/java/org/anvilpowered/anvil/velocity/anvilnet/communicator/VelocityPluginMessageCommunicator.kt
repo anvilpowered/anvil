@@ -115,7 +115,6 @@ class VelocityPluginMessageCommunicator @Inject constructor(
         }
       }
     }
-    logger.info("Hello3: $result")
     return result
   }
 }

@@ -26,15 +26,15 @@ import java.util.concurrent.CompletableFuture;
 
 public interface EventManager {
 
-  void register(Object listener);
+  void register(Object... listener);
 
-  void register(Class<?> listener);
+  void register(Class<?>... listener);
 
-  void register(Key<?> listener);
+  void register(Key<?>... listener);
 
-  void register(TypeLiteral<?> listener);
+  void register(TypeLiteral<?>... listener);
 
-  void register(TypeToken<?> listener);
+  void register(TypeToken<?>... listener);
 
   /**
    * Posts the provided event to all of its listeners

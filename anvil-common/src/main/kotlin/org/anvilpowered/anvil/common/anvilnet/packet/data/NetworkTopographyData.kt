@@ -53,31 +53,13 @@ class NetworkTopographyData : DataContainer, NetworkData {
   }
 
   override fun write(output: ByteArrayDataOutput) {
-    val logger = AnvilImpl.getLogger()
-    logger.info("Write Hub:")
-    for (con in hub) {
-      logger.info(con.toString())
-    }
-    logger.info("Write Lateral:")
-    for (con in lateral) {
-      logger.info(con.toString())
-    }
     output.writeShortContainers(hub)
     output.writeShortContainers(lateral)
   }
 
   override fun read(input: ByteArrayDataInput) {
-    val logger = AnvilImpl.getLogger()
     hub = input.readShortContainersAsArray()
     lateral = input.readShortContainersAsArray()
-    logger.info("Read Hub:")
-    for (con in hub) {
-      logger.info(con.toString())
-    }
-    logger.info("Read Lateral:")
-    for (con in lateral) {
-      logger.info(con.toString())
-    }
   }
 
   private fun update(remote: Array<ConnectionRef>, local: BaseNetwork) {
@@ -102,11 +84,7 @@ class NetworkTopographyData : DataContainer, NetworkData {
     pluginMessageNetwork: PluginMessageNetwork,
   ) {
     val logger = AnvilImpl.getLogger()
-    logger.info("In update method")
-    logger.info("PM: ${pluginMessageNetwork.connectionRefs}")
     update(hub, broadcastNetwork)
     update(lateral, pluginMessageNetwork)
-    logger.info("After update method")
-    logger.info("PM: ${pluginMessageNetwork.connectionRefs}")
   }
 }

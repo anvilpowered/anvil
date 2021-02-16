@@ -135,34 +135,6 @@ public abstract class BasePlugin {
 
     protected void whenReady(Environment environment) {
         sendLoaded("Loaded");
-        environment.getInjector().getInstance(EventManager.class).register(new EventListener<Event>() {
-          @Override
-          public EventListenerMeta<Event> getMeta() {
-            return new EventListenerMeta<Event>() {
-
-              @Override
-              public Class<Event> getEventType() {
-                return Event.class;
-              }
-
-              @Override
-              public Order getOrder() {
-                return Order.DEFAULT;
-              }
-
-              @Override
-              public boolean isAsync() {
-                return false;
-              }
-            };
-          }
-
-          @Override
-          public EventListenerResult handle(Event event) {
-            System.out.println("HELLOOOO");
-            return EventListenerResult.success();
-          }
-        });
     }
 
     protected void whenReloaded(Environment environment) {

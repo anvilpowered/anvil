@@ -20,10 +20,8 @@ package org.anvilpowered.anvil.sponge.listener;
 
 import com.google.inject.Inject;
 import org.anvilpowered.anvil.common.anvilnet.CommonPacketBus;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
-import org.spongepowered.api.service.user.UserStorageService;
 
 public class SpongeServerListener {
 
@@ -32,7 +30,6 @@ public class SpongeServerListener {
 
     @Listener
     public void onServerStop(GameStoppingEvent event) {
-        System.out.println("In here");
         packetBus.onServerStop();
     }
 }

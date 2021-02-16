@@ -83,7 +83,6 @@ abstract class BaseCommunicator protected constructor(
     packet.write(ByteStreams.newDataOutput(outputStream))
     val header = NetworkHeader(sequenceGenerator.next(), nodeId, target, type, outputStream.size(), connectionType)
     header.path.setForwardingType(packet.getContainer(PlayerData::class)?.userUUID)
-    logger.info("[Send] $header")
     return send(header, getData(header, outputStream))
   }
 
@@ -158,7 +157,6 @@ abstract class BaseCommunicator protected constructor(
     inputStream.mark(0)
     val packet = packetTranslator.parse(header, input)
     header.path.setForwardingType(packet?.getContainer(PlayerData::class)?.userUUID)
-    logger.info("[Receive] $header")
     // reset the inputStream to right after the header
     inputStream.reset()
     if (packet != null) {

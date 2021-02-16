@@ -101,7 +101,6 @@ fun ByteArrayDataOutput.writeInstant(instant: Instant) {
 
 fun <T : Any> ByteArrayDataInput.readKClass(): KClass<T> {
   val type = readUTF()
-  println("ReadKClass: $type")
   return Class.forName(type).kotlin as KClass<T>
 }
 
