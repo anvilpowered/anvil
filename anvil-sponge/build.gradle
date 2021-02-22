@@ -6,13 +6,8 @@ plugins {
 jar.enabled = false // we only want shadowJar
 
 dependencies {
-    if (rootProject.getName().equals("Anvil")) {
-        implementation project(':anvil-api')
-        implementation project(':anvil-common')
-    } else {
-        implementation project(':Anvil:anvil-api')
-        implementation project(':Anvil:anvil-common')
-    }
+    api(project(":anvil-sponge:anvil-sponge-7"))
+    api(project(":anvil-sponge:anvil-sponge-8"))
 
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
@@ -22,8 +17,6 @@ dependencies {
     implementation kotlinx_serialization
     implementation microutils_logging
     implementation mongo_java_driver
-    implementation sponge
-    annotationProcessor sponge
 }
 
 shadowJar {
@@ -32,13 +25,10 @@ shadowJar {
     archiveFileName = jarName
 
     dependencies {
-        if (rootProject.getName().equals("Anvil")) {
-            include project(':anvil-api')
-            include project(':anvil-common')
-        } else {
-            include project(':Anvil:anvil-api')
-            include project(':Anvil:anvil-common')
-        }
+        include(project(":anvil-api"))
+        include(project(":anvil-common"))
+        include(project(":anvil-sponge:anvil-sponge-7"))
+        include(project(":anvil-sponge:anvil-sponge-8"))
 
         exclude("META-INF/versions/**")
         relocate("org.apache.commons", "relocated.apache")

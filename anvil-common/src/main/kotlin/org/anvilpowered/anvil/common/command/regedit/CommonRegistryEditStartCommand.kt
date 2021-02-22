@@ -28,7 +28,7 @@ import java.util.stream.Collectors
 import java.util.stream.Stream
 import kotlin.streams.toList
 
-open class CommonRegistryEditStartCommand<TUser, TPlayer, TString, TCommandSource>
+class CommonRegistryEditStartCommand<TUser, TPlayer, TString, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
 
     @Inject
@@ -81,8 +81,7 @@ open class CommonRegistryEditStartCommand<TUser, TPlayer, TString, TCommandSourc
         }
     }
 
-    open fun execute(source: TCommandSource, context: Array<String>) {
-        if (hasNoPerms(source)) return
+    override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
         if (context.isEmpty()) {
             textService.builder()
                 .append(pluginInfo.prefix)
@@ -99,8 +98,7 @@ open class CommonRegistryEditStartCommand<TUser, TPlayer, TString, TCommandSourc
         }, source)
     }
 
-    open fun suggest(source: TCommandSource, context: Array<String>): List<String> {
-        if (!testPermission(source)) return listOf()
+    override fun suggest(source: TCommandSource, alias: String, context: Array<String>): List<String> {
         return when (context.size) {
             1 -> environments.filter { it.startsWith(context[0]) }.toList()
             else -> listOf()

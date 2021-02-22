@@ -33,8 +33,8 @@ class Change<T, TString, TCommandSource>(
             .red().append("[R]")
             .onHoverShowText(textService.builder()
                 .red().append("Remove this change\n")
-                .gray().append("/$alias regedit key $key unstage")
-            ).onClickRunCommand("/$alias regedit key $key unstage")
+                .gray().append("/$anvilAlias regedit key $key unstage")
+            ).onClickRunCommand("/$anvilAlias regedit key $key unstage")
             .build()
     }
 

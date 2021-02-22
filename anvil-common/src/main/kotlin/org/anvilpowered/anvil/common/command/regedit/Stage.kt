@@ -45,24 +45,24 @@ class Stage<TString, TCommandSource>(
         .aqua().append("[ Key ]")
         .onHoverShowText(textService.builder()
             .aqua().append("Key\n")
-            .gray().append("/$alias regedit key <key> [info|set|unset|unstage]")
-        ).onClickSuggestCommand("/$alias regedit key ")
+            .gray().append("/$anvilAlias regedit key <key> [info|set|unset|unstage]")
+        ).onClickSuggestCommand("/$anvilAlias regedit key ")
         .build()
 
     private val cancel = textService.builder()
         .red().append("[ Cancel ]")
         .onHoverShowText(textService.builder()
             .red().append("Cancel\n")
-            .gray().append("/$alias regedit cancel")
-        ).onClickRunCommand("/$alias regedit cancel")
+            .gray().append("/$anvilAlias regedit cancel")
+        ).onClickRunCommand("/$anvilAlias regedit cancel")
         .build()
 
     private val commit = textService.builder()
         .gold().append("[ Commit ]")
         .onHoverShowText(textService.builder()
             .gold().append("Commit\n")
-            .gray().append("/$alias regedit commit")
-        ).onClickRunCommand("/$alias regedit commit")
+            .gray().append("/$anvilAlias regedit commit")
+        ).onClickRunCommand("/$anvilAlias regedit commit")
         .build()
 
     private val noSuchChange = textService.builder()
@@ -110,22 +110,22 @@ class Stage<TString, TCommandSource>(
                 .aqua().append("[ Internal ]")
                 .onHoverShowText(textService.builder()
                     .aqua().append("The main registry\n")
-                    .gray().append("/$alias regedit select internal")
-                ).onClickRunCommand("/$alias regedit select internal")
+                    .gray().append("/$anvilAlias regedit select internal")
+                ).onClickRunCommand("/$anvilAlias regedit select internal")
             ).append(" ")
         }
         builder.append(textService.builder()
             .aqua().append("[ Config ]")
             .onHoverShowText(textService.builder()
                 .aqua().append("The configuration\n")
-                .gray().append("/$alias regedit select config")
-            ).onClickRunCommand("/$alias regedit select config")
+                .gray().append("/$anvilAlias regedit select config")
+            ).onClickRunCommand("/$anvilAlias regedit select config")
         )
         for ((name, _) in registries) {
             if (name == "main" || name == "config") {
                 continue
             }
-            val cmd = "/$alias regedit select $name"
+            val cmd = "/$anvilAlias regedit select $name"
             builder.append(" ", textService.builder()
                 .aqua().append("[ ", name, " ]")
                 .onHoverShowText(textService.builder()
@@ -212,7 +212,7 @@ class Stage<TString, TCommandSource>(
         }
         return print(textService.builder()
             .green().append("Successfully $action change for ")
-            .gold().append(key, " ", textService.undo("/$alias regedit key $key unstage"))
+            .gold().append(key, " ", textService.undo("/$anvilAlias regedit key $key unstage"))
             .build())
     }
 
@@ -227,7 +227,7 @@ class Stage<TString, TCommandSource>(
         val removed = changes.removeAt(index) as Change<T, TString, TCommandSource>
         return print(textService.builder()
             .green().append("Successfully unstaged change for ")
-            .gold().append(key, " ", textService.undo("/$alias regedit key $key set ${key.toString(removed.newValue)}"))
+            .gold().append(key, " ", textService.undo("/$anvilAlias regedit key $key set ${key.toString(removed.newValue)}"))
             .build())
     }
 

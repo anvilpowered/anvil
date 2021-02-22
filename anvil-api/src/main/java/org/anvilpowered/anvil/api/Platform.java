@@ -22,20 +22,25 @@ import org.anvilpowered.anvil.api.misc.Named;
 
 public interface Platform extends Named {
 
-    /**
-     * Returns a lowercase identifier for the current platform
-     *
-     * <p>
-     * Examples: "bungee", "spigot", "sponge", "velocity"
-     * </p>
-     *
-     * @return A lowercase identifier for the current platform
-     */
-    @Override
-    String getName();
+  /**
+   * Returns a lowercase identifier for the current platform
+   *
+   * <p>
+   * Examples: "bungee", "spigot", "sponge", "velocity"
+   * </p>
+   *
+   * @return A lowercase identifier for the current platform
+   */
+  @Override
+  String getName();
 
-    /**
-     * @return Whether the current platform is a proxy like bungee or velocity
-     */
-    boolean isProxy();
+  /**
+   * @return The platform's version as a string. E.g. "7.3.0"
+   */
+  String getVersionString();
+
+  /**
+   * @return Whether the current platform is a proxy like bungee or velocity
+   */
+  boolean isProxy();
 }

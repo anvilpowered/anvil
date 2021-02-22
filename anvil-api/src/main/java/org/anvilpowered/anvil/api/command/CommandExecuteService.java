@@ -20,10 +20,10 @@ package org.anvilpowered.anvil.api.command;
 
 public interface CommandExecuteService {
 
-    /**
-     * Executes the provided command as the console.
-     *
-     * @param command The command to execute
-     */
-    void execute(String command);
+  /**
+   * Executes the provided command as the console.
+   *
+   * @param command The command to execute
+   */
+  void execute(String command);
 }

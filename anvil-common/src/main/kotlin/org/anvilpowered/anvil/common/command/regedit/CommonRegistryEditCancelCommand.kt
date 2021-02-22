@@ -20,14 +20,13 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
 
-open class CommonRegistryEditCancelCommand<TUser, TPlayer, TString, TCommandSource>
+class CommonRegistryEditCancelCommand<TUser, TPlayer, TString, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
 
     @Inject
     private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource>
 
-    fun execute(source: TCommandSource, context: Array<String>? = null) {
-        if (hasNoPerms(source)) return
+  override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
         val builder = textService.builder().append(pluginInfo.prefix)
         val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source))
         if (removed == null) {

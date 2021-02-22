@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
+import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.plugin.PluginMessages
 import org.anvilpowered.anvil.api.registry.Keys
@@ -27,7 +28,8 @@ import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 
-open class CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource> {
+abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource> :
+  SimpleCommand<TString, TCommandSource> {
 
     @Inject
     protected lateinit var registry: Registry
@@ -47,15 +49,7 @@ open class CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource
     @Inject
     protected lateinit var userService: UserService<TUser, TPlayer>
 
-    fun testPermission(source: Any?): Boolean {
-        return permissionService.hasPermission(source ?: return false, registry.getOrDefault(Keys.REGEDIT_PERMISSION))
-    }
-
-    fun hasNoPerms(source: TCommandSource): Boolean {
-        if (!testPermission(source)) {
-            textService.send(pluginMessages.noPermission, source)
-            return true
-        }
-        return false
-    }
+  override fun canExecute(source: TCommandSource): Boolean {
+    return permissionService.hasPermission(source, registry.getOrDefault(Keys.REGEDIT_PERMISSION))
+  }
 }

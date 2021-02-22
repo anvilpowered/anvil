@@ -22,7 +22,7 @@ import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Keys
 import kotlin.streams.toList
 
-open class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>
+class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
 
     @Inject
@@ -32,14 +32,14 @@ open class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>
 
     private val usage: TString by lazy {
         textService.builder()
-            .red().append("Usage: /$alias regedit key <key> [info|set|unset|unstage] [<value>]")
+            .red().append("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]")
             .build()
     }
 
     private val setUsage: TString by lazy {
         textService.builder()
             .append(pluginInfo.prefix)
-            .red().append("Value required for set subcommand. Usage: /$alias regedit key <key> set <value>")
+            .red().append("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>")
             .build()
     }
 
@@ -53,8 +53,7 @@ open class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>
         return Keys.resolveLocalAndGlobal<Any>(this, envName).orElse(null)
     }
 
-    open fun execute(source: TCommandSource, context: Array<String>) {
-        if (hasNoPerms(source)) return
+    override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
         val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)]
         if (stage == null) {
             textService.send(registryEditRootCommand.notInStage, source)
@@ -97,7 +96,6 @@ open class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>
     }
 
     open fun suggest(source: TCommandSource, context: Array<String>): List<String> {
-        if (!testPermission(source)) return listOf()
         val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)] ?: return listOf()
         return when (context.size) {
             1 -> Keys.getAll(stage.envName).keys.stream().filter { it.startsWith(context[0]) }.toList()

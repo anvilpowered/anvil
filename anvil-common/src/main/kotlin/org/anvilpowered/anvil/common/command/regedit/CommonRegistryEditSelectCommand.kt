@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.common.command.regedit
 import com.google.inject.Inject
 import kotlin.streams.toList
 
-open class CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSource>
+class CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
 
     @Inject
@@ -30,12 +30,11 @@ open class CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSour
     private val usage: TString by lazy {
         textService.builder()
             .append(pluginInfo.prefix)
-            .red().append("Please provide exactly one argument!\nUsage: /$alias regedit select <reg>")
+            .red().append("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>")
             .build()
     }
 
-    open fun execute(source: TCommandSource, context: Array<String>) {
-        if (hasNoPerms(source)) return
+  override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
         val uuid = userService.getUUIDSafe(source)
         val stage = registryEditRootCommand.stages[uuid]
         textService.send(when {
@@ -45,8 +44,7 @@ open class CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSour
         }, source)
     }
 
-    open fun suggest(source: TCommandSource, context: Array<String>): List<String> {
-        if (!testPermission(source)) return listOf()
+    override fun suggest(source: TCommandSource, alias: String, context: Array<String>): List<String> {
         val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)] ?: return listOf()
         return when (context.size) {
             1 -> stage.registries.keys.stream().filter { it.startsWith(context[0]) }.toList()
