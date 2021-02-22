@@ -41,6 +41,12 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
   @Inject
   protected lateinit var textService: TextService<TString, TCommandSource>
 
+  private val HELP_DESCRIPTION: TString by lazy {
+    textService.builder()
+      .append("help command")
+      .build()
+  }
+
   private val noPermission: TString by lazy {
     textService.builder()
       .appendPrefix()
@@ -52,6 +58,12 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
     textService.builder()
       .appendPrefix()
       .green().append("Successfully reloaded!")
+      .build()
+  }
+
+  private val VERSION_DESCRIPTION: TString by lazy {
+    textService.builder()
+      .append("Anvil version command")
       .build()
   }
 
@@ -209,13 +221,7 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
         .sendTo(source)
     }
 
-    override fun getUsage(source: TCommandSource): Optional<TString> {
-      return Optional.ofNullable(textService.of(""))
-    }
-
-    override fun getShortDescription(source: TCommandSource): Optional<TString> {
-      return Optional.ofNullable(textService.of("Anvil version command"))
-    }
+    override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(VERSION_DESCRIPTION)
   }
 
   private inner class HelpCommand(
@@ -249,9 +255,7 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
         .sendTo(source)
     }
 
-    override fun getShortDescription(source: TCommandSource): Optional<TString> {
-      return Optional.ofNullable(textService.of("Help command"))
-    }
+    override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(HELP_DESCRIPTION)
   }
 
   private inner class ReloadCommand : SimpleCommand<TString, TCommandSource> {

@@ -63,7 +63,6 @@ class AnvilVelocity @Inject constructor(injector: Injector) : AnvilImpl(injector
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSource>>() {
-    })
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSource>>() {})
   }
 }
