@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.common.plugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
+import org.anvilpowered.anvil.api.util.TextService;
 
 public class AnvilPluginInfo implements PluginInfo {
     public static final String id = "anvil";
