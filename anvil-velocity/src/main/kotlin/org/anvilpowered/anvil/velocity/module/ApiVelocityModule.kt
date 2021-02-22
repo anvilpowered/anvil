@@ -22,7 +22,6 @@ import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.server.LocationService
@@ -54,7 +53,7 @@ class ApiVelocityModule : PlatformModule(
     bind(KickService::class.java).to(VelocityKickService::class.java)
     bind(LocationService::class.java).to(VelocityLocationService::class.java)
     bind(PermissionService::class.java).to(VelocityPermissionService::class.java)
-    bind(object : TypeLiteral<TextService<TextComponent, CommandSource>>() {}).to(VelocityTextService::class.java)
+    bind(object : TypeLiteral<TextService<Component, CommandSource>>() {}).to(VelocityTextService::class.java)
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(VelocityUserService::class.java)
   }
 }

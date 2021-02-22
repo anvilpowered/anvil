@@ -21,7 +21,6 @@ import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.identity.Identified
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import org.anvilpowered.anvil.common.util.KyoriTextService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.block.BlockSnapshot
@@ -35,7 +34,7 @@ import java.util.Optional
 
 class Sponge8TextService : KyoriTextService<CommandCause>() {
 
-  override fun send(text: TextComponent, receiver: CommandCause) {
+  override fun send(text: Component, receiver: CommandCause) {
     receiver.sendMessage(Identity.nil(), text)
   }
 

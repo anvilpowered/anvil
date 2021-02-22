@@ -35,28 +35,28 @@ import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public abstract class KyoriTextService<TCommandSource> extends CommonTextService<TextComponent, TCommandSource> {
+public abstract class KyoriTextService<TCommandSource> extends CommonTextService<Component, TCommandSource> {
 
     @Inject
     private Logger logger;
 
     @Override
-    public Builder<TextComponent, TCommandSource> builder() {
+    public Builder<Component, TCommandSource> builder() {
         return new VelocityTextBuilder();
     }
 
     @Override
-    public TextComponent deserialize(String text) {
+    public Component deserialize(String text) {
         return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
     }
 
     @Override
-    public String serialize(TextComponent text) {
+    public String serialize(Component text) {
         return LegacyComponentSerializer.legacyAmpersand().serialize(text);
     }
 
     @Override
-    public String serializePlain(TextComponent text) {
+    public String serializePlain(Component text) {
         return PlainComponentSerializer.plain().serialize(text.asComponent());
     }
 
@@ -73,139 +73,139 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> aqua() {
+        public Builder<Component, TCommandSource> aqua() {
             elements.add(NamedTextColor.AQUA);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> black() {
+        public Builder<Component, TCommandSource> black() {
             elements.add(NamedTextColor.BLACK);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> blue() {
+        public Builder<Component, TCommandSource> blue() {
             elements.add(NamedTextColor.BLUE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> dark_aqua() {
+        public Builder<Component, TCommandSource> dark_aqua() {
             elements.add(NamedTextColor.DARK_AQUA);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> dark_blue() {
+        public Builder<Component, TCommandSource> dark_blue() {
             elements.add(NamedTextColor.DARK_BLUE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> dark_gray() {
+        public Builder<Component, TCommandSource> dark_gray() {
             elements.add(NamedTextColor.DARK_GRAY);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> dark_green() {
+        public Builder<Component, TCommandSource> dark_green() {
             elements.add(NamedTextColor.DARK_GREEN);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> dark_purple() {
+        public Builder<Component, TCommandSource> dark_purple() {
             elements.add(NamedTextColor.DARK_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> dark_red() {
+        public Builder<Component, TCommandSource> dark_red() {
             elements.add(NamedTextColor.DARK_RED);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> gold() {
+        public Builder<Component, TCommandSource> gold() {
             elements.add(NamedTextColor.GOLD);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> gray() {
+        public Builder<Component, TCommandSource> gray() {
             elements.add(NamedTextColor.GRAY);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> green() {
+        public Builder<Component, TCommandSource> green() {
             elements.add(NamedTextColor.GREEN);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> light_purple() {
+        public Builder<Component, TCommandSource> light_purple() {
             elements.add(NamedTextColor.LIGHT_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> red() {
+        public Builder<Component, TCommandSource> red() {
             elements.add(NamedTextColor.RED);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> reset() {
+        public Builder<Component, TCommandSource> reset() {
             elements.add(NamedTextColor.WHITE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> white() {
+        public Builder<Component, TCommandSource> white() {
             elements.add(NamedTextColor.WHITE);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> yellow() {
+        public Builder<Component, TCommandSource> yellow() {
             elements.add(NamedTextColor.YELLOW);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> bold() {
+        public Builder<Component, TCommandSource> bold() {
             elements.add(TextDecoration.BOLD);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> italic() {
+        public Builder<Component, TCommandSource> italic() {
             elements.add(TextDecoration.ITALIC);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> obfuscated() {
+        public Builder<Component, TCommandSource> obfuscated() {
             elements.add(TextDecoration.OBFUSCATED);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> strikethrough() {
+        public Builder<Component, TCommandSource> strikethrough() {
             elements.add(TextDecoration.STRIKETHROUGH);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> underlined() {
+        public Builder<Component, TCommandSource> underlined() {
             elements.add(TextDecoration.UNDERLINED);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> append(Object... contents) {
+        public Builder<Component, TCommandSource> append(Object... contents) {
             for (Object o : contents) {
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
@@ -217,7 +217,7 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> appendJoining(
+        public Builder<Component, TCommandSource> appendJoining(
             Object delimiter, Object... contents) {
             if (!(delimiter instanceof Builder || delimiter instanceof Component)) {
                 delimiter = Component.text(delimiter.toString());
@@ -238,32 +238,32 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> onHoverShowText(TextComponent text) {
+        public Builder<Component, TCommandSource> onHoverShowText(Component text) {
             hoverEvent = HoverEvent.showText(text);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> onClickSuggestCommand(String command) {
+        public Builder<Component, TCommandSource> onClickSuggestCommand(String command) {
             callback = null;
             clickEvent = ClickEvent.suggestCommand(command);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> onClickRunCommand(String command) {
+        public Builder<Component, TCommandSource> onClickRunCommand(String command) {
             callback = null;
             clickEvent = ClickEvent.runCommand(command);
             return this;
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> onClickOpenUrl(URL url) {
+        public Builder<Component, TCommandSource> onClickOpenUrl(URL url) {
             return onClickOpenUrl(url.toString());
         }
 
         @Override
-        public Builder<TextComponent, TCommandSource> onClickOpenUrl(String url) {
+        public Builder<Component, TCommandSource> onClickOpenUrl(String url) {
             callback = null;
             clickEvent = ClickEvent.openUrl(url);
             return this;
@@ -271,7 +271,7 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
 
         @Override
         @SuppressWarnings("unchecked")
-        public TextComponent build() {
+        public Component build() {
             boolean hover = hoverEvent != null;
             if (callback != null) {
                 initializeCallback();
@@ -283,9 +283,9 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
             } else if (elements.size() == 1 && !hover && !click) {
                 Object o = elements.getFirst();
                 if (o instanceof Builder) {
-                    return ((Builder<TextComponent, TCommandSource>) o).build();
-                } else if (o instanceof TextComponent) {
-                    return (TextComponent) o;
+                    return ((Builder<Component, TCommandSource>) o).build();
+                } else if (o instanceof Component) {
+                    return (Component) o;
                 }
             }
 
@@ -302,7 +302,7 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
 
             for (Object o : elements) {
                 if (o instanceof Builder) {
-                    currentBuilder.append(((Builder<TextComponent, TCommandSource>) o).build());
+                    currentBuilder.append(((Builder<Component, TCommandSource>) o).build());
                 } else if (o instanceof Component) {
                     currentBuilder.append((Component) o);
                 } else if (o instanceof TextColor) {

@@ -23,7 +23,7 @@ import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.identity.Identified
 import net.kyori.adventure.identity.Identity
-import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.common.util.KyoriTextService
 import java.util.UUID
 
@@ -32,15 +32,15 @@ class VelocityTextService : KyoriTextService<CommandSource>() {
   @Inject
   private lateinit var proxyServer: ProxyServer
 
-  override fun send(text: TextComponent, receiver: CommandSource) {
+  override fun send(text: Component, receiver: CommandSource) {
     receiver.sendMessage(Identity.nil(), text)
   }
 
-  override fun send(text: TextComponent, receiver: CommandSource, sourceUUID: UUID) {
+  override fun send(text: Component, receiver: CommandSource, sourceUUID: UUID) {
     receiver.sendMessage(Identity.identity(sourceUUID), text)
   }
 
-  override fun send(text: TextComponent, receiver: CommandSource, source: Any) {
+  override fun send(text: Component, receiver: CommandSource, source: Any) {
     if (source is Identified) {
       receiver.sendMessage(source, text)
     } else {

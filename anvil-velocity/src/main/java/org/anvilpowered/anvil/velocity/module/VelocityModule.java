@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.velocity.module;
 
 import com.google.inject.TypeLiteral;
 import com.velocitypowered.api.command.CommandSource;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.Component;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -30,7 +30,7 @@ import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import java.io.File;
 import java.nio.file.Paths;
 
-public class VelocityModule extends CommonModule<TextComponent, CommandSource> {
+public class VelocityModule extends CommonModule<Component, CommandSource> {
 
     @Override
     protected void configure() {

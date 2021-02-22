@@ -19,7 +19,6 @@ package org.anvilpowered.anvil.sponge8.module
 
 import com.google.inject.TypeLiteral
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
@@ -41,8 +40,8 @@ import org.anvilpowered.anvil.sponge8.util.Sponge8UserService
 import org.spongepowered.api.Platform
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandCause
-import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
+import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
 class ApiSponge8Module : PlatformModule(
   PlatformImpl(
@@ -60,7 +59,7 @@ class ApiSponge8Module : PlatformModule(
     bind(EntityUtils::class.java).to(SpongeEntityUtils::class.java)
     bind(LocationService::class.java).to(Sponge8LocationService::class.java)
     bind(PermissionService::class.java).to(SpongePermissionService::class.java)
-    bind(object : TypeLiteral<TextService<TextComponent, CommandCause>>() {}).to(Sponge8TextService::class.java)
-    bind(object : TypeLiteral<UserService<User, Player>>() {}).to(Sponge8UserService::class.java)
+    bind(object : TypeLiteral<TextService<Component, CommandCause>>() {}).to(Sponge8TextService::class.java)
+    bind(object : TypeLiteral<UserService<User, ServerPlayer>>() {}).to(Sponge8UserService::class.java)
   }
 }
