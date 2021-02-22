@@ -19,15 +19,20 @@ package org.anvilpowered.anvil.sponge8
 
 import com.google.inject.Inject
 import com.google.inject.Injector
+import com.google.inject.TypeLiteral
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.AnvilImpl
+import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
+import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.sponge.module.SpongeModule
 import org.anvilpowered.anvil.sponge8.listener.Sponge8PlayerListener
 import org.anvilpowered.anvil.sponge8.module.ApiSponge8Module
 import org.anvilpowered.anvil.sponge8.module.Sponge8FallbackModule
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandCause
+import org.spongepowered.api.entity.living.player.Player
+import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.event.Listener
 import org.spongepowered.api.event.Order
 import org.spongepowered.api.event.lifecycle.LoadedGameEvent
@@ -47,5 +52,11 @@ class AnvilSponge8 @Inject constructor(
       plugin,
       environment.injector.getInstance(Sponge8PlayerListener::class.java)
     )
+  }
+
+  override fun applyToBuilder(builder: Environment.Builder) {
+    super.applyToBuilder(builder)
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Component, CommandCause>>() {
+    })
   }
 }

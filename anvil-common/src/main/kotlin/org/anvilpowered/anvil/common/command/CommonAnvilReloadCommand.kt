@@ -27,6 +27,7 @@ import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.jetbrains.annotations.Contract
 import java.math.BigDecimal
+import java.util.Optional
 import java.util.function.Function
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
@@ -53,6 +54,14 @@ class CommonAnvilReloadCommand<TString, TCommandSource> :
 
   @Inject
   private lateinit var textService: TextService<TString, TCommandSource>
+
+  private val USAGE: TString by lazy {
+    textService.of("[-a|--all|-r|--regex] [<plugin>]")
+  }
+
+  private val DESCRIPTION: TString by lazy {
+    textService.of("Anvil reload command")
+  }
 
   override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
     val length = context.size
@@ -88,6 +97,9 @@ class CommonAnvilReloadCommand<TString, TCommandSource> :
     suggestions.add("--regex")
     return suggestions
   }
+
+  override fun getUsage(source: TCommandSource): Optional<TString> = Optional.ofNullable(USAGE)
+  override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(DESCRIPTION)
 
   private fun doAll(): String {
     return Anvil.getEnvironmentManager()

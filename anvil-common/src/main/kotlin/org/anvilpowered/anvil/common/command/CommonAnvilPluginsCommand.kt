@@ -18,13 +18,14 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
+import java.util.Arrays
+import java.util.Optional
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
-import java.util.Arrays
 
 class CommonAnvilPluginsCommand<TString, TCommandSource> : SimpleCommand<TString, TCommandSource> {
 
@@ -36,6 +37,10 @@ class CommonAnvilPluginsCommand<TString, TCommandSource> : SimpleCommand<TString
 
   @Inject
   private lateinit var textService: TextService<TString, TCommandSource>
+
+  private val DESCRIPTION: TString by lazy {
+    textService.of("Anvil plugins command")
+  }
 
   override fun execute(source: TCommandSource, alias: String?, context: Array<String>) {
     val values = Anvil.getEnvironmentManager()
@@ -56,4 +61,6 @@ class CommonAnvilPluginsCommand<TString, TCommandSource> : SimpleCommand<TString
   override fun canExecute(source: TCommandSource): Boolean {
     return permissionService.hasPermission(source, registry.getOrDefault(Keys.PLUGINS_PERMISSION))
   }
+
+  override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(DESCRIPTION)
 }

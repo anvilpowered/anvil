@@ -1,6 +1,6 @@
 /*
- *   Anvil - AnvilPowered
- *   Copyright (C) 2020-2021
+ * Anvil - AnvilPowered
+ *   Copyright (C) 2020
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -13,32 +13,31 @@
  *     GNU Lesser General Public License for more details.
  *
  *     You should have received a copy of the GNU Lesser General Public License
- *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *     along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-package org.anvilpowered.anvil.sponge7
+package org.anvilpowered.anvil.velocity
 
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
+import com.velocitypowered.api.command.CommandSource
+import com.velocitypowered.api.event.PostOrder
+import com.velocitypowered.api.event.Subscribe
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
+import com.velocitypowered.api.plugin.Plugin
+import com.velocitypowered.api.proxy.Player
+import com.velocitypowered.api.proxy.ProxyServer
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
-import org.anvilpowered.anvil.sponge.module.SpongeModule
-import org.anvilpowered.anvil.sponge7.listener.Sponge7PlayerListener
-import org.anvilpowered.anvil.sponge7.module.ApiSponge7Module
-import org.anvilpowered.anvil.sponge7.module.Sponge7FallbackModule
-import org.spongepowered.api.Sponge
-import org.spongepowered.api.command.CommandSource
-import org.spongepowered.api.entity.living.player.Player
-import org.spongepowered.api.entity.living.player.User
-import org.spongepowered.api.event.Listener
-import org.spongepowered.api.event.Order
-import org.spongepowered.api.event.game.state.GameInitializationEvent
-import org.spongepowered.api.plugin.Plugin
-import org.spongepowered.api.text.Text
+import org.anvilpowered.anvil.velocity.listener.VelocityPlayerListener
+import org.anvilpowered.anvil.velocity.module.ApiVelocityModule
+import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule
+import org.anvilpowered.anvil.velocity.module.VelocityModule
 
 @Plugin(
   id = AnvilPluginInfo.id,
@@ -48,21 +47,23 @@ import org.spongepowered.api.text.Text
   url = AnvilPluginInfo.url,
   authors = [AnvilPluginInfo.organizationName]
 )
-class AnvilSponge7 @Inject constructor(
-  injector: Injector,
-) : AnvilImpl(injector, SpongeModule<Text, CommandSource>()) {
-  @Listener(order = Order.EARLY)
-  fun onInit(event: GameInitializationEvent?) {
-    EnvironmentBuilderImpl.completeInitialization(ApiSponge7Module(), Sponge7FallbackModule())
-    Sponge.getEventManager().registerListeners(
+class AnvilVelocity @Inject constructor(injector: Injector) : AnvilImpl(injector, VelocityModule()) {
+
+  @Inject
+  private lateinit var proxyServer: ProxyServer
+
+  @Subscribe(order = PostOrder.EARLY)
+  fun onInit(event: ProxyInitializeEvent) {
+    EnvironmentBuilderImpl.completeInitialization(ApiVelocityModule(), VelocityFallbackModule())
+    proxyServer.eventManager.register(
       this,
-      Anvil.environment.injector.getInstance(Sponge7PlayerListener::class.java)
+      Anvil.environment.injector.getInstance(VelocityPlayerListener::class.java)
     )
   }
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Text, CommandSource>>() {
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSource>>() {
     })
   }
 }

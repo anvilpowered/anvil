@@ -18,7 +18,9 @@
 
 package org.anvilpowered.anvil.nukkit;
 
+import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.command.CommandSender;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Logger;
@@ -26,9 +28,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.AnvilImpl;
 import org.anvilpowered.anvil.api.Environment;
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl;
+import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
 import org.anvilpowered.anvil.nukkit.listener.NukkitPlayerListener;
 import org.anvilpowered.anvil.nukkit.module.ApiNukkitModule;
 import org.anvilpowered.anvil.nukkit.module.NukkitFallbackModule;
@@ -62,6 +67,8 @@ public class AnvilNukkit extends PluginBase {
         protected void applyToBuilder(Environment.Builder builder) {
             super.applyToBuilder(builder);
             builder.setLoggerSupplier(AnvilNukkit.this::getLogger);
+            builder.addEarlyServices(new TypeLiteral<CommonAnvilCommandNode<Player, Player, String, CommandSender>>() {
+            });
         }
     }
 

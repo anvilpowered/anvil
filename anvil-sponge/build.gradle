@@ -29,6 +29,7 @@ shadowJar {
         include(project(":anvil-common"))
         include(project(":anvil-sponge:anvil-sponge-7"))
         include(project(":anvil-sponge:anvil-sponge-8"))
+        include(project(":anvil-sponge:anvil-sponge-common"))
 
         exclude("META-INF/versions/**")
         relocate("org.apache.commons", "relocated.apache")

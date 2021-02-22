@@ -18,6 +18,9 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
+import java.util.Optional
+import java.util.function.Predicate
+import java.util.function.Supplier
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
@@ -25,8 +28,6 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.TextService
 import org.checkerframework.checker.nullness.qual.Nullable
-import java.util.function.Predicate
-import java.util.function.Supplier
 
 abstract class CommonSimpleCommandService<TString, TCommandSource> :
   SimpleCommandService<TString, TCommandSource> {
@@ -207,6 +208,14 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
         )
         .sendTo(source)
     }
+
+    override fun getUsage(source: TCommandSource): Optional<TString> {
+      return Optional.ofNullable(textService.of(""))
+    }
+
+    override fun getShortDescription(source: TCommandSource): Optional<TString> {
+      return Optional.ofNullable(textService.of("Anvil version command"))
+    }
   }
 
   private inner class HelpCommand(
@@ -219,15 +228,16 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
           val command = mapping.command
           val fullPath = mapping.getFullPath()
           val otherAliases = mapping.otherAliases
-          val builder = textService.builder().gold().append(fullPath).append(mapping.name)
-          command.getShortDescription(source).ifPresent { builder.append(" - ", it) }
+          val builder = textService.builder().gold().append(fullPath)
+          command.getShortDescription(source).ifPresent { builder.append("- ", it) }
           command.getLongDescription(source).ifPresent { builder.append("\n", it) }
+          builder.gray().append("\nUsage: ", fullPath)
           command.getUsage(source).ifPresent { usage ->
-            builder.gray().append("\nUsage: ", fullPath)
-              .append(mapping.name)
-              .appendIf(otherAliases.isNotEmpty(), ", ")
+            builder.appendIf(otherAliases.isNotEmpty(), ", ")
               .appendJoining(", ", *otherAliases.toTypedArray())
-              .append(" ", usage)
+              //Only append a space before the usage if the aliases are empty
+              .appendIf(otherAliases.isNotEmpty(), " ")
+              .append(usage)
           }
           builder.build()
         }.toList()
@@ -237,6 +247,10 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
         .contents(helpList)
         .build()
         .sendTo(source)
+    }
+
+    override fun getShortDescription(source: TCommandSource): Optional<TString> {
+      return Optional.ofNullable(textService.of("Help command"))
     }
   }
 

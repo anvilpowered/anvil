@@ -21,6 +21,10 @@ import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Inject
 import com.google.inject.Injector
+import com.google.inject.TypeLiteral
+import net.kyori.adventure.text.Component
+import net.md_5.bungee.api.CommandSender
+import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.plugin.Plugin
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
@@ -29,6 +33,7 @@ import org.anvilpowered.anvil.bungee.listener.BungeePlayerListener
 import org.anvilpowered.anvil.bungee.module.ApiBungeeModule
 import org.anvilpowered.anvil.bungee.module.BungeeFallbackModule
 import org.anvilpowered.anvil.bungee.module.BungeeModule
+import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 
 class AnvilBungee : Plugin() {
   private val inner: Inner
@@ -49,6 +54,9 @@ class AnvilBungee : Plugin() {
       builder.addEarlyServices(BungeePlayerListener::class.java) {
         proxy.pluginManager.registerListener(this@AnvilBungee, it)
       }
+      builder.addEarlyServices(object :
+        TypeLiteral<CommonAnvilCommandNode<ProxiedPlayer, ProxiedPlayer, Component, CommandSender>>() {
+      })
     }
   }
 

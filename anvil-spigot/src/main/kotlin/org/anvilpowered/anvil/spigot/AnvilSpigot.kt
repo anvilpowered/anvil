@@ -20,11 +20,15 @@ package org.anvilpowered.anvil.spigot
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
+import com.google.inject.TypeLiteral
+import java.lang.reflect.InvocationTargetException
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Keys
+import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.spigot.AnvilSpigot
 import org.anvilpowered.anvil.spigot.listener.SpigotPlayerListener
 import org.anvilpowered.anvil.spigot.module.ApiSpigotModule
@@ -32,12 +36,13 @@ import org.anvilpowered.anvil.spigot.module.SpigotFallbackModule
 import org.anvilpowered.anvil.spigot.module.SpigotModule
 import org.bukkit.Bukkit
 import org.bukkit.Server
+import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.server.ServerLoadEvent
 import org.bukkit.plugin.java.JavaPlugin
-import java.lang.reflect.InvocationTargetException
 
 class AnvilSpigot : JavaPlugin() {
   private val inner: Inner
@@ -59,6 +64,9 @@ class AnvilSpigot : JavaPlugin() {
       builder.addEarlyServices(SpigotPlayerListener::class.java) {
         Bukkit.getPluginManager().registerEvents(it, this@AnvilSpigot)
       }
+      builder.addEarlyServices(object :
+        TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSender>>() {
+      })
     }
 
     override fun whenLoaded(environment: Environment) {
@@ -89,13 +97,17 @@ class AnvilSpigot : JavaPlugin() {
         val anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE)
         if (serverProxyMode && !anvilProxyMode) {
           getLogger().error(
-            "It looks like you are running this server behind a proxy. " +
-              "If this is the case, set server.proxyMode=true in the anvil config"
+            """
+              It looks like you are running this server behind a proxy. 
+              If this is the case, set server.proxyMode=true in the anvil config.
+            """.trimIndent()
           )
         } else if (anvilProxyMode && !serverProxyMode) {
           getLogger().error(
-            "It looks like you are not running this server behind a proxy. " +
-              "If this is the case, set server.proxyMode=false in the anvil config"
+            """
+              It looks like you are not running this server behind a proxy.
+              If this is the case, set server.proxyMode=false in the anvil config/
+            """.trimIndent()
           )
         }
       }
