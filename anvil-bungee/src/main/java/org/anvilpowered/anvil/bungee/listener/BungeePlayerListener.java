@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.bungee.listener;
 
 import com.google.inject.Inject;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -27,9 +27,10 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
-import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.util.TextService;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages;
 
 public class BungeePlayerListener implements Listener {
 
@@ -37,7 +38,10 @@ public class BungeePlayerListener implements Listener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<TextComponent> pluginMessages;
+    private AnvilPluginMessages pluginMessages;
+
+    @Inject
+    private TextService<CommandSender> textService;
 
     @Inject
     private Registry registry;
@@ -57,10 +61,11 @@ public class BungeePlayerListener implements Listener {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> coreMember = optionalMember.get();
-            if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
+            CoreMember<?> member = optionalMember.get();
+            if (coreMemberManager.getPrimaryComponent().checkBanned(member)) {
                 player.disconnect(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())
+                    textService.serializeAmpersand(
+                        pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc()))
                 );
             }
         }).join();
@@ -79,11 +84,11 @@ public class BungeePlayerListener implements Listener {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> coreMember = optionalMember.get();
-            if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
+            CoreMember<?> member = optionalMember.get();
+            if (coreMemberManager.getPrimaryComponent().checkMuted(member)) {
                 event.setCancelled(true);
-                player.sendMessage(
-                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                player.sendMessage(textService.serializeAmpersand(
+                    pluginMessages.getMuteMessage(member.getMuteReason(), member.getMuteEndUtc()))
                 );
             }
         }).join();
