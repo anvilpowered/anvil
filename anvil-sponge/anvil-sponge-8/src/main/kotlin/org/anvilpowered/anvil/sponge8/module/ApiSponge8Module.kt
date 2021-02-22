@@ -23,6 +23,7 @@ import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
@@ -31,10 +32,12 @@ import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.PlatformModule
 import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils
+import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
 import org.anvilpowered.anvil.sponge.util.SpongePermissionService
 import org.anvilpowered.anvil.sponge8.command.Sponge8CommandExecuteService
 import org.anvilpowered.anvil.sponge8.command.Sponge8SimpleCommandService
 import org.anvilpowered.anvil.sponge8.server.Sponge8LocationService
+import org.anvilpowered.anvil.sponge8.util.Sponge8KickService
 import org.anvilpowered.anvil.sponge8.util.Sponge8TextService
 import org.anvilpowered.anvil.sponge8.util.Sponge8UserService
 import org.spongepowered.api.Platform
@@ -43,7 +46,7 @@ import org.spongepowered.api.command.CommandCause
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
-class ApiSponge8Module : PlatformModule(
+class ApiSponge8Module : ApiSpongeModule(
   PlatformImpl(
     "sponge",
     false,
@@ -56,9 +59,8 @@ class ApiSponge8Module : PlatformModule(
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(Sponge8CommandExecuteService::class.java)
     bind(object : TypeLiteral<SimpleCommandService<Component, CommandCause>>() {}).to(Sponge8SimpleCommandService::class.java)
-    bind(EntityUtils::class.java).to(SpongeEntityUtils::class.java)
+    bind(KickService::class.java).to(Sponge8KickService::class.java)
     bind(LocationService::class.java).to(Sponge8LocationService::class.java)
-    bind(PermissionService::class.java).to(SpongePermissionService::class.java)
     bind(object : TypeLiteral<TextService<Component, CommandCause>>() {}).to(Sponge8TextService::class.java)
     bind(object : TypeLiteral<UserService<User, ServerPlayer>>() {}).to(Sponge8UserService::class.java)
   }

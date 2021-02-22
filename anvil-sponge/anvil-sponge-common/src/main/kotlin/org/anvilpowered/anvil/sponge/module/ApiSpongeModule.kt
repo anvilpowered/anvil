@@ -20,12 +20,15 @@ package org.anvilpowered.anvil.sponge.module
 
 import org.anvilpowered.anvil.api.Platform
 import org.anvilpowered.anvil.api.util.PermissionService
+import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils
 import org.anvilpowered.anvil.sponge.util.SpongePermissionService
 
 open class ApiSpongeModule(platform: Platform) : PlatformModule(platform) {
   override fun configure() {
     super.configure()
+    bind(EntityUtils::class.java).to(SpongeEntityUtils::class.java)
     bind(PermissionService::class.java).to(SpongePermissionService::class.java)
   }
 }
