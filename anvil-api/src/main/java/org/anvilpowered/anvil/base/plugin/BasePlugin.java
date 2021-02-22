@@ -114,8 +114,8 @@ public abstract class BasePlugin {
     }
 
     private void sendLoaded(String status) {
-        PluginInfo<?> pluginInfo = environment.getPluginInfo();
-        environment.getTextService().builder()
+        PluginInfo pluginInfo = environment.getPluginInfo();
+        environment.getTextService().getBuilder()
             .append(pluginInfo.getPrefix())
             .green().append(pluginInfo.getVersion())
             .aqua().append(" by ")

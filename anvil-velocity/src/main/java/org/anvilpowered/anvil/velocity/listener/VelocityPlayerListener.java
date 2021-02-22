@@ -24,7 +24,6 @@ import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.identity.Identity;
-import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
@@ -37,7 +36,7 @@ public class VelocityPlayerListener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<TextComponent> pluginMessages;
+    private PluginMessages pluginMessages;
 
     @Inject
     private Registry registry;
@@ -57,10 +56,10 @@ public class VelocityPlayerListener {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> coreMember = optionalMember.get();
-            if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
+            CoreMember<?> member = optionalMember.get();
+            if (coreMemberManager.getPrimaryComponent().checkBanned(member)) {
                 player.disconnect(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())
+                    pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc())
                 );
             }
         }).join();
@@ -79,12 +78,12 @@ public class VelocityPlayerListener {
             if (!optionalMember.isPresent()) {
                 return;
             }
-            CoreMember<?> coreMember = optionalMember.get();
-            if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
+            CoreMember<?> member = optionalMember.get();
+            if (coreMemberManager.getPrimaryComponent().checkMuted(member)) {
                 event.setResult(PlayerChatEvent.ChatResult.denied());
                 player.sendMessage(
                     Identity.nil(),
-                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                    pluginMessages.getMuteMessage(member.getMuteReason(), member.getMuteEndUtc())
                 );
             }
         }).join();

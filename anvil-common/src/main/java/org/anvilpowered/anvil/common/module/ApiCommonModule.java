@@ -34,6 +34,6 @@ public class ApiCommonModule extends AbstractModule {
         bind(TimeFormatService.class).to(CommonTimeFormatService.class);
         bind(RedisService.class).to(CommonRedisService.class);
         bind(RestrictionService.class).toProvider(
-            BindingExtensions.asInternalProvider(CommonRestrictionService.class));
+            BindingExtensions.Companion.asInternalProvider(CommonRestrictionService.class));
     }
 }

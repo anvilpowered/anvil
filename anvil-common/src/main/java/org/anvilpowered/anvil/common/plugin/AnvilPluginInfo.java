@@ -19,10 +19,11 @@
 package org.anvilpowered.anvil.common.plugin;
 
 import com.google.inject.Inject;
+import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 
-public class AnvilPluginInfo<TString, TCommandSource> implements PluginInfo<TString> {
+public class AnvilPluginInfo<TCommandSource> implements PluginInfo {
     public static final String id = "anvil";
     public static final String name = "Anvil";
     public static final String version = "$modVersion";
@@ -31,11 +32,11 @@ public class AnvilPluginInfo<TString, TCommandSource> implements PluginInfo<TStr
     public static final String organizationName = "AnvilPowered";
     public static final String[] authors = {organizationName};
     public static final String buildDate = "$buildDate";
-    public TString pluginPrefix;
+    public Component pluginPrefix;
 
     @Inject
-    public void setPluginPrefix(TextService<TString, TCommandSource> textService) {
-        pluginPrefix = textService.builder().blue().append("[").aqua().append(name).blue().append("] ").build();
+    public void setPluginPrefix(TextService<TCommandSource> textService) {
+        pluginPrefix = textService.getBuilder().blue().append("[").aqua().append(name).blue().append("] ").build();
     }
 
     @Override
@@ -79,7 +80,7 @@ public class AnvilPluginInfo<TString, TCommandSource> implements PluginInfo<TStr
     }
 
     @Override
-    public TString getPrefix() {
+    public Component getPrefix() {
         return pluginPrefix;
     }
 }

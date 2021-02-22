@@ -55,7 +55,7 @@ class ServiceManagerImpl implements ServiceManager {
         if (supplier != null) {
             return supplier;
         }
-        return () -> injector.getInstance(BindingExtensions.getKey(typeToken));
+        return () -> injector.getInstance(BindingExtensions.Companion.getKey(typeToken));
     }
 
     @Override
@@ -85,7 +85,7 @@ class ServiceManagerImpl implements ServiceManager {
             return function;
         }
         return injector -> ((Injector) injector)
-            .getInstance(BindingExtensions.getKey(typeToken));
+            .getInstance(BindingExtensions.Companion.getKey(typeToken));
     }
 
     @Override
