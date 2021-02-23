@@ -18,7 +18,8 @@
 
 package org.anvilpowered.anvil.api.registry;
 
-import com.google.common.reflect.TypeToken;
+
+import io.leangen.geantyref.TypeToken;
 
 import java.time.ZoneId;
 
@@ -29,8 +30,8 @@ public final class TypeTokens {
         throw new AssertionError("**boss music** No instance for you!");
     }
 
-    public static final TypeToken<Boolean> BOOLEAN = TypeToken.of(Boolean.class);
-    public static final TypeToken<Integer> INTEGER = TypeToken.of(Integer.class);
-    public static final TypeToken<String> STRING = TypeToken.of(String.class);
-    public static final TypeToken<ZoneId> ZONE_ID = TypeToken.of(ZoneId.class);
+    public static final TypeToken<Boolean> BOOLEAN = TypeToken.get(Boolean.class);
+    public static final TypeToken<Integer> INTEGER = TypeToken.get(Integer.class);
+    public static final TypeToken<String> STRING = TypeToken.get(String.class);
+    public static final TypeToken<ZoneId> ZONE_ID = TypeToken.get(ZoneId.class);
 }

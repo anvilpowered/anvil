@@ -20,12 +20,12 @@ package org.anvilpowered.anvil.spigot.module;
 
 import com.google.inject.TypeLiteral;
 import net.md_5.bungee.api.chat.TextComponent;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
 import org.bukkit.command.CommandSender;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.configurate.loader.ConfigurationLoader;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -42,6 +42,6 @@ public class SpigotModule extends CommonModule<TextComponent, CommandSender> {
             }
         }
         bind(new TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {
-        }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
+        }).toInstance(HoconConfigurationLoader.builder().path(Paths.get(configFilesLocation + "/anvil.conf")).build());
     }
 }

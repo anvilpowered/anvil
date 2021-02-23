@@ -19,12 +19,12 @@ package org.anvilpowered.anvil.sponge.registry
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import ninja.leaping.configurate.commented.CommentedConfigurationNode
-import ninja.leaping.configurate.loader.ConfigurationLoader
 import org.anvilpowered.anvil.common.registry.CommonConfigurationService
 import org.spongepowered.api.config.DefaultConfig
+import org.spongepowered.configurate.CommentedConfigurationNode
+import org.spongepowered.configurate.loader.ConfigurationLoader
 
 @Singleton
 class SpongeConfigurationService @Inject constructor(
-    @DefaultConfig(sharedRoot = false) configLoader: ConfigurationLoader<CommentedConfigurationNode>
+  @DefaultConfig(sharedRoot = false) configLoader: ConfigurationLoader<CommentedConfigurationNode>
 ) : CommonConfigurationService(configLoader)

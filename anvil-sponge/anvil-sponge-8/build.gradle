@@ -3,9 +3,62 @@ plugins {
   id("org.jetbrains.kotlin.kapt")
 }
 
+jar.enabled = false // we only want shadowJar
+
 dependencies {
   api(project(":anvil-sponge:anvil-sponge-common"))
   api(sponge + ":" + sponge8_version)
   kapt(sponge + ":" + sponge8_version)
   implementation(javax)
+
+  implementation configurate_core
+  implementation configurate_hocon
+  implementation javasisst
+  implementation(kotlin_reflect + ":" + kotlin_version)
+  implementation(kotlin_stdlib + ":" + kotlin_version)
+  implementation(kotlin_stdlib8 + ":" + kotlin_version)
+  implementation kotlinx_coroutines
+  implementation kotlinx_serialization
+  implementation microutils_logging
+  implementation mongo_java_driver
+}
+
+shadowJar {
+  String jarName = "Anvil-Sponge-v8-${project.version}.jar"
+  println "Building: " + jarName
+  archiveFileName = jarName
+
+  dependencies {
+    include(project(":anvil-api"))
+    include(project(":anvil-common"))
+    include(project(":anvil-sponge:anvil-sponge-8"))
+    include(project(":anvil-sponge:anvil-sponge-common"))
+
+    exclude("META-INF/versions/**")
+    include dependency(apache_commons)
+    include dependency(bson)
+    include dependency(configurate_core)
+    include dependency(configurate_hocon)
+    include dependency(javasisst)
+    include dependency(jedis)
+    include dependency(kotlin_reflect)
+    include dependency(kotlin_stdlib)
+    include dependency(kotlin_stdlib8)
+    include dependency(kotlinx_coroutines)
+    include dependency(kotlinx_serialization)
+    include dependency(microutils_logging)
+    include dependency(mongo_java_driver)
+    include dependency(mongodb_driver_sync)
+    include dependency(morphia)
+    include dependency(reflections)
+    include dependency(slf4j)
+    include dependency(xodus)
+    include dependency(xodus_entity_store)
+    include dependency(xodus_environment)
+    include dependency(xodus_utils)
+  }
+}
+
+artifacts {
+  archives shadowJar
 }

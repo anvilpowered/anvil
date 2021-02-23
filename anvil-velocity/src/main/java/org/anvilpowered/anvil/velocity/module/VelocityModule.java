@@ -21,11 +21,11 @@ package org.anvilpowered.anvil.velocity.module;
 import com.google.inject.TypeLiteral;
 import com.velocitypowered.api.command.CommandSource;
 import net.kyori.adventure.text.Component;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.anvilpowered.anvil.common.module.CommonModule;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.configurate.loader.ConfigurationLoader;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -42,6 +42,6 @@ public class VelocityModule extends CommonModule<Component, CommandSource> {
             }
         }
         bind(new TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {
-        }).toInstance(HoconConfigurationLoader.builder().setPath(Paths.get(configFilesLocation + "/anvil.conf")).build());
+        }).toInstance(HoconConfigurationLoader.builder().path(Paths.get(configFilesLocation + "/anvil.conf")).build());
     }
 }

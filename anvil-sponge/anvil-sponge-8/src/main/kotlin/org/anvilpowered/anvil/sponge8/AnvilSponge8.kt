@@ -56,6 +56,6 @@ class AnvilSponge8 @Inject constructor(
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Component, CommandCause>>() {})
+    //builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Component, CommandCause>>() {})
   }
 }

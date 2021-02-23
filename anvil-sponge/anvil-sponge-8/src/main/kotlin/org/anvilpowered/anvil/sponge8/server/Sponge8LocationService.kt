@@ -19,20 +19,20 @@ package org.anvilpowered.anvil.sponge8.server
 
 import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
+import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonLocationService
 import org.spongepowered.api.Sponge
-import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
-import java.util.Optional
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
+import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
 class Sponge8LocationService : CommonLocationService() {
 
   @Inject
-  private lateinit var userService: UserService<User, Player>
+  private lateinit var userService: UserService<User, ServerPlayer>
 
   override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
     val teleporter = userService[teleportingUserUUID].orElse(null)

@@ -20,6 +20,7 @@ dependencies {
     }
 
     implementation javasisst
+    implementation configurate_hocon
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)

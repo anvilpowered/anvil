@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.api.registry;
 
 import com.google.common.base.Preconditions;
-import com.google.common.reflect.TypeToken;
+import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

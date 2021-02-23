@@ -19,8 +19,8 @@ dependencies {
     implementation mongo_java_driver
 }
 
-shadowJar {
-    String jarName = "Anvil-Sponge-${project.version}.jar"
+/*shadowJar {
+    String jarName = "Anvil-Sponge-v7-${project.version}.jar"
     println "Building: " + jarName
     archiveFileName = jarName
 
@@ -28,13 +28,15 @@ shadowJar {
         include(project(":anvil-api"))
         include(project(":anvil-common"))
         include(project(":anvil-sponge:anvil-sponge-7"))
-        include(project(":anvil-sponge:anvil-sponge-8"))
         include(project(":anvil-sponge:anvil-sponge-common"))
 
         exclude("META-INF/versions/**")
         relocate("org.apache.commons", "relocated.apache")
+        relocate("ninja.leaping", "relocated.ninja")
         include dependency(apache_commons)
         include dependency(bson)
+        include dependency(configurate_core)
+        include dependency(configurate_hocon)
         include dependency(javasisst)
         include dependency(jedis)
         include dependency(kotlin_reflect)
@@ -56,4 +58,4 @@ shadowJar {
 
 artifacts {
     archives shadowJar
-}
+}*/

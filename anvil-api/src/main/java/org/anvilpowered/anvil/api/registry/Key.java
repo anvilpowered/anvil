@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.api.registry;
 
-import com.google.common.reflect.TypeToken;
+import io.leangen.geantyref.TypeToken;
 import org.anvilpowered.anvil.api.misc.Named;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

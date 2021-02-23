@@ -19,22 +19,23 @@
 package org.anvilpowered.anvil.base.registry;
 
 import com.google.common.reflect.Invokable;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import io.leangen.geantyref.TypeToken;
 import org.anvilpowered.anvil.api.registry.ConfigurationService;
 import org.anvilpowered.anvil.api.registry.Key;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.RegistryScope;
 import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurationOptions;
+import org.spongepowered.configurate.loader.ConfigurationLoader;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -269,7 +270,7 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
                 CommentedConfigurationNode node = fromString(entry.getValue());
                 try {
                     setNodeValue(node, entry.getKey());
-                } catch (ObjectMappingException e) {
+                } catch (Exception e) {
                     logger.error("Unable to set config value for " + entry.getKey(), e);
                 }
             }
@@ -287,20 +288,18 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     private CommentedConfigurationNode fromString(String name) {
         String[] path = name.split("[.]");
         CommentedConfigurationNode node = rootConfigurationNode;
-        for (String s : path) {
-            node = node.getNode(s);
-        }
+        node = node.node((Object[]) path);
         return node;
     }
 
-    private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
+    private <T> void setNodeDefault(CommentedConfigurationNode node, Key<T> key) throws SerializationException {
         T def = getDefault(key);
-        node.setValue(key.getType(), def);
+        node.set(key.getType(), def);
         set(key, def);
     }
 
-    private <T> void setNodeValue(CommentedConfigurationNode node, Key<T> key) throws ObjectMappingException {
-        node.setValue(key.getType(), getOrDefault(key));
+    private <T> void setNodeValue(CommentedConfigurationNode node, Key<T> key) throws SerializationException {
+        node.set(key.getType().getClass(), getOrDefault(key));
     }
 
     @RegistryScoped
@@ -319,11 +318,11 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
         for (Map.Entry<Key<?>, String> entry : nodeNameMap.entrySet()) {
             Key<?> key = entry.getKey();
             CommentedConfigurationNode node = fromString(entry.getValue());
-            if (node.isVirtual()) {
+            if (node.virtual()) {
                 try {
                     setNodeDefault(node, key);
                     updatedCount++;
-                } catch (ObjectMappingException e) {
+                } catch (SerializationException e) {
                     e.printStackTrace();
                 }
             } else {
@@ -334,8 +333,8 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
                 }
             }
 
-            if (node.isVirtual() || !node.getComment().isPresent()) {
-                node.setComment(nodeDescriptionMap.get(key));
+            if (node.virtual() || node.comment() == null) {
+                node.comment(nodeDescriptionMap.get(key));
                 updatedCount++;
             }
         }
@@ -363,38 +362,38 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
         // it ain't pretty but it works
 
-        if (key != null && typeToken.isSubtypeOf(List.class)) {
+        if (key != null && typeToken.getType() == List.class) {
 
             // *** unwrap list *** //
             try {
 
                 Method getMethod = List.class.getMethod("get", int.class);
-                Invokable<? extends T, ?> invokable = typeToken.method(getMethod);
-                T list = (T) verify(verificationMap.get(key), node.getList(invokable.getReturnType()), node, modified);
+                Invokable<?, ?> invokable = (Invokable<?, ?>) ((Map<?, ?>) typeToken.getType()).get(getMethod);
+                T list = (T) verify(verificationMap.get(key), node.getList(invokable.getReturnType().getClass()), node, modified);
 
                 set(key, list);
 
                 return list;
 
-            } catch (NoSuchMethodException | IllegalArgumentException | ObjectMappingException e) {
+            } catch (NoSuchMethodException | IllegalArgumentException | SerializationException e) {
                 e.printStackTrace();
                 return null;
             }
 
-        } else if (typeToken.isSubtypeOf(Map.class)) {
+        } else if (typeToken.getType() instanceof Map){
 
             // *** unwrap map *** //
             try {
 
                 Method getMethod = Map.class.getMethod("get", Object.class);
-                Invokable<?, ?> invokable = typeToken.method(getMethod);
-                TypeToken<?> subType = invokable.getReturnType();
+                Invokable<?, ?> invokable = (Invokable<?, ?>) ((Map<?, ?>) typeToken.getType()).get(getMethod);
+                TypeToken<?> subType = TypeToken.get(invokable.getReturnType().getType());
 
                 Map<Object, Object> result = new HashMap<>();
 
-                for (Map.Entry<?, ? extends CommentedConfigurationNode> entry : node.getChildrenMap().entrySet()) {
+                for (Map.Entry<?, ? extends CommentedConfigurationNode> entry : node.childrenMap().entrySet()) {
                     // here comes the recursion
-                    result.put(entry.getValue().getKey(), initConfigValue(null, subType, entry.getValue(), modified));
+                    result.put(entry.getValue().key(), initConfigValue(null, subType, entry.getValue(), modified));
                 }
 
                 if (key != null) {
@@ -404,30 +403,30 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
 
                 return (T) result;
 
-            } catch (NoSuchMethodException | IllegalArgumentException e) {
+            } catch (NoSuchMethodException | IllegalArgumentException | SerializationException e) {
                 e.printStackTrace();
                 return null;
             }
         } else if (key != null) {
             try {
-                T value = node.getValue(typeToken);
+                T value = (T) node.get(key.getType().getType());
                 set(key, (T) verify(verificationMap.get(key), value, node, modified));
                 return value;
-            } catch (ClassCastException | ObjectMappingException e) {
+            } catch (ClassCastException | SerializationException e) {
                 e.printStackTrace();
                 return null;
             }
         } else {
             try {
-                return node.getValue(typeToken);
-            } catch (ObjectMappingException e) {
+                return (T) node.get(typeToken.getType());
+            } catch (SerializationException e) {
                 e.printStackTrace();
                 return null;
             }
         }
     }
 
-    private <T> T verify(Map<Predicate<T>, Function<T, T>> verificationMap, T value, CommentedConfigurationNode node, boolean[] modified) {
+    private <T> T verify(Map<Predicate<T>, Function<T, T>> verificationMap, T value, CommentedConfigurationNode node, boolean[] modified) throws SerializationException {
         if (verificationMap == null) return value; // if there is no verification function defined
         T result = value;
         for (Map.Entry<Predicate<T>, Function<T, T>> entry : verificationMap.entrySet()) {
@@ -437,7 +436,7 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
             }
         }
         if (modified[0]) {
-            node.setValue(result);
+            node.set(result);
         }
         return result;
     }
