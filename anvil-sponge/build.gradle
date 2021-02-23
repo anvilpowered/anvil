@@ -9,6 +9,16 @@ dependencies {
     api(project(":anvil-sponge:anvil-sponge-7"))
     api(project(":anvil-sponge:anvil-sponge-8"))
 
+    implementation(configurate_core) {
+        version {
+            strictly '3.7.2'
+        }
+    }
+    implementation(configurate_hocon) {
+        version {
+            strictly '3.7.2'
+        }
+    }
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
@@ -33,8 +43,11 @@ shadowJar {
 
         exclude("META-INF/versions/**")
         relocate("org.apache.commons", "relocated.apache")
+        relocate("ninja.leaping", "relocated")
         include dependency(apache_commons)
         include dependency(bson)
+        include dependency(configurate_core)
+        include dependency(configurate_hocon)
         include dependency(javasisst)
         include dependency(jedis)
         include dependency(kotlin_reflect)
