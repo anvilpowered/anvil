@@ -50,9 +50,9 @@ import org.spongepowered.api.text.Text
 )
 class AnvilSponge7 @Inject constructor(
   injector: Injector,
-) : AnvilImpl(injector, SpongeModule<Text, CommandSource>()) {
+) : AnvilImpl(injector, object : SpongeModule<Text, CommandSource>() {}) {
   @Listener(order = Order.EARLY)
-  fun onInit(event: GameInitializationEvent?) {
+  fun onInit(event: GameInitializationEvent) {
     EnvironmentBuilderImpl.completeInitialization(ApiSponge7Module(), Sponge7FallbackModule())
     Sponge.getEventManager().registerListeners(
       this,
@@ -62,7 +62,6 @@ class AnvilSponge7 @Inject constructor(
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Text, CommandSource>>() {
-    })
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Text, CommandSource>>() {})
   }
 }
