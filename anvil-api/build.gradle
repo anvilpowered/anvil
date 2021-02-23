@@ -10,7 +10,7 @@ dependencies {
     api mongodb_driver_sync
     api morphia
     api reflections
-    api sponge_math
+    api(sponge_math)
     api xodus_entity_store
 }
 

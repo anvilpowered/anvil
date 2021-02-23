@@ -23,17 +23,17 @@ import com.google.inject.Injector
 import com.google.inject.TypeLiteral
 import java.lang.reflect.InvocationTargetException
 import net.kyori.adventure.text.Component
+import net.md_5.bungee.api.chat.TextComponent
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
-import org.anvilpowered.anvil.spigot.AnvilSpigot
+import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.spigot.listener.SpigotPlayerListener
 import org.anvilpowered.anvil.spigot.module.ApiSpigotModule
 import org.anvilpowered.anvil.spigot.module.SpigotFallbackModule
-import org.anvilpowered.anvil.spigot.module.SpigotModule
 import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.command.CommandSender
@@ -58,7 +58,8 @@ class AnvilSpigot : JavaPlugin() {
     inner = Inner(injector)
   }
 
-  private inner class Inner(injector: Injector) : AnvilImpl(injector, SpigotModule()) {
+  private inner class Inner(injector: Injector) :
+    AnvilImpl(injector, object : CommonModule<TextComponent, Player>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
       builder.addEarlyServices(SpigotPlayerListener::class.java) {

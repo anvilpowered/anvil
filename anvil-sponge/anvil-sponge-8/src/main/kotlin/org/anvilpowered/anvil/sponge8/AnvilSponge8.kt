@@ -25,7 +25,7 @@ import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
-import org.anvilpowered.anvil.sponge.module.SpongeModule
+import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.sponge8.listener.Sponge8PlayerListener
 import org.anvilpowered.anvil.sponge8.module.ApiSponge8Module
 import org.anvilpowered.anvil.sponge8.module.Sponge8FallbackModule
@@ -40,7 +40,7 @@ import org.spongepowered.plugin.PluginContainer
 
 class AnvilSponge8 @Inject constructor(
   injector: Injector,
-) : AnvilImpl(injector, object : SpongeModule<Component, CommandCause>() {}) {
+) : AnvilImpl(injector, object : CommonModule<Component, CommandCause>("config") {}) {
 
   @Inject
   private lateinit var plugin: PluginContainer

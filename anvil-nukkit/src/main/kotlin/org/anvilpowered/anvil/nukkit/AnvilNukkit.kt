@@ -33,10 +33,10 @@ import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
+import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.nukkit.listener.NukkitPlayerListener
 import org.anvilpowered.anvil.nukkit.module.ApiNukkitModule
 import org.anvilpowered.anvil.nukkit.module.NukkitFallbackModule
-import org.anvilpowered.anvil.nukkit.module.NukkitModule
 
 class AnvilNukkit : PluginBase() {
   private val inner: Inner
@@ -53,7 +53,8 @@ class AnvilNukkit : PluginBase() {
     inner = Inner(injector)
   }
 
-  private inner class Inner @Inject constructor(injector: Injector?) : AnvilImpl(injector, NukkitModule()) {
+  private inner class Inner @Inject constructor(injector: Injector) :
+    AnvilImpl(injector, object : CommonModule<String, Player>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
       builder.setLoggerSupplier { logger }

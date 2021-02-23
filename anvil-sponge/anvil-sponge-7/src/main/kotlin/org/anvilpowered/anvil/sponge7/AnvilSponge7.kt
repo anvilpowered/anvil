@@ -25,8 +25,8 @@ import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
+import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
-import org.anvilpowered.anvil.sponge.module.SpongeModule
 import org.anvilpowered.anvil.sponge7.listener.Sponge7PlayerListener
 import org.anvilpowered.anvil.sponge7.module.ApiSponge7Module
 import org.anvilpowered.anvil.sponge7.module.Sponge7FallbackModule
@@ -50,7 +50,7 @@ import org.spongepowered.api.text.Text
 )
 class AnvilSponge7 @Inject constructor(
   injector: Injector,
-) : AnvilImpl(injector, object : SpongeModule<Text, CommandSource>() {}) {
+) : AnvilImpl(injector, object : CommonModule<Text, CommandSource>("config") {}) {
   @Listener(order = Order.EARLY)
   fun onInit(event: GameInitializationEvent) {
     EnvironmentBuilderImpl.completeInitialization(ApiSponge7Module(), Sponge7FallbackModule())

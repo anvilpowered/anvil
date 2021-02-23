@@ -24,11 +24,16 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
+import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.entity.EntityUtils
+import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
+import org.anvilpowered.anvil.sponge.util.SpongePermissionService
 import org.anvilpowered.anvil.sponge8.command.Sponge8CommandExecuteService
 import org.anvilpowered.anvil.sponge8.command.Sponge8SimpleCommandService
 import org.anvilpowered.anvil.sponge8.server.Sponge8LocationService
