@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.common.server
 
-import com.flowpowered.math.vector.Vector3d
 import org.anvilpowered.anvil.api.server.BackendServer
 import org.anvilpowered.anvil.api.server.LocationService
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
+import org.spongepowered.math.vector.Vector3d
 
 abstract class CommonLocationService : LocationService {
 
@@ -39,7 +39,7 @@ abstract class CommonLocationService : LocationService {
         return Optional.empty()
     }
 
-    override fun getServers(): List<out BackendServer> {
+    override fun getServers(): List<BackendServer> {
         return listOf()
     }
 

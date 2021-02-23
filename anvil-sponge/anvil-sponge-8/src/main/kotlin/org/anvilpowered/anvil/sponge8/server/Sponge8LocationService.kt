@@ -17,7 +17,6 @@
  */
 package org.anvilpowered.anvil.sponge8.server
 
-import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
 import java.util.Optional
 import java.util.UUID
@@ -28,6 +27,7 @@ import org.anvilpowered.anvil.common.server.CommonLocationService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
+import org.spongepowered.math.vector.Vector3d
 
 class Sponge8LocationService : CommonLocationService() {
 
@@ -42,20 +42,14 @@ class Sponge8LocationService : CommonLocationService() {
     )
   }
 
-  private fun Optional<User>.getWorldName(): Optional<String> {
-    return flatMap { Sponge.getServer().worldManager.world(it.worldKey) }
+  private fun Optional<User>.getWorldName(): Optional<String> =
+    flatMap { Sponge.getServer().worldManager.world(it.worldKey) }
       .flatMap { it.properties.displayName() }
       .map { PlainComponentSerializer.plain().serialize(it) }
-  }
 
-  override fun getWorldName(userName: String): Optional<String> = userService[userName].getWorldName()
+  private fun Optional<User>.getPosition(): Optional<Vector3d> = map { it.position }
   override fun getWorldName(userUUID: UUID): Optional<String> = userService[userUUID].getWorldName()
-
-  private fun Optional<User>.getPosition(): Optional<Vector3d> {
-    //TODO: use new math lib in api
-    return map { it.position }.map { Vector3d(it.x, it.y, it.z) }
-  }
-
+  override fun getWorldName(userName: String): Optional<String> = userService[userName].getWorldName()
   override fun getPosition(userUUID: UUID): Optional<Vector3d> = userService[userUUID].getPosition()
   override fun getPosition(userName: String): Optional<Vector3d> = userService[userName].getPosition()
 }

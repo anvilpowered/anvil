@@ -17,51 +17,45 @@
  */
 package org.anvilpowered.anvil.sponge7.server
 
-import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
+import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonLocationService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
-import java.util.Optional
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
+import org.spongepowered.math.vector.Vector3d
 
 class Sponge7LocationService : CommonLocationService() {
 
-    @Inject
-    private lateinit var userService: UserService<User, Player>
+  @Inject
+  private lateinit var userService: UserService<User, Player>
 
-    override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
-        val teleporter = userService[teleportingUserUUID]
-        val target = userService[targetUserUUID]
-        return CompletableFuture.completedFuture(
-            if (teleporter.isPresent && target.isPresent) {
-                target.get().worldUniqueId
-                    .filter { teleporter.get().setLocation(target.get().position, it) }
-                    .isPresent
-            } else false
-        )
-    }
+  override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
+    val teleporter = userService[teleportingUserUUID]
+    val target = userService[targetUserUUID]
+    return CompletableFuture.completedFuture(
+      if (teleporter.isPresent && target.isPresent) {
+        target.get().worldUniqueId
+          .filter { teleporter.get().setLocation(target.get().position, it) }
+          .isPresent
+      } else false
+    )
+  }
 
-    override fun getWorldName(userName: String): Optional<String> {
-        return userService[userName].flatMap { it.worldUniqueId }
-                .flatMap { Sponge.getServer().getWorld(it) }
-                .map { it.name }
-    }
+  private fun Optional<User>.getWorldName(): Optional<String> =
+    flatMap { it.worldUniqueId }
+      .flatMap { Sponge.getServer().getWorld(it) }
+      .map { it.name }
 
-    override fun getWorldName(userUUID: UUID): Optional<String> {
-        return userService[userUUID].flatMap { it.worldUniqueId }
-                .flatMap { Sponge.getServer().getWorld(it) }
-                .map { it.name }
-    }
+  override fun getWorldName(userUUID: UUID): Optional<String> = userService[userUUID].getWorldName()
+  override fun getWorldName(userName: String): Optional<String> = userService[userName].getWorldName()
 
-    override fun getPosition(userUUID: UUID): Optional<Vector3d> {
-        return userService[userUUID].map { it.position }
-    }
+  private fun Optional<User>.getPosition(): Optional<Vector3d> =
+    map { it.position }.map { Vector3d.from(it.x, it.y, it.z) }
 
-    override fun getPosition(userName: String): Optional<Vector3d> {
-        return userService[userName].map { it.position }
-    }
+  override fun getPosition(userUUID: UUID): Optional<Vector3d> = userService[userUUID].getPosition()
+  override fun getPosition(userName: String): Optional<Vector3d> = userService[userName].getPosition()
 }

@@ -19,13 +19,13 @@
 package org.anvilpowered.anvil.sponge8.util
 
 import com.google.inject.Inject
+import java.util.Optional
+import java.util.UUID
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.UserService
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
-import java.util.Optional
-import java.util.UUID
 
 class Sponge8KickService : KickService {
 
@@ -34,7 +34,8 @@ class Sponge8KickService : KickService {
 
   private fun Optional<ServerPlayer>.kick(reason: Any? = null) {
     orElse(null)?.apply {
-      reason?.let { kick((reason as? Component) ?: Component.text(reason.toString())) } ?: kick()
+      reason?.let { kick((reason as? Component) ?: Component.text(reason.toString())) }
+        ?: kick(Component.text("You have been kicked"))
     }
   }
 

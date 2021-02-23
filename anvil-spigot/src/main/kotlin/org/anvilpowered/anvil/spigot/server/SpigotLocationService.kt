@@ -17,7 +17,6 @@
  */
 package org.anvilpowered.anvil.spigot.server
 
-import com.flowpowered.math.vector.Vector3d
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonLocationService
@@ -25,6 +24,7 @@ import org.bukkit.entity.Player
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
+import org.spongepowered.math.vector.Vector3d
 
 class SpigotLocationService : CommonLocationService() {
 

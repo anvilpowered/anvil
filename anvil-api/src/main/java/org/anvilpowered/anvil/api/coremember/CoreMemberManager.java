@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.api.coremember;
 import org.anvilpowered.anvil.api.datastore.Manager;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-@Nullable
 public interface CoreMemberManager extends Manager<CoreMemberRepository<?, ?>> {
 
     @Override

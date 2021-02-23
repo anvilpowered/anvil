@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.api.server;
 
-import com.flowpowered.math.vector.Vector3d;
+import org.spongepowered.math.vector.Vector3d;
 
 import java.util.List;
 import java.util.Optional;

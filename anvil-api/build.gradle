@@ -3,7 +3,6 @@ version = rootProject.apiVersion
 dependencies {
     api bson
     api configurate_core
-    api(flow_math)
     api(guice + ":" + guice_version)
     api hikari
     api jedis
@@ -11,6 +10,7 @@ dependencies {
     api mongodb_driver_sync
     api morphia
     api reflections
+    api sponge_math
     api xodus_entity_store
 }
 
