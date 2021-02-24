@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.bungee.listener;
 
 import com.google.inject.Inject;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -37,7 +38,7 @@ public class BungeePlayerListener implements Listener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<TextComponent> pluginMessages;
+    private PluginMessages pluginMessages;
 
     @Inject
     private Registry registry;
@@ -60,8 +61,10 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
                 player.disconnect(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())
-                );
+                    PlainComponentSerializer.plain().serialize(
+                        pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()
+                        )
+                    ));
             }
         }).join();
     }
@@ -83,7 +86,9 @@ public class BungeePlayerListener implements Listener {
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled(true);
                 player.sendMessage(
-                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                    PlainComponentSerializer.plain().serialize(
+                        pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                    )
                 );
             }
         }).join();

@@ -7,6 +7,8 @@ dependencies {
     api hikari
     api jedis
     api jetbrains_annotations
+    api("net.kyori:adventure-text-serializer-legacy:4.5.0")
+    api("net.kyori:adventure-text-serializer-plain:4.5.0")
     api mongodb_driver_sync
     api morphia
     api reflections

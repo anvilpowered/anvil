@@ -20,22 +20,35 @@ package org.anvilpowered.anvil.nukkit.util;
 
 import cn.nukkit.Server;
 import cn.nukkit.command.CommandSender;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.common.util.StringTextService;
 
 public class NukkitTextService extends StringTextService<CommandSender> {
 
     @Override
-    public Builder<String, CommandSender> builder() {
+    public Builder<CommandSender> builder() {
         return new StringTextBuilder();
     }
 
     @Override
-    public void send(String result, CommandSender receiver) {
-        receiver.sendMessage(result);
+    public void send(Component result, CommandSender receiver) {
+        receiver.sendMessage(serialize(result));
     }
 
     @Override
     public CommandSender getConsole() {
         return Server.getInstance().getConsoleSender();
+    }
+
+    @Override
+    public String serialize(Component text) {
+        return LegacyComponentSerializer.legacySection().serialize(text);
+    }
+
+    @Override
+    public String serializePlain(Component text) {
+        return PlainComponentSerializer.plain().serialize(text);
     }
 }

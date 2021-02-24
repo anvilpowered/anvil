@@ -17,18 +17,19 @@
  */
 package org.anvilpowered.anvil.common.command.regedit
 
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.TextService
 
-class Change<T, TString, TCommandSource>(
+class Change<T,  TCommandSource>(
     private val registry: Registry,
-    private val textService: TextService<TString, TCommandSource>,
+    private val textService: TextService< TCommandSource>,
     val key: Key<T>,
     var newValue: T? = null,
 ) {
 
-    private val remove: TString by lazy {
+    private val remove: Component by lazy {
         textService.builder()
             .red().append("[R]")
             .onHoverShowText(textService.builder()
@@ -38,14 +39,14 @@ class Change<T, TString, TCommandSource>(
             .build()
     }
 
-    constructor(stage: Stage<TString, TCommandSource>, key: Key<T>, newValue: T? = null)
+    constructor(stage: Stage< TCommandSource>, key: Key<T>, newValue: T? = null)
         : this(stage.registry.second, stage.textService, key, newValue)
 
     fun apply(registry: Registry) {
         registry.set(key, newValue)
     }
 
-    fun print(): TString {
+    fun print(): Component {
         return textService.builder()
             .append(remove, " ")
             .gold().append(key.name, " > ")

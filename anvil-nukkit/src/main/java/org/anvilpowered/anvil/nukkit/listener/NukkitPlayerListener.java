@@ -24,6 +24,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import com.google.inject.Inject;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
@@ -36,7 +37,7 @@ public class NukkitPlayerListener implements Listener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<String> pluginMessages;
+    private PluginMessages pluginMessages;
 
     @Inject
     private Registry registry;
@@ -59,7 +60,8 @@ public class NukkitPlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
                 player.kick(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()),
+                    PlainComponentSerializer.plain().serialize(
+                        pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())),
                     false
                 );
             }
@@ -83,7 +85,8 @@ public class NukkitPlayerListener implements Listener {
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled();
                 player.sendMessage(
-                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                    PlainComponentSerializer.plain().serialize(
+                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc()))
                 );
             }
         }).join();

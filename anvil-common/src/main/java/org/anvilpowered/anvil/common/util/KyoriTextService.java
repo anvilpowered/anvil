@@ -35,13 +35,13 @@ import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public abstract class KyoriTextService<TCommandSource> extends CommonTextService<Component, TCommandSource> {
+public abstract class KyoriTextService<TCommandSource> extends CommonTextService<TCommandSource> {
 
     @Inject
     private Logger logger;
 
     @Override
-    public Builder<Component, TCommandSource> builder() {
+    public Builder<TCommandSource> builder() {
         return new VelocityTextBuilder();
     }
 
@@ -73,139 +73,139 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
         }
 
         @Override
-        public Builder<Component, TCommandSource> aqua() {
+        public Builder<TCommandSource> aqua() {
             elements.add(NamedTextColor.AQUA);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> black() {
+        public Builder<TCommandSource> black() {
             elements.add(NamedTextColor.BLACK);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> blue() {
+        public Builder<TCommandSource> blue() {
             elements.add(NamedTextColor.BLUE);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> dark_aqua() {
+        public Builder<TCommandSource> dark_aqua() {
             elements.add(NamedTextColor.DARK_AQUA);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> dark_blue() {
+        public Builder<TCommandSource> dark_blue() {
             elements.add(NamedTextColor.DARK_BLUE);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> dark_gray() {
+        public Builder<TCommandSource> dark_gray() {
             elements.add(NamedTextColor.DARK_GRAY);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> dark_green() {
+        public Builder<TCommandSource> dark_green() {
             elements.add(NamedTextColor.DARK_GREEN);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> dark_purple() {
+        public Builder<TCommandSource> dark_purple() {
             elements.add(NamedTextColor.DARK_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> dark_red() {
+        public Builder<TCommandSource> dark_red() {
             elements.add(NamedTextColor.DARK_RED);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> gold() {
+        public Builder<TCommandSource> gold() {
             elements.add(NamedTextColor.GOLD);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> gray() {
+        public Builder<TCommandSource> gray() {
             elements.add(NamedTextColor.GRAY);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> green() {
+        public Builder<TCommandSource> green() {
             elements.add(NamedTextColor.GREEN);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> light_purple() {
+        public Builder<TCommandSource> light_purple() {
             elements.add(NamedTextColor.LIGHT_PURPLE);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> red() {
+        public Builder<TCommandSource> red() {
             elements.add(NamedTextColor.RED);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> reset() {
+        public Builder<TCommandSource> reset() {
             elements.add(NamedTextColor.WHITE);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> white() {
+        public Builder<TCommandSource> white() {
             elements.add(NamedTextColor.WHITE);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> yellow() {
+        public Builder<TCommandSource> yellow() {
             elements.add(NamedTextColor.YELLOW);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> bold() {
+        public Builder<TCommandSource> bold() {
             elements.add(TextDecoration.BOLD);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> italic() {
+        public Builder<TCommandSource> italic() {
             elements.add(TextDecoration.ITALIC);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> obfuscated() {
+        public Builder<TCommandSource> obfuscated() {
             elements.add(TextDecoration.OBFUSCATED);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> strikethrough() {
+        public Builder<TCommandSource> strikethrough() {
             elements.add(TextDecoration.STRIKETHROUGH);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> underlined() {
+        public Builder<TCommandSource> underlined() {
             elements.add(TextDecoration.UNDERLINED);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> append(Object... contents) {
+        public Builder<TCommandSource> append(Object... contents) {
             for (Object o : contents) {
                 if (o instanceof Builder || o instanceof Component || o instanceof TextColor) {
                     elements.add(o);
@@ -217,7 +217,7 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
         }
 
         @Override
-        public Builder<Component, TCommandSource> appendJoining(
+        public Builder<TCommandSource> appendJoining(
             Object delimiter, Object... contents) {
             if (!(delimiter instanceof Builder || delimiter instanceof Component)) {
                 delimiter = Component.text(delimiter.toString());
@@ -238,32 +238,32 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
         }
 
         @Override
-        public Builder<Component, TCommandSource> onHoverShowText(Component text) {
+        public Builder<TCommandSource> onHoverShowText(Component text) {
             hoverEvent = HoverEvent.showText(text);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> onClickSuggestCommand(String command) {
+        public Builder<TCommandSource> onClickSuggestCommand(String command) {
             callback = null;
             clickEvent = ClickEvent.suggestCommand(command);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> onClickRunCommand(String command) {
+        public Builder<TCommandSource> onClickRunCommand(String command) {
             callback = null;
             clickEvent = ClickEvent.runCommand(command);
             return this;
         }
 
         @Override
-        public Builder<Component, TCommandSource> onClickOpenUrl(URL url) {
+        public Builder<TCommandSource> onClickOpenUrl(URL url) {
             return onClickOpenUrl(url.toString());
         }
 
         @Override
-        public Builder<Component, TCommandSource> onClickOpenUrl(String url) {
+        public Builder<TCommandSource> onClickOpenUrl(String url) {
             callback = null;
             clickEvent = ClickEvent.openUrl(url);
             return this;
@@ -283,7 +283,7 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
             } else if (elements.size() == 1 && !hover && !click) {
                 Object o = elements.getFirst();
                 if (o instanceof Builder) {
-                    return ((Builder<Component, TCommandSource>) o).build();
+                    return ((Builder<TCommandSource>) o).build();
                 } else if (o instanceof Component) {
                     return (Component) o;
                 }
@@ -302,7 +302,7 @@ public abstract class KyoriTextService<TCommandSource> extends CommonTextService
 
             for (Object o : elements) {
                 if (o instanceof Builder) {
-                    currentBuilder.append(((Builder<Component, TCommandSource>) o).build());
+                    currentBuilder.append(((Builder<TCommandSource>) o).build());
                 } else if (o instanceof Component) {
                     currentBuilder.append((Component) o);
                 } else if (o instanceof TextColor) {

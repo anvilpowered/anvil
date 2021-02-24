@@ -23,22 +23,23 @@ import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.util.TextService
 import java.util.UUID
 import java.util.function.Consumer
+import net.kyori.adventure.text.Component
 
 @Singleton
-class CommonCallbackCommand<TString, TCommandSource> @Inject constructor(
-  private val textService: TextService<TString, TCommandSource>,
-) : SimpleCommand<TString, TCommandSource> {
+class CommonCallbackCommand< TCommandSource> @Inject constructor(
+  private val textService: TextService< TCommandSource>,
+) : SimpleCommand< TCommandSource> {
 
   private val callbacks: MutableMap<UUID, (TCommandSource) -> Unit> = mutableMapOf()
 
-  private val missingId: TString by lazy {
+  private val missingId: Component by lazy {
     textService.builder()
       .appendPrefix()
       .red().append("Missing callback id")
       .build()
   }
 
-  private val invalidId: TString by lazy {
+  private val invalidId: Component by lazy {
     textService.builder()
       .appendPrefix()
       .red().append("Callback id must be a valid UUID")

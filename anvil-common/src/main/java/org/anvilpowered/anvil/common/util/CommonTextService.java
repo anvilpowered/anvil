@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.common.util;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
+import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.Anvil;
 import org.anvilpowered.anvil.api.Platform;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
@@ -37,40 +38,40 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class CommonTextService<TString, TCommandSource>
-    implements TextService<TString, TCommandSource> {
+public abstract class CommonTextService< TCommandSource>
+    implements TextService< TCommandSource> {
 
     @Inject
     private Platform platform;
 
     @Inject
-    private PluginInfo<TString> pluginInfo;
+    private PluginInfo pluginInfo;
 
     @Inject
-    protected CommonCallbackCommand<TString, TCommandSource> callbackCommand;
+    protected CommonCallbackCommand< TCommandSource> callbackCommand;
 
     @Override
-    public TString success(String s) {
+    public Component success(String s) {
         return builder().green().append(s).build();
     }
 
     @Override
-    public TString fail(String s) {
+    public Component fail(String s) {
         return builder().red().append(s).build();
     }
 
     @Override
-    public PaginationBuilder<TString, TCommandSource> paginationBuilder() {
+    public PaginationBuilder< TCommandSource> paginationBuilder() {
         return new CommonExtendedPaginationBuilder();
     }
 
     @Override
-    public void send(TString text, TCommandSource receiver, UUID sourceUUID) {
+    public void send(Component text, TCommandSource receiver, UUID sourceUUID) {
         send(text, receiver);
     }
 
     @Override
-    public void send(TString text, TCommandSource receiver, Object source) {
+    public void send(Component text, TCommandSource receiver, Object source) {
         send(text, receiver);
     }
 
@@ -82,7 +83,7 @@ public abstract class CommonTextService<TString, TCommandSource>
     private static final Pattern LINE_BREAK_PATTERN = Pattern.compile("\r\n|\r|\n");
 
     @Override
-    public int lineCount(TString text) {
+    public int lineCount(Component text) {
         if (text == null) {
             return -1;
         }
@@ -99,18 +100,18 @@ public abstract class CommonTextService<TString, TCommandSource>
     }
 
     protected abstract class CommonTextBuilder
-        implements Builder<TString, TCommandSource> {
+        implements Builder< TCommandSource> {
 
         @Nullable
         protected Consumer<TCommandSource> callback;
 
         @Override
-        public Builder<TString, TCommandSource> append(CharSequence... contents) {
+        public Builder< TCommandSource> append(CharSequence... contents) {
             return append((Object[]) contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendCount(
+        public Builder< TCommandSource> appendCount(
             int count, Object... contents) {
             for (int i = 0; i < count; i++) {
                 append(contents);
@@ -119,7 +120,7 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendCount(
+        public Builder< TCommandSource> appendCount(
             int count, CharSequence... contents) {
             for (int i = 0; i < count; i++) {
                 append(contents);
@@ -127,21 +128,21 @@ public abstract class CommonTextService<TString, TCommandSource>
             return this;
         }
 
-        protected Builder<TString, TCommandSource> appendWithPadding(
-            @Nullable BiConsumer<Integer, TString> before,
-            @Nullable BiConsumer<Integer, TString> after,
+        protected Builder< TCommandSource> appendWithPadding(
+            @Nullable BiConsumer<Integer, Component> before,
+            @Nullable BiConsumer<Integer, Component> after,
             int width, Object padding, Object... contents) {
             if (width < 1) {
                 throw new IllegalArgumentException("Width must be at least 1");
             }
-            final TString paddingText = of(padding);
+            final Component paddingText = of(padding);
             final int paddingLength = length(paddingText);
             if (paddingLength < 1) {
                 throw new IllegalArgumentException("Padding length must be at least 1");
             } else if (width < paddingLength) {
                 throw new IllegalArgumentException("Padding length must not be greater than width");
             }
-            final TString contentsText = of(contents);
+            final Component contentsText = of(contents);
             final int contentsLength = length(contentsText);
             if (width < contentsLength) {
                 throw new IllegalArgumentException("Contents length must not be greater than width");
@@ -159,79 +160,79 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendWithPaddingLeft(int width, Object padding, Object... contents) {
+        public Builder< TCommandSource> appendWithPaddingLeft(int width, Object padding, Object... contents) {
             return appendWithPadding(this::appendCount, null, width, padding, contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendWithPaddingLeft(int width, Object padding, CharSequence... contents) {
+        public Builder< TCommandSource> appendWithPaddingLeft(int width, Object padding, CharSequence... contents) {
             return appendWithPaddingLeft(width, padding, (Object[]) contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendWithPaddingAround(int width, Object padding, Object... contents) {
-            BiConsumer<Integer, TString> bothEnds = (m, c) -> appendCount(m / 2, c);
+        public Builder< TCommandSource> appendWithPaddingAround(int width, Object padding, Object... contents) {
+            BiConsumer<Integer, Component> bothEnds = (m, c) -> appendCount(m / 2, c);
             return appendWithPadding(bothEnds, bothEnds, width, padding, contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendWithPaddingAround(int width, Object padding, CharSequence... contents) {
+        public Builder< TCommandSource> appendWithPaddingAround(int width, Object padding, CharSequence... contents) {
             return appendWithPaddingAround(width, padding, (Object[]) contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendWithPaddingRight(int width, Object padding, Object... contents) {
+        public Builder< TCommandSource> appendWithPaddingRight(int width, Object padding, Object... contents) {
             return appendWithPadding(null, this::appendCount, width, padding, contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendWithPaddingRight(int width, Object padding, CharSequence... contents) {
+        public Builder< TCommandSource> appendWithPaddingRight(int width, Object padding, CharSequence... contents) {
             return appendWithPaddingRight(width, padding, (Object[]) contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendIf(
+        public Builder< TCommandSource> appendIf(
             boolean condition, Object... contents) {
             return condition ? append(contents) : this;
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendIf(
+        public Builder< TCommandSource> appendIf(
             boolean condition, CharSequence... contents) {
             return condition ? append(contents) : this;
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendJoining(
+        public Builder< TCommandSource> appendJoining(
             Object delimiter, CharSequence... contents) {
             return appendJoining(delimiter, (Object[]) contents);
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendJoiningIf(
+        public Builder< TCommandSource> appendJoiningIf(
             boolean condition, Object delimiter, Object... contents) {
             return condition ? appendJoining(delimiter, contents) : this;
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendJoiningIf(
+        public Builder< TCommandSource> appendJoiningIf(
             boolean condition, Object delimiter, CharSequence... contents) {
             return condition ? appendJoining(delimiter, contents) : this;
         }
 
         @Override
-        public Builder<TString, TCommandSource> appendPrefix() {
+        public Builder< TCommandSource> appendPrefix() {
             return append(pluginInfo.getPrefix());
         }
 
         @Override
-        public Builder<TString, TCommandSource> onHoverShowText(
-            Builder<TString, TCommandSource> builder) {
+        public Builder< TCommandSource> onHoverShowText(
+            Builder< TCommandSource> builder) {
             return onHoverShowText(builder.build());
         }
 
         @Override
-        public Builder<TString, TCommandSource> onClickExecuteCallback(
+        public Builder< TCommandSource> onClickExecuteCallback(
             Consumer<TCommandSource> callback) {
             this.callback = callback;
             return this;
@@ -268,38 +269,38 @@ public abstract class CommonTextService<TString, TCommandSource>
     }
 
     protected abstract class CommonPaginationBuilder
-        implements PaginationBuilder<TString, TCommandSource> {
+        implements PaginationBuilder< TCommandSource> {
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> title(
-            @Nullable Builder<TString, TCommandSource> title) {
+        public PaginationBuilder< TCommandSource> title(
+            @Nullable Builder< TCommandSource> title) {
             if (title == null) {
-                return title((TString) null);
+                return title((Component) null);
             }
             return title(title.build());
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> header(
-            @Nullable Builder<TString, TCommandSource> header) {
+        public PaginationBuilder< TCommandSource> header(
+            @Nullable Builder< TCommandSource> header) {
             if (header == null) {
-                return header((TString) null);
+                return header((Component) null);
             }
             return header(header.build());
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> footer(
-            @Nullable Builder<TString, TCommandSource> footer) {
+        public PaginationBuilder< TCommandSource> footer(
+            @Nullable Builder< TCommandSource> footer) {
             if (footer == null) {
-                return footer((TString) null);
+                return footer((Component) null);
             }
             return footer(footer.build());
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> padding(
-            Builder<TString, TCommandSource> padding) {
+        public PaginationBuilder< TCommandSource> padding(
+            Builder< TCommandSource> padding) {
             return padding(padding.build());
         }
     }
@@ -307,14 +308,14 @@ public abstract class CommonTextService<TString, TCommandSource>
     protected class CommonExtendedPaginationBuilder
         extends CommonPaginationBuilder {
 
-        List<TString> contents;
+        List<Component> contents;
         @Nullable
-        TString title;
+        Component title;
         @Nullable
-        TString header;
+        Component header;
         @Nullable
-        TString footer;
-        TString padding;
+        Component footer;
+        Component padding;
         int linesPerPage;
 
         public CommonExtendedPaginationBuilder() {
@@ -323,50 +324,50 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> contents(
-            TString... contents) {
+        public PaginationBuilder< TCommandSource> contents(
+            Component... contents) {
             this.contents = Arrays.asList(contents);
             return this;
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> contents(
-            Iterable<TString> contents) {
+        public PaginationBuilder< TCommandSource> contents(
+            Iterable<Component> contents) {
             this.contents = new ArrayList<>(64);
             contents.forEach(c -> this.contents.add(c));
             return this;
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> title(
-            @Nullable TString title) {
+        public PaginationBuilder< TCommandSource> title(
+            @Nullable Component title) {
             this.title = title;
             return this;
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> header(
-            @Nullable TString header) {
+        public PaginationBuilder<TCommandSource> header(
+            @Nullable Component header) {
             this.header = header;
             return this;
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> footer(
-            @Nullable TString footer) {
+        public PaginationBuilder< TCommandSource> footer(
+            @Nullable Component footer) {
             this.footer = footer;
             return this;
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> padding(
-            TString padding) {
+        public PaginationBuilder< TCommandSource> padding(
+            Component padding) {
             this.padding = padding;
             return this;
         }
 
         @Override
-        public PaginationBuilder<TString, TCommandSource> linesPerPage(
+        public PaginationBuilder< TCommandSource> linesPerPage(
             int linesPerPage) {
             if (linesPerPage < 1) {
                 throw new IllegalArgumentException("Lines per page must be at least 1");
@@ -376,7 +377,7 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         @Override
-        public Pagination<TString, TCommandSource> build() {
+        public Pagination< TCommandSource> build() {
             return new CommonExtendedPagination(
                 contents,
                 title,
@@ -389,32 +390,32 @@ public abstract class CommonTextService<TString, TCommandSource>
     }
 
     protected class CommonExtendedPagination
-        implements Pagination<TString, TCommandSource> {
+        implements Pagination< TCommandSource> {
 
-        protected final List<TString> contents;
-
-        @Nullable
-        protected final TString title;
+        protected final List<Component> contents;
 
         @Nullable
-        protected final TString header;
+        protected final Component title;
 
         @Nullable
-        protected final TString footer;
+        protected final Component header;
 
-        protected final TString padding;
+        @Nullable
+        protected final Component footer;
+
+        protected final Component padding;
 
         protected final int linesPerPage;
 
         @Nullable
-        protected List<TString> pages;
+        protected List<Component> pages;
 
         protected CommonExtendedPagination(
-            List<TString> contents,
-            @Nullable TString title,
-            @Nullable TString header,
-            @Nullable TString footer,
-            TString padding,
+            List<Component> contents,
+            @Nullable Component title,
+            @Nullable Component header,
+            @Nullable Component footer,
+            Component padding,
             int linesPerPage
         ) {
             this.contents = Preconditions.checkNotNull(contents, "contents");
@@ -426,27 +427,27 @@ public abstract class CommonTextService<TString, TCommandSource>
         }
 
         @Override
-        public Iterable<TString> getContents() {
+        public Iterable<Component> getContents() {
             return contents;
         }
 
         @Override
-        public Optional<TString> getTitle() {
+        public Optional<Component> getTitle() {
             return Optional.ofNullable(title);
         }
 
         @Override
-        public Optional<TString> getHeader() {
+        public Optional<Component> getHeader() {
             return Optional.ofNullable(header);
         }
 
         @Override
-        public Optional<TString> getFooter() {
+        public Optional<Component> getFooter() {
             return Optional.ofNullable(footer);
         }
 
         @Override
-        public TString getPadding() {
+        public Component getPadding() {
             return padding;
         }
 
@@ -468,7 +469,7 @@ public abstract class CommonTextService<TString, TCommandSource>
             boolean isFirstPage = true;
             outer:
             while (contentsIndex < contentsSize) {
-                Builder<TString, TCommandSource> page = builder();
+                Builder< TCommandSource> page = builder();
                 int linesAvailable = linesPerPage - 1;
                 if (title != null) {
                     page.appendWithPaddingAround(LINE_WIDTH, ' ', title).append("\n");
@@ -497,7 +498,7 @@ public abstract class CommonTextService<TString, TCommandSource>
                         // no more content, add an empty line
                         page.append("\n");
                     }
-                    TString next = contents.get(contentsIndex);
+                    Component next = contents.get(contentsIndex);
                     // make sure there's enough space
                     if (linesAvailable < lineCount(next)) {
                         continue outer;

@@ -32,13 +32,13 @@ import org.spongepowered.api.world.Location
 import org.spongepowered.api.world.World
 import java.util.Optional
 
-class Sponge7SimpleCommandService : CommonSimpleCommandService<Text, CommandSource>() {
+class Sponge7SimpleCommandService : CommonSimpleCommandService<CommandSource>() {
 
   @Inject
   private lateinit var plugin: PluginContainer
 
   private inner class PlatformCommand(
-    private val delegate: SimpleCommand<Text, CommandSource>,
+    private val delegate: SimpleCommand<CommandSource>,
     private val primaryAlias: String,
   ) : CommandCallable {
     override fun process(source: CommandSource, context: String): CommandResult {
@@ -51,12 +51,12 @@ class Sponge7SimpleCommandService : CommonSimpleCommandService<Text, CommandSour
     }
 
     override fun testPermission(source: CommandSource): Boolean = delegate.canExecute(source)
-    override fun getShortDescription(source: CommandSource): Optional<Text> = delegate.getShortDescription(source)
-    override fun getHelp(source: CommandSource): Optional<Text> = delegate.getLongDescription(source)
-    override fun getUsage(source: CommandSource): Text = delegate.getUsage(source).orElse(Text.of())
+    override fun getShortDescription(source: CommandSource): Optional<Text> = Optional.of(Text.of(delegate.getShortDescription(source)))
+    override fun getHelp(source: CommandSource): Optional<Text> = Optional.of(Text.of(delegate.getLongDescription(source)))
+    override fun getUsage(source: CommandSource): Text = Text.of(delegate.getUsage(source))
   }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<Text, CommandSource>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<CommandSource>>) {
     Sponge.getCommandManager().register(
       plugin,
       PlatformCommand(mapping.command, mapping.name), mapping.name, *mapping.otherAliases.toTypedArray()

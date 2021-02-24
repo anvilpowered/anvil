@@ -57,7 +57,7 @@ class Sponge7PlayerListener {
     coreMemberManager.primaryComponent.getOneOrGenerateForUser(
       player.uniqueId,
       player.name,
-      player.connection.address.hostString
+      player.connection.address.hostName
     )
   }
 

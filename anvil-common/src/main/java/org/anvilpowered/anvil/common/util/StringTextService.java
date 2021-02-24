@@ -18,25 +18,17 @@
 
 package org.anvilpowered.anvil.common.util;
 
+import net.kyori.adventure.text.Component;
+
 import java.net.URL;
 import java.util.function.Consumer;
 
 public abstract class StringTextService<TCommandSource>
-    extends CommonTextService<String, TCommandSource> {
+    extends CommonTextService<TCommandSource> {
 
     @Override
-    public String deserialize(String text) {
-        return text;
-    }
-
-    @Override
-    public String serializePlain(String text) {
-        return toPlain(text);
-    }
-
-    @Override
-    public String serialize(String text) {
-        return text;
+    public Component deserialize(String text) {
+        return Component.text(text);
     }
 
     protected class StringTextBuilder extends CommonTextBuilder {
@@ -47,139 +39,139 @@ public abstract class StringTextService<TCommandSource>
         }
 
         @Override
-        public Builder<String, TCommandSource> aqua() {
+        public Builder<TCommandSource> aqua() {
             elements.append("\u00a7b");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> black() {
+        public Builder<TCommandSource> black() {
             elements.append("\u00a70");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> blue() {
+        public Builder<TCommandSource> blue() {
             elements.append("\u00a79");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> dark_aqua() {
+        public Builder<TCommandSource> dark_aqua() {
             elements.append("\u00a73");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> dark_blue() {
+        public Builder<TCommandSource> dark_blue() {
             elements.append("\u00a71");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> dark_gray() {
+        public Builder<TCommandSource> dark_gray() {
             elements.append("\u00a78");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> dark_green() {
+        public Builder<TCommandSource> dark_green() {
             elements.append("\u00a72");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> dark_purple() {
+        public Builder<TCommandSource> dark_purple() {
             elements.append("\u00a75");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> dark_red() {
+        public Builder<TCommandSource> dark_red() {
             elements.append("\u00a74");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> gold() {
+        public Builder<TCommandSource> gold() {
             elements.append("\u00a76");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> gray() {
+        public Builder<TCommandSource> gray() {
             elements.append("\u00a77");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> green() {
+        public Builder<TCommandSource> green() {
             elements.append("\u00a7a");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> light_purple() {
+        public Builder<TCommandSource> light_purple() {
             elements.append("\u00a7d");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> red() {
+        public Builder<TCommandSource> red() {
             elements.append("\u00a7c");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> reset() {
+        public Builder<TCommandSource> reset() {
             elements.append("\u00a7r");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> white() {
+        public Builder<TCommandSource> white() {
             elements.append("\u00a7f");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> yellow() {
+        public Builder<TCommandSource> yellow() {
             elements.append("\u00a7e");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> bold() {
+        public Builder<TCommandSource> bold() {
             elements.append("\u00a7l");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> italic() {
+        public Builder<TCommandSource> italic() {
             elements.append("\u00a7o");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> obfuscated() {
+        public Builder<TCommandSource> obfuscated() {
             elements.append("\u00a7k");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> strikethrough() {
+        public Builder<TCommandSource> strikethrough() {
             elements.append("\u00a7m");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> underlined() {
+        public Builder<TCommandSource> underlined() {
             elements.append("\u00a7n");
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> append(Object... contents) {
+        public Builder<TCommandSource> append(Object... contents) {
             for (Object o : contents) {
                 if (o instanceof Builder) {
                     elements.append(((Builder) o).build());
@@ -191,7 +183,7 @@ public abstract class StringTextService<TCommandSource>
         }
 
         @Override
-        public Builder<String, TCommandSource> appendJoining(Object delimiter, Object... contents) {
+        public Builder<TCommandSource> appendJoining(Object delimiter, Object... contents) {
             if (delimiter instanceof Builder) {
                 delimiter = ((Builder) delimiter).build();
             }
@@ -211,38 +203,43 @@ public abstract class StringTextService<TCommandSource>
         }
 
         @Override
-        public Builder<String, TCommandSource> onHoverShowText(String content) {
+        public Builder<TCommandSource> onHoverShowText(Component text) {
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> onClickSuggestCommand(String command) {
+        public Builder<TCommandSource> onHoverShowText(Builder<TCommandSource> builder) {
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> onClickRunCommand(String command) {
+        public Builder<TCommandSource> onClickSuggestCommand(String command) {
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback) {
+        public Builder<TCommandSource> onClickRunCommand(String command) {
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> onClickOpenUrl(URL url) {
+        public Builder<TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback) {
             return this;
         }
 
         @Override
-        public Builder<String, TCommandSource> onClickOpenUrl(String url) {
+        public Builder<TCommandSource> onClickOpenUrl(URL url) {
             return this;
         }
 
         @Override
-        public String build() {
-            return elements.toString();
+        public Builder<TCommandSource> onClickOpenUrl(String url) {
+            return this;
+        }
+
+        @Override
+        public Component build() {
+            return Component.text(elements.toString());
         }
     }
 }

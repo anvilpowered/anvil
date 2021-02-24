@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.sponge7
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
+import net.kyori.adventure.platform.spongeapi.SpongeAudiences
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
@@ -49,8 +50,9 @@ import org.spongepowered.api.text.Text
   authors = [AnvilPluginInfo.organizationName]
 )
 class AnvilSponge7 @Inject constructor(
-  injector: Injector,
-) : AnvilImpl(injector, object : CommonModule<Text, CommandSource>("config") {}) {
+  injector: Injector
+) : AnvilImpl(injector, object : CommonModule<CommandSource>("config") {}) {
+
   @Listener(order = Order.EARLY)
   fun onInit(event: GameInitializationEvent) {
     EnvironmentBuilderImpl.completeInitialization(ApiSponge7Module(), Sponge7FallbackModule())
@@ -62,6 +64,6 @@ class AnvilSponge7 @Inject constructor(
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Text, CommandSource>>() {})
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, CommandSource>>() {})
   }
 }

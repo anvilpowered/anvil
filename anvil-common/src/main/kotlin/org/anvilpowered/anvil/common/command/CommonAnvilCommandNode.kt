@@ -25,12 +25,12 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCommandNode
 
-class CommonAnvilCommandNode<TUser, TPlayer, TString, TCommandSource> @Inject constructor(
-  private val commandService: SimpleCommandService<TString, TCommandSource>,
-  private val pluginsCommand: CommonAnvilPluginsCommand<TString, TCommandSource>,
-  private val reloadCommand: CommonAnvilReloadCommand<TString, TCommandSource>,
-  private val callbackCommand: CommonCallbackCommand<TString, TCommandSource>,
-  private val regeditNode: CommonRegistryEditCommandNode<TUser, TPlayer, TString, TCommandSource>,
+class CommonAnvilCommandNode<TUser, TPlayer,  TCommandSource> @Inject constructor(
+  private val commandService: SimpleCommandService< TCommandSource>,
+  private val pluginsCommand: CommonAnvilPluginsCommand< TCommandSource>,
+  private val reloadCommand: CommonAnvilReloadCommand< TCommandSource>,
+  private val callbackCommand: CommonCallbackCommand< TCommandSource>,
+  private val regeditNode: CommonRegistryEditCommandNode<TUser, TPlayer,  TCommandSource>,
   registry: Registry,
 ) {
 
@@ -54,9 +54,9 @@ class CommonAnvilCommandNode<TUser, TPlayer, TString, TCommandSource> @Inject co
     val HELP_USAGE: String = "/$ALIAS help"
   }
 
-  lateinit var anvilMapping: CommandMapping<SimpleCommand<TString, TCommandSource>>
+  lateinit var anvilMapping: CommandMapping<SimpleCommand< TCommandSource>>
     private set
-  lateinit var callbackMapping: CommandMapping<SimpleCommand<TString, TCommandSource>>
+  lateinit var callbackMapping: CommandMapping<SimpleCommand< TCommandSource>>
     private set
   private var alreadyLoaded = false
 

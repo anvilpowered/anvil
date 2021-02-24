@@ -19,11 +19,12 @@
 package org.anvilpowered.anvil.api.command;
 
 import com.google.common.collect.ImmutableList;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface SimpleCommand<TString, TCommandSource> {
+public interface SimpleCommand< TCommandSource> {
 
   // TODO: Put all arguments into an interface
   void execute(TCommandSource source, String alias, String[] context);
@@ -36,15 +37,15 @@ public interface SimpleCommand<TString, TCommandSource> {
     return true;
   }
 
-  default Optional<TString> getShortDescription(TCommandSource source) {
+  default Optional<Component> getShortDescription(TCommandSource source) {
     return Optional.empty();
   }
 
-  default Optional<TString> getLongDescription(TCommandSource source) {
+  default Optional<Component> getLongDescription(TCommandSource source) {
     return Optional.empty();
   }
 
-  default Optional<TString> getUsage(TCommandSource source) {
+  default Optional<Component> getUsage(TCommandSource source) {
     return Optional.empty();
   }
 }

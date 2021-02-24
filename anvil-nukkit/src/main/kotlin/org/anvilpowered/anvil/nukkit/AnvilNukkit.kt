@@ -54,11 +54,11 @@ class AnvilNukkit : PluginBase() {
   }
 
   private inner class Inner @Inject constructor(injector: Injector) :
-    AnvilImpl(injector, object : CommonModule<String, Player>("plugins") {}) {
+    AnvilImpl(injector, object : CommonModule<Player>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
       builder.setLoggerSupplier { logger }
-      builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, String, CommandSender>>() {})
+      builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, CommandSender>>() {})
     }
   }
 

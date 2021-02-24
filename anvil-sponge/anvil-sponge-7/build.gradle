@@ -6,5 +6,6 @@ plugins {
 dependencies {
   api(project(":anvil-sponge:anvil-sponge-common"))
   api(sponge + ":" + sponge7_version)
+  api(kyori_sponge)
   kapt(sponge + ":" + sponge7_version)
 }

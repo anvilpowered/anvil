@@ -22,6 +22,7 @@ import com.google.inject.Guice
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.TextComponent
@@ -35,9 +36,12 @@ import org.anvilpowered.anvil.bungee.module.ApiBungeeModule
 import org.anvilpowered.anvil.bungee.module.BungeeFallbackModule
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.module.CommonModule
-
-class AnvilBungee : Plugin() {
+open class AnvilBungee : Plugin() {
   private val inner: Inner
+
+  companion object{
+    lateinit var adventure: BungeeAudiences
+  }
 
   init {
     val module: AbstractModule = object : AbstractModule() {
@@ -50,18 +54,22 @@ class AnvilBungee : Plugin() {
   }
 
   private inner class Inner @Inject constructor(injector: Injector) :
-    AnvilImpl(injector, object : CommonModule<TextComponent, ProxiedPlayer>("plugins") {}) {
+    AnvilImpl(injector, object : CommonModule<ProxiedPlayer>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
       builder.addEarlyServices(BungeePlayerListener::class.java) {
         proxy.pluginManager.registerListener(this@AnvilBungee, it)
       }
       builder.addEarlyServices(object :
-        TypeLiteral<CommonAnvilCommandNode<ProxiedPlayer, ProxiedPlayer, Component, CommandSender>>() {
+        TypeLiteral<CommonAnvilCommandNode<ProxiedPlayer, ProxiedPlayer,CommandSender>>() {
       })
     }
   }
 
-  override fun onEnable() = EnvironmentBuilderImpl.completeInitialization(ApiBungeeModule(), BungeeFallbackModule())
+  override fun onEnable() {
+    adventure = BungeeAudiences.create(this)
+    EnvironmentBuilderImpl.completeInitialization(ApiBungeeModule(), BungeeFallbackModule())
+  }
   override fun toString(): String = inner.toString()
 }
+

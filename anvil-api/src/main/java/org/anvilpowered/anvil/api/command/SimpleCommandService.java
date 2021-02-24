@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public interface SimpleCommandService<TString, TCommandSource> {
+public interface SimpleCommandService< TCommandSource> {
 
   /**
    * Attempts to register the provided command to the instance bound to the plugin type in the current injector.
@@ -47,7 +47,7 @@ public interface SimpleCommandService<TString, TCommandSource> {
    * @throws IllegalStateException If the plugin instance is not bound
    * @throws IllegalStateException If there was a platform-specific error (see tips above)
    */
-  void register(CommandMapping<? extends SimpleCommand<TString, TCommandSource>> mapping);
+  void register(CommandMapping<? extends SimpleCommand< TCommandSource>> mapping);
 
   /**
    * Generates a command that runs a child command if its alias
@@ -65,33 +65,33 @@ public interface SimpleCommandService<TString, TCommandSource> {
    *                             argument did not match a child command alias
    * @return A routing command
    */
-  CommandMapping<SimpleCommand<TString, TCommandSource>> mapRouting(
+  CommandMapping<SimpleCommand< TCommandSource>> mapRouting(
     List<String> aliases,
-    @Nullable SimpleCommand<TString, TCommandSource> rootCommand,
-    List<? extends CommandMapping<SimpleCommand<TString, TCommandSource>>> subCommands,
+    @Nullable SimpleCommand< TCommandSource> rootCommand,
+    List<? extends CommandMapping<SimpleCommand< TCommandSource>>> subCommands,
     boolean childCommandFallback
   );
 
-  CommandMapping<SimpleCommand<TString, TCommandSource>> mapTerminal(
+  CommandMapping<SimpleCommand< TCommandSource>> mapTerminal(
     List<String> aliases,
-    SimpleCommand<TString, TCommandSource> command
+    SimpleCommand< TCommandSource> command
   );
 
-  SimpleCommand<TString, TCommandSource> generateRoot(String helpUsage, Predicate<TCommandSource> extended);
+  SimpleCommand< TCommandSource> generateRoot(String helpUsage, Predicate<TCommandSource> extended);
 
-  default SimpleCommand<TString, TCommandSource> generateRoot(String helpUsage) {
+  default SimpleCommand< TCommandSource> generateRoot(String helpUsage) {
     return generateRoot(helpUsage, e -> true);
   }
 
-  SimpleCommand<TString, TCommandSource> generateVersion(String helpUsage, Predicate<TCommandSource> extended);
+  SimpleCommand< TCommandSource> generateVersion(String helpUsage, Predicate<TCommandSource> extended);
 
-  default SimpleCommand<TString, TCommandSource> generateVersion(String helpUsage) {
+  default SimpleCommand< TCommandSource> generateVersion(String helpUsage) {
     return generateVersion(helpUsage, e -> true);
   }
 
-  SimpleCommand<TString, TCommandSource> generateHelp(
-    Supplier<List<? extends CommandMapping<? extends SimpleCommand<TString, TCommandSource>>>> subCommandsSupplier
+  SimpleCommand< TCommandSource> generateHelp(
+    Supplier<List<? extends CommandMapping<? extends SimpleCommand< TCommandSource>>>> subCommandsSupplier
   );
 
-  SimpleCommand<TString, TCommandSource> generateReload();
+  SimpleCommand< TCommandSource> generateReload();
 }

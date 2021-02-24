@@ -18,7 +18,9 @@
 
 package org.anvilpowered.anvil.api.plugin;
 
-public interface PluginInfo<TString> extends BasicPluginInfo {
+import net.kyori.adventure.text.Component;
 
-    TString getPrefix();
+public interface PluginInfo extends BasicPluginInfo {
+
+    Component getPrefix();
 }

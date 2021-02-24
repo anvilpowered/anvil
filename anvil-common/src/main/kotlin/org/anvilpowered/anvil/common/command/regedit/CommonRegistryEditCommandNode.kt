@@ -24,14 +24,14 @@ import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.registry.Registry
 
-class CommonRegistryEditCommandNode<TUser, TPlayer, TString, TCommandSource> @Inject constructor(
-  private val commandService: SimpleCommandService<TString, TCommandSource>,
+class CommonRegistryEditCommandNode<TUser, TPlayer,  TCommandSource> @Inject constructor(
+  private val commandService: SimpleCommandService< TCommandSource>,
   private val registry: Registry,
-  private val registryEditCancelCommand: CommonRegistryEditCancelCommand<TUser, TPlayer, TString, TCommandSource>,
-  private val registryEditCommitCommand: CommonRegistryEditCommitCommand<TUser, TPlayer, TString, TCommandSource>,
-  private val registryEditKeyCommand: CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>,
-  private val registryEditSelectCommand: CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSource>,
-  private val registryEditStartCommand: CommonRegistryEditStartCommand<TUser, TPlayer, TString, TCommandSource>,
+  private val registryEditCancelCommand: CommonRegistryEditCancelCommand<TUser, TPlayer,  TCommandSource>,
+  private val registryEditCommitCommand: CommonRegistryEditCommitCommand<TUser, TPlayer,  TCommandSource>,
+  private val registryEditKeyCommand: CommonRegistryEditKeyCommand<TUser, TPlayer,  TCommandSource>,
+  private val registryEditSelectCommand: CommonRegistryEditSelectCommand<TUser, TPlayer,  TCommandSource>,
+  private val registryEditStartCommand: CommonRegistryEditStartCommand<TUser, TPlayer,  TCommandSource>,
 ) {
 
   companion object {
@@ -49,7 +49,7 @@ class CommonRegistryEditCommandNode<TUser, TPlayer, TString, TCommandSource> @In
 
   private var alreadyLoaded = false
 
-  lateinit var regeditMapping: CommandMapping<SimpleCommand<TString, TCommandSource>>
+  lateinit var regeditMapping: CommandMapping<SimpleCommand< TCommandSource>>
     private set
 
   init {
