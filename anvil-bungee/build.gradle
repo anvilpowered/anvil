@@ -8,11 +8,9 @@ dependencies {
     if (rootProject.getName().equals("Anvil")) {
         implementation project(':anvil-api')
         implementation project(':anvil-common')
-        implementation project(':anvil-md5')
     } else {
         implementation project(':Anvil:anvil-api')
         implementation project(':Anvil:anvil-common')
-        implementation project(':Anvil:anvil-md5')
     }
 
     implementation bungee
@@ -21,6 +19,13 @@ dependencies {
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)
+    implementation kyori_api
+    implementation kyori_bungee
+    implementation kyori_bungee_serializer
+    implementation kyori_examination
+    implementation kyori_facet
+    implementation kyori_key
+    implementation kyori_platform
     implementation kotlinx_coroutines
     implementation kotlinx_serialization
     implementation microutils_logging
@@ -37,11 +42,9 @@ shadowJar {
         if (rootProject.getName().equals("Anvil")) {
             include project(':anvil-api')
             include project(':anvil-common')
-            include project(':anvil-md5')
         } else {
             include project(':Anvil:anvil-api')
             include project(':Anvil:anvil-common')
-            include project(':Anvil:anvil-md5')
         }
 
         include dependency(apache_commons)
@@ -58,6 +61,13 @@ shadowJar {
         include dependency(kotlin_stdlib8)
         include dependency(kotlinx_coroutines)
         include dependency(kotlinx_serialization)
+        include dependency(kyori_api)
+        include dependency(kyori_bungee)
+        include dependency(kyori_bungee_serializer)
+        include dependency(kyori_examination)
+        include dependency(kyori_facet)
+        include dependency(kyori_key)
+        include dependency(kyori_platform)
         include dependency(microutils_logging)
         include dependency(mongo_java_driver)
         include dependency(mongodb_driver_sync)
