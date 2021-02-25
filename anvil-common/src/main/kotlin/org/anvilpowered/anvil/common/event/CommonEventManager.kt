@@ -202,15 +202,25 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
     return result
   }
 
-  override fun <E : Event> post(eventType: Class<E>, event: E, maxWait: Long): CompletableFuture<EventPostResult<E>> {
-    check(eventType.isInstance(event)) { "Event is not instance of $eventType" }
+  private fun getToWait(eventType: KClass<out Event>): MutableMap<Order, MutableList<NodeRef>> {
     val toWait: MutableMap<Order, MutableList<NodeRef>> = mutableMapOf()
-    val eventTypeKt = eventType.kotlin
     for (nodeRef in pluginMessageNetwork.nodeRefs) {
-      for (order in nodeRef.node.eventListeners[eventTypeKt] ?: continue) {
+      for (superInterface in eventType.superclasses) {
+        if (superInterface.isSubclassOf(Event::class)) {
+          toWait.putAll(getToWait(superInterface as KClass<out Event>))
+        }
+      }
+      for (order in nodeRef.node.eventListeners[eventType] ?: continue) {
         toWait.computeIfAbsent(order) { mutableListOf() }.add(nodeRef)
       }
     }
+    return toWait
+  }
+
+  override fun <E : Event> post(eventType: Class<E>, event: E, maxWait: Long): CompletableFuture<EventPostResult<E>> {
+    check(eventType.isInstance(event)) { "Event is not instance of $eventType" }
+    val eventTypeKt = eventType.kotlin
+    val toWait = getToWait(eventTypeKt)
     return if (event.isAsync) {
       CompletableFuture.completedFuture(post(eventTypeKt, event, maxWait, toWait))
       //CompletableFuture.supplyAsync { post(eventTypeKt, event, maxWait, toWait) }
@@ -225,26 +235,31 @@ class CommonEventManager @Inject constructor(private val registry: Registry) : E
       parseListener(l::class) { l }
     }
   }
-  override fun register(vararg type: Class<*>){
+
+  override fun register(vararg type: Class<*>) {
     for (t in type) {
-      parseListener(t.kotlin) {injector.getInstance(t)}
+      parseListener(t.kotlin) { injector.getInstance(t) }
     }
   }
+
   override fun register(vararg key: Key<*>) {
     for (k in key) {
-      parseListener(k.typeLiteral.rawType.kotlin) {injector.getInstance(k)}
+      parseListener(k.typeLiteral.rawType.kotlin) { injector.getInstance(k) }
     }
   }
+
   override fun register(vararg type: TypeLiteral<*>) {
     for (t in type) {
       register(Key.get(t))
     }
   }
+
   override fun register(vararg type: TypeToken<*>) {
-   for (t in type) {
-     register(BindingExtensions.getKey(t))
-   }
+    for (t in type) {
+      register(BindingExtensions.getKey(t))
+    }
   }
+
   override fun <E : Event> register(listener: EventListener<E>) {
     localListeners.row(listener.meta.order)
       .computeIfAbsent(listener.meta.eventType.kotlin) { ArrayList() }
