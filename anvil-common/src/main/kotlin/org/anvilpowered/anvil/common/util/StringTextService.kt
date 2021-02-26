@@ -181,29 +181,12 @@ abstract class StringTextService<TCommandSource> : CommonTextService<TCommandSou
       return this
     }
 
-    override fun onHoverShowText(content: Component): TextService.Builder<TCommandSource> {
-      return this
-    }
-
-    override fun onClickSuggestCommand(command: String): TextService.Builder<TCommandSource> {
-      return this
-    }
-
-    override fun onClickRunCommand(command: String): TextService.Builder<TCommandSource> {
-      return this
-    }
-
-    override fun onClickExecuteCallback(callback: Consumer<TCommandSource>): TextService.Builder<TCommandSource> {
-      return this
-    }
-
-    override fun onClickOpenUrl(url: URL): TextService.Builder<TCommandSource> {
-      return this
-    }
-
-    override fun onClickOpenUrl(url: String): TextService.Builder<TCommandSource> {
-      return this
-    }
+    override fun onHoverShowText(content: Component): TextService.Builder<TCommandSource> = this
+    override fun onClickSuggestCommand(command: String): TextService.Builder<TCommandSource> = this
+    override fun onClickRunCommand(command: String): TextService.Builder<TCommandSource> = this
+    override fun onClickExecuteCallback(callback: Consumer<TCommandSource>): TextService.Builder<TCommandSource> = this
+    override fun onClickOpenUrl(url: URL): TextService.Builder<TCommandSource> = this
+    override fun onClickOpenUrl(url: String): TextService.Builder<TCommandSource> = this
 
     override fun build(): Component {
       if (elements.isEmpty()) {
@@ -211,19 +194,23 @@ abstract class StringTextService<TCommandSource> : CommonTextService<TCommandSou
       } else if (elements.size == 1) {
         val o = elements.first
         if (o is TextService.Builder<*>) {
-          return (o as TextService.Builder<TCommandSource>).build()
+          return (o).build()
         } else if (o is Component) {
           return o
         }
       }
       val currentBuilder = Component.text()
       for (o in elements) {
-        if (o is TextService.Builder<*>) {
-          currentBuilder.append((o as TextService.Builder<TCommandSource>).build())
-        } else if (o is Component) {
-          currentBuilder.append(o as Component?)
-        } else if (o is String) {
-          currentBuilder.append(Component.text(o.toString()))
+        when (o) {
+          is TextService.Builder<*> -> {
+            currentBuilder.append((o as TextService.Builder<TCommandSource>).build())
+          }
+          is Component -> {
+            currentBuilder.append(o as Component?)
+          }
+          is String -> {
+            currentBuilder.append(Component.text(o.toString()))
+          }
         }
       }
       return currentBuilder.build()
@@ -269,35 +256,35 @@ abstract class StringTextService<TCommandSource> : CommonTextService<TCommandSou
     if (data.contains("&b")) {
       data = data.replace("&b","\u00a7b")
     }
-    if (data.contains("&d")) {
-      data = data.replace("&d", "\u00a7d")
-    }
     if (data.contains("&c")) {
       data = data.replace("&c", "\u00a7c")
     }
-    if (data.contains("&r")) {
-      data = data.replace("&r", "\u00a7r")
-    }
-    if (data.contains("&f")) {
-      data = data.replace("&f", "\u00a7f")
+    if (data.contains("&d")) {
+      data = data.replace("&d", "\u00a7d")
     }
     if (data.contains("&e")) {
       data = data.replace("&e", "\u00a7e")
     }
-    if (data.contains("&l")) {
-      data = data.replace("&l", "\u00a7l")
-    }
-    if (data.contains("&o")) {
-      data = data.replace("&o", "\u00a7o")
+    if (data.contains("&f")) {
+      data = data.replace("&f", "\u00a7f")
     }
     if (data.contains("&k")) {
       data = data.replace("&k", "\u00a7k")
+    }
+    if (data.contains("&l")) {
+      data = data.replace("&l", "\u00a7l")
     }
     if (data.contains("&m")) {
       data = data.replace("&m", "\u00a7m")
     }
     if (data.contains("&n")) {
       data = data.replace("&n", "\ua007n")
+    }
+    if (data.contains("&o")) {
+      data = data.replace("&o", "\u00a7o")
+    }
+    if (data.contains("&r")) {
+      data = data.replace("&r", "\u00a7r")
     }
     return data
   }
