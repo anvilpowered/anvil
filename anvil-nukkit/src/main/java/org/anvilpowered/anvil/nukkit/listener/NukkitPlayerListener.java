@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.nukkit.listener;
 
 import cn.nukkit.Player;
+import cn.nukkit.command.CommandSender;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
@@ -29,6 +30,7 @@ import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.util.TextService;
 
 public class NukkitPlayerListener implements Listener {
 
@@ -37,6 +39,9 @@ public class NukkitPlayerListener implements Listener {
 
     @Inject
     private PluginMessages pluginMessages;
+
+    @Inject
+    private TextService<CommandSender> textService;
 
     @Inject
     private Registry registry;
@@ -58,9 +63,8 @@ public class NukkitPlayerListener implements Listener {
             }
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
-                //TODO somehow convert this
-                player.kick("",/*
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()),*/
+                player.kick(textService.serialize(
+                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())),
                     false
                 );
             }
@@ -83,8 +87,8 @@ public class NukkitPlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled();
-                player.sendMessage(""
-                    /*pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())*/
+                player.sendMessage(textService.serialize(
+                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc()))
                 );
             }
         }).join();

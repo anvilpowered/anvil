@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.bungee.listener;
 import com.google.inject.Inject;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -33,6 +34,7 @@ import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.util.TextService;
 
 public class BungeePlayerListener implements Listener {
 
@@ -42,8 +44,8 @@ public class BungeePlayerListener implements Listener {
     @Inject
     private PluginMessages pluginMessages;
 
-    @Inject(optional = true)
-    private Plugin plugin;
+    @Inject
+    private TextService<CommandSender> textService;
 
     @Inject
     private Registry registry;
@@ -66,7 +68,8 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
                 player.disconnect(
-                    PlainComponentSerializer.plain().serialize(pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()))
+                    textService.serialize(
+                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()))
                 );
             }
         }).join();
@@ -88,8 +91,8 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled(true);
-                player.sendMessage(
-                    BaseComponent.toLegacyText(BungeeComponentSerializer.get().serialize(pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())))
+                player.sendMessage(textService.serialize(
+                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc()))
                 );
             }
         }).join();

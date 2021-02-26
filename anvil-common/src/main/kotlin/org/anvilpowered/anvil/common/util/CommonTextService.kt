@@ -430,7 +430,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       return this
     }
 
-    override fun onClickOpenUrl(url: String): TextService.Builder<TCommandSource>  {
+    override fun onClickOpenUrl(url: String): TextService.Builder<TCommandSource> {
       clickEvent = ClickEvent.openUrl(url)
       return this
     }
@@ -513,7 +513,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       title: TextService.Builder<TCommandSource>?
     ): TextService.PaginationBuilder<TCommandSource> {
       return if (title == null) {
-        title(null as Component?)
+        title(Component.text(""))
       } else title(title.build())
     }
 
@@ -521,7 +521,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       header: TextService.Builder<TCommandSource>?
     ): TextService.PaginationBuilder<TCommandSource> {
       return if (header == null) {
-        header(null as Component?)
+        header(Component.text(""))
       } else header(header.build())
     }
 
@@ -529,7 +529,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       footer: TextService.Builder<TCommandSource>?
     ): TextService.PaginationBuilder<TCommandSource> {
       return if (footer == null) {
-        footer(null as Component?)
+        footer(Component.text(""))
       } else footer(footer.build())
     }
 
@@ -568,21 +568,33 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     override fun title(
       title: Component?
     ): TextService.PaginationBuilder<TCommandSource> {
-      this.title = title
+      if (title == null) {
+        this.title = Component.text("")
+      } else {
+        this.title = title
+      }
       return this
     }
 
     override fun header(
       header: Component?
     ): TextService.PaginationBuilder<TCommandSource> {
-      this.header = header
+      if (header == null) {
+        this.header = Component.text("")
+      } else {
+        this.header = header
+      }
       return this
     }
 
     override fun footer(
       footer: Component?
     ): TextService.PaginationBuilder<TCommandSource> {
-      this.footer = footer
+      if (footer == null) {
+        this.footer = Component.text("")
+      } else {
+        this.footer = footer
+      }
       return this
     }
 
@@ -637,7 +649,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     override fun getPadding(): Component = padding0
     override fun getLinesPerPage(): Int = linesPerPage0
 
-    protected fun buildPages() {
+    fun buildPages() {
       val LINE_WIDTH: Int =
         if (platform.name == "sponge") {
           91
@@ -659,7 +671,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
           page.appendWithPaddingAround(LINE_WIDTH, ' ', header).append("\n")
           linesAvailable -= lineCount(header)
         } else {
-          page.appendWithPaddingAround(LINE_WIDTH, padding, null)
+          page.appendWithPaddingAround(LINE_WIDTH, padding, "").append("\n")
         }
         var withFooter = false
         if (footer != null) {
@@ -694,7 +706,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
         if (withFooter) {
           page.appendWithPaddingAround(LINE_WIDTH, padding, footer)
         } else {
-          page.appendWithPaddingAround(LINE_WIDTH, padding, null)
+          page.appendWithPaddingAround(LINE_WIDTH, padding, "").append("\n")
         }
         pages.add(page.build())
       }
