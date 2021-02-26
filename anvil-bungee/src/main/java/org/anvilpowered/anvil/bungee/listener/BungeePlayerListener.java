@@ -19,11 +19,14 @@
 package org.anvilpowered.anvil.bungee.listener;
 
 import com.google.inject.Inject;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
@@ -37,7 +40,10 @@ public class BungeePlayerListener implements Listener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<TextComponent> pluginMessages;
+    private PluginMessages pluginMessages;
+
+    @Inject(optional = true)
+    private Plugin plugin;
 
     @Inject
     private Registry registry;
@@ -60,7 +66,7 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
                 player.disconnect(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())
+                    PlainComponentSerializer.plain().serialize(pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()))
                 );
             }
         }).join();
@@ -83,7 +89,7 @@ public class BungeePlayerListener implements Listener {
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled(true);
                 player.sendMessage(
-                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                    BaseComponent.toLegacyText(BungeeComponentSerializer.get().serialize(pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())))
                 );
             }
         }).join();

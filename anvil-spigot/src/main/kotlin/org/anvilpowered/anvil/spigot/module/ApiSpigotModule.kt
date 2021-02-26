@@ -18,7 +18,7 @@
 package org.anvilpowered.anvil.spigot.module
 
 import com.google.inject.TypeLiteral
-import net.md_5.bungee.api.chat.TextComponent
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
@@ -54,17 +54,17 @@ class ApiSpigotModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    val callbackCommandType: TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>> =
-      object : TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>>() {}
+    val callbackCommandType: TypeLiteral<CommonCallbackCommand<CommandSender>> =
+      object : TypeLiteral<CommonCallbackCommand<CommandSender>>() {}
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(SpigotCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<TextComponent, CommandSender>>() {})
+    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {})
       .to(SpigotSimpleCommandService::class.java)
     bind(KickService::class.java).to(SpigotKickService::class.java)
     bind(EntityUtils::class.java).to(SpigotEntityUtils::class.java)
     bind(LocationService::class.java).to(SpigotLocationService::class.java)
     bind(PermissionService::class.java).to(SpigotPermissionService::class.java)
-    bind(object : TypeLiteral<TextService<TextComponent, CommandSender>>() {}).to(SpigotTextService::class.java)
+    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(SpigotTextService::class.java)
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(SpigotUserService::class.java)
   }
 }

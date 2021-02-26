@@ -21,22 +21,23 @@ package org.anvilpowered.anvil.nukkit.command
 import cn.nukkit.Server
 import cn.nukkit.command.CommandSender
 import cn.nukkit.command.PluginCommand
+import cn.nukkit.plugin.Plugin
 import cn.nukkit.plugin.PluginBase
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
 
-class NukkitSimpleCommandService : CommonSimpleCommandService<String, CommandSender>() {
+class NukkitSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
 
   @Inject(optional = true)
-  private lateinit var plugin: PluginBase
+  private lateinit var plugin: Plugin
 
   private inner class PlatformCommand(
     primaryAlias: String,
-    plugin: PluginBase,
-    private val delegate: SimpleCommand<String, CommandSender>,
-  ) : PluginCommand<PluginBase>(primaryAlias, plugin) {
+    plugin: Plugin,
+    private val delegate: SimpleCommand<CommandSender>,
+  ) : PluginCommand<Plugin>(primaryAlias, plugin) {
     override fun execute(source: CommandSender, alias: String?, context: Array<String>): Boolean {
       if (delegate.canExecute(source)) {
         delegate.execute(source, alias, context)
@@ -49,7 +50,7 @@ class NukkitSimpleCommandService : CommonSimpleCommandService<String, CommandSen
     override fun testPermissionSilent(source: CommandSender): Boolean = delegate.canExecute(source)
   }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<String, CommandSender>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<CommandSender>>) {
     check(this::plugin.isInitialized) { "cn.nukkit.plugin.PluginBase not bound" }
     Server.getInstance().commandMap.register(pluginInfo.id, PlatformCommand(mapping.name, plugin, mapping.command))
   }

@@ -40,7 +40,7 @@ import org.spongepowered.plugin.PluginContainer
 
 class AnvilSponge8 @Inject constructor(
   injector: Injector,
-) : AnvilImpl(injector, object : CommonModule<Component, CommandCause>("config") {}) {
+) : AnvilImpl(injector, object : CommonModule<CommandCause>("config") {}) {
 
   @Inject
   private lateinit var plugin: PluginContainer
@@ -56,6 +56,6 @@ class AnvilSponge8 @Inject constructor(
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Component, CommandCause>>() {})
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, CommandCause>>() {})
   }
 }

@@ -21,11 +21,11 @@ package org.anvilpowered.anvil.common.command.regedit
 import com.google.inject.Inject
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
 
-class CommonRegistryEditCommitCommand<TUser, TPlayer, TString, TCommandSource>
-    : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
+class CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
     @Inject
-    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource>
+    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
     override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
         val uuid = userService.getUUIDSafe(source)

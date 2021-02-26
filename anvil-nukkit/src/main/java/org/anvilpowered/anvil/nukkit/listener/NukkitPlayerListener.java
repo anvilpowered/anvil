@@ -36,7 +36,7 @@ public class NukkitPlayerListener implements Listener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<String> pluginMessages;
+    private PluginMessages pluginMessages;
 
     @Inject
     private Registry registry;
@@ -58,8 +58,9 @@ public class NukkitPlayerListener implements Listener {
             }
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
-                player.kick(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()),
+                //TODO somehow convert this
+                player.kick("",/*
+                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()),*/
                     false
                 );
             }
@@ -82,8 +83,8 @@ public class NukkitPlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled();
-                player.sendMessage(
-                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                player.sendMessage(""
+                    /*pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())*/
                 );
             }
         }).join();

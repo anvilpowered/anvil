@@ -21,7 +21,6 @@ import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.identity.Identified
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.common.util.KyoriTextService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.block.BlockSnapshot
 import org.spongepowered.api.command.CommandCause
@@ -31,8 +30,9 @@ import org.spongepowered.api.service.permission.Subject
 import org.spongepowered.api.world.server.ServerLocation
 import org.spongepowered.math.vector.Vector3d
 import java.util.Optional
+import org.anvilpowered.anvil.common.util.CommonTextService
 
-class Sponge8TextService : KyoriTextService<CommandCause>() {
+class Sponge8TextService : CommonTextService<CommandCause>() {
 
   override fun send(text: Component, receiver: CommandCause) {
     receiver.sendMessage(Identity.nil(), text)

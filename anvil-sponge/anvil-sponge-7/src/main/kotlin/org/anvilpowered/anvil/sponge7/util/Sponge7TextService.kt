@@ -17,28 +17,26 @@
  */
 package org.anvilpowered.anvil.sponge7.util
 
-import java.net.MalformedURLException
-import java.net.URL
-import java.util.ArrayList
-import java.util.Optional
-import java.util.function.Consumer
-import org.anvilpowered.anvil.api.util.TextService
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandSource
-import org.spongepowered.api.service.pagination.PaginationList
-import org.spongepowered.api.service.pagination.PaginationService
 import org.spongepowered.api.text.Text
-import org.spongepowered.api.text.TextElement
-import org.spongepowered.api.text.action.ClickAction
-import org.spongepowered.api.text.action.HoverAction
-import org.spongepowered.api.text.action.TextActions
-import org.spongepowered.api.text.format.TextColors
-import org.spongepowered.api.text.format.TextStyles
 import org.spongepowered.api.text.serializer.TextSerializers
 
-open class Sponge7TextService : CommonTextService<Text, CommandSource>() {
-  override fun builder(): TextService.Builder<Text, CommandSource> {
+open class Sponge7TextService : CommonTextService<CommandSource>() {
+
+  override fun send(text: Component, receiver: CommandSource) {
+    receiver.sendMessage(
+      Text.of(
+        TextSerializers.FORMATTING_CODE.deserialize(LegacyComponentSerializer.legacyAmpersand().serialize(text))
+      )
+    )
+  }
+
+  override fun getConsole(): CommandSource = Sponge.getServer().console
+  /*override fun builder(): TextService.Builder<Text, CommandSource> {
     return SpongeTextBuilder()
   }
 
@@ -322,5 +320,5 @@ open class Sponge7TextService : CommonTextService<Text, CommandSource>() {
     override fun getLinesPerPage(): Int = paginationList.linesPerPage
     override fun sendTo(receiver: CommandSource) = paginationList.sendTo(receiver)
     override fun sendToConsole() = sendTo(Sponge.getServer().console)
-  }
+  }*/
 }

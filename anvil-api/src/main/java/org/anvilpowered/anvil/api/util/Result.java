@@ -18,9 +18,11 @@
 
 package org.anvilpowered.anvil.api.util;
 
-public interface Result<TResult, TData> {
+import net.kyori.adventure.text.Component;
 
-    TResult success(TData data);
+public interface Result<TData> {
 
-    TResult fail(TData data);
+    Component success(TData data);
+
+    Component fail(TData data);
 }

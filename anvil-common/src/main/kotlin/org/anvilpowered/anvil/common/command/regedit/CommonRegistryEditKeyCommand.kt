@@ -21,22 +21,23 @@ import com.google.inject.Inject
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Keys
 import kotlin.streams.toList
+import net.kyori.adventure.text.Component
 
-class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>
-    : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
+class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
     @Inject
-    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource>
+    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
     private val keyActions = listOf("info", "set", "unset", "unstage")
 
-    private val usage: TString by lazy {
+    private val usage: Component by lazy {
         textService.builder()
             .red().append("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]")
             .build()
     }
 
-    private val setUsage: TString by lazy {
+    private val setUsage: Component by lazy {
         textService.builder()
             .append(pluginInfo.prefix)
             .red().append("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>")

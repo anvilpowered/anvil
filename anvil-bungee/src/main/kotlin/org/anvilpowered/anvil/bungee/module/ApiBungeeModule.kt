@@ -21,11 +21,9 @@ import com.google.inject.TypeLiteral
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
-import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
-import org.anvilpowered.anvil.api.misc.BindingExtensions
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
@@ -39,7 +37,6 @@ import org.anvilpowered.anvil.bungee.util.BungeePermissionService
 import org.anvilpowered.anvil.bungee.util.BungeeTextService
 import org.anvilpowered.anvil.bungee.util.BungeeUserService
 import org.anvilpowered.anvil.common.PlatformImpl
-import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
 
@@ -53,15 +50,13 @@ class ApiBungeeModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    val callbackCommandType = object : TypeLiteral<CommonCallbackCommand<Component, CommandSender>>() {}
-    bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
+    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(BungeeTextService::class.java)
     bind(CommandExecuteService::class.java).to(BungeeCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<TextComponent, CommandSender>>() {})
+    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {})
       .to(BungeeSimpleCommandService::class.java)
     bind(KickService::class.java).to(BungeeKickService::class.java)
     bind(LocationService::class.java).to(BungeeLocationService::class.java)
     bind(PermissionService::class.java).to(BungeePermissionService::class.java)
-    bind(object : TypeLiteral<TextService<TextComponent, CommandSender>>() {}).to(BungeeTextService::class.java)
     bind(object : TypeLiteral<UserService<ProxiedPlayer, ProxiedPlayer>>() {}).to(BungeeUserService::class.java)
   }
 }

@@ -18,13 +18,15 @@
 
 package org.anvilpowered.anvil.api.plugin;
 
+import net.kyori.adventure.text.Component;
+
 import java.time.Instant;
 
-public interface PluginMessages<TString> {
+public interface PluginMessages {
 
-    TString getBanMessage(String reason, Instant endUtc);
+    Component getBanMessage(String reason, Instant endUtc);
 
-    TString getMuteMessage(String reason, Instant endUtc);
+    Component getMuteMessage(String reason, Instant endUtc);
 
-    TString getNoPermission();
+    Component getNoPermission();
 }

@@ -7,6 +7,7 @@ dependencies {
     api hikari
     api jedis
     api jetbrains_annotations
+    api(kyori_api)
     api mongodb_driver_sync
     api morphia
     api reflections

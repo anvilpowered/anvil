@@ -21,13 +21,13 @@ package org.anvilpowered.anvil.velocity.util
 import com.google.inject.Inject
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.ProxyServer
+import java.util.UUID
 import net.kyori.adventure.identity.Identified
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.common.util.KyoriTextService
-import java.util.UUID
+import org.anvilpowered.anvil.common.util.CommonTextService
 
-class VelocityTextService : KyoriTextService<CommandSource>() {
+class VelocityTextService : CommonTextService<CommandSource>() {
 
   @Inject
   private lateinit var proxyServer: ProxyServer

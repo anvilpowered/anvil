@@ -22,4 +22,4 @@ import com.velocitypowered.api.command.CommandSource
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.common.module.FallbackModule
 
-class VelocityFallbackModule : FallbackModule<Component, CommandSource>()
+class VelocityFallbackModule : FallbackModule<CommandSource>()

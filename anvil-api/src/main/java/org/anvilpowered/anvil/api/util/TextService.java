@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api.util;
 
+import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -26,74 +27,74 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public interface TextService<TString, TCommandSource>
-    extends Result<TString, String> {
+public interface TextService<TCommandSource>
+    extends Result<String> {
 
     /**
      * @return A new {@link Builder} instance
      */
-    Builder<TString, TCommandSource> builder();
+    Builder<TCommandSource> builder();
 
     /**
      * @return A new {@link PaginationBuilder} instance
      */
-    PaginationBuilder<TString, TCommandSource> paginationBuilder();
+    PaginationBuilder<TCommandSource> paginationBuilder();
 
     /**
-     * Create a {@link TString} with the provided contents
+     * Create a {@link Component} with the provided contents
      *
      * @param contents The contents to add to the result
-     * @return A built {@link TString}
+     * @return A built {@link Component}
      */
-    default TString of(Object... contents) {
+    default Component of(Object... contents) {
         return builder().append(contents).build();
     }
 
     /**
-     * Create a {@link TString} with the provided contents
+     * Create a {@link Component} with the provided contents
      *
      * @param contents The contents to add to the result
-     * @return A built {@link TString}
+     * @return A built {@link Component}
      */
-    default TString of(CharSequence... contents) {
+    default Component of(CharSequence... contents) {
         return builder().append(contents).build();
     }
 
     /**
-     * Sends the provided {@link TString text} to the provided {@link TCommandSource receiver}.
+     * Sends the provided {@link Component text} to the provided {@link TCommandSource receiver}.
      *
-     * @param text     The {@link TString text} to send
+     * @param text     The {@link Component text} to send
      * @param receiver The {@link TCommandSource receiver} to send the provided text to
      */
-    void send(TString text, TCommandSource receiver);
+    void send(Component text, TCommandSource receiver);
 
     /**
-     * Sends the provided {@link TString text} to the provided {@link TCommandSource receiver},
+     * Sends the provided {@link Component text} to the provided {@link TCommandSource receiver},
      * originating from the provided {@link UUID sourceUUID}.
      *
-     * @param text       The {@link TString text} to send
+     * @param text       The {@link Component text} to send
      * @param receiver   The {@link TCommandSource receiver} to send the provided text to
      * @param sourceUUID The {@link UUID} of the source of the message
      */
-    void send(TString text, TCommandSource receiver, UUID sourceUUID);
+    void send(Component text, TCommandSource receiver, UUID sourceUUID);
 
     /**
-     * Sends the provided {@link TString text} to the provided {@link TCommandSource receiver},
+     * Sends the provided {@link Component text} to the provided {@link TCommandSource receiver},
      * originating from the provided source. Attempts to extract a {@link UUID}
      * from the provided source to server as the identity.
      *
-     * @param text     The {@link TString text} to send
+     * @param text     The {@link Component text} to send
      * @param receiver The {@link TCommandSource receiver} source to send the provided text to
      * @param source   The source of the message
      */
-    void send(TString text, TCommandSource receiver, Object source);
+    void send(Component text, TCommandSource receiver, Object source);
 
     /**
-     * Send the provided {@link TString text} to the console
+     * Send the provided {@link Component text} to the console
      *
-     * @param text The {@link TString text} to send
+     * @param text The {@link Component text} to send
      */
-    default void sendToConsole(TString text) {
+    default void sendToConsole(Component text) {
         send(text, getConsole());
     }
 
@@ -107,27 +108,27 @@ public interface TextService<TString, TCommandSource>
      * character {@literal '&'} to determine styles.
      *
      * @param text {@link String} text to deserialize
-     * @return The {@link TString} result of the deserialization
+     * @return The {@link Component} result of the deserialization
      */
-    TString deserialize(String text);
+    Component deserialize(String text);
 
     /**
      * Serializes the provided {@link String} using the
      * character {@literal '&'} to serialize styles.
      *
-     * @param text {@link TString} text to serialize
+     * @param text {@link Component} text to serialize
      * @return The {@link String} result of the serialization
      */
-    String serialize(TString text);
+    String serialize(Component text);
 
     /**
      * Serializes the provided {@link String} and
      * ignores all styles.
      *
-     * @param text {@link TString} text to serialize
+     * @param text {@link Component} text to serialize
      * @return The {@link String} result of the serialization
      */
-    String serializePlain(TString text);
+    String serializePlain(Component text);
 
     /**
      * Removes all styles codes from the provided {@link String}
@@ -143,29 +144,29 @@ public interface TextService<TString, TCommandSource>
     String toPlain(String text);
 
     /**
-     * Counts the number of lines in the provided {@link TString}
+     * Counts the number of lines in the provided {@link Component}
      *
-     * @param text {@link TString} text to count lines
-     * @return The number of lines in the provided {@link TString}.
+     * @param text {@link Component} text to count lines
+     * @return The number of lines in the provided {@link Component}.
      * -1 if null. 0 if empty.
      */
-    int lineCount(@Nullable TString text);
+    int lineCount(@Nullable Component text);
 
     /**
-     * Counts the number of characters in the provided {@link TString}
+     * Counts the number of characters in the provided {@link Component}
      * excluding color codes.
      *
-     * @param text {@link TString} text to count characters
-     * @return The number of characters in the provided {@link TString}.
+     * @param text {@link Component} text to count characters
+     * @return The number of characters in the provided {@link Component}.
      * -1 if null. 0 if empty.
      */
-    default int length(@Nullable TString text) {
+    default int length(@Nullable Component text) {
         return text == null
             ? -1
             : serializePlain(text).length();
     }
 
-    interface Builder<TString, TCommandSource> {
+    interface Builder<TCommandSource> {
 
         /**
          * Sets the current color to aqua. Only applies
@@ -173,7 +174,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> aqua();
+        Builder<TCommandSource> aqua();
 
         /**
          * Sets the current color to black. Only applies
@@ -181,7 +182,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> black();
+        Builder<TCommandSource> black();
 
         /**
          * Sets the current color to blue. Only applies
@@ -189,7 +190,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> blue();
+        Builder<TCommandSource> blue();
 
         /**
          * Sets the current color to dark aqua. Only applies
@@ -197,7 +198,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> dark_aqua();
+        Builder<TCommandSource> dark_aqua();
 
         /**
          * Sets the current color to dark blue. Only applies
@@ -205,7 +206,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> dark_blue();
+        Builder<TCommandSource> dark_blue();
 
         /**
          * Sets the current color to dark gray. Only applies
@@ -213,7 +214,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> dark_gray();
+        Builder<TCommandSource> dark_gray();
 
         /**
          * Sets the current color to dark green. Only applies
@@ -221,7 +222,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> dark_green();
+        Builder<TCommandSource> dark_green();
 
         /**
          * Sets the current color to dark purple. Only applies
@@ -229,7 +230,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> dark_purple();
+        Builder<TCommandSource> dark_purple();
 
         /**
          * Sets the current color to dark red. Only applies
@@ -237,7 +238,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> dark_red();
+        Builder<TCommandSource> dark_red();
 
         /**
          * Sets the current color to gold. Only applies
@@ -245,7 +246,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> gold();
+        Builder<TCommandSource> gold();
 
         /**
          * Sets the current color to gray. Only applies
@@ -253,7 +254,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> gray();
+        Builder<TCommandSource> gray();
 
         /**
          * Sets the current color to green. Only applies
@@ -261,7 +262,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> green();
+        Builder<TCommandSource> green();
 
         /**
          * Sets the current color to light purple. Only applies
@@ -269,7 +270,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> light_purple();
+        Builder<TCommandSource> light_purple();
 
         /**
          * Sets the current color to red. Only applies
@@ -277,7 +278,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> red();
+        Builder<TCommandSource> red();
 
         /**
          * Resets the current style to default. Only applies
@@ -285,7 +286,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> reset();
+        Builder<TCommandSource> reset();
 
         /**
          * Sets the current color to white. Only applies
@@ -293,7 +294,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> white();
+        Builder<TCommandSource> white();
 
         /**
          * Sets the current color to yellow. Only applies
@@ -301,7 +302,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> yellow();
+        Builder<TCommandSource> yellow();
 
         /**
          * Sets the current style to bold. Only applies
@@ -309,7 +310,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> bold();
+        Builder<TCommandSource> bold();
 
         /**
          * Sets the current style to italic. Only applies
@@ -317,7 +318,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> italic();
+        Builder<TCommandSource> italic();
 
         /**
          * Sets the current style to obfuscated. Only applies
@@ -325,7 +326,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> obfuscated();
+        Builder<TCommandSource> obfuscated();
 
         /**
          * Sets the current style to strikethrough. Only applies
@@ -333,7 +334,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> strikethrough();
+        Builder<TCommandSource> strikethrough();
 
         /**
          * Sets the current style to underlined. Only applies
@@ -341,7 +342,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> underlined();
+        Builder<TCommandSource> underlined();
 
         /**
          * Append the provided contents to this builder
@@ -349,7 +350,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents {@link Object} contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> append(
+        Builder<TCommandSource> append(
             Object... contents);
 
         /**
@@ -358,7 +359,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents {@link CharSequence} contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> append(
+        Builder<TCommandSource> append(
             CharSequence... contents);
 
         /**
@@ -378,7 +379,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents {@link Object} contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendCount(
+        Builder<TCommandSource> appendCount(
             int count, Object... contents);
 
         /**
@@ -398,7 +399,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents {@link CharSequence} contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendCount(
+        Builder<TCommandSource> appendCount(
             int count, CharSequence... contents);
 
         /**
@@ -448,7 +449,7 @@ public interface TextService<TString, TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TString, TCommandSource> appendWithPaddingLeft(
+        Builder<TCommandSource> appendWithPaddingLeft(
             int width, Object padding, Object... contents);
 
         /**
@@ -498,7 +499,7 @@ public interface TextService<TString, TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TString, TCommandSource> appendWithPaddingLeft(
+        Builder<TCommandSource> appendWithPaddingLeft(
             int width, Object padding, CharSequence... contents);
 
         /**
@@ -550,7 +551,7 @@ public interface TextService<TString, TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TString, TCommandSource> appendWithPaddingAround(
+        Builder<TCommandSource> appendWithPaddingAround(
             int width, Object padding, Object... contents);
 
         /**
@@ -602,7 +603,7 @@ public interface TextService<TString, TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TString, TCommandSource> appendWithPaddingAround(
+        Builder<TCommandSource> appendWithPaddingAround(
             int width, Object padding, CharSequence... contents);
 
         /**
@@ -652,7 +653,7 @@ public interface TextService<TString, TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TString, TCommandSource> appendWithPaddingRight(
+        Builder<TCommandSource> appendWithPaddingRight(
             int width, Object padding, Object... contents);
 
         /**
@@ -702,7 +703,7 @@ public interface TextService<TString, TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TString, TCommandSource> appendWithPaddingRight(
+        Builder<TCommandSource> appendWithPaddingRight(
             int width, Object padding, CharSequence... contents);
 
         /**
@@ -721,7 +722,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendIf(
+        Builder<TCommandSource> appendIf(
             boolean condition, Object... contents);
 
         /**
@@ -740,7 +741,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendIf(
+        Builder<TCommandSource> appendIf(
             boolean condition, CharSequence... contents);
 
         /**
@@ -764,7 +765,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendJoining(
+        Builder<TCommandSource> appendJoining(
             Object delimiter, Object... contents);
 
         /**
@@ -788,7 +789,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendJoining(
+        Builder<TCommandSource> appendJoining(
             Object delimiter, CharSequence... contents);
 
         /**
@@ -820,7 +821,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendJoiningIf(
+        Builder<TCommandSource> appendJoiningIf(
             boolean condition, Object delimiter, Object... contents);
 
         /**
@@ -852,7 +853,7 @@ public interface TextService<TString, TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendJoiningIf(
+        Builder<TCommandSource> appendJoiningIf(
             boolean condition, Object delimiter, CharSequence... contents);
 
         /**
@@ -860,7 +861,7 @@ public interface TextService<TString, TCommandSource>
          *
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> appendPrefix();
+        Builder<TCommandSource> appendPrefix();
 
         /**
          * Show the provided text as a tooltip while
@@ -869,8 +870,8 @@ public interface TextService<TString, TCommandSource>
          * @param text The text to show on hover
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> onHoverShowText(
-            TString text);
+        Builder<TCommandSource> onHoverShowText(
+            Component text);
 
         /**
          * Show the provided text as a tooltip while
@@ -879,8 +880,8 @@ public interface TextService<TString, TCommandSource>
          * @param builder The text to show on hover
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> onHoverShowText(
-            Builder<TString, TCommandSource> builder);
+        Builder<TCommandSource> onHoverShowText(
+            Builder<TCommandSource> builder);
 
         /**
          * Suggest the provided command to the provided{@link TCommandSource} when
@@ -889,7 +890,7 @@ public interface TextService<TString, TCommandSource>
          * @param command The command to suggest
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> onClickSuggestCommand(
+        Builder<TCommandSource> onClickSuggestCommand(
             String command);
 
         /**
@@ -898,7 +899,7 @@ public interface TextService<TString, TCommandSource>
          * @param command The command to run
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> onClickRunCommand(
+        Builder<TCommandSource> onClickRunCommand(
             String command);
 
         /**
@@ -907,7 +908,7 @@ public interface TextService<TString, TCommandSource>
          * @param callback The callback to run
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> onClickExecuteCallback(
+        Builder<TCommandSource> onClickExecuteCallback(
             Consumer<TCommandSource> callback);
 
         /**
@@ -916,7 +917,7 @@ public interface TextService<TString, TCommandSource>
          * @param url The url to open
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> onClickOpenUrl(
+        Builder<TCommandSource> onClickOpenUrl(
             URL url);
 
         /**
@@ -925,31 +926,31 @@ public interface TextService<TString, TCommandSource>
          * @param url The url to open
          * @return {@code this}
          */
-        Builder<TString, TCommandSource> onClickOpenUrl(
+        Builder<TCommandSource> onClickOpenUrl(
             String url);
 
         /**
-         * Creates a {@link TString} from this builder.
+         * Creates a {@link Component} from this builder.
          *
-         * @return The built {@link TString}
+         * @return The built {@link Component}
          */
-        TString build();
+        Component build();
 
         /**
-         * Creates a {@link TString text} from this builder and sends it to the provided {@link TCommandSource receiver}
+         * Creates a {@link Component text} from this builder and sends it to the provided {@link TCommandSource receiver}
          *
-         * @param receiver The {@link TCommandSource receiver} to send the {@link TString text} to
+         * @param receiver The {@link TCommandSource receiver} to send the {@link Component text} to
          */
         void sendTo(TCommandSource receiver);
 
         /**
-         * Creates a {@link TString} from this builder and sends
+         * Creates a {@link Component} from this builder and sends
          * it to the console
          */
         void sendToConsole();
     }
 
-    interface PaginationBuilder<TString, TCommandSource> {
+    interface PaginationBuilder<TCommandSource> {
 
         /**
          * Sets the contents of this {@link PaginationBuilder}.
@@ -957,8 +958,8 @@ public interface TextService<TString, TCommandSource>
          * @param contents The contents to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> contents(
-            TString... contents);
+        PaginationBuilder<TCommandSource> contents(
+            Component... contents);
 
         /**
          * Sets the contents of this {@link PaginationBuilder}.
@@ -966,8 +967,8 @@ public interface TextService<TString, TCommandSource>
          * @param contents The contents to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> contents(
-            Iterable<TString> contents);
+        PaginationBuilder<TCommandSource> contents(
+            Iterable<Component> contents);
 
         /**
          * Sets the title of this {@link PaginationBuilder}.
@@ -975,8 +976,8 @@ public interface TextService<TString, TCommandSource>
          * @param title The title to set, should be exactly one line
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> title(
-            @Nullable TString title);
+        PaginationBuilder<TCommandSource> title(
+            @Nullable Component title);
 
         /**
          * Sets the title of this {@link PaginationBuilder}.
@@ -984,8 +985,8 @@ public interface TextService<TString, TCommandSource>
          * @param title The title to set, should be exactly one line
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> title(
-            @Nullable Builder<TString, TCommandSource> title);
+        PaginationBuilder<TCommandSource> title(
+            @Nullable Builder<TCommandSource> title);
 
         /**
          * Sets the header of this {@link PaginationBuilder}.
@@ -998,8 +999,8 @@ public interface TextService<TString, TCommandSource>
          * @param header The header to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> header(
-            @Nullable TString header);
+        PaginationBuilder<TCommandSource> header(
+            @Nullable Component header);
 
         /**
          * Sets the header of this {@link PaginationBuilder}.
@@ -1012,8 +1013,8 @@ public interface TextService<TString, TCommandSource>
          * @param header The header to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> header(
-            @Nullable Builder<TString, TCommandSource> header);
+        PaginationBuilder<TCommandSource> header(
+            @Nullable Builder<TCommandSource> header);
 
         /**
          * Sets the footer of this {@link PaginationBuilder}.
@@ -1026,8 +1027,8 @@ public interface TextService<TString, TCommandSource>
          * @param footer The footer to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> footer(
-            @Nullable TString footer);
+        PaginationBuilder<TCommandSource> footer(
+            @Nullable Component footer);
 
         /**
          * Sets the footer of this {@link PaginationBuilder}.
@@ -1040,8 +1041,8 @@ public interface TextService<TString, TCommandSource>
          * @param footer The footer to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> footer(
-            @Nullable Builder<TString, TCommandSource> footer);
+        PaginationBuilder<TCommandSource> footer(
+            @Nullable Builder<TCommandSource> footer);
 
         /**
          * Sets the padding of this {@link PaginationBuilder}.
@@ -1049,8 +1050,8 @@ public interface TextService<TString, TCommandSource>
          * @param padding The padding to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> padding(
-            TString padding);
+        PaginationBuilder<TCommandSource> padding(
+            Component padding);
 
         /**
          * Sets the padding of this {@link PaginationBuilder}.
@@ -1058,8 +1059,8 @@ public interface TextService<TString, TCommandSource>
          * @param padding The padding to set
          * @return {@code this}
          */
-        PaginationBuilder<TString, TCommandSource> padding(
-            Builder<TString, TCommandSource> padding);
+        PaginationBuilder<TCommandSource> padding(
+            Builder<TCommandSource> padding);
 
         /**
          * Sets the maximum number of lines for this {@link PaginationBuilder}.
@@ -1068,7 +1069,7 @@ public interface TextService<TString, TCommandSource>
          * @return {@code this}
          * @throws IllegalArgumentException If linesPerPage {@literal <} 1
          */
-        PaginationBuilder<TString, TCommandSource> linesPerPage(
+        PaginationBuilder<TCommandSource> linesPerPage(
             int linesPerPge);
 
         /**
@@ -1076,35 +1077,35 @@ public interface TextService<TString, TCommandSource>
          *
          * @return The built {@link Pagination}
          */
-        Pagination<TString, TCommandSource> build();
+        Pagination<TCommandSource> build();
     }
 
-    interface Pagination<TString, TCommandSource> {
+    interface Pagination<TCommandSource> {
 
         /**
          * @return The contents of this {@link Pagination}
          */
-        Iterable<TString> getContents();
+        Iterable<Component> getContents();
 
         /**
          * @return The title of this {@link Pagination}
          */
-        Optional<TString> getTitle();
+        Optional<Component> getTitle();
 
         /**
          * @return The header of this {@link Pagination}
          */
-        Optional<TString> getHeader();
+        Optional<Component> getHeader();
 
         /**
          * @return The footer of this {@link Pagination}
          */
-        Optional<TString> getFooter();
+        Optional<Component> getFooter();
 
         /**
          * @return The padding of this {@link Pagination}
          */
-        TString getPadding();
+        Component getPadding();
 
         /**
          * @return The lines per page of this {@link Pagination}

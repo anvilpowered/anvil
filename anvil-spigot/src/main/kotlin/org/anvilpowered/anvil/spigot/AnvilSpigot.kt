@@ -23,7 +23,6 @@ import com.google.inject.Injector
 import com.google.inject.TypeLiteral
 import java.lang.reflect.InvocationTargetException
 import net.kyori.adventure.text.Component
-import net.md_5.bungee.api.chat.TextComponent
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
@@ -47,6 +46,7 @@ import org.bukkit.plugin.java.JavaPlugin
 class AnvilSpigot : JavaPlugin() {
   private val inner: Inner
 
+
   init {
     val module: AbstractModule = object : AbstractModule() {
       override fun configure() {
@@ -59,14 +59,14 @@ class AnvilSpigot : JavaPlugin() {
   }
 
   private inner class Inner(injector: Injector) :
-    AnvilImpl(injector, object : CommonModule<TextComponent, Player>("plugins") {}) {
+    AnvilImpl(injector, object : CommonModule<CommandSender>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
       builder.addEarlyServices(SpigotPlayerListener::class.java) {
         Bukkit.getPluginManager().registerEvents(it, this@AnvilSpigot)
       }
       builder.addEarlyServices(object :
-        TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSender>>() {
+        TypeLiteral<CommonAnvilCommandNode<Player, Player, CommandSender>>() {
       })
     }
 

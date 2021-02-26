@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.common.command.regedit
 
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.TextService
@@ -27,7 +28,7 @@ val anvilAlias by lazy { CommonAnvilCommandNode.ALIAS }
 
 val whitespace = "\\s+".toRegex()
 
-fun <TString, TCommandSource> TextService<TString, TCommandSource>.undo(cmd: String): TString {
+fun <TCommandSource> TextService<TCommandSource>.undo(cmd: String): Component {
     return builder()
         .light_purple().append("[ Undo ]")
         .onHoverShowText(builder()
@@ -37,7 +38,7 @@ fun <TString, TCommandSource> TextService<TString, TCommandSource>.undo(cmd: Str
         .build()
 }
 
-fun <T, TString, TCommandSource> TextService<TString, TCommandSource>.info(key: Key<T>, registry: Registry): TString {
+fun <T, TCommandSource> TextService<TCommandSource>.info(key: Key<T>, registry: Registry): Component {
     return builder()
         .gold().append(key, " >").gray()
         .append("\nValue: ", printValueYellow(key, registry.get(key).orElse(null)))
@@ -46,7 +47,7 @@ fun <T, TString, TCommandSource> TextService<TString, TCommandSource>.info(key: 
         .build()
 }
 
-fun <T, TString, TCommandSource> TextService<TString, TCommandSource>.printValueGreen(key: Key<T>, value: T?): TString {
+fun <T, TCommandSource> TextService<TCommandSource>.printValueGreen(key: Key<T>, value: T?): Component {
     if (value == null) {
         return builder().red().append("none").build()
     }
@@ -59,7 +60,7 @@ fun <T, TString, TCommandSource> TextService<TString, TCommandSource>.printValue
     return builder.build()
 }
 
-fun <T, TString, TCommandSource> TextService<TString, TCommandSource>.printValueYellow(key: Key<T>, value: T?): TString {
+fun <T, TCommandSource> TextService<TCommandSource>.printValueYellow(key: Key<T>, value: T?): Component {
     if (value == null) {
         return builder().red().append("none").build()
     }

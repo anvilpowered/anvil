@@ -16,22 +16,22 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.spigot.util;
+package org.anvilpowered.anvil.bungee.util
 
-import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.md5.util.MD5TextService;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
+import net.md_5.bungee.api.CommandSender
+import net.md_5.bungee.api.ProxyServer
+import net.md_5.bungee.api.chat.BaseComponent
+import org.anvilpowered.anvil.common.util.CommonTextService
 
-public class SpigotTextService extends MD5TextService<CommandSender> {
+class BungeeTextService : CommonTextService<CommandSender>() {
 
-    @Override
-    public void send(TextComponent text, CommandSender receiver) {
-        receiver.spigot().sendMessage(text);
-    }
+  override fun send(text: Component, receiver: CommandSender) {
+    receiver.sendMessage(BaseComponent.toLegacyText(*BungeeComponentSerializer.get().serialize(text)))
+  }
 
-    @Override
-    public CommandSender getConsole() {
-        return Bukkit.getConsoleSender();
-    }
+  override fun getConsole(): CommandSender {
+    return ProxyServer.getInstance().console
+  }
 }

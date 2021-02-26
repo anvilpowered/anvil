@@ -49,11 +49,11 @@ class ApiVelocityModule : PlatformModule(
   override fun configure() {
     super.configure()
     bind(CommandExecuteService::class.java).to(VelocityCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<Component, CommandSource>>() {}).to(VelocitySimpleCommandService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandSource>>() {}).to(VelocitySimpleCommandService::class.java)
     bind(KickService::class.java).to(VelocityKickService::class.java)
     bind(LocationService::class.java).to(VelocityLocationService::class.java)
     bind(PermissionService::class.java).to(VelocityPermissionService::class.java)
-    bind(object : TypeLiteral<TextService<Component, CommandSource>>() {}).to(VelocityTextService::class.java)
+    bind(object : TypeLiteral<TextService<CommandSource>>() {}).to(VelocityTextService::class.java)
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(VelocityUserService::class.java)
   }
 }

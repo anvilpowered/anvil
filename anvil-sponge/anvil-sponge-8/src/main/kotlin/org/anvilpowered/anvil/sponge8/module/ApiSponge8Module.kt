@@ -24,16 +24,11 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
-import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
-import org.anvilpowered.anvil.common.entity.EntityUtils
-import org.anvilpowered.anvil.common.module.PlatformModule
-import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
-import org.anvilpowered.anvil.sponge.util.SpongePermissionService
 import org.anvilpowered.anvil.sponge8.command.Sponge8CommandExecuteService
 import org.anvilpowered.anvil.sponge8.command.Sponge8SimpleCommandService
 import org.anvilpowered.anvil.sponge8.server.Sponge8LocationService
@@ -57,13 +52,13 @@ class ApiSponge8Module : ApiSpongeModule(
 ) {
   override fun configure() {
     super.configure()
-    val callbackCommandType = object : TypeLiteral<CommonCallbackCommand<Component, CommandCause>>() {}
+    val callbackCommandType = object : TypeLiteral<CommonCallbackCommand<CommandCause>>() {}
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(Sponge8CommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<Component, CommandCause>>() {}).to(Sponge8SimpleCommandService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandCause>>() {}).to(Sponge8SimpleCommandService::class.java)
     bind(KickService::class.java).to(Sponge8KickService::class.java)
     bind(LocationService::class.java).to(Sponge8LocationService::class.java)
-    bind(object : TypeLiteral<TextService<Component, CommandCause>>() {}).to(Sponge8TextService::class.java)
+    bind(object : TypeLiteral<TextService<CommandCause>>() {}).to(Sponge8TextService::class.java)
     bind(object : TypeLiteral<UserService<User, ServerPlayer>>() {}).to(Sponge8UserService::class.java)
   }
 }

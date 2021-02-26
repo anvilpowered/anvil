@@ -49,7 +49,7 @@ import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule
   authors = [AnvilPluginInfo.organizationName]
 )
 class AnvilVelocity @Inject constructor(injector: Injector) :
-  AnvilImpl(injector, object : CommonModule<TextComponent, CommandSource>("plugins") {}) {
+  AnvilImpl(injector, object : CommonModule<CommandSource>("plugins") {}) {
 
   @Inject
   private lateinit var proxyServer: ProxyServer
@@ -65,6 +65,6 @@ class AnvilVelocity @Inject constructor(injector: Injector) :
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSource>>() {})
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, CommandSource>>() {})
   }
 }

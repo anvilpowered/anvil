@@ -27,12 +27,13 @@ import org.anvilpowered.anvil.api.registry.Registry
 import java.util.stream.Collectors
 import java.util.stream.Stream
 import kotlin.streams.toList
+import net.kyori.adventure.text.Component
 
-class CommonRegistryEditStartCommand<TUser, TPlayer, TString, TCommandSource>
-    : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
+class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
     @Inject
-    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource>
+    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
     private val envRegs: MutableMap<String, Map<String, Registry>> = HashMap()
 
@@ -52,7 +53,7 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TString, TCommandSource>
         return Anvil.getEnvironmentManager().getEnvironment(envName).orElse(null)
     }
 
-    private fun parseEnv(envName: String?, then: (Environment) -> TString): TString {
+    private fun parseEnv(envName: String?, then: (Environment) -> Component): Component {
         return parseEnv(envName)?.let { then(it) }
             ?: textService.builder()
                 .append(pluginInfo.prefix)

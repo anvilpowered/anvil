@@ -37,7 +37,7 @@ public class VelocityPlayerListener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<Component> pluginMessages;
+    private PluginMessages pluginMessages;
 
     @Inject
     private Registry registry;

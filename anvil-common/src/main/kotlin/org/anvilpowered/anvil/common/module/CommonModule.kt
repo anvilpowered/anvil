@@ -45,22 +45,22 @@ import org.anvilpowered.anvil.common.registry.CommonConfigurationService
 import org.bson.types.ObjectId
 
 @Suppress("UnstableApiUsage")
-open class CommonModule<TString, TCommandSource>(private val configDir: String) : ApiCommonModule() {
+open class CommonModule<TCommandSource>(private val configDir: String) : ApiCommonModule() {
 
   override fun configure() {
     val be = CommonBindingExtensions(binder())
 
     be.bind(
-      object : TypeToken<PluginInfo<TString>>(javaClass) {},
-      object : TypeToken<AnvilPluginInfo<TString, TCommandSource>>(javaClass) {}
+      object : TypeToken<PluginInfo>(javaClass) {},
+      object : TypeToken<AnvilPluginInfo<TCommandSource>>(javaClass) {}
     )
     be.bind(
       object : TypeToken<BasicPluginInfo>(javaClass) {},
-      object : TypeToken<AnvilPluginInfo<TString, TCommandSource>>(javaClass) {}
+      object : TypeToken<AnvilPluginInfo<TCommandSource>>(javaClass) {}
     )
     be.bind(
-      object : TypeToken<PluginMessages<TString>>(javaClass) {},
-      object : TypeToken<AnvilPluginMessages<TString, TCommandSource>>(javaClass) {}
+      object : TypeToken<PluginMessages>(javaClass) {},
+      object : TypeToken<AnvilPluginMessages<TCommandSource>>(javaClass) {}
     )
 
     be.bind(

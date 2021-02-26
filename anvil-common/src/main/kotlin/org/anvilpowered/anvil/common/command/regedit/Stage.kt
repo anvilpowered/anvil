@@ -17,23 +17,24 @@
  */
 package org.anvilpowered.anvil.common.command.regedit
 
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.TextService
 
-class Stage<TString, TCommandSource>(
+class Stage<TCommandSource>(
     val envName: String,
     val registries: MutableMap<String, Registry>,
-    val pluginInfo: PluginInfo<TString>,
-    val textService: TextService<TString, TCommandSource>,
+    val pluginInfo: PluginInfo,
+    val textService: TextService<TCommandSource>,
 ) {
 
     lateinit var registry: Pair<String, Registry>
 
-    private val changes: MutableList<Change<*, TString, TCommandSource>> = ArrayList()
-    private val availableRegistries: TString
+    private val changes: MutableList<Change<*, TCommandSource>> = ArrayList()
+    private val availableRegistries: Component
 
     private val border = textService.builder()
         .dark_gray().appendCount(15, '=')
@@ -87,7 +88,7 @@ class Stage<TString, TCommandSource>(
         .red().append("This key is user immutable and may not be edited with the regedit command")
         .build()
 
-    fun setRegistry(name: String?): TString {
+    fun setRegistry(name: String?): Component {
         val newReg = when (name) {
             null, "internal", "r", "registry" -> Pair("main", registries["main"])
             "c" -> Pair("config", registries["config"])
@@ -137,7 +138,7 @@ class Stage<TString, TCommandSource>(
         availableRegistries = builder.build()
     }
 
-    fun info(key: Key<*>): TString {
+    fun info(key: Key<*>): Component {
         return when {
             !::registry.isInitialized -> selectRegistry
             else -> when (key.isSensitive(registry.second)) {
@@ -189,7 +190,7 @@ class Stage<TString, TCommandSource>(
         return true
     }
 
-    fun <T> addChange(key: Key<T>, newValue: T? = null): TString {
+    fun <T> addChange(key: Key<T>, newValue: T? = null): Component {
         if (!::registry.isInitialized) {
             return selectRegistry
         }
@@ -201,7 +202,7 @@ class Stage<TString, TCommandSource>(
         }
         val existing = changes.stream()
             .filter { it.key == key }
-            .findAny().orElse(null) as? Change<T, TString, TCommandSource>
+            .findAny().orElse(null) as? Change<T, TCommandSource>
         val action: String
         if (existing == null) {
             changes += Change(this, key, newValue)
@@ -216,7 +217,7 @@ class Stage<TString, TCommandSource>(
             .build())
     }
 
-    fun <T> unstageChange(key: Key<T>): TString {
+    fun <T> unstageChange(key: Key<T>): Component {
         if (!::registry.isInitialized) {
             return selectRegistry
         }
@@ -224,14 +225,14 @@ class Stage<TString, TCommandSource>(
         if (index == -1) {
             return noSuchChange
         }
-        val removed = changes.removeAt(index) as Change<T, TString, TCommandSource>
+        val removed = changes.removeAt(index) as Change<T, TCommandSource>
         return print(textService.builder()
             .green().append("Successfully unstaged change for ")
             .gold().append(key, " ", textService.undo("/$anvilAlias regedit key $key set ${key.toString(removed.newValue)}"))
             .build())
     }
 
-    fun print(message: TString? = null): TString {
+    fun print(message: Component? = null): Component {
         if (!::registry.isInitialized) {
             return textService.builder()
                 .append(border, "\n\n")
