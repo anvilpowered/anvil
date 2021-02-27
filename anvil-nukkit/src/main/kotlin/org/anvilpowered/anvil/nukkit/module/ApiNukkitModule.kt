@@ -31,6 +31,7 @@ import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.StringTextService
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandExecuteService
 import org.anvilpowered.anvil.nukkit.command.NukkitSimpleCommandService
 import org.anvilpowered.anvil.nukkit.entity.NukkitEntityUtils
@@ -50,13 +51,13 @@ class ApiNukkitModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
+    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(NukkitTextService::class.java)
     bind(CommandExecuteService::class.java).to(NukkitCommandExecuteService::class.java)
     bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(NukkitSimpleCommandService::class.java)
     bind(KickService::class.java).to(NukkitKickService::class.java)
     bind(EntityUtils::class.java).to(NukkitEntityUtils::class.java)
     bind(LocationService::class.java).to(NukkitLocationService::class.java)
     bind(PermissionService::class.java).to(NukkitPermissionService::class.java)
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(NukkitTextService::class.java)
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(NukkitUserService::class.java)
   }
 }
