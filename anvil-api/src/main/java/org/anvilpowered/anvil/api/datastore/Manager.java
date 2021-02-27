@@ -47,20 +47,20 @@ import org.anvilpowered.anvil.api.util.TextService;
  * following:
  * </p>
  * <ul>
- *     <li>{@code CompletableFuture<TString> create(UUID userUUID);}</li>
- *     <li>{@code CompletableFuture<TString> invite(UUID userUUID, UUID targetUserUUID);}</li>
- *     <li>{@code CompletableFuture<TString> kick(UUID userUUID, UUID targetUserUUID);}</li>
- *     <li>{@code CompletableFuture<List<TString>> list(String query);}</li>
+ *     <li>{@code CompletableFuture<{@link net.kyori.adventure.text.Component}> create(UUID userUUID);}</li>
+ *     <li>{@code CompletableFuture<@link net.kyori.adventure.text.Component> invite(UUID userUUID, UUID targetUserUUID);}</li>
+ *     <li>{@code CompletableFuture<@link net.kyori.adventure.text.Component> kick(UUID userUUID, UUID targetUserUUID);}</li>
+ *     <li>{@code CompletableFuture<List<@link net.kyori.adventure.text.Component>> list(String query);}</li>
  * </ul>
  * <p>
- * {@code TString} is the base return type for the methods in a {@link Manager}.
+ * {@link net.kyori.adventure.text.Component} is the base return type for the methods in a {@link Manager}.
  * To build these results use {@link TextService.Builder}.
  * </p>
  * <p>
- * All methods (with some exceptions) in {@link Manager} should return a form of {@code TString}
- * to be displayed directly to the end user. Normally, the return type, {@code TString}, is wrapped in
+ * All methods (with some exceptions) in {@link Manager} should return a form of {@link net.kyori.adventure.text.Component}
+ * to be displayed directly to the end user. Normally, the return type, {@link net.kyori.adventure.text.Component}, is wrapped in
  * a {@link java.util.concurrent.CompletableFuture} in order to keep the main game thread
- * free from IO. It is sometimes necessary to further wrap the {@code TString} in a {@link java.util.List}
+ * free from IO. It is sometimes necessary to further wrap the {@link net.kyori.adventure.text.Component} in a {@link java.util.List}
  * when the result is more than a single line. In this case, pagination can be used to display the result
  * to the end user.
  * </p>
@@ -70,7 +70,7 @@ import org.anvilpowered.anvil.api.util.TextService;
  * <pre>{@code
  * public interface FooManager<
  * TFoo extends Foo<?>,
- * TString>
+ * @link net.kyori.adventure.text.Component>
  * extends Manager<FooRepository<?, TFoo, ?, ?>>
  * }</pre>
  *
