@@ -18,17 +18,16 @@
 
 package org.anvilpowered.anvil.spigot.util;
 
-import net.kyori.adventure.text.Component;
-import org.anvilpowered.anvil.common.util.KyoriTextService;
-import org.anvilpowered.anvil.spigot.AnvilSpigot;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.anvilpowered.anvil.md5.util.MD5TextService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-public class SpigotTextService extends KyoriTextService<CommandSender> {
+public class SpigotTextService extends MD5TextService<CommandSender> {
 
     @Override
-    public void send(Component text, CommandSender receiver) {
-        AnvilSpigot.adventure.sender(receiver).sendMessage(text);
+    public void send(TextComponent text, CommandSender receiver) {
+        receiver.spigot().sendMessage(text);
     }
 
     @Override

@@ -18,7 +18,7 @@
 package org.anvilpowered.anvil.spigot.command
 
 import com.google.inject.Inject
-import net.kyori.adventure.text.Component
+import net.md_5.bungee.api.chat.TextComponent
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
@@ -27,13 +27,13 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.plugin.java.JavaPlugin
 
-class SpigotSimpleCommandService : CommonSimpleCommandService<Component, CommandSender>() {
+class SpigotSimpleCommandService : CommonSimpleCommandService<TextComponent, CommandSender>() {
 
   @Inject(optional = true)
   private lateinit var plugin: JavaPlugin
 
   private inner class PlatformExecutor(
-    private val delegate: SimpleCommand<Component, CommandSender>,
+    private val delegate: SimpleCommand<TextComponent, CommandSender>,
   ) : TabExecutor {
     override fun onCommand(source: CommandSender, command: Command, alias: String, context: Array<String>): Boolean {
       if (delegate.canExecute(source)) {
@@ -49,7 +49,7 @@ class SpigotSimpleCommandService : CommonSimpleCommandService<Component, Command
     }
   }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<Component, CommandSender>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<TextComponent, CommandSender>>) {
     check(this::plugin.isInitialized) { "org.bukkit.plugin.java.JavaPlugin not bound" }
     val pluginCommand = checkNotNull(plugin.getCommand(mapping.name)) { "Alias ${mapping.name} not defined in plugin.yml" }
     pluginCommand.setExecutor(PlatformExecutor(mapping.command))

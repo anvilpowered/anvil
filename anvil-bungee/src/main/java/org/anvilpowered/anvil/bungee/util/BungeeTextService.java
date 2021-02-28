@@ -18,17 +18,16 @@
 
 package org.anvilpowered.anvil.bungee.util;
 
-import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
-import org.anvilpowered.anvil.bungee.AnvilBungee;
-import org.anvilpowered.anvil.common.util.KyoriTextService;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.anvilpowered.anvil.md5.util.MD5TextService;
 
-public class BungeeTextService extends KyoriTextService<CommandSender> {
+public class BungeeTextService extends MD5TextService<CommandSender> {
 
     @Override
-    public void send(Component text, CommandSender receiver) {
-        AnvilBungee.adventure.sender(receiver).sendMessage(text);
+    public void send(TextComponent text, CommandSender receiver) {
+        receiver.sendMessage(text);
     }
 
     @Override

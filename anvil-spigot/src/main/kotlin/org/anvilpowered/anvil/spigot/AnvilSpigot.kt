@@ -22,8 +22,8 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
 import java.lang.reflect.InvocationTargetException
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
+import net.md_5.bungee.api.chat.TextComponent
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
@@ -47,10 +47,6 @@ import org.bukkit.plugin.java.JavaPlugin
 class AnvilSpigot : JavaPlugin() {
   private val inner: Inner
 
-  companion object{
-    lateinit var adventure: BukkitAudiences
-  }
-
   init {
     val module: AbstractModule = object : AbstractModule() {
       override fun configure() {
@@ -63,7 +59,7 @@ class AnvilSpigot : JavaPlugin() {
   }
 
   private inner class Inner(injector: Injector) :
-    AnvilImpl(injector, object : CommonModule<Component, CommandSender>("plugins") {}) {
+    AnvilImpl(injector, object : CommonModule<TextComponent, Player>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
       builder.addEarlyServices(SpigotPlayerListener::class.java) {
@@ -120,7 +116,6 @@ class AnvilSpigot : JavaPlugin() {
   }
 
   override fun onEnable() {
-    adventure = BukkitAudiences.create(this)
     Bukkit.getPluginManager().registerEvents(object : Listener {
       @EventHandler
       fun onLoad(event: ServerLoadEvent) {

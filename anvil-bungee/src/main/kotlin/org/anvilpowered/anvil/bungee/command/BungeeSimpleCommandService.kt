@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.bungee.command
 
 import com.google.inject.Inject
-import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.chat.TextComponent
@@ -29,13 +28,13 @@ import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
 
-class BungeeSimpleCommandService : CommonSimpleCommandService<Component, CommandSender>() {
+class BungeeSimpleCommandService : CommonSimpleCommandService<TextComponent, CommandSender>() {
 
   @Inject(optional = true)
   private lateinit var plugin: Plugin
 
   private inner class PlatformCommand(
-    private val delegate: SimpleCommand<Component, CommandSender>,
+    private val delegate: SimpleCommand<TextComponent, CommandSender>,
     private val primaryAlias: String,
     vararg otherAliases: String
   ) : Command(primaryAlias, null, *otherAliases) {
@@ -50,7 +49,7 @@ class BungeeSimpleCommandService : CommonSimpleCommandService<Component, Command
     override fun hasPermission(source: CommandSender): Boolean = delegate.canExecute(source)
   }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<Component, CommandSender>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<TextComponent, CommandSender>>) {
     check(this::plugin.isInitialized) { "net.md_5.bungee.api.plugin.Plugin not bound" }
     ProxyServer.getInstance().pluginManager.registerCommand(
       plugin,
