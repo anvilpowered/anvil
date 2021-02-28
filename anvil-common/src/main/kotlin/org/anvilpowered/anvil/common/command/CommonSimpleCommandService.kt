@@ -30,8 +30,7 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.TextService
 import org.checkerframework.checker.nullness.qual.Nullable
 
-abstract class CommonSimpleCommandService<TCommandSource> :
-  SimpleCommandService<TCommandSource> {
+abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService<TCommandSource> {
 
   @Inject
   protected lateinit var environment: Environment

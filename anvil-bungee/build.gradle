@@ -19,14 +19,14 @@ dependencies {
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)
-    implementation kyori_api
-    implementation kyori_bungee_serializer
-    implementation kyori_examination
-    implementation kyori_key
-    implementation kyori_legacy_serializer
+    implementation(kyori_api)
+    implementation(kyori_bungee_serializer)
+    implementation(kyori_examination)
+    implementation(kyori_key)
+    implementation(kyori_legacy_serializer)
+    implementation(kyori_gson_serializer)
+    implementation(kyori_plain_serializer)
     implementation kotlinx_coroutines
-    implementation kyori_gson_serializer
-    implementation kyori_plain_serializer
     implementation kotlinx_serialization
     implementation microutils_logging
     implementation mongo_java_driver
@@ -46,7 +46,7 @@ shadowJar {
             include project(':Anvil:anvil-api')
             include project(':Anvil:anvil-common')
         }
-        relocate("net.kyori", "relocated")
+        relocate("net.kyori", "relocated.net.kyori")
         include dependency(apache_commons)
         include dependency(aopalliance)
         include dependency(bson)

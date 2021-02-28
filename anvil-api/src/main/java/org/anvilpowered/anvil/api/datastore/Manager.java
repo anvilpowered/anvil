@@ -67,12 +67,10 @@ import org.anvilpowered.anvil.api.util.TextService;
  * <p>
  * The following interface signature is an example of a simple {@link Manager}:
  * </p>
- * <pre>{@code
- * public interface FooManager<
- * TFoo extends Foo<?>,
- * @link net.kyori.adventure.text.Component>
- * extends Manager<FooRepository<?, TFoo, ?, ?>>
- * }</pre>
+ * <pre><code>
+ * public interface FooManager&lt;TFoo extends Foo&lt;?&gt;,Component&gt;
+ * extends Manager&lt;FooRepository&lt;?, TFoo, ?, ?&gt;&gt;
+ * </code></pre>
  *
  * @param <C> Base {@link Component} type for this manager.
  *            Must be implemented by all components in this module

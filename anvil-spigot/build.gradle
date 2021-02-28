@@ -24,14 +24,14 @@ dependencies {
     implementation(kotlin_stdlib + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)
     implementation kotlinx_coroutines
-    implementation kyori_api
-    implementation kyori_bukkit_serializer
-    implementation kyori_examination
-    implementation kyori_key
-    implementation kyori_legacy_serializer
-    implementation kyori_gson_serializer
-    implementation kyori_gson_legacy
-    implementation kyori_platform
+    implementation(kyori_api)
+    implementation(kyori_bukkit_serializer)
+    implementation(kyori_examination)
+    implementation(kyori_key)
+    implementation(kyori_legacy_serializer)
+    implementation(kyori_gson_serializer)
+    implementation(kyori_gson_legacy)
+    implementation(kyori_platform)
     implementation kotlinx_serialization
     implementation microutils_logging
     implementation mongo_java_driver

@@ -27,8 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public interface TextService<TCommandSource>
-    extends Result<String> {
+public interface TextService<TCommandSource> extends Result<String> {
 
     /**
      * @return A new {@link Builder} instance
@@ -350,8 +349,7 @@ public interface TextService<TCommandSource>
          * @param contents {@link Object} contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> append(
-            Object... contents);
+        Builder<TCommandSource> append(Object... contents);
 
         /**
          * Append the provided contents to this builder
@@ -359,8 +357,7 @@ public interface TextService<TCommandSource>
          * @param contents {@link CharSequence} contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> append(
-            CharSequence... contents);
+        Builder<TCommandSource> append(CharSequence... contents);
 
         /**
          * Append the provided contents to this builder
@@ -379,8 +376,7 @@ public interface TextService<TCommandSource>
          * @param contents {@link Object} contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendCount(
-            int count, Object... contents);
+        Builder<TCommandSource> appendCount(int count, Object... contents);
 
         /**
          * Append the provided contents to this builder
@@ -399,8 +395,7 @@ public interface TextService<TCommandSource>
          * @param contents {@link CharSequence} contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendCount(
-            int count, CharSequence... contents);
+        Builder<TCommandSource> appendCount(int count, CharSequence... contents);
 
         /**
          * Append the provided contents to this builder
@@ -449,8 +444,7 @@ public interface TextService<TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TCommandSource> appendWithPaddingLeft(
-            int width, Object padding, Object... contents);
+        Builder<TCommandSource> appendWithPaddingLeft(int width, Object padding, Object... contents);
 
         /**
          * Append the provided contents to this builder
@@ -499,8 +493,7 @@ public interface TextService<TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TCommandSource> appendWithPaddingLeft(
-            int width, Object padding, CharSequence... contents);
+        Builder<TCommandSource> appendWithPaddingLeft(int width, Object padding, CharSequence... contents);
 
         /**
          * Append the provided contents to this builder
@@ -551,8 +544,7 @@ public interface TextService<TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TCommandSource> appendWithPaddingAround(
-            int width, Object padding, Object... contents);
+        Builder<TCommandSource> appendWithPaddingAround(int width, Object padding, Object... contents);
 
         /**
          * Append the provided contents to this builder
@@ -603,8 +595,7 @@ public interface TextService<TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TCommandSource> appendWithPaddingAround(
-            int width, Object padding, CharSequence... contents);
+        Builder<TCommandSource> appendWithPaddingAround(int width, Object padding, CharSequence... contents);
 
         /**
          * Append the provided contents to this builder
@@ -653,8 +644,7 @@ public interface TextService<TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TCommandSource> appendWithPaddingRight(
-            int width, Object padding, Object... contents);
+        Builder<TCommandSource> appendWithPaddingRight(int width, Object padding, Object... contents);
 
         /**
          * Append the provided contents to this builder
@@ -703,8 +693,7 @@ public interface TextService<TCommandSource>
          * @throws IllegalArgumentException If padding length {@literal >} width
          * @throws IllegalArgumentException If contents length {@literal >} width
          */
-        Builder<TCommandSource> appendWithPaddingRight(
-            int width, Object padding, CharSequence... contents);
+        Builder<TCommandSource> appendWithPaddingRight(int width, Object padding, CharSequence... contents);
 
         /**
          * Append the provided contents if {@code condition} is true.
@@ -722,8 +711,7 @@ public interface TextService<TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendIf(
-            boolean condition, Object... contents);
+        Builder<TCommandSource> appendIf(boolean condition, Object... contents);
 
         /**
          * Append the provided contents if {@code condition} is true.
@@ -741,8 +729,7 @@ public interface TextService<TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendIf(
-            boolean condition, CharSequence... contents);
+        Builder<TCommandSource> appendIf(boolean condition, CharSequence... contents);
 
         /**
          * Append the provided contents, putting the
@@ -765,8 +752,7 @@ public interface TextService<TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendJoining(
-            Object delimiter, Object... contents);
+        Builder<TCommandSource> appendJoining(Object delimiter, Object... contents);
 
         /**
          * Append the provided contents, putting the
@@ -789,8 +775,7 @@ public interface TextService<TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendJoining(
-            Object delimiter, CharSequence... contents);
+        Builder<TCommandSource> appendJoining(Object delimiter, CharSequence... contents);
 
         /**
          * Append the provided contents if {@code condition} is true,
@@ -821,8 +806,7 @@ public interface TextService<TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendJoiningIf(
-            boolean condition, Object delimiter, Object... contents);
+        Builder<TCommandSource> appendJoiningIf(boolean condition, Object delimiter, Object... contents);
 
         /**
          * Append the provided contents if {@code condition} is true,
@@ -853,8 +837,7 @@ public interface TextService<TCommandSource>
          * @param contents  The contents to append
          * @return {@code this}
          */
-        Builder<TCommandSource> appendJoiningIf(
-            boolean condition, Object delimiter, CharSequence... contents);
+        Builder<TCommandSource> appendJoiningIf(boolean condition, Object delimiter, CharSequence... contents);
 
         /**
          * Fetches the plugin prefix from the bound {@link PluginInfo} and appends it to this builder.
@@ -870,8 +853,7 @@ public interface TextService<TCommandSource>
          * @param text The text to show on hover
          * @return {@code this}
          */
-        Builder<TCommandSource> onHoverShowText(
-            Component text);
+        Builder<TCommandSource> onHoverShowText(Component text);
 
         /**
          * Show the provided text as a tooltip while
@@ -880,8 +862,7 @@ public interface TextService<TCommandSource>
          * @param builder The text to show on hover
          * @return {@code this}
          */
-        Builder<TCommandSource> onHoverShowText(
-            Builder<TCommandSource> builder);
+        Builder<TCommandSource> onHoverShowText(Builder<TCommandSource> builder);
 
         /**
          * Suggest the provided command to the provided{@link TCommandSource} when
@@ -890,8 +871,7 @@ public interface TextService<TCommandSource>
          * @param command The command to suggest
          * @return {@code this}
          */
-        Builder<TCommandSource> onClickSuggestCommand(
-            String command);
+        Builder<TCommandSource> onClickSuggestCommand(String command);
 
         /**
          * Run the provided command as the provided {@link TCommandSource} when they click.
@@ -899,8 +879,7 @@ public interface TextService<TCommandSource>
          * @param command The command to run
          * @return {@code this}
          */
-        Builder<TCommandSource> onClickRunCommand(
-            String command);
+        Builder<TCommandSource> onClickRunCommand(String command);
 
         /**
          * Run the provided callback, passing the provided {@link TCommandSource}, when they click.
@@ -908,8 +887,7 @@ public interface TextService<TCommandSource>
          * @param callback The callback to run
          * @return {@code this}
          */
-        Builder<TCommandSource> onClickExecuteCallback(
-            Consumer<TCommandSource> callback);
+        Builder<TCommandSource> onClickExecuteCallback(Consumer<TCommandSource> callback);
 
         /**
          * Open a url in a browser when this text is clicked.
@@ -917,8 +895,7 @@ public interface TextService<TCommandSource>
          * @param url The url to open
          * @return {@code this}
          */
-        Builder<TCommandSource> onClickOpenUrl(
-            URL url);
+        Builder<TCommandSource> onClickOpenUrl(URL url);
 
         /**
          * Open a url in a browser when this text is clicked.
@@ -926,8 +903,7 @@ public interface TextService<TCommandSource>
          * @param url The url to open
          * @return {@code this}
          */
-        Builder<TCommandSource> onClickOpenUrl(
-            String url);
+        Builder<TCommandSource> onClickOpenUrl(String url);
 
         /**
          * Creates a {@link Component} from this builder.
@@ -958,8 +934,7 @@ public interface TextService<TCommandSource>
          * @param contents The contents to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> contents(
-            Component... contents);
+        PaginationBuilder<TCommandSource> contents(Component... contents);
 
         /**
          * Sets the contents of this {@link PaginationBuilder}.
@@ -967,8 +942,7 @@ public interface TextService<TCommandSource>
          * @param contents The contents to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> contents(
-            Iterable<Component> contents);
+        PaginationBuilder<TCommandSource> contents(Iterable<Component> contents);
 
         /**
          * Sets the title of this {@link PaginationBuilder}.
@@ -976,8 +950,7 @@ public interface TextService<TCommandSource>
          * @param title The title to set, should be exactly one line
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> title(
-            @Nullable Component title);
+        PaginationBuilder<TCommandSource> title(@Nullable Component title);
 
         /**
          * Sets the title of this {@link PaginationBuilder}.
@@ -985,8 +958,7 @@ public interface TextService<TCommandSource>
          * @param title The title to set, should be exactly one line
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> title(
-            @Nullable Builder<TCommandSource> title);
+        PaginationBuilder<TCommandSource> title(@Nullable Builder<TCommandSource> title);
 
         /**
          * Sets the header of this {@link PaginationBuilder}.
@@ -999,8 +971,7 @@ public interface TextService<TCommandSource>
          * @param header The header to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> header(
-            @Nullable Component header);
+        PaginationBuilder<TCommandSource> header(@Nullable Component header);
 
         /**
          * Sets the header of this {@link PaginationBuilder}.
@@ -1013,8 +984,7 @@ public interface TextService<TCommandSource>
          * @param header The header to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> header(
-            @Nullable Builder<TCommandSource> header);
+        PaginationBuilder<TCommandSource> header(@Nullable Builder<TCommandSource> header);
 
         /**
          * Sets the footer of this {@link PaginationBuilder}.
@@ -1027,8 +997,7 @@ public interface TextService<TCommandSource>
          * @param footer The footer to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> footer(
-            @Nullable Component footer);
+        PaginationBuilder<TCommandSource> footer(@Nullable Component footer);
 
         /**
          * Sets the footer of this {@link PaginationBuilder}.
@@ -1041,8 +1010,7 @@ public interface TextService<TCommandSource>
          * @param footer The footer to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> footer(
-            @Nullable Builder<TCommandSource> footer);
+        PaginationBuilder<TCommandSource> footer(@Nullable Builder<TCommandSource> footer);
 
         /**
          * Sets the padding of this {@link PaginationBuilder}.
@@ -1050,8 +1018,7 @@ public interface TextService<TCommandSource>
          * @param padding The padding to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> padding(
-            Component padding);
+        PaginationBuilder<TCommandSource> padding(Component padding);
 
         /**
          * Sets the padding of this {@link PaginationBuilder}.
@@ -1059,8 +1026,7 @@ public interface TextService<TCommandSource>
          * @param padding The padding to set
          * @return {@code this}
          */
-        PaginationBuilder<TCommandSource> padding(
-            Builder<TCommandSource> padding);
+        PaginationBuilder<TCommandSource> padding(Builder<TCommandSource> padding);
 
         /**
          * Sets the maximum number of lines for this {@link PaginationBuilder}.
@@ -1069,8 +1035,7 @@ public interface TextService<TCommandSource>
          * @return {@code this}
          * @throws IllegalArgumentException If linesPerPage {@literal <} 1
          */
-        PaginationBuilder<TCommandSource> linesPerPage(
-            int linesPerPge);
+        PaginationBuilder<TCommandSource> linesPerPage(int linesPerPge);
 
         /**
          * Creates a {@link Pagination} from this builder
