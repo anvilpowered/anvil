@@ -19,8 +19,23 @@
 package org.anvilpowered.anvil.api.plugin;
 
 import net.kyori.adventure.text.Component;
+import org.anvilpowered.anvil.api.misc.Named;
 
-public interface PluginInfo extends BasicPluginInfo {
+public interface PluginInfo extends Named {
 
     Component getPrefix();
+
+    String getId();
+
+    String getVersion();
+
+    String getDescription();
+
+    String getUrl();
+
+    String[] getAuthors();
+
+    String getOrganizationName();
+
+    String getBuildDate();
 }

@@ -29,7 +29,6 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader
 import ninja.leaping.configurate.loader.ConfigurationLoader
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
-import org.anvilpowered.anvil.api.plugin.BasicPluginInfo
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.plugin.PluginMessages
 import org.anvilpowered.anvil.api.registry.ConfigurationService
@@ -52,10 +51,6 @@ open class CommonModule<TCommandSource>(private val configDir: String) : ApiComm
 
     be.bind(
       object : TypeToken<PluginInfo>(javaClass) {},
-      object : TypeToken<AnvilPluginInfo<TCommandSource>>(javaClass) {}
-    )
-    be.bind(
-      object : TypeToken<BasicPluginInfo>(javaClass) {},
       object : TypeToken<AnvilPluginInfo<TCommandSource>>(javaClass) {}
     )
     be.bind(
