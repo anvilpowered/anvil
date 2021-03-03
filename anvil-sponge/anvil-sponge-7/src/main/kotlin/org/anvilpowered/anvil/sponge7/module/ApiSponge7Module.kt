@@ -27,6 +27,7 @@ import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
 import org.anvilpowered.anvil.sponge7.command.Sponge7CommandExecuteService
@@ -50,6 +51,7 @@ class ApiSponge7Module : ApiSpongeModule(
 ) {
   override fun configure() {
     super.configure()
+    bind(object : TypeLiteral<TextService<CommandSource>>() {}).to(object : TypeLiteral<CommonTextService<CommandSource>>() {})
     val callbackCommandType = object : TypeLiteral<CommonCallbackCommand<CommandSource>>() {}
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(Sponge7CommandExecuteService::class.java)

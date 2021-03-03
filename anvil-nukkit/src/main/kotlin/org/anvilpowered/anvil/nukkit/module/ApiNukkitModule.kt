@@ -26,10 +26,12 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
+import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandExecuteService
 import org.anvilpowered.anvil.nukkit.command.NukkitSimpleCommandService
@@ -50,6 +52,7 @@ class ApiNukkitModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
+    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
     bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(NukkitSendTextService::class.java)
     bind(CommandExecuteService::class.java).to(NukkitCommandExecuteService::class.java)
     bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(NukkitSimpleCommandService::class.java)
