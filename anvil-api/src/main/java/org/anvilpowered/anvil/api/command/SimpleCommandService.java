@@ -34,7 +34,7 @@ public interface SimpleCommandService<TCommandSource> {
    *   <li>Sponge - org.spongepowered.api.plugin.PluginContainer</li>
    *   <li>Velocity - com.velocitypowered.api.plugin</li>
    * </ul>
-   * <h3>A few platform-specific tips</h3>
+   * <h4>A few platform-specific tips</h4>
    * <ul>
    *   <li>
    *     Spigot does not support defining commands at runtime. The provided primaryAlias must be defined in the plugin.yml file.

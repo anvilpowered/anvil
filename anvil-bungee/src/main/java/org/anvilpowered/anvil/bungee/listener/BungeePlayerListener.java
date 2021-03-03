@@ -19,15 +19,11 @@
 package org.anvilpowered.anvil.bungee.listener;
 
 import com.google.inject.Inject;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
@@ -68,7 +64,7 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
                 player.disconnect(
-                    textService.serialize(
+                    textService.serializeAmpersand(
                     pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()))
                 );
             }
@@ -91,7 +87,7 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled(true);
-                player.sendMessage(textService.serialize(
+                player.sendMessage(textService.serializeAmpersand(
                     pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc()))
                 );
             }

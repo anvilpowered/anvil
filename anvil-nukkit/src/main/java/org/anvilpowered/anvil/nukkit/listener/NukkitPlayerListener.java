@@ -63,7 +63,7 @@ public class NukkitPlayerListener implements Listener {
             }
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
-                player.kick(textService.serialize(
+                player.kick(textService.serializeAmpersand(
                     pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())),
                     false
                 );
@@ -87,7 +87,7 @@ public class NukkitPlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled();
-                player.sendMessage(textService.serialize(
+                player.sendMessage(textService.serializeAmpersand(
                     pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc()))
                 );
             }

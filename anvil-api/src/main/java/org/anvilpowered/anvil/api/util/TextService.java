@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public interface TextService<TCommandSource> extends Result<String> {
+public interface TextService<TCommandSource> {
 
   /**
    * @return A new {@link Builder} instance
@@ -108,15 +108,31 @@ public interface TextService<TCommandSource> extends Result<String> {
    * @param text {@link String} text to deserialize
    * @return The {@link Component} result of the deserialization
    */
-  Component deserialize(String text);
+  Component deserializeAmpersand(String text);
 
   /**
-   * Serializes the provided {@link String} using the character {@literal '&'} to serialize styles.
+   * Deserializes the provided {@link String} using the character {@literal '§'} to determine styles.
+   *
+   * @param text {@link String} text to deserialize
+   * @return The {@link Component} result of the deserialization
+   */
+  Component deserializeSection(String text);
+
+  /**
+   * Serializes the provided {@link String} using the character {@literal '§'} to serialize styles.
    *
    * @param text {@link Component} text to serialize
    * @return The {@link String} result of the serialization
    */
-  String serialize(Component text);
+  String serializeAmpersand(Component text);
+
+  /**
+   * Serializes the provided {@link String} using the character {@literal '§'} to serialize styles.
+   *
+   * @param text {@link Component} text to serialize
+   * @return The {@link String} result of the serialization
+   */
+  String serializeSection(Component text);
 
   /**
    * Serializes the provided {@link String} and ignores all styles.
@@ -142,8 +158,7 @@ public interface TextService<TCommandSource> extends Result<String> {
    * Counts the number of lines in the provided {@link Component}
    *
    * @param text {@link Component} text to count lines
-   * @return The number of lines in the provided {@link Component}.
-   * -1 if null. 0 if empty.
+   * @return The number of lines in the provided {@link Component}. -1 if null. 0 if empty.
    */
   int lineCount(@Nullable Component text);
 

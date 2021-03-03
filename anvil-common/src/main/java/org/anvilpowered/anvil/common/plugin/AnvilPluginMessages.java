@@ -44,7 +44,7 @@ public class AnvilPluginMessages<TCommandSource> implements PluginMessages {
     @Override
     public Component getBanMessage(String reason, Instant endUtc) {
         return textService.builder()
-            .red().append("You have been banned for: ", textService.deserialize(reason))
+            .red().append("You have been banned for: ", textService.deserializeAmpersand(reason))
             .yellow().append("\n\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
             .append("\n\nUntil ", timeFormatService.format(endUtc))
             .build();
@@ -54,7 +54,7 @@ public class AnvilPluginMessages<TCommandSource> implements PluginMessages {
     public Component getMuteMessage(String reason, Instant endUtc) {
         return textService.builder()
             .append(pluginInfo.getPrefix())
-            .red().append("You have been muted for: ", textService.deserialize(reason))
+            .red().append("You have been muted for: ", textService.deserializeAmpersand(reason))
             .yellow().append("\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
             .build();
     }

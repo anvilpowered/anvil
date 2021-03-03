@@ -95,7 +95,11 @@ class Stage<TCommandSource>(
             else -> Pair(name, registries[name])
         }
         return if (newReg.second == null) {
-            textService.fail("Could not find registry $name")
+            textService.builder()
+              .appendPrefix()
+              .red()
+              .append("Could not find registry $name")
+              .build()
         } else {
             registry = Pair(newReg.first, newReg.second!!)
             print()

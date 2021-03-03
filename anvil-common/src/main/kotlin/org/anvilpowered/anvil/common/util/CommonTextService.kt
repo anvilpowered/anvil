@@ -19,15 +19,6 @@
 package org.anvilpowered.anvil.common.util
 
 import com.google.inject.Inject
-import java.net.URL
-import java.util.ArrayList
-import java.util.Deque
-import java.util.LinkedList
-import java.util.Optional
-import java.util.UUID
-import java.util.function.BiConsumer
-import java.util.function.Consumer
-import java.util.regex.Pattern
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
@@ -42,8 +33,24 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.slf4j.Logger
+import java.net.URL
+import java.util.ArrayList
+import java.util.Deque
+import java.util.LinkedList
+import java.util.Optional
+import java.util.UUID
+import java.util.function.Consumer
+import java.util.regex.Pattern
 
 abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
+
+  companion object {
+    private val LINE_BREAK_PATTERN = Pattern.compile("\r\n|\r|\n")
+    private val FORMATTING_PATTERN = Pattern.compile("&[0-9a-fklmnor]")
+  }
+
+  @Inject
+  private lateinit var callbackCommand: CommonCallbackCommand<TCommandSource>
 
   @Inject
   private lateinit var logger: Logger
@@ -54,36 +61,16 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
   @Inject
   private lateinit var pluginInfo: PluginInfo
 
-  @Inject
-  private lateinit var callbackCommand: CommonCallbackCommand<TCommandSource>
-
-  companion object {
-    private val LINE_BREAK_PATTERN = Pattern.compile("\r\n|\r|\n")
-  }
-
-  override fun success(s: String): Component {
-    return builder().green().append(s).build()
-  }
-
-  override fun fail(s: String): Component {
-    return builder().red().append(s).build()
-  }
-
-  override fun paginationBuilder(): CommonExtendedPaginationBuilder {
-    return CommonExtendedPaginationBuilder()
-  }
-
-  override fun send(text: Component, receiver: TCommandSource, sourceUUID: UUID) {
-    send(text, receiver)
-  }
-
-  override fun send(text: Component, receiver: TCommandSource, source: Any) {
-    send(text, receiver)
-  }
-
-  override fun toPlain(text: String): String {
-    return text.replace("&[0-9a-fklmnor]".toRegex(), "")
-  }
+  override fun builder(): TextService.Builder<TCommandSource> = this.CommonTextBuilder()
+  override fun paginationBuilder(): CommonExtendedPaginationBuilder = CommonExtendedPaginationBuilder()
+  override fun send(text: Component, receiver: TCommandSource, sourceUUID: UUID) = send(text, receiver)
+  override fun send(text: Component, receiver: TCommandSource, source: Any) = send(text, receiver)
+  override fun deserializeAmpersand(text: String): Component = LegacyComponentSerializer.legacyAmpersand().deserialize(text)
+  override fun deserializeSection(text: String): Component = LegacyComponentSerializer.legacySection().deserialize(text)
+  override fun serializeAmpersand(text: Component): String = LegacyComponentSerializer.legacyAmpersand().serialize(text)
+  override fun serializeSection(text: Component): String = LegacyComponentSerializer.legacySection().serialize(text)
+  override fun serializePlain(text: Component): String = PlainComponentSerializer.plain().serialize(text)
+  override fun toPlain(text: String): String = text.replace(FORMATTING_PATTERN.toRegex(), "")
 
   override fun lineCount(text: Component?): Int {
     if (text == null) {
@@ -110,21 +97,17 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     private var clickEvent: ClickEvent? = null
 
     override fun append(vararg contents: CharSequence): TextService.Builder<TCommandSource> {
-      return append(*contents as Array<Any>)
+      return append(*contents as Array<out Any>)
     }
 
-    override fun appendCount(
-      count: Int, vararg contents: Any
-    ): TextService.Builder<TCommandSource> {
+    override fun appendCount(count: Int, vararg contents: Any): TextService.Builder<TCommandSource> {
       for (i in 0 until count) {
         append(*contents)
       }
       return this
     }
 
-    override fun appendCount(
-      count: Int, vararg contents: CharSequence
-    ): TextService.Builder<TCommandSource> {
+    override fun appendCount(count: Int, vararg contents: CharSequence): TextService.Builder<TCommandSource> {
       for (i in 0 until count) {
         append(*contents)
       }
@@ -132,8 +115,8 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     }
 
     private fun appendWithPadding(
-      before: BiConsumer<Int, Component>?,
-      after: BiConsumer<Int, Component>?,
+      before: ((Int, Component) -> Unit)?,
+      after: ((Int, Component) -> Unit)?,
       width: Int, padding: Any, vararg contents: Any
     ): TextService.Builder<TCommandSource> {
       require(width >= 1) { "Width must be at least 1" }
@@ -147,22 +130,17 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       val missingSpace = (width - contentsLength) / paddingLength
       val add = missingSpace != 0
       if (add && before != null) {
-        before.accept(missingSpace, paddingText)
+        before(missingSpace, paddingText)
       }
       append(contentsText)
       if (add && after != null) {
-        after.accept(missingSpace, paddingText)
+        after(missingSpace, paddingText)
       }
       return this
     }
 
     override fun appendWithPaddingLeft(width: Int, padding: Any, vararg contents: Any): TextService.Builder<TCommandSource> {
-      return appendWithPadding({ count: Int, contents: Component ->
-        this.appendCount(
-          count,
-          contents
-        )
-      }, null, width, padding, *contents)
+      return appendWithPadding(this::appendCount, null, width, padding, *contents)
     }
 
     override fun appendWithPaddingLeft(
@@ -170,11 +148,11 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       padding: Any,
       vararg contents: CharSequence
     ): TextService.Builder<TCommandSource> {
-      return appendWithPaddingLeft(width, padding, *contents as Array<Any>)
+      return appendWithPaddingLeft(width, padding, contents)
     }
 
     override fun appendWithPaddingAround(width: Int, padding: Any, vararg contents: Any): TextService.Builder<TCommandSource> {
-      val bothEnds = BiConsumer { m: Int, c: Component -> appendCount(m / 2, c) }
+      val bothEnds = { m: Int, c: Component -> appendCount(m / 2, c); Unit }
       return appendWithPadding(bothEnds, bothEnds, width, padding, *contents)
     }
 
@@ -183,19 +161,11 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       padding: Any,
       vararg contents: CharSequence
     ): TextService.Builder<TCommandSource> {
-      return appendWithPaddingAround(width, padding, *contents as Array<Any>)
+      return appendWithPaddingAround(width, padding, contents)
     }
 
     override fun appendWithPaddingRight(width: Int, padding: Any, vararg contents: Any): TextService.Builder<TCommandSource> {
-      return appendWithPadding(
-        null,
-        { count: Int, contents: Component? ->
-          this.appendCount(
-            count,
-            contents!!
-          )
-        }, width, padding, *contents
-      )
+      return appendWithPadding(null, this::appendCount, width, padding, *contents)
     }
 
     override fun appendWithPaddingRight(
@@ -203,7 +173,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       padding: Any,
       vararg contents: CharSequence
     ): TextService.Builder<TCommandSource> {
-      return appendWithPaddingRight(width, padding, *contents as Array<Any>)
+      return appendWithPaddingRight(width, padding, contents)
     }
 
     override fun appendIf(
@@ -221,34 +191,30 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     override fun appendJoining(
       delimiter: Any, vararg contents: CharSequence
     ): TextService.Builder<TCommandSource> {
-      return appendJoining(delimiter, *contents as Array<Any>)
+      return appendJoining(delimiter, contents)
     }
 
     override fun appendJoiningIf(
       condition: Boolean, delimiter: Any, vararg contents: Any
     ): TextService.Builder<TCommandSource> {
-      return if (condition) appendJoining(delimiter, *contents) else this
+      return if (condition) appendJoining(delimiter, contents) else this
     }
 
     override fun appendJoiningIf(
       condition: Boolean, delimiter: Any, vararg contents: CharSequence
     ): TextService.Builder<TCommandSource> {
-      return if (condition) appendJoining(delimiter, *contents) else this
+      return if (condition) appendJoining(delimiter, contents) else this
     }
 
     override fun appendPrefix(): TextService.Builder<TCommandSource> {
       return append(pluginInfo.prefix)
     }
 
-    override fun onHoverShowText(
-      builder: TextService.Builder<TCommandSource>
-    ): TextService.Builder<TCommandSource> {
+    override fun onHoverShowText(builder: TextService.Builder<TCommandSource>): TextService.Builder<TCommandSource> {
       return onHoverShowText(builder.build())
     }
 
-    override fun onClickExecuteCallback(
-      callback: Consumer<TCommandSource>
-    ): TextService.Builder<TCommandSource> {
+    override fun onClickExecuteCallback(callback: Consumer<TCommandSource>): TextService.Builder<TCommandSource> {
       this.callback = callback
       return this
     }
@@ -264,13 +230,8 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       onClickRunCommand(command + uuid)
     }
 
-    override fun sendTo(receiver: TCommandSource) {
-      send(build(), receiver)
-    }
-
-    override fun sendToConsole() {
-      this@CommonTextService.sendToConsole(build())
-    }
+    override fun sendTo(receiver: TCommandSource) = send(build(), receiver)
+    override fun sendToConsole() = sendToConsole(build())
 
     override fun aqua(): TextService.Builder<TCommandSource> {
       elements.add(NamedTextColor.AQUA)
@@ -379,29 +340,26 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       return this
     }
 
-    override fun append(vararg contents: Any?): TextService.Builder<TCommandSource> {
+    override fun append(vararg contents: Any): TextService.Builder<TCommandSource> {
       for (o in contents) {
-        if (o is TextService.Builder<*> || o is Component || o is TextColor) {
-          elements.add(o)
-        } else {
-          elements.add(Component.text(o.toString()))
+        when (o) {
+          is TextService.Builder<*>, is Component, is TextColor -> elements.add(o)
+          else -> elements.add(Component.text(o.toString()))
         }
       }
       return this
     }
 
-    override fun appendJoining(delimiter: Any?, vararg contents: Any?): TextService.Builder<TCommandSource> {
+    override fun appendJoining(delimiter: Any, vararg contents: Any): TextService.Builder<TCommandSource> {
       var delim = delimiter
       if (!(delimiter is TextService.Builder<*> || delimiter is Component)) {
         delim = Component.text(delimiter.toString())
       }
       val indexOfLast = contents.size - 1
       for (i in 0..indexOfLast) {
-        val o = contents[i]!!
-        if (o is TextService.Builder<*> || o is Component || o is TextColor) {
-          elements.add(o)
-        } else {
-          elements.add(Component.text(o.toString()))
+        when (val o = contents[i]) {
+          is TextService.Builder<*>, is Component, is TextColor -> elements.add(o)
+          else -> elements.add(Component.text(o.toString()))
         }
         if (i != indexOfLast) {
           elements.add(delim)
@@ -445,20 +403,14 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       if (elements.isEmpty()) {
         return Component.empty()
       } else if (elements.size == 1 && !hover && !click) {
-        val o = elements.first
-        if (o is TextService.Builder<*>) {
-          return o.build()
-        } else if (o is Component) {
-          return o
+        when (val o = elements.first) {
+          is TextService.Builder<*> -> return o.build()
+          is Component -> return o
         }
       }
 
       // one builder for every color
-
-      // one builder for every color
       val components: Deque<Component> = LinkedList()
-
-      // create first builder
 
       // create first builder
       var currentBuilder = Component.text()
@@ -470,30 +422,20 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
 
       for (o in elements) {
         when (o) {
-          is TextService.Builder<*> -> {
-            currentBuilder.append(o.build())
-          }
-          is Component -> {
-            currentBuilder.append(o)
-          }
+          is TextService.Builder<*> -> currentBuilder.append(o.build())
+          is Component -> currentBuilder.append(o)
           is TextColor -> {
             // build current builder
             components.offer(currentBuilder.build())
             // create new builder starting at this point until the next color
             currentBuilder = Component.text().color(o)
           }
-          else -> {
-            logger.error("Skipping {} because it does not match any of the correct types.", o)
-          }
+          else -> logger.error("Skipping {} because it does not match any of the correct types.", o)
         }
       }
 
       // build last builder
-
-      // build last builder
       components.offer(currentBuilder.build())
-
-      // create new builder with all previous components
 
       // create new builder with all previous components
       currentBuilder = Component.text().append(components)
@@ -508,125 +450,70 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     }
   }
 
-  abstract inner class CommonPaginationBuilder : TextService.PaginationBuilder<TCommandSource> {
-    override fun title(
-      title: TextService.Builder<TCommandSource>?
-    ): TextService.PaginationBuilder<TCommandSource> {
-      return if (title == null) {
-        title(Component.text(""))
-      } else title(title.build())
-    }
-
-    override fun header(
-      header: TextService.Builder<TCommandSource>?
-    ): TextService.PaginationBuilder<TCommandSource> {
-      return if (header == null) {
-        header(Component.text(""))
-      } else header(header.build())
-    }
-
-    override fun footer(
-      footer: TextService.Builder<TCommandSource>?
-    ): TextService.PaginationBuilder<TCommandSource> {
-      return if (footer == null) {
-        footer(Component.text(""))
-      } else footer(footer.build())
-    }
-
-    override fun padding(
-      padding: TextService.Builder<TCommandSource>
-    ): TextService.PaginationBuilder<TCommandSource> {
-      return padding(padding.build())
-    }
-  }
-
-  inner class CommonExtendedPaginationBuilder : CommonPaginationBuilder() {
+  inner class CommonExtendedPaginationBuilder : TextService.PaginationBuilder<TCommandSource> {
 
     var contents: MutableList<Component> = mutableListOf()
-
     var title: Component? = null
     var header: Component? = null
     var footer: Component? = null
-    var padding: Component
-    var linesPerPage: Int
+    var padding: Component = Component.text("-").color(NamedTextColor.DARK_GREEN)
+    var linesPerPage: Int = 20
 
-    override fun contents(
-      vararg contents: Component
-    ): TextService.PaginationBuilder<TCommandSource> {
+    override fun contents(vararg contents: Component): TextService.PaginationBuilder<TCommandSource> {
       this.contents = mutableListOf(*contents)
       return this
     }
 
-    override fun contents(
-      contents: Iterable<Component>
-    ): TextService.PaginationBuilder<TCommandSource> {
+    override fun contents(contents: Iterable<Component>): TextService.PaginationBuilder<TCommandSource> {
       this.contents = ArrayList(64)
-      contents.forEach { c -> this.contents.add(c) }
+      contents.forEach(this.contents::add)
       return this
     }
 
-    override fun title(
-      title: Component?
-    ): TextService.PaginationBuilder<TCommandSource> {
-      if (title == null) {
-        this.title = Component.text("")
-      } else {
-        this.title = title
-      }
+    override fun title(title: Component?): TextService.PaginationBuilder<TCommandSource> {
+      this.title = title
       return this
     }
 
-    override fun header(
-      header: Component?
-    ): TextService.PaginationBuilder<TCommandSource> {
-      if (header == null) {
-        this.header = Component.text("")
-      } else {
-        this.header = header
-      }
+    override fun title(title: TextService.Builder<TCommandSource>?): TextService.PaginationBuilder<TCommandSource> {
+      return title(title?.build())
+    }
+
+    override fun header(header: Component?): TextService.PaginationBuilder<TCommandSource> {
+      this.header = header
       return this
     }
 
-    override fun footer(
-      footer: Component?
-    ): TextService.PaginationBuilder<TCommandSource> {
-      if (footer == null) {
-        this.footer = Component.text("")
-      } else {
-        this.footer = footer
-      }
+    override fun header(header: TextService.Builder<TCommandSource>?): TextService.PaginationBuilder<TCommandSource> {
+      return header(header?.build())
+    }
+
+    override fun footer(footer: Component?): TextService.PaginationBuilder<TCommandSource> {
+      this.footer = footer
       return this
     }
 
-    override fun padding(
-      padding: Component
-    ): TextService.PaginationBuilder<TCommandSource> {
+    override fun footer(footer: TextService.Builder<TCommandSource>?): TextService.PaginationBuilder<TCommandSource> {
+      return footer(footer?.build())
+    }
+
+    override fun padding(padding: Component): TextService.PaginationBuilder<TCommandSource> {
       this.padding = padding
       return this
     }
 
-    override fun linesPerPage(
-      linesPerPage: Int
-    ): TextService.PaginationBuilder<TCommandSource> {
+    override fun padding(padding: TextService.Builder<TCommandSource>): TextService.PaginationBuilder<TCommandSource> {
+      return padding(padding.build())
+    }
+
+    override fun linesPerPage(linesPerPage: Int): TextService.PaginationBuilder<TCommandSource> {
       require(linesPerPage >= 1) { "Lines per page must be at least 1" }
       this.linesPerPage = linesPerPage
       return this
     }
 
-    override fun build(): TextService.Pagination<TCommandSource>? {
-      return CommonExtendedPagination(
-        contents,
-        title,
-        header,
-        footer,
-        padding,
-        linesPerPage
-      )
-    }
-
-    init {
-      padding = builder().dark_green().append("-").build()
-      linesPerPage = 20
+    override fun build(): TextService.Pagination<TCommandSource> {
+      return CommonExtendedPagination(contents, title, header, footer, padding, linesPerPage)
     }
   }
 
@@ -639,7 +526,6 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     var linesPerPage0: Int
   ) : TextService.Pagination<TCommandSource> {
 
-
     var pages: MutableList<Component> = mutableListOf()
 
     override fun getContents(): Iterable<Component> = contents
@@ -649,14 +535,12 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     override fun getPadding(): Component = padding0
     override fun getLinesPerPage(): Int = linesPerPage0
 
-    fun buildPages() {
-      val LINE_WIDTH: Int =
-        if (platform.name == "sponge") {
-          91
-        } else {
-          51
-        }
-      pages = ArrayList()
+    private fun buildPages() {
+      val lineWidth: Int = when (platform.name) {
+        "sponge" -> 91
+        else -> 51
+      }
+      pages = mutableListOf()
       var contentsIndex = 0 // index in contents list
       val contentsSize = contents.size
       var isFirstPage = true
@@ -664,24 +548,22 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
         val page = builder()
         var linesAvailable = linesPerPage - 1
         if (title != null) {
-          page.appendWithPaddingAround(LINE_WIDTH, ' ', title).append("\n")
+          page.appendWithPaddingAround(lineWidth, ' ', title).append("\n")
           linesAvailable -= lineCount(title)
         }
         if (header != null) {
-          page.appendWithPaddingAround(LINE_WIDTH, ' ', header).append("\n")
+          page.appendWithPaddingAround(lineWidth, ' ', header).append("\n")
           linesAvailable -= lineCount(header)
         } else {
-          page.appendWithPaddingAround(LINE_WIDTH, padding, "").append("\n")
+          page.appendWithPaddingAround(lineWidth, padding, "").append("\n")
         }
         var withFooter = false
         if (footer != null) {
-          // reserve space for footer
-          // will be added later
+          // reserve space for footer, will be added later
           withFooter = true
           linesAvailable -= lineCount(footer)
         }
         while (linesAvailable > 0) {
-
           // check if there are any contents left
           if (contentsIndex >= contentsSize) {
             // dont add empty lines on first page
@@ -704,9 +586,9 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
           isFirstPage = false
         }
         if (withFooter) {
-          page.appendWithPaddingAround(LINE_WIDTH, padding, footer)
+          page.appendWithPaddingAround(lineWidth, padding, footer)
         } else {
-          page.appendWithPaddingAround(LINE_WIDTH, padding, "").append("\n")
+          page.appendWithPaddingAround(lineWidth, padding, "").append("\n")
         }
         pages.add(page.build())
       }
@@ -719,13 +601,6 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
       send(pages[0], receiver)
     }
 
-    override fun sendToConsole() {
-      sendTo(console)
-    }
+    override fun sendToConsole() = sendTo(console)
   }
-
-  override fun builder(): TextService.Builder<TCommandSource> = this.CommonTextBuilder()
-  override fun deserialize(text: String): Component = LegacyComponentSerializer.legacySection().deserialize(text)
-  override fun serialize(text: Component): String = LegacyComponentSerializer.legacyAmpersand().serialize(text)
-  override fun serializePlain(text: Component): String = PlainComponentSerializer.plain().serialize(text)
 }

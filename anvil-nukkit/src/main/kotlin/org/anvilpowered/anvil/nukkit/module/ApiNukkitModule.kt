@@ -31,7 +31,6 @@ import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.PlatformModule
-import org.anvilpowered.anvil.common.util.StringTextService
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandExecuteService
 import org.anvilpowered.anvil.nukkit.command.NukkitSimpleCommandService
 import org.anvilpowered.anvil.nukkit.entity.NukkitEntityUtils

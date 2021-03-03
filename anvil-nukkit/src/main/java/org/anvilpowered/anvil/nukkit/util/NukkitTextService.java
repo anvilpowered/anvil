@@ -21,19 +21,13 @@ package org.anvilpowered.anvil.nukkit.util;
 import cn.nukkit.Server;
 import cn.nukkit.command.CommandSender;
 import net.kyori.adventure.text.Component;
-import org.anvilpowered.anvil.common.util.StringTextService;
-import org.jetbrains.annotations.NotNull;
+import org.anvilpowered.anvil.common.util.CommonTextService;
 
-public class NukkitTextService extends StringTextService<CommandSender> {
-
-    @Override
-    public @NotNull Builder<CommandSender> builder() {
-        return new StringTextBuilder();
-    }
+public class NukkitTextService extends CommonTextService<CommandSender> {
 
     @Override
     public void send(Component result, CommandSender receiver) {
-        receiver.sendMessage(convertColors(serialize(result)));
+        receiver.sendMessage(serializeAmpersand(result));
     }
 
     @Override
