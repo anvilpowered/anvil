@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.bungee.module
 
 import com.google.inject.TypeLiteral
-import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.connection.ProxiedPlayer
@@ -27,18 +26,18 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
-import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.bungee.command.BungeeCommandExecuteService
 import org.anvilpowered.anvil.bungee.command.BungeeSimpleCommandService
 import org.anvilpowered.anvil.bungee.server.BungeeLocationService
 import org.anvilpowered.anvil.bungee.util.BungeeKickService
 import org.anvilpowered.anvil.bungee.util.BungeePermissionService
-import org.anvilpowered.anvil.bungee.util.BungeeTextService
+import org.anvilpowered.anvil.bungee.util.BungeeSendTextService
 import org.anvilpowered.anvil.bungee.util.BungeeUserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.SendTextService
 
 class ApiBungeeModule : PlatformModule(
   PlatformImpl(
@@ -50,7 +49,7 @@ class ApiBungeeModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(BungeeTextService::class.java)
+    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(BungeeSendTextService::class.java)
     bind(CommandExecuteService::class.java).to(BungeeCommandExecuteService::class.java)
     bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {})
       .to(BungeeSimpleCommandService::class.java)

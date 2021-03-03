@@ -15,12 +15,14 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package org.anvilpowered.anvil.sponge8.util
 
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.identity.Identified
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.block.BlockSnapshot
 import org.spongepowered.api.command.CommandCause
@@ -30,18 +32,17 @@ import org.spongepowered.api.service.permission.Subject
 import org.spongepowered.api.world.server.ServerLocation
 import org.spongepowered.math.vector.Vector3d
 import java.util.Optional
-import org.anvilpowered.anvil.common.util.CommonTextService
 
-class Sponge8TextService : CommonTextService<CommandCause>() {
+class Sponge8SendTextService : SendTextService<CommandCause> {
 
   override fun send(text: Component, receiver: CommandCause) {
     receiver.sendMessage(Identity.nil(), text)
   }
 
-  override fun getConsole(): CommandCause {
+  override val console: CommandCause =
     // yes, this is a hack and fundamentally flawed
     // yes, there will be a permanent, correct (and API breaking) fix in the future
-    return object : CommandCause {
+    object : CommandCause {
       override fun getSubject(): Subject = Sponge.getSystemSubject()
       override fun getCause(): Cause = Cause.of(EventContext.empty(), subject)
       override fun getAudience(): Audience = Sponge.getSystemSubject()
@@ -50,6 +51,5 @@ class Sponge8TextService : CommonTextService<CommandCause>() {
       override fun getTargetBlock(): Optional<BlockSnapshot> = Optional.empty()
       override fun sendMessage(source: Identified, message: Component) = audience.sendMessage(source, message)
       override fun sendMessage(source: Identity, message: Component) = audience.sendMessage(source, message)
-    }
   }
 }

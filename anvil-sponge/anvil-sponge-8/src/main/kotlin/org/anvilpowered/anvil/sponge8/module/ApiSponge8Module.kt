@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.sponge8.module
 
 import com.google.inject.TypeLiteral
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
@@ -28,13 +27,14 @@ import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
 import org.anvilpowered.anvil.sponge8.command.Sponge8CommandExecuteService
 import org.anvilpowered.anvil.sponge8.command.Sponge8SimpleCommandService
 import org.anvilpowered.anvil.sponge8.server.Sponge8LocationService
 import org.anvilpowered.anvil.sponge8.util.Log4jAdapter
 import org.anvilpowered.anvil.sponge8.util.Sponge8KickService
-import org.anvilpowered.anvil.sponge8.util.Sponge8TextService
+import org.anvilpowered.anvil.sponge8.util.Sponge8SendTextService
 import org.anvilpowered.anvil.sponge8.util.Sponge8UserService
 import org.spongepowered.api.Platform
 import org.spongepowered.api.Sponge
@@ -58,7 +58,7 @@ class ApiSponge8Module : ApiSpongeModule(
     bind(object : TypeLiteral<SimpleCommandService<CommandCause>>() {}).to(Sponge8SimpleCommandService::class.java)
     bind(KickService::class.java).to(Sponge8KickService::class.java)
     bind(LocationService::class.java).to(Sponge8LocationService::class.java)
-    bind(object : TypeLiteral<TextService<CommandCause>>() {}).to(Sponge8TextService::class.java)
+    bind(object : TypeLiteral<SendTextService<CommandCause>>() {}).to(Sponge8SendTextService::class.java)
     bind(object : TypeLiteral<UserService<User, ServerPlayer>>() {}).to(Sponge8UserService::class.java)
   }
 }

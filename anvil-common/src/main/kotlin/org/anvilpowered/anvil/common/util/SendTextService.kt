@@ -16,22 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.nukkit.util;
+package org.anvilpowered.anvil.common.util
 
-import cn.nukkit.Server;
-import cn.nukkit.command.CommandSender;
-import net.kyori.adventure.text.Component;
-import org.anvilpowered.anvil.common.util.CommonTextService;
+import net.kyori.adventure.text.Component
 
-public class NukkitTextService extends CommonTextService<CommandSender> {
+interface SendTextService<TCommandSource> {
 
-    @Override
-    public void send(Component result, CommandSender receiver) {
-        receiver.sendMessage(serializeAmpersand(result));
-    }
+  fun send(text: Component, receiver: TCommandSource)
 
-    @Override
-    public CommandSender getConsole() {
-        return Server.getInstance().getConsoleSender();
-    }
+  val console: TCommandSource
 }

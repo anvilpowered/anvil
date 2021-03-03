@@ -16,22 +16,18 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.bungee.util
+package org.anvilpowered.anvil.nukkit.util
 
+import cn.nukkit.Server
+import cn.nukkit.command.CommandSender
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
-import net.md_5.bungee.api.CommandSender
-import net.md_5.bungee.api.ProxyServer
-import net.md_5.bungee.api.chat.BaseComponent
-import org.anvilpowered.anvil.common.util.CommonTextService
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.anvilpowered.anvil.common.util.SendTextService
 
-class BungeeTextService : CommonTextService<CommandSender>() {
+class NukkitSendTextService : SendTextService<CommandSender> {
 
-  override fun send(text: Component, receiver: CommandSender) {
-    receiver.sendMessage(BaseComponent.toLegacyText(*BungeeComponentSerializer.get().serialize(text)))
-  }
+  override fun send(text: Component, receiver: CommandSender) =
+    receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(text))
 
-  override fun getConsole(): CommandSender {
-    return ProxyServer.getInstance().console
-  }
+  override val console: CommandSender = Server.getInstance().consoleSender
 }

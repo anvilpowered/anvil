@@ -61,10 +61,15 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
   @Inject
   private lateinit var pluginInfo: PluginInfo
 
+  @Inject
+  private lateinit var sendTextService: SendTextService<TCommandSource>
+
   override fun builder(): TextService.Builder<TCommandSource> = this.CommonTextBuilder()
   override fun paginationBuilder(): CommonExtendedPaginationBuilder = CommonExtendedPaginationBuilder()
+  override fun send(text: Component, receiver: TCommandSource) = sendTextService.send(text, receiver)
   override fun send(text: Component, receiver: TCommandSource, sourceUUID: UUID) = send(text, receiver)
   override fun send(text: Component, receiver: TCommandSource, source: Any) = send(text, receiver)
+  override fun sendToConsole(text: Component) = sendTextService.send(text, sendTextService.console)
   override fun deserializeAmpersand(text: String): Component = LegacyComponentSerializer.legacyAmpersand().deserialize(text)
   override fun deserializeSection(text: String): Component = LegacyComponentSerializer.legacySection().deserialize(text)
   override fun serializeAmpersand(text: Component): String = LegacyComponentSerializer.legacyAmpersand().serialize(text)

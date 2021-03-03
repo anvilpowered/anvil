@@ -18,27 +18,26 @@
 package org.anvilpowered.anvil.spigot.module
 
 import com.google.inject.TypeLiteral
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
-import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService
 import org.anvilpowered.anvil.spigot.command.SpigotSimpleCommandService
 import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils
 import org.anvilpowered.anvil.spigot.server.SpigotLocationService
 import org.anvilpowered.anvil.spigot.util.SpigotKickService
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService
-import org.anvilpowered.anvil.spigot.util.SpigotTextService
+import org.anvilpowered.anvil.spigot.util.SpigotSendTextService
 import org.anvilpowered.anvil.spigot.util.SpigotUserService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -64,7 +63,7 @@ class ApiSpigotModule : PlatformModule(
     bind(EntityUtils::class.java).to(SpigotEntityUtils::class.java)
     bind(LocationService::class.java).to(SpigotLocationService::class.java)
     bind(PermissionService::class.java).to(SpigotPermissionService::class.java)
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(SpigotTextService::class.java)
+    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(SpigotSendTextService::class.java)
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(SpigotUserService::class.java)
   }
 }

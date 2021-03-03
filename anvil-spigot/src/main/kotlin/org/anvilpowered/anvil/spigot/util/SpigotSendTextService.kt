@@ -15,21 +15,20 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package org.anvilpowered.anvil.spigot.util
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.craftbukkit.BukkitComponentSerializer
-import org.anvilpowered.anvil.common.util.CommonTextService
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
-class SpigotTextService : CommonTextService<CommandSender>() {
+class SpigotSendTextService : SendTextService<CommandSender> {
 
   override fun send(text: Component, receiver: CommandSender) {
-    receiver.sendMessage(BukkitComponentSerializer.legacy().serialize(text))
+    receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(text))
   }
 
-  override fun getConsole(): CommandSender {
-    return Bukkit.getConsoleSender()
-  }
+  override val console: CommandSender = Bukkit.getConsoleSender()
 }

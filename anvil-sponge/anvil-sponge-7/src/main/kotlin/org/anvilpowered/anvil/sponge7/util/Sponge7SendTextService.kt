@@ -1,6 +1,6 @@
 /*
- * Anvil - AnvilPowered
- *   Copyright (C) 2020
+ *   Anvil - AnvilPowered
+ *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -13,19 +13,20 @@
  *     GNU Lesser General Public License for more details.
  *
  *     You should have received a copy of the GNU Lesser General Public License
- *     along with this program.  If not, see https://www.gnu.org/licenses/.
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package org.anvilpowered.anvil.sponge7.util
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
-import org.anvilpowered.anvil.common.util.CommonTextService
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandSource
 import org.spongepowered.api.text.Text
 import org.spongepowered.api.text.serializer.TextSerializers
 
-open class Sponge7TextService : CommonTextService<CommandSource>() {
+class Sponge7SendTextService : SendTextService<CommandSource> {
 
   override fun send(text: Component, receiver: CommandSource) {
     receiver.sendMessage(
@@ -33,5 +34,5 @@ open class Sponge7TextService : CommonTextService<CommandSource>() {
     )
   }
 
-  override fun getConsole(): CommandSource = Sponge.getServer().console
+  override val console: CommandSource = Sponge.getServer().console
 }
