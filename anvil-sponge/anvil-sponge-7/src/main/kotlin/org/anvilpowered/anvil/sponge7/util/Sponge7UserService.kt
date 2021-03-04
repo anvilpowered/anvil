@@ -18,16 +18,16 @@
 package org.anvilpowered.anvil.sponge7.util
 
 import com.google.inject.Inject
-import java.util.Optional
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
-import java.util.stream.Collectors
 import org.anvilpowered.anvil.common.util.CommonUserService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.profile.GameProfile
 import org.spongepowered.api.service.user.UserStorageService
+import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
+import java.util.stream.Collectors
 
 class Sponge7UserService @Inject constructor() : CommonUserService<User, Player>(User::class.java) {
 

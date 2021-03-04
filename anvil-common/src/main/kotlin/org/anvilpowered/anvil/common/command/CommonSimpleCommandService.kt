@@ -18,9 +18,7 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
-import java.util.Optional
-import java.util.function.Predicate
-import java.util.function.Supplier
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
@@ -28,40 +26,42 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.TextService
 import org.checkerframework.checker.nullness.qual.Nullable
+import java.util.Optional
+import java.util.function.Predicate
+import java.util.function.Supplier
 
-abstract class CommonSimpleCommandService<TString, TCommandSource> :
-  SimpleCommandService<TString, TCommandSource> {
+abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService<TCommandSource> {
 
   @Inject
   protected lateinit var environment: Environment
 
   @Inject
-  protected lateinit var pluginInfo: PluginInfo<TString>
+  protected lateinit var pluginInfo: PluginInfo
 
   @Inject
-  protected lateinit var textService: TextService<TString, TCommandSource>
+  protected lateinit var textService: TextService<TCommandSource>
 
-  private val HELP_DESCRIPTION: TString by lazy {
+  private val HELP_DESCRIPTION: Component by lazy {
     textService.builder()
       .append("help command")
       .build()
   }
 
-  private val noPermission: TString by lazy {
+  private val noPermission: Component by lazy {
     textService.builder()
       .appendPrefix()
       .red().append("You do not have permission for this command!")
       .build()
   }
 
-  private val successfullyReloaded: TString by lazy {
+  private val successfullyReloaded: Component by lazy {
     textService.builder()
       .appendPrefix()
       .green().append("Successfully reloaded!")
       .build()
   }
 
-  private val VERSION_DESCRIPTION: TString by lazy {
+  private val VERSION_DESCRIPTION: Component by lazy {
     textService.builder()
       .append("Anvil version command")
       .build()
@@ -70,7 +70,7 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
   private fun sendSubCommandError(
     source: TCommandSource,
     alias: String?,
-    subCommands: List<CommandMapping<SimpleCommand<TString, TCommandSource>>>
+    subCommands: List<CommandMapping<SimpleCommand<TCommandSource>>>
   ) {
     textService.builder()
       .red().append("Input command ", alias ?: "null", " was not a valid subcommand!\n")
@@ -82,7 +82,7 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
 
   protected fun TCommandSource.sendNoPermission() = textService.send(noPermission, this)
 
-  private fun CommandMapping<out SimpleCommand<TString, TCommandSource>>.getFullPath(): String {
+  private fun CommandMapping<out SimpleCommand<TCommandSource>>.getFullPath(): String {
     val stack: MutableList<String> = mutableListOf()
     var current = this
     while (true) {
@@ -99,10 +99,10 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
 
   private inner class RoutingMapping(
     aliases: List<String>,
-    rootCommand: SimpleCommand<TString, TCommandSource>?,
-    private val subCommands: List<CommandMapping<SimpleCommand<TString, TCommandSource>>>,
+    rootCommand: SimpleCommand<TCommandSource>?,
+    private val subCommands: List<CommandMapping<SimpleCommand<TCommandSource>>>,
     childCommandFallback: Boolean
-  ) : BaseCommandMapping<SimpleCommand<TString, TCommandSource>>(
+  ) : BaseCommandMapping<SimpleCommand<TCommandSource>>(
     aliases,
     RoutingCommand(rootCommand, subCommands, childCommandFallback)
   ) {
@@ -113,14 +113,14 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
       }
     }
 
-    override fun getSubCommands(): List<CommandMapping<SimpleCommand<TString, TCommandSource>>> = subCommands
+    override fun getSubCommands(): List<CommandMapping<SimpleCommand<TCommandSource>>> = subCommands
   }
 
   private inner class RoutingCommand(
-    private val root: SimpleCommand<TString, TCommandSource>?,
-    private val subCommands: List<CommandMapping<SimpleCommand<TString, TCommandSource>>>,
+    private val root: SimpleCommand<TCommandSource>?,
+    private val subCommands: List<CommandMapping<SimpleCommand<TCommandSource>>>,
     private val childCommandFallback: Boolean
-  ) : SimpleCommand<TString, TCommandSource> {
+  ) : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
       val length = context.size
       if (length > 0) {
@@ -170,7 +170,7 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
   private inner class RootCommand(
     private val helpUsage: String,
     private val extended: (TCommandSource) -> Boolean,
-  ) : SimpleCommand<TString, TCommandSource> {
+  ) : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
       val isExtended = extended(source)
       textService.builder()
@@ -197,7 +197,7 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
   private inner class VersionCommand(
     private val helpUsage: String,
     private val extended: (TCommandSource) -> Boolean,
-  ) : SimpleCommand<TString, TCommandSource> {
+  ) : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
       val isExtended = extended(source)
       textService.builder()
@@ -221,12 +221,12 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
         .sendTo(source)
     }
 
-    override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(VERSION_DESCRIPTION)
+    override fun getShortDescription(source: TCommandSource): Optional<Component> = Optional.ofNullable(VERSION_DESCRIPTION)
   }
 
   private inner class HelpCommand(
-    private val subCommandsSupplier: Supplier<List<CommandMapping<out SimpleCommand<TString, TCommandSource>>>>
-  ) : SimpleCommand<TString, TCommandSource> {
+    private val subCommandsSupplier: Supplier<List<CommandMapping<out SimpleCommand<TCommandSource>>>>
+  ) : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, alias: String, context: Array<out String>?) {
       val helpList = subCommandsSupplier.get().asSequence()
         .filter { it.command.canExecute(source) }
@@ -255,10 +255,10 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
         .sendTo(source)
     }
 
-    override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(HELP_DESCRIPTION)
+    override fun getShortDescription(source: TCommandSource): Optional<Component> = Optional.ofNullable(HELP_DESCRIPTION)
   }
 
-  private inner class ReloadCommand : SimpleCommand<TString, TCommandSource> {
+  private inner class ReloadCommand : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, alias: String, context: Array<String>) {
       environment.reload()
       textService.send(successfullyReloaded, source)
@@ -267,41 +267,41 @@ abstract class CommonSimpleCommandService<TString, TCommandSource> :
 
   override fun mapRouting(
     aliases: List<String>,
-    rootCommand: @Nullable SimpleCommand<TString, TCommandSource>?,
-    subCommands: List<CommandMapping<SimpleCommand<TString, TCommandSource>>>,
+    rootCommand: @Nullable SimpleCommand<TCommandSource>?,
+    subCommands: List<CommandMapping<SimpleCommand<TCommandSource>>>,
     childCommandFallback: Boolean,
-  ): CommandMapping<SimpleCommand<TString, TCommandSource>>? {
+  ): CommandMapping<SimpleCommand<TCommandSource>>? {
     return RoutingMapping(aliases, rootCommand, subCommands, childCommandFallback)
   }
 
   override fun mapTerminal(
     aliases: List<String>,
-    command: SimpleCommand<TString, TCommandSource>
-  ): CommandMapping<SimpleCommand<TString, TCommandSource>> {
+    command: SimpleCommand<TCommandSource>
+  ): CommandMapping<SimpleCommand<TCommandSource>> {
     return BaseCommandMapping(aliases, command)
   }
 
   override fun generateRoot(
     helpUsage: String,
     extended: Predicate<TCommandSource>,
-  ): SimpleCommand<TString, TCommandSource> {
+  ): SimpleCommand<TCommandSource> {
     return RootCommand(helpUsage, extended::test)
   }
 
   override fun generateVersion(
     helpUsage: String,
     extended: Predicate<TCommandSource>,
-  ): SimpleCommand<TString, TCommandSource> {
+  ): SimpleCommand<TCommandSource> {
     return VersionCommand(helpUsage, extended::test)
   }
 
   override fun generateHelp(
-    treeCommandSupplier: Supplier<List<CommandMapping<out SimpleCommand<TString, TCommandSource>>>>,
-  ): SimpleCommand<TString, TCommandSource>? {
+    treeCommandSupplier: Supplier<List<CommandMapping<out SimpleCommand<TCommandSource>>>>,
+  ): SimpleCommand<TCommandSource>? {
     return HelpCommand(treeCommandSupplier)
   }
 
-  override fun generateReload(): SimpleCommand<TString, TCommandSource> {
+  override fun generateReload(): SimpleCommand<TCommandSource> {
     return ReloadCommand()
   }
 }

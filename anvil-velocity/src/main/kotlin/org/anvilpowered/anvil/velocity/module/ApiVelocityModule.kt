@@ -21,7 +21,6 @@ import com.google.inject.TypeLiteral
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.server.LocationService
@@ -31,12 +30,14 @@ import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.CommonTextService
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService
 import org.anvilpowered.anvil.velocity.command.VelocitySimpleCommandService
 import org.anvilpowered.anvil.velocity.server.VelocityLocationService
 import org.anvilpowered.anvil.velocity.util.VelocityKickService
 import org.anvilpowered.anvil.velocity.util.VelocityPermissionService
-import org.anvilpowered.anvil.velocity.util.VelocityTextService
+import org.anvilpowered.anvil.velocity.util.VelocitySendTextService
 import org.anvilpowered.anvil.velocity.util.VelocityUserService
 
 class ApiVelocityModule : PlatformModule(
@@ -48,12 +49,13 @@ class ApiVelocityModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
+    bind(object : TypeLiteral<TextService<CommandSource>>() {}).to(object : TypeLiteral<CommonTextService<CommandSource>>() {})
     bind(CommandExecuteService::class.java).to(VelocityCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<Component, CommandSource>>() {}).to(VelocitySimpleCommandService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandSource>>() {}).to(VelocitySimpleCommandService::class.java)
     bind(KickService::class.java).to(VelocityKickService::class.java)
     bind(LocationService::class.java).to(VelocityLocationService::class.java)
     bind(PermissionService::class.java).to(VelocityPermissionService::class.java)
-    bind(object : TypeLiteral<TextService<Component, CommandSource>>() {}).to(VelocityTextService::class.java)
+    bind(object : TypeLiteral<SendTextService<CommandSource>>() {}).to(VelocitySendTextService::class.java)
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(VelocityUserService::class.java)
   }
 }

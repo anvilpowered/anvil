@@ -16,11 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.util;
+package org.anvilpowered.anvil.common.util
 
-public interface Result<TResult, TData> {
+import net.kyori.adventure.text.Component
 
-    TResult success(TData data);
+interface SendTextService<TCommandSource> {
 
-    TResult fail(TData data);
+  fun send(text: Component, receiver: TCommandSource)
+
+  val console: TCommandSource
 }

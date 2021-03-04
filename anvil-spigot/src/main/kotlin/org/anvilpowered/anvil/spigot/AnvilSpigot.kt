@@ -21,9 +21,6 @@ import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
-import java.lang.reflect.InvocationTargetException
-import net.kyori.adventure.text.Component
-import net.md_5.bungee.api.chat.TextComponent
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
@@ -43,9 +40,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.server.ServerLoadEvent
 import org.bukkit.plugin.java.JavaPlugin
+import java.lang.reflect.InvocationTargetException
 
 class AnvilSpigot : JavaPlugin() {
   private val inner: Inner
+
 
   init {
     val module: AbstractModule = object : AbstractModule() {
@@ -59,14 +58,14 @@ class AnvilSpigot : JavaPlugin() {
   }
 
   private inner class Inner(injector: Injector) :
-    AnvilImpl(injector, object : CommonModule<TextComponent, Player>("plugins") {}) {
+    AnvilImpl(injector, object : CommonModule<CommandSender>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
       builder.addEarlyServices(SpigotPlayerListener::class.java) {
         Bukkit.getPluginManager().registerEvents(it, this@AnvilSpigot)
       }
       builder.addEarlyServices(object :
-        TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSender>>() {
+        TypeLiteral<CommonAnvilCommandNode<Player, Player, CommandSender>>() {
       })
     }
 
@@ -99,7 +98,7 @@ class AnvilSpigot : JavaPlugin() {
         if (serverProxyMode && !anvilProxyMode) {
           getLogger().error(
             """
-              It looks like you are running this server behind a proxy. 
+              It looks like you are running this server behind a proxy.
               If this is the case, set server.proxyMode=true in the anvil config.
             """.trimIndent()
           )

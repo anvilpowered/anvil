@@ -18,6 +18,7 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.SimpleCommand
@@ -26,20 +27,19 @@ import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.jetbrains.annotations.Contract
-import java.math.BigDecimal
 import java.util.Optional
 import java.util.function.Function
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 import java.util.stream.Collectors
 
-class CommonAnvilReloadCommand<TString, TCommandSource> :
-  SimpleCommand<TString, TCommandSource> {
+class CommonAnvilReloadCommand<TCommandSource> :
+  SimpleCommand< TCommandSource> {
 
   companion object {
     private val reloadEnvironment = Function { e: Environment ->
       e.reload()
-      e.getPluginInfo<Any>().name
+      e.pluginInfo.name
     }
   }
 
@@ -47,19 +47,19 @@ class CommonAnvilReloadCommand<TString, TCommandSource> :
   private lateinit var permissionService: PermissionService
 
   @Inject
-  private lateinit var pluginMessages: PluginMessages<TString>
+  private lateinit var pluginMessages: PluginMessages
 
   @Inject
   private lateinit var registry: Registry
 
   @Inject
-  private lateinit var textService: TextService<TString, TCommandSource>
+  private lateinit var textService: TextService<TCommandSource>
 
-  private val USAGE: TString by lazy {
+  private val USAGE: Component by lazy {
     textService.of("[-a|--all|-r|--regex] [<plugin>]")
   }
 
-  private val DESCRIPTION: TString by lazy {
+  private val DESCRIPTION: Component by lazy {
     textService.of("Anvil reload command")
   }
 
@@ -98,8 +98,8 @@ class CommonAnvilReloadCommand<TString, TCommandSource> :
     return suggestions
   }
 
-  override fun getUsage(source: TCommandSource): Optional<TString> = Optional.ofNullable(USAGE)
-  override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(DESCRIPTION)
+  override fun getUsage(source: TCommandSource): Optional<Component> = Optional.ofNullable(USAGE)
+  override fun getShortDescription(source: TCommandSource): Optional<Component> = Optional.ofNullable(DESCRIPTION)
 
   private fun doAll(): String {
     return Anvil.getEnvironmentManager()

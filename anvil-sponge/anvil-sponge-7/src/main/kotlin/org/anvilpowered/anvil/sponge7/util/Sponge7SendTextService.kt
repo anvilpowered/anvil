@@ -16,22 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.bungee.util;
+package org.anvilpowered.anvil.sponge7.util
 
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.md5.util.MD5TextService;
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.anvilpowered.anvil.common.util.SendTextService
+import org.spongepowered.api.Sponge
+import org.spongepowered.api.command.CommandSource
+import org.spongepowered.api.text.Text
+import org.spongepowered.api.text.serializer.TextSerializers
 
-public class BungeeTextService extends MD5TextService<CommandSender> {
+class Sponge7SendTextService : SendTextService<CommandSource> {
 
-    @Override
-    public void send(TextComponent text, CommandSender receiver) {
-        receiver.sendMessage(text);
-    }
+  override fun send(text: Component, receiver: CommandSource) {
+    receiver.sendMessage(
+      Text.of(TextSerializers.FORMATTING_CODE.deserialize(LegacyComponentSerializer.legacyAmpersand().serialize(text)))
+    )
+  }
 
-    @Override
-    public CommandSender getConsole() {
-        return ProxyServer.getInstance().getConsole();
-    }
+  override val console: CommandSource = Sponge.getServer().console
 }

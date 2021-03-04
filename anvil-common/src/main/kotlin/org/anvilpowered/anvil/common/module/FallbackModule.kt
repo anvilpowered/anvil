@@ -21,19 +21,17 @@ package org.anvilpowered.anvil.common.module
 import com.google.common.reflect.TypeToken
 import com.google.inject.AbstractModule
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.plugin.BasicPluginInfo
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.base.registry.BaseRegistry
 import org.anvilpowered.anvil.common.plugin.FallbackPluginInfo
 
 @Suppress("UnstableApiUsage")
-open class FallbackModule<TString : Any, TCommandSource> : AbstractModule() {
+open class FallbackModule<TCommandSource> : AbstractModule() {
     override fun configure() {
         val be = Anvil.getBindingExtensions(binder());
-        val fallbackPluginInfoToken = object : TypeToken<FallbackPluginInfo<TString, TCommandSource>>(javaClass) {}
-        be.bind(TypeToken.of(BasicPluginInfo::class.java), fallbackPluginInfoToken)
-        be.bind(object : TypeToken<PluginInfo<TString>>(javaClass) {}, fallbackPluginInfoToken)
+        val fallbackPluginInfoToken = object : TypeToken<FallbackPluginInfo<TCommandSource>>(javaClass) {}
+        be.bind(object : TypeToken<PluginInfo>(javaClass) {}, fallbackPluginInfoToken)
         bind(Registry::class.java).to(BaseRegistry::class.java)
     }
 }

@@ -18,9 +18,8 @@
 
 package org.anvilpowered.anvil.sponge8.module
 
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.common.module.FallbackModule
 import org.spongepowered.api.command.CommandCause
 
-class Sponge8FallbackModule : FallbackModule<Component, CommandCause>() {
+class Sponge8FallbackModule : FallbackModule<CommandCause>() {
 }

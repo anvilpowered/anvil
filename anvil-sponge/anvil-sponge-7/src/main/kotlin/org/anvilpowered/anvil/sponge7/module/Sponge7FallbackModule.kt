@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.sponge7.module
 
 import org.anvilpowered.anvil.common.module.FallbackModule
 import org.spongepowered.api.command.CommandSource
-import org.spongepowered.api.text.Text
 
-class Sponge7FallbackModule : FallbackModule<Text, CommandSource>() {
+class Sponge7FallbackModule : FallbackModule<CommandSource>() {
 }

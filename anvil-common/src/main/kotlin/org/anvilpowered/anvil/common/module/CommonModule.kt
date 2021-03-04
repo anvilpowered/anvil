@@ -21,7 +21,6 @@ import com.google.common.reflect.TypeToken
 import com.google.inject.TypeLiteral
 import com.google.inject.name.Names
 import dev.morphia.Datastore
-import java.nio.file.Paths
 import jetbrains.exodus.entitystore.EntityId
 import jetbrains.exodus.entitystore.PersistentEntityStore
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
@@ -29,7 +28,6 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader
 import ninja.leaping.configurate.loader.ConfigurationLoader
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
-import org.anvilpowered.anvil.api.plugin.BasicPluginInfo
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.plugin.PluginMessages
 import org.anvilpowered.anvil.api.registry.ConfigurationService
@@ -43,24 +41,21 @@ import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages
 import org.anvilpowered.anvil.common.registry.CommonConfigurationService
 import org.bson.types.ObjectId
+import java.nio.file.Paths
 
 @Suppress("UnstableApiUsage")
-open class CommonModule<TString, TCommandSource>(private val configDir: String) : ApiCommonModule() {
+open class CommonModule<TCommandSource>(private val configDir: String) : ApiCommonModule() {
 
   override fun configure() {
     val be = CommonBindingExtensions(binder())
 
     be.bind(
-      object : TypeToken<PluginInfo<TString>>(javaClass) {},
-      object : TypeToken<AnvilPluginInfo<TString, TCommandSource>>(javaClass) {}
+      object : TypeToken<PluginInfo>(javaClass) {},
+      object : TypeToken<AnvilPluginInfo<TCommandSource>>(javaClass) {}
     )
     be.bind(
-      object : TypeToken<BasicPluginInfo>(javaClass) {},
-      object : TypeToken<AnvilPluginInfo<TString, TCommandSource>>(javaClass) {}
-    )
-    be.bind(
-      object : TypeToken<PluginMessages<TString>>(javaClass) {},
-      object : TypeToken<AnvilPluginMessages<TString, TCommandSource>>(javaClass) {}
+      object : TypeToken<PluginMessages>(javaClass) {},
+      object : TypeToken<AnvilPluginMessages<TCommandSource>>(javaClass) {}
     )
 
     be.bind(

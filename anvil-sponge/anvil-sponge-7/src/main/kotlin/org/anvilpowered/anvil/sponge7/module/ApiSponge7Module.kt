@@ -27,19 +27,20 @@ import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.util.CommonTextService
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
 import org.anvilpowered.anvil.sponge7.command.Sponge7CommandExecuteService
 import org.anvilpowered.anvil.sponge7.command.Sponge7SimpleCommandService
 import org.anvilpowered.anvil.sponge7.server.Sponge7LocationService
 import org.anvilpowered.anvil.sponge7.util.Sponge7KickService
-import org.anvilpowered.anvil.sponge7.util.Sponge7TextService
+import org.anvilpowered.anvil.sponge7.util.Sponge7SendTextService
 import org.anvilpowered.anvil.sponge7.util.Sponge7UserService
 import org.spongepowered.api.Platform
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandSource
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
-import org.spongepowered.api.text.Text
 
 class ApiSponge7Module : ApiSpongeModule(
   PlatformImpl(
@@ -50,13 +51,14 @@ class ApiSponge7Module : ApiSpongeModule(
 ) {
   override fun configure() {
     super.configure()
-    val callbackCommandType = object : TypeLiteral<CommonCallbackCommand<Text, CommandSource>>() {}
+    bind(object : TypeLiteral<TextService<CommandSource>>() {}).to(object : TypeLiteral<CommonTextService<CommandSource>>() {})
+    val callbackCommandType = object : TypeLiteral<CommonCallbackCommand<CommandSource>>() {}
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(Sponge7CommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<Text, CommandSource>>() {}).to(Sponge7SimpleCommandService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandSource>>() {}).to(Sponge7SimpleCommandService::class.java)
     bind(KickService::class.java).to(Sponge7KickService::class.java)
     bind(LocationService::class.java).to(Sponge7LocationService::class.java)
-    bind(object : TypeLiteral<TextService<Text, CommandSource>>() {}).to(Sponge7TextService::class.java)
+    bind(object : TypeLiteral<SendTextService<CommandSource>>() {}).to(Sponge7SendTextService::class.java)
     bind(object : TypeLiteral<UserService<User, Player>>() {}).to(Sponge7UserService::class.java)
   }
 }

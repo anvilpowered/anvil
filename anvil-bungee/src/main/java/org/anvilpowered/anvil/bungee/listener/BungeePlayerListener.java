@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.bungee.listener;
 
 import com.google.inject.Inject;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -30,6 +30,7 @@ import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.util.TextService;
 
 public class BungeePlayerListener implements Listener {
 
@@ -37,7 +38,10 @@ public class BungeePlayerListener implements Listener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<TextComponent> pluginMessages;
+    private PluginMessages pluginMessages;
+
+    @Inject
+    private TextService<CommandSender> textService;
 
     @Inject
     private Registry registry;
@@ -60,7 +64,8 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
                 player.disconnect(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc())
+                    textService.serializeAmpersand(
+                        pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()))
                 );
             }
         }).join();
@@ -82,8 +87,8 @@ public class BungeePlayerListener implements Listener {
             CoreMember<?> coreMember = optionalMember.get();
             if (coreMemberManager.getPrimaryComponent().checkMuted(coreMember)) {
                 event.setCancelled(true);
-                player.sendMessage(
-                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc())
+                player.sendMessage(textService.serializeAmpersand(
+                    pluginMessages.getMuteMessage(coreMember.getMuteReason(), coreMember.getMuteEndUtc()))
                 );
             }
         }).join();

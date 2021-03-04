@@ -18,14 +18,15 @@
 
 package org.anvilpowered.anvil.common.command.regedit
 
+import net.kyori.adventure.text.Component
 import java.util.UUID
 
-class CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource>
-    : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
+class CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
-    val stages: MutableMap<UUID, Stage<TString, TCommandSource>> = HashMap()
+    val stages: MutableMap<UUID, Stage<TCommandSource>> = HashMap()
 
-    val notInStage: TString by lazy {
+    val notInStage: Component by lazy {
         textService.builder()
             .append(pluginInfo.prefix)
             .red().append("You are not currently in a regedit session. Use /$anvilAlias regedit help")

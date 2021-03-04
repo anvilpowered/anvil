@@ -28,8 +28,8 @@ import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 
-abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource> :
-  SimpleCommand<TString, TCommandSource> {
+abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> :
+  SimpleCommand<TCommandSource> {
 
     @Inject
     protected lateinit var registry: Registry
@@ -38,13 +38,13 @@ abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSo
     protected lateinit var permissionService: PermissionService
 
     @Inject
-    protected lateinit var pluginInfo: PluginInfo<TString>
+    protected lateinit var pluginInfo: PluginInfo
 
     @Inject
-    protected lateinit var pluginMessages: PluginMessages<TString>
+    protected lateinit var pluginMessages: PluginMessages
 
     @Inject
-    protected lateinit var textService: TextService<TString, TCommandSource>
+    protected lateinit var textService: TextService<TCommandSource>
 
     @Inject
     protected lateinit var userService: UserService<TUser, TPlayer>

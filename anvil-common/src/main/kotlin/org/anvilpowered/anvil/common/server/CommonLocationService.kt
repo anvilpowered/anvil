@@ -20,10 +20,10 @@ package org.anvilpowered.anvil.common.server
 
 import org.anvilpowered.anvil.api.server.BackendServer
 import org.anvilpowered.anvil.api.server.LocationService
+import org.spongepowered.math.vector.Vector3d
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
-import org.spongepowered.math.vector.Vector3d
 
 abstract class CommonLocationService : LocationService {
 

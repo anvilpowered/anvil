@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.plugin;
 
 import com.google.inject.Inject;
+import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
 import org.anvilpowered.anvil.api.util.TextService;
@@ -29,37 +30,37 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-public class AnvilPluginMessages<TString, TCommandSource> implements PluginMessages<TString> {
+public class AnvilPluginMessages<TCommandSource> implements PluginMessages {
 
     @Inject
-    protected PluginInfo<TString> pluginInfo;
+    protected PluginInfo pluginInfo;
 
     @Inject
-    protected TextService<TString, TCommandSource> textService;
+    protected TextService<TCommandSource> textService;
 
     @Inject
     protected TimeFormatService timeFormatService;
 
     @Override
-    public TString getBanMessage(String reason, Instant endUtc) {
+    public Component getBanMessage(String reason, Instant endUtc) {
         return textService.builder()
-            .red().append("You have been banned for: ", textService.deserialize(reason))
+            .red().append("You have been banned for: ", textService.deserializeAmpersand(reason))
             .yellow().append("\n\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
             .append("\n\nUntil ", timeFormatService.format(endUtc))
             .build();
     }
 
     @Override
-    public TString getMuteMessage(String reason, Instant endUtc) {
+    public Component getMuteMessage(String reason, Instant endUtc) {
         return textService.builder()
             .append(pluginInfo.getPrefix())
-            .red().append("You have been muted for: ", textService.deserialize(reason))
+            .red().append("You have been muted for: ", textService.deserializeAmpersand(reason))
             .yellow().append("\nFor another ", timeFormatService.format(Duration.between(OffsetDateTime.now(ZoneOffset.UTC).toInstant(), endUtc)))
             .build();
     }
 
     @Override
-    public TString getNoPermission() {
+    public Component getNoPermission() {
         return textService.builder()
             .append(pluginInfo.getPrefix())
             .red().append("You do not have permission for this command!")

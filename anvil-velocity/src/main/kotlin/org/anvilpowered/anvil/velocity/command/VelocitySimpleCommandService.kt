@@ -20,19 +20,18 @@ package org.anvilpowered.anvil.velocity.command
 import com.google.inject.Inject
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
 import com.velocitypowered.api.command.SimpleCommand as VelocitySimpleCommand
 
-class VelocitySimpleCommandService : CommonSimpleCommandService<Component, CommandSource>() {
+class VelocitySimpleCommandService : CommonSimpleCommandService<CommandSource>() {
 
   @Inject
   private lateinit var proxyServer: ProxyServer
 
   private inner class PlatformCommand(
-    private val delegate: SimpleCommand<Component, CommandSource>,
+    private val delegate: SimpleCommand<CommandSource>,
   ) : VelocitySimpleCommand {
 
     override fun execute(invocation: VelocitySimpleCommand.Invocation) {
@@ -40,7 +39,7 @@ class VelocitySimpleCommandService : CommonSimpleCommandService<Component, Comma
     }
   }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<Component, CommandSource>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<CommandSource>>) {
     proxyServer.commandManager.register(mapping.name, PlatformCommand(mapping.command), *mapping.otherAliases.toTypedArray())
   }
 }

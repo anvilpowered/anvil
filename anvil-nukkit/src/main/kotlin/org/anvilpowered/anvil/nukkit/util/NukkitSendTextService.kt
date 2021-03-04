@@ -16,22 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.spigot.util;
+package org.anvilpowered.anvil.nukkit.util
 
-import net.md_5.bungee.api.chat.TextComponent;
-import org.anvilpowered.anvil.md5.util.MD5TextService;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import cn.nukkit.Server
+import cn.nukkit.command.CommandSender
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.anvilpowered.anvil.common.util.SendTextService
 
-public class SpigotTextService extends MD5TextService<CommandSender> {
+class NukkitSendTextService : SendTextService<CommandSender> {
 
-    @Override
-    public void send(TextComponent text, CommandSender receiver) {
-        receiver.spigot().sendMessage(text);
-    }
+  override fun send(text: Component, receiver: CommandSender) {
+    receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(text))
+  }
 
-    @Override
-    public CommandSender getConsole() {
-        return Bukkit.getConsoleSender();
-    }
+  override val console: CommandSender = Server.getInstance().consoleSender
 }

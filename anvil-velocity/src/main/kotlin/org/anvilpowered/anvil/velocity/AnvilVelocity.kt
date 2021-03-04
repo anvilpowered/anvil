@@ -27,8 +27,6 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
@@ -49,7 +47,7 @@ import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule
   authors = [AnvilPluginInfo.organizationName]
 )
 class AnvilVelocity @Inject constructor(injector: Injector) :
-  AnvilImpl(injector, object : CommonModule<TextComponent, CommandSource>("plugins") {}) {
+  AnvilImpl(injector, object : CommonModule<CommandSource>("plugins") {}) {
 
   @Inject
   private lateinit var proxyServer: ProxyServer
@@ -65,6 +63,6 @@ class AnvilVelocity @Inject constructor(injector: Injector) :
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, Component, CommandSource>>() {})
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, CommandSource>>() {})
   }
 }

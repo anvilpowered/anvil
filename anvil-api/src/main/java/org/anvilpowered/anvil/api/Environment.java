@@ -91,9 +91,9 @@ public interface Environment extends Named, Comparable<Environment> {
 
     Object getPlugin();
 
-    <TString> PluginInfo<TString> getPluginInfo();
+    PluginInfo getPluginInfo();
 
-    <TString, TCommandSource> TextService<TString, TCommandSource> getTextService();
+    <TCommandSource> TextService<TCommandSource> getTextService();
 
     Registry getRegistry();
 

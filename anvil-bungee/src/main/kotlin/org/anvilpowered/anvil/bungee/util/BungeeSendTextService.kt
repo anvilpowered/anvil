@@ -16,23 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.plugin;
+package org.anvilpowered.anvil.bungee.util
 
-import org.anvilpowered.anvil.api.misc.Named;
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.md_5.bungee.api.CommandSender
+import net.md_5.bungee.api.ProxyServer
+import org.anvilpowered.anvil.common.util.SendTextService
 
-public interface BasicPluginInfo extends Named {
+class BungeeSendTextService : SendTextService<CommandSender> {
 
-    String getId();
+  override fun send(text: Component, receiver: CommandSender) {
+    receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(text))
+  }
 
-    String getVersion();
-
-    String getDescription();
-
-    String getUrl();
-
-    String[] getAuthors();
-
-    String getOrganizationName();
-
-    String getBuildDate();
+  override val console: CommandSender = ProxyServer.getInstance().console
 }

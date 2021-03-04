@@ -24,7 +24,7 @@ import com.google.inject.TypeLiteral;
 import dev.morphia.Datastore;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
-import org.anvilpowered.anvil.api.datastore.Component;
+import org.anvilpowered.anvil.api.datastore.DBComponent;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 import org.anvilpowered.anvil.api.datastore.MongoContext;
 import org.anvilpowered.anvil.api.datastore.XodusContext;
@@ -43,8 +43,8 @@ public class CommonBindingExtensions implements BindingExtensions {
     }
 
     @Override
-    public <From1 extends Component<?, ?>,
-        From2 extends Component<?, ?>,
+    public <From1 extends DBComponent<?, ?>,
+        From2 extends DBComponent<?, ?>,
         From3 extends From1,
         Target extends From1>
     void bind(
@@ -63,7 +63,7 @@ public class CommonBindingExtensions implements BindingExtensions {
     }
 
     @Override
-    public <From1 extends Component<?, ?>,
+    public <From1 extends DBComponent<?, ?>,
         From2 extends From1,
         Target extends From1>
     void bind(

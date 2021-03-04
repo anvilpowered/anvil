@@ -24,7 +24,6 @@ import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.identity.Identity;
-import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.plugin.PluginMessages;
@@ -37,7 +36,7 @@ public class VelocityPlayerListener {
     private CoreMemberManager coreMemberManager;
 
     @Inject
-    private PluginMessages<Component> pluginMessages;
+    private PluginMessages pluginMessages;
 
     @Inject
     private Registry registry;

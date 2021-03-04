@@ -16,26 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.nukkit.util;
+package org.anvilpowered.anvil.spigot.util
 
-import cn.nukkit.Server;
-import cn.nukkit.command.CommandSender;
-import org.anvilpowered.anvil.common.util.StringTextService;
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.anvilpowered.anvil.common.util.SendTextService
+import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
 
-public class NukkitTextService extends StringTextService<CommandSender> {
+class SpigotSendTextService : SendTextService<CommandSender> {
 
-    @Override
-    public Builder<String, CommandSender> builder() {
-        return new StringTextBuilder();
-    }
+  override fun send(text: Component, receiver: CommandSender) {
+    receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(text))
+  }
 
-    @Override
-    public void send(String result, CommandSender receiver) {
-        receiver.sendMessage(result);
-    }
-
-    @Override
-    public CommandSender getConsole() {
-        return Server.getInstance().getConsoleSender();
-    }
+  override val console: CommandSender = Bukkit.getConsoleSender()
 }

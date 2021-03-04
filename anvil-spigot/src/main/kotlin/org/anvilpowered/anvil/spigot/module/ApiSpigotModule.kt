@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.spigot.module
 
 import com.google.inject.TypeLiteral
-import net.md_5.bungee.api.chat.TextComponent
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.BindingExtensions
@@ -32,13 +31,15 @@ import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.CommonTextService
+import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService
 import org.anvilpowered.anvil.spigot.command.SpigotSimpleCommandService
 import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils
 import org.anvilpowered.anvil.spigot.server.SpigotLocationService
 import org.anvilpowered.anvil.spigot.util.SpigotKickService
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService
-import org.anvilpowered.anvil.spigot.util.SpigotTextService
+import org.anvilpowered.anvil.spigot.util.SpigotSendTextService
 import org.anvilpowered.anvil.spigot.util.SpigotUserService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -54,17 +55,17 @@ class ApiSpigotModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    val callbackCommandType: TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>> =
-      object : TypeLiteral<CommonCallbackCommand<TextComponent, CommandSender>>() {}
+    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
+    val callbackCommandType: TypeLiteral<CommonCallbackCommand<CommandSender>> =
+      object : TypeLiteral<CommonCallbackCommand<CommandSender>>() {}
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(SpigotCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<TextComponent, CommandSender>>() {})
-      .to(SpigotSimpleCommandService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(SpigotSimpleCommandService::class.java)
     bind(KickService::class.java).to(SpigotKickService::class.java)
     bind(EntityUtils::class.java).to(SpigotEntityUtils::class.java)
     bind(LocationService::class.java).to(SpigotLocationService::class.java)
     bind(PermissionService::class.java).to(SpigotPermissionService::class.java)
-    bind(object : TypeLiteral<TextService<TextComponent, CommandSender>>() {}).to(SpigotTextService::class.java)
+    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(SpigotSendTextService::class.java)
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(SpigotUserService::class.java)
   }
 }

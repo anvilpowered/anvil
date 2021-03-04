@@ -18,6 +18,8 @@
 package org.anvilpowered.anvil.sponge7.command
 
 import com.google.inject.Inject
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.splitContext
@@ -28,17 +30,18 @@ import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.CommandSource
 import org.spongepowered.api.plugin.PluginContainer
 import org.spongepowered.api.text.Text
+import org.spongepowered.api.text.serializer.TextSerializers
 import org.spongepowered.api.world.Location
 import org.spongepowered.api.world.World
 import java.util.Optional
 
-class Sponge7SimpleCommandService : CommonSimpleCommandService<Text, CommandSource>() {
+class Sponge7SimpleCommandService : CommonSimpleCommandService<CommandSource>() {
 
   @Inject
   private lateinit var plugin: PluginContainer
 
   private inner class PlatformCommand(
-    private val delegate: SimpleCommand<Text, CommandSource>,
+    private val delegate: SimpleCommand<CommandSource>,
     private val primaryAlias: String,
   ) : CommandCallable {
     override fun process(source: CommandSource, context: String): CommandResult {
@@ -51,12 +54,14 @@ class Sponge7SimpleCommandService : CommonSimpleCommandService<Text, CommandSour
     }
 
     override fun testPermission(source: CommandSource): Boolean = delegate.canExecute(source)
-    override fun getShortDescription(source: CommandSource): Optional<Text> = delegate.getShortDescription(source)
-    override fun getHelp(source: CommandSource): Optional<Text> = delegate.getLongDescription(source)
-    override fun getUsage(source: CommandSource): Text = delegate.getUsage(source).orElse(Text.of())
+    override fun getShortDescription(source: CommandSource): Optional<Text> = asText(delegate.getShortDescription(source).get())
+    override fun getHelp(source: CommandSource): Optional<Text> = asText(delegate.getLongDescription(source).get())
+    override fun getUsage(source: CommandSource): Text = asText(delegate.getUsage(source).orElse(Component.text(""))).get()
+    private fun asText(component: Component) =
+      Optional.ofNullable(TextSerializers.FORMATTING_CODE.deserialize(LegacyComponentSerializer.legacySection().serialize(component)))
   }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<Text, CommandSource>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<CommandSource>>) {
     Sponge.getCommandManager().register(
       plugin,
       PlatformCommand(mapping.command, mapping.name), mapping.name, *mapping.otherAliases.toTypedArray()

@@ -18,13 +18,13 @@
 package org.anvilpowered.anvil.sponge7.util
 
 import com.google.inject.Inject
-import java.util.Optional
-import java.util.UUID
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.UserService
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.text.Text
+import java.util.Optional
+import java.util.UUID
 
 class Sponge7KickService : KickService {
 

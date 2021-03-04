@@ -39,7 +39,7 @@ import java.util.Optional
 class Sponge8SimpleCommandService @Inject constructor(
   private val plugin: PluginContainer,
   registry: Registry,
-) : CommonSimpleCommandService<Component, CommandCause>() {
+) : CommonSimpleCommandService<CommandCause>() {
 
   private var alreadyLoaded = false
 
@@ -60,7 +60,7 @@ class Sponge8SimpleCommandService @Inject constructor(
   )
 
   private inner class PlatformCommand(
-    private val delegate: SimpleCommand<Component, CommandCause>,
+    private val delegate: SimpleCommand<CommandCause>,
     private val primaryAlias: String,
   ) : Command.Raw {
     override fun process(cause: CommandCause, arguments: ArgumentReader.Mutable): CommandResult {
@@ -80,7 +80,7 @@ class Sponge8SimpleCommandService @Inject constructor(
 
   private val registrations: MutableList<CommandRegistration> = mutableListOf()
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<Component, CommandCause>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<CommandCause>>) {
     registrations.add(
       CommandRegistration(
         PlatformCommand(mapping.command, mapping.name),

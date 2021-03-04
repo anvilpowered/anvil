@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.sponge8
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
@@ -40,7 +39,7 @@ import org.spongepowered.plugin.PluginContainer
 
 class AnvilSponge8 @Inject constructor(
   injector: Injector,
-) : AnvilImpl(injector, object : CommonModule<Component, CommandCause>("config") {}) {
+) : AnvilImpl(injector, object : CommonModule<CommandCause>("config") {}) {
 
   @Inject
   private lateinit var plugin: PluginContainer
@@ -56,6 +55,6 @@ class AnvilSponge8 @Inject constructor(
 
   override fun applyToBuilder(builder: Environment.Builder) {
     super.applyToBuilder(builder)
-    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, Component, CommandCause>>() {})
+    builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<User, Player, CommandCause>>() {})
   }
 }

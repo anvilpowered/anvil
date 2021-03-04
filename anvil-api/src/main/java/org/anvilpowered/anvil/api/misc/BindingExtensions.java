@@ -23,7 +23,7 @@ import com.google.inject.Key;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.datastore.Component;
+import org.anvilpowered.anvil.api.datastore.DBComponent;
 import org.anvilpowered.anvil.api.datastore.DataStoreContext;
 
 import java.lang.annotation.Annotation;
@@ -50,8 +50,8 @@ public interface BindingExtensions {
      * );
      * }</pre>
      */
-    <From1 extends Component<?, ?>,
-        From2 extends Component<?, ?>,
+    <From1 extends DBComponent<?, ?>,
+        From2 extends DBComponent<?, ?>,
         From3 extends From1,
         Target extends From1>
     void bind(
@@ -79,7 +79,7 @@ public interface BindingExtensions {
      * );
      * }</pre>
      */
-    <From1 extends Component<?, ?>,
+    <From1 extends DBComponent<?, ?>,
         From2 extends From1,
         Target extends From1>
     void bind(

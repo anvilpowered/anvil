@@ -21,20 +21,19 @@ package org.anvilpowered.anvil.bungee.command
 import com.google.inject.Inject
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
-import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.plugin.Command
 import net.md_5.bungee.api.plugin.Plugin
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
 
-class BungeeSimpleCommandService : CommonSimpleCommandService<TextComponent, CommandSender>() {
+class BungeeSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
 
   @Inject(optional = true)
   private lateinit var plugin: Plugin
 
   private inner class PlatformCommand(
-    private val delegate: SimpleCommand<TextComponent, CommandSender>,
+    private val delegate: SimpleCommand<CommandSender>,
     private val primaryAlias: String,
     vararg otherAliases: String
   ) : Command(primaryAlias, null, *otherAliases) {
@@ -49,7 +48,7 @@ class BungeeSimpleCommandService : CommonSimpleCommandService<TextComponent, Com
     override fun hasPermission(source: CommandSender): Boolean = delegate.canExecute(source)
   }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<TextComponent, CommandSender>>) {
+  override fun register(mapping: CommandMapping<out SimpleCommand<CommandSender>>) {
     check(this::plugin.isInitialized) { "net.md_5.bungee.api.plugin.Plugin not bound" }
     ProxyServer.getInstance().pluginManager.registerCommand(
       plugin,

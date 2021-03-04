@@ -18,16 +18,17 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
-import java.util.Arrays
-import java.util.Optional
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
+import java.util.Arrays
+import java.util.Optional
 
-class CommonAnvilPluginsCommand<TString, TCommandSource> : SimpleCommand<TString, TCommandSource> {
+class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
   @Inject
   private lateinit var permissionService: PermissionService
@@ -36,9 +37,9 @@ class CommonAnvilPluginsCommand<TString, TCommandSource> : SimpleCommand<TString
   private lateinit var registry: Registry
 
   @Inject
-  private lateinit var textService: TextService<TString, TCommandSource>
+  private lateinit var textService: TextService<TCommandSource>
 
-  private val DESCRIPTION: TString by lazy {
+  private val DESCRIPTION: Component by lazy {
     textService.of("Anvil plugins command")
   }
 
@@ -47,7 +48,7 @@ class CommonAnvilPluginsCommand<TString, TCommandSource> : SimpleCommand<TString
       .environments.values
     val mappedValues = values
       .asSequence()
-      .map { it.getPluginInfo<Any>().name }
+      .map { it.pluginInfo.name }
       .iterator()
     val names = Array<String>(values.size) { mappedValues.next() }
     Arrays.sort(names)
@@ -62,5 +63,5 @@ class CommonAnvilPluginsCommand<TString, TCommandSource> : SimpleCommand<TString
     return permissionService.hasPermission(source, registry.getOrDefault(Keys.PLUGINS_PERMISSION))
   }
 
-  override fun getShortDescription(source: TCommandSource): Optional<TString> = Optional.ofNullable(DESCRIPTION)
+  override fun getShortDescription(source: TCommandSource): Optional<Component> = Optional.ofNullable(DESCRIPTION)
 }

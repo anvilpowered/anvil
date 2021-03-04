@@ -19,15 +19,16 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
+import net.kyori.adventure.text.Component
 import kotlin.streams.toList
 
-class CommonRegistryEditSelectCommand<TUser, TPlayer, TString, TCommandSource>
-    : CommonRegistryEditBaseCommand<TUser, TPlayer, TString, TCommandSource>() {
+class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
     @Inject
-    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TString, TCommandSource>
+    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
-    private val usage: TString by lazy {
+    private val usage: Component by lazy {
         textService.builder()
             .append(pluginInfo.prefix)
             .red().append("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>")
