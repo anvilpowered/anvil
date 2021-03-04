@@ -51,14 +51,13 @@ class ApiBungeeModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
-    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(BungeeSendTextService::class.java)
     bind(CommandExecuteService::class.java).to(BungeeCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {})
-      .to(BungeeSimpleCommandService::class.java)
     bind(KickService::class.java).to(BungeeKickService::class.java)
     bind(LocationService::class.java).to(BungeeLocationService::class.java)
     bind(PermissionService::class.java).to(BungeePermissionService::class.java)
+    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(BungeeSendTextService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(BungeeSimpleCommandService::class.java)
+    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
     bind(object : TypeLiteral<UserService<ProxiedPlayer, ProxiedPlayer>>() {}).to(BungeeUserService::class.java)
   }
 }

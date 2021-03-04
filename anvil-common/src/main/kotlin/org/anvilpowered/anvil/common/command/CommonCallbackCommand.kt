@@ -19,11 +19,11 @@ package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.util.UUID
-import java.util.function.Consumer
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.util.TextService
+import java.util.UUID
+import java.util.function.Consumer
 
 @Singleton
 class CommonCallbackCommand<TCommandSource> @Inject constructor(

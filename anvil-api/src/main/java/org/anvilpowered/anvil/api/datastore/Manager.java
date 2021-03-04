@@ -49,9 +49,9 @@ import org.anvilpowered.anvil.api.util.TextService;
  * </p>
  * <ul>
  *     <li>{@code CompletableFuture<{@link Component}> create(UUID userUUID);}</li>
- *     <li>{@code CompletableFuture<{@link Component> invite(UUID userUUID, UUID targetUserUUID);}</li>
- *     <li>{@code CompletableFuture<{@link Component> kick(UUID userUUID, UUID targetUserUUID);}</li>
- *     <li>{@code CompletableFuture<List<{@link Component>> list(String query);}</li>
+ *     <li>{@code CompletableFuture<{@link Component>} invite(UUID userUUID, UUID targetUserUUID);}</li>
+ *     <li>{@code CompletableFuture<{@link Component>} kick(UUID userUUID, UUID targetUserUUID);}</li>
+ *     <li>{@code CompletableFuture<List<{@link Component}>> list(String query);}</li>
  * </ul>
  * <p>
  * {@link Component} is the base return type for the methods in a {@link Manager}.
@@ -66,11 +66,14 @@ import org.anvilpowered.anvil.api.util.TextService;
  * to the end user.
  * </p>
  * <p>
- * The following interface signature is an example of a simple {@link Manager}:
+ * The following is an example of a typical {@link Manager} and {@link Repository} combination:
  * </p>
  * <pre><code>
- * public interface FooManager&lt;TFoo extends Foo&lt;?&gt;,Component&gt;
- * extends Manager&lt;FooRepository&lt;?, TFoo, ?, ?&gt;&gt;
+ * public interface FooManager
+ *   extends Manager&lt;FooRepository&lt;?, ?&gt;&gt; {...}
+ *
+ * public interface FooRepository&lt;TKey, TDataStore&gt;
+ *   extends Repository&lt;TKey, Foo&lt;Tkey&gt;, TDataStore&gt; {...}
  * </code></pre>
  *
  * @param <C> Base {@link DBComponent} type for this manager.
@@ -81,105 +84,105 @@ import org.anvilpowered.anvil.api.util.TextService;
  */
 public interface Manager<C extends DBComponent<?, ?>> {
 
-    /**
-     * <p>
-     * Represents the default singular identifier for this module
-     * </p>
-     * <p>
-     * Should be overridden by other plugins who change the name of the object.
-     * Examples: "Clan", "Faction", "Guild", "Member", ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     *
-     * @return The default singular identifier for this module
-     */
-    String getDefaultIdentifierSingularUpper();
+  /**
+   * <p>
+   * Represents the default singular identifier for this module
+   * </p>
+   * <p>
+   * Should be overridden by other plugins who change the name of the object.
+   * Examples: "Clan", "Faction", "Guild", "Member", ... etc
+   * </p>
+   * <p>
+   * Used in text sent to the player
+   * </p>
+   *
+   * @return The default singular identifier for this module
+   */
+  String getDefaultIdentifierSingularUpper();
 
-    /**
-     * <p>
-     * Represents the default plural identifier for this module
-     * </p>
-     * <p>
-     * Should be overridden by other plugins who change the name of party.
-     * Examples: "Clans", "Factions", "Guilds", "Members" ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     *
-     * @return The default plural identifier for this module
-     */
-    String getDefaultIdentifierPluralUpper();
+  /**
+   * <p>
+   * Represents the default plural identifier for this module
+   * </p>
+   * <p>
+   * Should be overridden by other plugins who change the name of party.
+   * Examples: "Clans", "Factions", "Guilds", "Members" ... etc
+   * </p>
+   * <p>
+   * Used in text sent to the player
+   * </p>
+   *
+   * @return The default plural identifier for this module
+   */
+  String getDefaultIdentifierPluralUpper();
 
-    /**
-     * <p>
-     * Represents the default singular identifier for this module
-     * </p>
-     * <p>
-     * Should be overridden by other plugins who change the name of party.
-     * Examples: "clan", "faction", "guild", "member" ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     *
-     * @return The default singular identifier for this module
-     */
-    String getDefaultIdentifierSingularLower();
+  /**
+   * <p>
+   * Represents the default singular identifier for this module
+   * </p>
+   * <p>
+   * Should be overridden by other plugins who change the name of party.
+   * Examples: "clan", "faction", "guild", "member" ... etc
+   * </p>
+   * <p>
+   * Used in text sent to the player
+   * </p>
+   *
+   * @return The default singular identifier for this module
+   */
+  String getDefaultIdentifierSingularLower();
 
-    /**
-     * <p>
-     * Represents the default plural identifier for this module
-     * </p>
-     * <p>
-     * Should be overridden by other plugins who change the name of party.
-     * Examples: "clans", "factions", "guilds", "members" ... etc
-     * </p>
-     * <p>
-     * Used in text sent to the player
-     * </p>
-     *
-     * @return The default plural identifier for this module
-     */
-    String getDefaultIdentifierPluralLower();
+  /**
+   * <p>
+   * Represents the default plural identifier for this module
+   * </p>
+   * <p>
+   * Should be overridden by other plugins who change the name of party.
+   * Examples: "clans", "factions", "guilds", "members" ... etc
+   * </p>
+   * <p>
+   * Used in text sent to the player
+   * </p>
+   *
+   * @return The default plural identifier for this module
+   */
+  String getDefaultIdentifierPluralLower();
 
-    /**
-     * Provides the current {@link DBComponent} as defined by
-     * {@link Keys#DATA_STORE_NAME} in the current {@link Registry}.
-     *
-     * <p>
-     * The current {@link DBComponent} implementation is defined as the
-     * implementation provided by Guice that meets the following criteria:
-     * </p>
-     * <br>
-     * <p>
-     * The value for {@link Keys#DATA_STORE_NAME} found by
-     * the the current {@link Registry} must match (ignored case) a registered
-     * datastore implementation. This can be one of the following predefined values:
-     * </p>
-     * <ul>
-     *   <li>{@code "mongodb"}</li>
-     *   <li>{@code "xodus"}</li>
-     * </ul>
-     * <p>
-     * or a custom value defined by your guice module.
-     * </p>
-     * <br>
-     * <p>
-     * For example, 'mongodb' (or any capitalization thereof) will match
-     * a {@link DBComponent} annotated with {@link Named}{@code (value = "mongodb"}
-     * </p>
-     * <p>
-     * Use {@link BindingExtensions} to bind your component implementations
-     * </p>
-     *
-     * @return The current {@link DBComponent} implementation
-     * @throws IllegalStateException If the config has not been loaded yet,
-     *                               or if no implementation was found
-     * @see DBComponent
-     * @see BindingExtensions
-     */
-    C getPrimaryComponent();
+  /**
+   * Provides the current {@link DBComponent} as defined by
+   * {@link Keys#DATA_STORE_NAME} in the current {@link Registry}.
+   *
+   * <p>
+   * The current {@link DBComponent} implementation is defined as the
+   * implementation provided by Guice that meets the following criteria:
+   * </p>
+   * <br>
+   * <p>
+   * The value for {@link Keys#DATA_STORE_NAME} found by
+   * the the current {@link Registry} must match (ignored case) a registered
+   * datastore implementation. This can be one of the following predefined values:
+   * </p>
+   * <ul>
+   *   <li>{@code "mongodb"}</li>
+   *   <li>{@code "xodus"}</li>
+   * </ul>
+   * <p>
+   * or a custom value defined by your guice module.
+   * </p>
+   * <br>
+   * <p>
+   * For example, 'mongodb' (or any capitalization thereof) will match
+   * a {@link DBComponent} annotated with {@link Named}{@code (value = "mongodb"}
+   * </p>
+   * <p>
+   * Use {@link BindingExtensions} to bind your component implementations
+   * </p>
+   *
+   * @return The current {@link DBComponent} implementation
+   * @throws IllegalStateException If the config has not been loaded yet,
+   *                               or if no implementation was found
+   * @see DBComponent
+   * @see BindingExtensions
+   */
+  C getPrimaryComponent();
 }

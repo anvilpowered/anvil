@@ -60,8 +60,7 @@ class ApiSpigotModule : PlatformModule(
       object : TypeLiteral<CommonCallbackCommand<CommandSender>>() {}
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(SpigotCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {})
-      .to(SpigotSimpleCommandService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(SpigotSimpleCommandService::class.java)
     bind(KickService::class.java).to(SpigotKickService::class.java)
     bind(EntityUtils::class.java).to(SpigotEntityUtils::class.java)
     bind(LocationService::class.java).to(SpigotLocationService::class.java)
