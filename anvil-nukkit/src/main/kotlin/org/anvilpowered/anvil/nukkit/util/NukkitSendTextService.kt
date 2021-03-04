@@ -26,8 +26,9 @@ import org.anvilpowered.anvil.common.util.SendTextService
 
 class NukkitSendTextService : SendTextService<CommandSender> {
 
-  override fun send(text: Component, receiver: CommandSender) =
+  override fun send(text: Component, receiver: CommandSender) {
     receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(text))
+  }
 
   override val console: CommandSender = Server.getInstance().consoleSender
 }

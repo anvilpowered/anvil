@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.api.datastore;
 
 import com.google.inject.name.Named;
+import net.kyori.adventure.text.Component;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
@@ -26,7 +27,7 @@ import org.anvilpowered.anvil.api.util.TextService;
 
 /**
  * <p>
- * A module consists of a {@link Manager} and a (single) {@link Component}
+ * A module consists of a {@link Manager} and a (single) {@link DBComponent}
  * for every data storage implementation.
  * </p>
  * <p>
@@ -34,33 +35,33 @@ import org.anvilpowered.anvil.api.util.TextService;
  * other modules should (almost always) be done through the {@link Manager}.
  * There are, however, some cases where direct access to a component is required.
  * One such case is inter-{@link Repository} access that requires compile time
- * type safety. Because the {@link Component#getTKeyClass()} type is not known
+ * type safety. Because the {@link DBComponent#getTKeyClass()} type is not known
  * to the manager, code that interacts with {@code TKey} must be placed in a
- * {@link Component}.
+ * {@link DBComponent}.
  * </p>
  * <p>
  * One of the primary functions of a {@link Manager} is to provide the correct
- * {@link Component} implementation via {@link #getPrimaryComponent()}.
+ * {@link DBComponent} implementation via {@link #getPrimaryComponent()}.
  * </p>
  * <p>
  * Implementations of {@link Manager} should consist of methods similar to the
  * following:
  * </p>
  * <ul>
- *     <li>{@code CompletableFuture<{@link net.kyori.adventure.text.Component}> create(UUID userUUID);}</li>
+ *     <li>{@code CompletableFuture<{@link Component}> create(UUID userUUID);}</li>
  *     <li>{@code CompletableFuture<@link net.kyori.adventure.text.Component> invite(UUID userUUID, UUID targetUserUUID);}</li>
  *     <li>{@code CompletableFuture<@link net.kyori.adventure.text.Component> kick(UUID userUUID, UUID targetUserUUID);}</li>
  *     <li>{@code CompletableFuture<List<@link net.kyori.adventure.text.Component>> list(String query);}</li>
  * </ul>
  * <p>
- * {@link net.kyori.adventure.text.Component} is the base return type for the methods in a {@link Manager}.
+ * {@link Component} is the base return type for the methods in a {@link Manager}.
  * To build these results use {@link TextService.Builder}.
  * </p>
  * <p>
- * All methods (with some exceptions) in {@link Manager} should return a form of {@link net.kyori.adventure.text.Component}
- * to be displayed directly to the end user. Normally, the return type, {@link net.kyori.adventure.text.Component}, is wrapped in
+ * All methods (with some exceptions) in {@link Manager} should return a form of {@link Component}
+ * to be displayed directly to the end user. Normally, the return type, {@link Component}, is wrapped in
  * a {@link java.util.concurrent.CompletableFuture} in order to keep the main game thread
- * free from IO. It is sometimes necessary to further wrap the {@link net.kyori.adventure.text.Component} in a {@link java.util.List}
+ * free from IO. It is sometimes necessary to further wrap the {@link Component} in a {@link java.util.List}
  * when the result is more than a single line. In this case, pagination can be used to display the result
  * to the end user.
  * </p>
@@ -72,13 +73,13 @@ import org.anvilpowered.anvil.api.util.TextService;
  * extends Manager&lt;FooRepository&lt;?, TFoo, ?, ?&gt;&gt;
  * </code></pre>
  *
- * @param <C> Base {@link Component} type for this manager.
+ * @param <C> Base {@link DBComponent} type for this manager.
  *            Must be implemented by all components in this module
  * @see Repository
- * @see Component
+ * @see DBComponent
  * @see TextService
  */
-public interface Manager<C extends Component<?, ?>> {
+public interface Manager<C extends DBComponent<?, ?>> {
 
     /**
      * <p>
@@ -145,11 +146,11 @@ public interface Manager<C extends Component<?, ?>> {
     String getDefaultIdentifierPluralLower();
 
     /**
-     * Provides the current {@link Component} as defined by
+     * Provides the current {@link DBComponent} as defined by
      * {@link Keys#DATA_STORE_NAME} in the current {@link Registry}.
      *
      * <p>
-     * The current {@link Component} implementation is defined as the
+     * The current {@link DBComponent} implementation is defined as the
      * implementation provided by Guice that meets the following criteria:
      * </p>
      * <br>
@@ -168,16 +169,16 @@ public interface Manager<C extends Component<?, ?>> {
      * <br>
      * <p>
      * For example, 'mongodb' (or any capitalization thereof) will match
-     * a {@link Component} annotated with {@link Named}{@code (value = "mongodb"}
+     * a {@link DBComponent} annotated with {@link Named}{@code (value = "mongodb"}
      * </p>
      * <p>
      * Use {@link BindingExtensions} to bind your component implementations
      * </p>
      *
-     * @return The current {@link Component} implementation
+     * @return The current {@link DBComponent} implementation
      * @throws IllegalStateException If the config has not been loaded yet,
      *                               or if no implementation was found
-     * @see Component
+     * @see DBComponent
      * @see BindingExtensions
      */
     C getPrimaryComponent();

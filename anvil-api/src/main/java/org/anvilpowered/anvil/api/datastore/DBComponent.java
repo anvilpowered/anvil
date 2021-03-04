@@ -30,7 +30,7 @@ import java.util.Optional;
  * @see CacheService
  * @see BindingExtensions
  */
-public interface Component<
+public interface DBComponent<
     TKey,
     TDataStore> {
 
