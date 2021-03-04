@@ -65,7 +65,7 @@ public class BungeePlayerListener implements Listener {
             if (coreMemberManager.getPrimaryComponent().checkBanned(coreMember)) {
                 player.disconnect(
                     textService.serializeAmpersand(
-                    pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()))
+                        pluginMessages.getBanMessage(coreMember.getBanReason(), coreMember.getBanEndUtc()))
                 );
             }
         }).join();

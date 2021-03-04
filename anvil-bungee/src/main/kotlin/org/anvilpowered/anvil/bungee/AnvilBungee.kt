@@ -60,8 +60,6 @@ class AnvilBungee : Plugin() {
     }
   }
 
-  override fun onEnable() {
-    EnvironmentBuilderImpl.completeInitialization(ApiBungeeModule(), BungeeFallbackModule())
-  }
+  override fun onEnable() = EnvironmentBuilderImpl.completeInitialization(ApiBungeeModule(), BungeeFallbackModule())
   override fun toString(): String = inner.toString()
 }
