@@ -25,10 +25,9 @@ import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.common.util.SendTextService
 
-class VelocitySendTextService : SendTextService<CommandSource> {
-
-  @Inject
-  private lateinit var proxyServer: ProxyServer
+class VelocitySendTextService @Inject constructor(
+  private val proxyServer: ProxyServer,
+) : SendTextService<CommandSource> {
 
   override fun send(text: Component, receiver: CommandSource) {
     receiver.sendMessage(Identity.nil(), text)

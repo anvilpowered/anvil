@@ -42,7 +42,7 @@ import java.util.UUID
 import java.util.function.Consumer
 import java.util.regex.Pattern
 
-abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
+class CommonTextService<TCommandSource> : TextService<TCommandSource> {
 
   companion object {
     private val LINE_BREAK_PATTERN = Pattern.compile("\r\n|\r|\n")
@@ -70,6 +70,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
   override fun send(text: Component, receiver: TCommandSource, sourceUUID: UUID) = send(text, receiver)
   override fun send(text: Component, receiver: TCommandSource, source: Any) = send(text, receiver)
   override fun sendToConsole(text: Component) = sendTextService.send(text, sendTextService.console)
+  override fun getConsole(): TCommandSource = sendTextService.console
   override fun deserializeAmpersand(text: String): Component = LegacyComponentSerializer.legacyAmpersand().deserialize(text)
   override fun deserializeSection(text: String): Component = LegacyComponentSerializer.legacySection().deserialize(text)
   override fun serializeAmpersand(text: Component): String = LegacyComponentSerializer.legacyAmpersand().serialize(text)
@@ -122,7 +123,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     private fun appendWithPadding(
       before: ((Int, Component) -> Unit)?,
       after: ((Int, Component) -> Unit)?,
-      width: Int, padding: Any, vararg contents: Any
+      width: Int, padding: Any, vararg contents: Any,
     ): TextService.Builder<TCommandSource> {
       require(width >= 1) { "Width must be at least 1" }
       val paddingText = of(padding)
@@ -151,7 +152,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     override fun appendWithPaddingLeft(
       width: Int,
       padding: Any,
-      vararg contents: CharSequence
+      vararg contents: CharSequence,
     ): TextService.Builder<TCommandSource> {
       return appendWithPaddingLeft(width, padding, contents)
     }
@@ -164,7 +165,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     override fun appendWithPaddingAround(
       width: Int,
       padding: Any,
-      vararg contents: CharSequence
+      vararg contents: CharSequence,
     ): TextService.Builder<TCommandSource> {
       return appendWithPaddingAround(width, padding, contents)
     }
@@ -176,39 +177,39 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     override fun appendWithPaddingRight(
       width: Int,
       padding: Any,
-      vararg contents: CharSequence
+      vararg contents: CharSequence,
     ): TextService.Builder<TCommandSource> {
       return appendWithPaddingRight(width, padding, contents)
     }
 
     override fun appendIf(
-      condition: Boolean, vararg contents: Any
+      condition: Boolean, vararg contents: Any,
     ): TextService.Builder<TCommandSource> {
       return if (condition) append(*contents) else this
     }
 
     override fun appendIf(
-      condition: Boolean, vararg contents: CharSequence
+      condition: Boolean, vararg contents: CharSequence,
     ): TextService.Builder<TCommandSource> {
       return if (condition) append(*contents) else this
     }
 
     override fun appendJoining(
-      delimiter: Any, vararg contents: CharSequence
+      delimiter: Any, vararg contents: CharSequence,
     ): TextService.Builder<TCommandSource> {
-      return appendJoining(delimiter, contents)
+      return appendJoining(delimiter, *contents as Array<out Any>)
     }
 
     override fun appendJoiningIf(
-      condition: Boolean, delimiter: Any, vararg contents: Any
+      condition: Boolean, delimiter: Any, vararg contents: Any,
     ): TextService.Builder<TCommandSource> {
-      return if (condition) appendJoining(delimiter, contents) else this
+      return if (condition) appendJoining(delimiter, *contents) else this
     }
 
     override fun appendJoiningIf(
-      condition: Boolean, delimiter: Any, vararg contents: CharSequence
+      condition: Boolean, delimiter: Any, vararg contents: CharSequence,
     ): TextService.Builder<TCommandSource> {
-      return if (condition) appendJoining(delimiter, contents) else this
+      return if (condition) appendJoining(delimiter, *contents as Array<out Any>) else this
     }
 
     override fun appendPrefix(): TextService.Builder<TCommandSource> {
@@ -528,7 +529,7 @@ abstract class CommonTextService<TCommandSource> : TextService<TCommandSource> {
     var header: Component?,
     var footer: Component?,
     private var padding0: Component,
-    var linesPerPage0: Int
+    var linesPerPage0: Int,
   ) : TextService.Pagination<TCommandSource> {
 
     var pages: MutableList<Component> = mutableListOf()
