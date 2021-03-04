@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.sponge7.command
 
 import com.google.inject.Inject
-import java.util.Optional
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.anvilpowered.anvil.api.command.CommandMapping
@@ -34,6 +33,7 @@ import org.spongepowered.api.text.Text
 import org.spongepowered.api.text.serializer.TextSerializers
 import org.spongepowered.api.world.Location
 import org.spongepowered.api.world.World
+import java.util.Optional
 
 class Sponge7SimpleCommandService : CommonSimpleCommandService<CommandSource>() {
 

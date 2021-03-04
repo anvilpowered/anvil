@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.sponge8
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl

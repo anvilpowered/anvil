@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.spigot.command
 
 import com.google.inject.Inject
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService

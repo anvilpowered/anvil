@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
 import com.google.inject.name.Named
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.registry.ConfigurationService
@@ -27,7 +28,6 @@ import org.anvilpowered.anvil.api.registry.Registry
 import java.util.stream.Collectors
 import java.util.stream.Stream
 import kotlin.streams.toList
-import net.kyori.adventure.text.Component
 
 class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {

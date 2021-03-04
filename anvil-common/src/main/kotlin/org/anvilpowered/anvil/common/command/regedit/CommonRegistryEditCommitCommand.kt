@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
-import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
 
 class CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {

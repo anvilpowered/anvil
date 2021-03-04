@@ -18,7 +18,6 @@
 
 package org.anvilpowered.anvil.spigot.module
 
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.common.module.FallbackModule
 import org.bukkit.command.CommandSender
 

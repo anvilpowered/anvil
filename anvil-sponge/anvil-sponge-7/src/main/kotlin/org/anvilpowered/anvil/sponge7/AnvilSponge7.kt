@@ -38,7 +38,6 @@ import org.spongepowered.api.event.Listener
 import org.spongepowered.api.event.Order
 import org.spongepowered.api.event.game.state.GameInitializationEvent
 import org.spongepowered.api.plugin.Plugin
-import org.spongepowered.api.text.Text
 
 @Plugin(
   id = AnvilPluginInfo.id,

@@ -18,15 +18,15 @@
 package org.anvilpowered.anvil.sponge7.server
 
 import com.google.inject.Inject
-import java.util.Optional
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonLocationService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.math.vector.Vector3d
+import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 class Sponge7LocationService : CommonLocationService() {
 

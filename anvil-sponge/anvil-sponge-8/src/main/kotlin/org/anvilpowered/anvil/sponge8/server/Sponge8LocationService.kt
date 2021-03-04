@@ -18,9 +18,6 @@
 package org.anvilpowered.anvil.sponge8.server
 
 import com.google.inject.Inject
-import java.util.Optional
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonLocationService
@@ -28,6 +25,9 @@ import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import org.spongepowered.math.vector.Vector3d
+import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 class Sponge8LocationService : CommonLocationService() {
 

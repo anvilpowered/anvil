@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.velocity.command
 import com.google.inject.Inject
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService

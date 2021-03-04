@@ -18,6 +18,7 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.SimpleCommand
@@ -26,13 +27,11 @@ import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.jetbrains.annotations.Contract
-import java.math.BigDecimal
 import java.util.Optional
 import java.util.function.Function
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 import java.util.stream.Collectors
-import net.kyori.adventure.text.Component
 
 class CommonAnvilReloadCommand<TCommandSource> :
   SimpleCommand< TCommandSource> {

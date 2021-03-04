@@ -18,8 +18,8 @@
 
 package org.anvilpowered.anvil.common.command.regedit
 
-import java.util.UUID
 import net.kyori.adventure.text.Component
+import java.util.UUID
 
 class CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {

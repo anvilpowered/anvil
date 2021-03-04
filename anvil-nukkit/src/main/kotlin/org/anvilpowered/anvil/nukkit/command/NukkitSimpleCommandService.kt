@@ -22,7 +22,6 @@ import cn.nukkit.Server
 import cn.nukkit.command.CommandSender
 import cn.nukkit.command.PluginCommand
 import cn.nukkit.plugin.Plugin
-import cn.nukkit.plugin.PluginBase
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand

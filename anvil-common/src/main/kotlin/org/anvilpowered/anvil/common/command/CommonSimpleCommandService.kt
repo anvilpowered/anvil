@@ -18,9 +18,6 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
-import java.util.Optional
-import java.util.function.Predicate
-import java.util.function.Supplier
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.CommandMapping
@@ -29,6 +26,9 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.TextService
 import org.checkerframework.checker.nullness.qual.Nullable
+import java.util.Optional
+import java.util.function.Predicate
+import java.util.function.Supplier
 
 abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService<TCommandSource> {
 

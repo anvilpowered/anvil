@@ -21,7 +21,6 @@ import com.google.common.reflect.TypeToken
 import com.google.inject.TypeLiteral
 import com.google.inject.name.Names
 import dev.morphia.Datastore
-import java.nio.file.Paths
 import jetbrains.exodus.entitystore.EntityId
 import jetbrains.exodus.entitystore.PersistentEntityStore
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
@@ -42,6 +41,7 @@ import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages
 import org.anvilpowered.anvil.common.registry.CommonConfigurationService
 import org.bson.types.ObjectId
+import java.nio.file.Paths
 
 @Suppress("UnstableApiUsage")
 open class CommonModule<TCommandSource>(private val configDir: String) : ApiCommonModule() {

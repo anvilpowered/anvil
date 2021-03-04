@@ -19,8 +19,8 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
-import kotlin.streams.toList
 import net.kyori.adventure.text.Component
+import kotlin.streams.toList
 
 class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
