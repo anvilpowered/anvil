@@ -49,9 +49,9 @@ import org.anvilpowered.anvil.api.util.TextService;
  * </p>
  * <ul>
  *     <li>{@code CompletableFuture<{@link Component}> create(UUID userUUID);}</li>
- *     <li>{@code CompletableFuture<@link net.kyori.adventure.text.Component> invite(UUID userUUID, UUID targetUserUUID);}</li>
- *     <li>{@code CompletableFuture<@link net.kyori.adventure.text.Component> kick(UUID userUUID, UUID targetUserUUID);}</li>
- *     <li>{@code CompletableFuture<List<@link net.kyori.adventure.text.Component>> list(String query);}</li>
+ *     <li>{@code CompletableFuture<{@link Component> invite(UUID userUUID, UUID targetUserUUID);}</li>
+ *     <li>{@code CompletableFuture<{@link Component> kick(UUID userUUID, UUID targetUserUUID);}</li>
+ *     <li>{@code CompletableFuture<List<{@link Component>> list(String query);}</li>
  * </ul>
  * <p>
  * {@link Component} is the base return type for the methods in a {@link Manager}.
