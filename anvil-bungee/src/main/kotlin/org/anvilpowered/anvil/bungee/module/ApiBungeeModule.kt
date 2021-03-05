@@ -32,10 +32,12 @@ import org.anvilpowered.anvil.bungee.command.BungeeCommandExecuteService
 import org.anvilpowered.anvil.bungee.command.BungeeSimpleCommandService
 import org.anvilpowered.anvil.bungee.server.BungeeLocationService
 import org.anvilpowered.anvil.bungee.util.BungeeKickService
+import org.anvilpowered.anvil.bungee.util.BungeeMetricService
 import org.anvilpowered.anvil.bungee.util.BungeePermissionService
 import org.anvilpowered.anvil.bungee.util.BungeeSendTextService
 import org.anvilpowered.anvil.bungee.util.BungeeUserService
 import org.anvilpowered.anvil.common.PlatformImpl
+import org.anvilpowered.anvil.common.metric.MetricService
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
 import org.anvilpowered.anvil.common.util.CommonTextService
@@ -54,6 +56,7 @@ class ApiBungeeModule : PlatformModule(
     bind(CommandExecuteService::class.java).to(BungeeCommandExecuteService::class.java)
     bind(KickService::class.java).to(BungeeKickService::class.java)
     bind(LocationService::class.java).to(BungeeLocationService::class.java)
+    bind(MetricService::class.java).to(BungeeMetricService::class.java)
     bind(PermissionService::class.java).to(BungeePermissionService::class.java)
     bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(BungeeSendTextService::class.java)
     bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(BungeeSimpleCommandService::class.java)

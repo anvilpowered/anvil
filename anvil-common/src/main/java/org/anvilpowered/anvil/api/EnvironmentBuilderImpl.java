@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.api;
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.AbstractModule;
+import com.google.inject.Binding;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -32,6 +33,7 @@ import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.registry.RegistryScope;
 import org.anvilpowered.anvil.common.PlatformImpl;
+import org.anvilpowered.anvil.common.metric.MetricService;
 import org.anvilpowered.anvil.common.module.PlatformModule;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -132,6 +134,11 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
             }
             ServiceManagerImpl.environmentManager
                 .registerEnvironment(environment, environment.getPlugin());
+            Binding<MetricService> metricBinding =
+              Anvil.environment.getInjector().getExistingBinding(Key.get(MetricService.class));
+            if (metricBinding != null) {
+                metricBinding.getProvider().get().initializeMetric(environment);
+            }
             for (Map.Entry<Key<?>, Consumer<?>> entry
                 : environment.getEarlyServices().entrySet()) {
                 ((Consumer) entry.getValue())

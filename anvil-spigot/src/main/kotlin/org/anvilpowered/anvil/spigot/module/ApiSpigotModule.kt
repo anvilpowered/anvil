@@ -29,6 +29,7 @@ import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.entity.EntityUtils
+import org.anvilpowered.anvil.common.metric.MetricService
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
 import org.anvilpowered.anvil.common.util.CommonTextService
@@ -38,6 +39,7 @@ import org.anvilpowered.anvil.spigot.command.SpigotSimpleCommandService
 import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils
 import org.anvilpowered.anvil.spigot.server.SpigotLocationService
 import org.anvilpowered.anvil.spigot.util.SpigotKickService
+import org.anvilpowered.anvil.spigot.util.SpigotMetricService
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService
 import org.anvilpowered.anvil.spigot.util.SpigotSendTextService
 import org.anvilpowered.anvil.spigot.util.SpigotUserService
@@ -55,17 +57,18 @@ class ApiSpigotModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
     val callbackCommandType: TypeLiteral<CommonCallbackCommand<CommandSender>> =
       object : TypeLiteral<CommonCallbackCommand<CommandSender>>() {}
     bind(callbackCommandType).toProvider(BindingExtensions.asInternalProvider(callbackCommandType))
     bind(CommandExecuteService::class.java).to(SpigotCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(SpigotSimpleCommandService::class.java)
-    bind(KickService::class.java).to(SpigotKickService::class.java)
     bind(EntityUtils::class.java).to(SpigotEntityUtils::class.java)
+    bind(KickService::class.java).to(SpigotKickService::class.java)
     bind(LocationService::class.java).to(SpigotLocationService::class.java)
+    bind(MetricService::class.java).to(SpigotMetricService::class.java)
     bind(PermissionService::class.java).to(SpigotPermissionService::class.java)
     bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(SpigotSendTextService::class.java)
+    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(SpigotSimpleCommandService::class.java)
+    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
     bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(SpigotUserService::class.java)
   }
 }

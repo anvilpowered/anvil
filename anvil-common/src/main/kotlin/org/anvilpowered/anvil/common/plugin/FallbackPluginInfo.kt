@@ -24,33 +24,34 @@ import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.TextService
 
-class FallbackPluginInfo<TCommandSource> : PluginInfo {
-    companion object {
-        const val version = "v0"
-        const val description = "description"
-        const val url = "URL"
-        val authors = arrayOf("author")
-        const val organizationName = "organizationName"
-        const val buildDate = "last night"
-    }
+class FallbackPluginInfo<TCommandSource> @Inject constructor(
+  private val environment: Environment
+) : PluginInfo {
+  companion object {
+    const val version = "v0"
+    const val description = "description"
+    const val url = "URL"
+    val authors = arrayOf("author")
+    const val organizationName = "organizationName"
+    const val buildDate = "last night"
+    val metricIds = mutableMapOf("fake" to 0)
+  }
 
-    @Inject
-    private lateinit var environment: Environment
+  private lateinit var pluginPrefix: Component
 
-    lateinit var pluginPrefix: Component
+  @Inject
+  fun setPluginPrefix(textService: TextService<TCommandSource>) {
+    pluginPrefix = textService.builder().gold().append("[", name, "] ").build()
+  }
 
-    @Inject
-    fun setPluginPrefix(textService: TextService<TCommandSource>) {
-        pluginPrefix = textService.builder().gold().append("[", name, "] ").build()
-    }
-
-    override fun getId(): String = environment.name
-    override fun getName(): String = environment.name
-    override fun getVersion(): String = Companion.version
-    override fun getDescription(): String = Companion.description
-    override fun getUrl(): String = Companion.url
-    override fun getAuthors(): Array<String> = Companion.authors
-    override fun getOrganizationName(): String = Companion.organizationName
-    override fun getBuildDate(): String = Companion.buildDate
-    override fun getPrefix(): Component = pluginPrefix
+  override fun getId(): String = environment.name
+  override fun getName(): String = environment.name
+  override fun getVersion(): String = Companion.version
+  override fun getDescription(): String = Companion.description
+  override fun getUrl(): String = Companion.url
+  override fun getAuthors(): Array<String> = Companion.authors
+  override fun getOrganizationName(): String = Companion.organizationName
+  override fun getBuildDate(): String = Companion.buildDate
+  override fun getPrefix(): Component = pluginPrefix
+  override fun getMetricIds(): MutableMap<String, Int> = Companion.metricIds
 }

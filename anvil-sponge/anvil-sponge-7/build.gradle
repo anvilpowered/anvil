@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
   api(project(":anvil-sponge:anvil-sponge-common"))
+  api(bstats_base)
   api(sponge + ":" + sponge7_version)
   api(kyori_legacy_serializer)
   api(kyori_examination)

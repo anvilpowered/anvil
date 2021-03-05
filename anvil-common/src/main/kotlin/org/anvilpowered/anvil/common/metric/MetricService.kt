@@ -16,30 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.plugin;
+package org.anvilpowered.anvil.common.metric
 
-import net.kyori.adventure.text.Component;
-import org.anvilpowered.anvil.api.misc.Named;
+import org.anvilpowered.anvil.api.Environment
 
-import java.util.Map;
+interface MetricService {
 
-public interface PluginInfo extends Named {
+  fun initializeMetric(env: Environment)
 
-  Component getPrefix();
-
-  String getId();
-
-  String getVersion();
-
-  String getDescription();
-
-  String getUrl();
-
-  String[] getAuthors();
-
-  String getOrganizationName();
-
-  String getBuildDate();
-
-  Map<String, Integer> getMetricIds();
 }

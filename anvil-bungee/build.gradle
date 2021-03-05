@@ -47,9 +47,11 @@ shadowJar {
             include project(':Anvil:anvil-common')
         }
         relocate("net.kyori", "relocated.net.kyori")
+        relocate("org.bstats", "relocated.org.bstats")
         include dependency(apache_commons)
         include dependency(aopalliance)
         include dependency(bson)
+        include dependency(bstats_base)
         include dependency(configurate_core)
         include dependency(configurate_hocon)
         include dependency(guice)
