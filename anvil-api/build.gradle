@@ -1,7 +1,6 @@
 version = rootProject.apiVersion
 
 dependencies {
-    api(asynchttp)
     api bson
     api configurate_core
     api(gson)
