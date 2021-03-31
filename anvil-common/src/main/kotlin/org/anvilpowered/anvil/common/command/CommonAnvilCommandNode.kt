@@ -30,7 +30,7 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
   private val dumpCommand: CommonAnvilDumpCommand<TCommandSource>,
   private val pluginsCommand: CommonAnvilPluginsCommand<TCommandSource>,
   private val reloadCommand: CommonAnvilReloadCommand<TCommandSource>,
-  //private val callbackCommand: CommonCallbackCommand<TCommandSource>,
+  private val callbackCommand: CommonCallbackCommand<TCommandSource>,
   private val regeditNode: CommonRegistryEditCommandNode<TUser, TPlayer, TCommandSource>,
   registry: Registry,
 ) {
@@ -88,8 +88,8 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
     commandService.register(anvilMapping)
     // we'll use sponge's callback command on sponge
     if (Anvil.getPlatform().name != "sponge") {
-      //callbackMapping = commandService.mapTerminal(CALLBACK_ALIAS, callbackCommand)
-      //commandService.register(callbackMapping)
+      callbackMapping = commandService.mapTerminal(CALLBACK_ALIAS, callbackCommand)
+      commandService.register(callbackMapping)
     }
   }
 }
