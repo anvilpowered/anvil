@@ -19,6 +19,7 @@ dependencies {
         implementation project(':Anvil:anvil-common')
     }
 
+    implementation bstats
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
@@ -45,8 +46,10 @@ shadowJar {
             include project(':Anvil:anvil-common')
         }
 
+        relocate("org.bstats", "relocated.org.bstats")
         include dependency(apache_commons)
         include dependency(bson)
+        include dependency(bstats)
         include dependency(javasisst)
         include dependency(jedis)
         include dependency(kotlin_reflect)

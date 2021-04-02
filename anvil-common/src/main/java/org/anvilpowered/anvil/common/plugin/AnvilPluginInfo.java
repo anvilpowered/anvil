@@ -18,12 +18,16 @@
 
 package org.anvilpowered.anvil.common.plugin;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.anvilpowered.anvil.api.plugin.PluginInfo;
 import org.anvilpowered.anvil.api.util.TextService;
 
-public class AnvilPluginInfo implements PluginInfo {
+import java.util.Map;
+
+public class AnvilPluginInfo<TCommandSource> implements PluginInfo {
     public static final String id = "anvil";
     public static final String name = "Anvil";
     public static final String version = "$modVersion";
@@ -37,6 +41,7 @@ public class AnvilPluginInfo implements PluginInfo {
       .append(Component.text(name, NamedTextColor.AQUA))
       .append(Component.text("] ", NamedTextColor.BLUE))
       .build();
+    public static final Map<String, Integer> metricId = ImmutableMap.of();
 
     @Override
     public String getId() {
@@ -81,5 +86,10 @@ public class AnvilPluginInfo implements PluginInfo {
     @Override
     public Component getPrefix() {
         return pluginPrefix;
+    }
+
+    @Override
+    public Map<String, Integer> getMetricIds() {
+        return metricId;
     }
 }

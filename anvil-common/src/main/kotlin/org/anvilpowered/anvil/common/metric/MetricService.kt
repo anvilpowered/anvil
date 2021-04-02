@@ -16,28 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.plugin
+package org.anvilpowered.anvil.common.metric
 
-import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.api.misc.Named
+import org.anvilpowered.anvil.api.Environment
 
-interface PluginInfo : Named {
+interface MetricService {
 
-  val prefix: Component
+  /**
+   * Initializes metrics through bStats for the specified [Environment]
+   */
+  fun initialize(env: Environment)
 
-  val id: String
-
-  val version: String
-
-  val description: String
-
-  val url: String
-
-  val authors: Array<String>
-
-  val organizationName: String
-
-  val buildDate: String
-
-  val metricIds: Map<String, Int>
 }

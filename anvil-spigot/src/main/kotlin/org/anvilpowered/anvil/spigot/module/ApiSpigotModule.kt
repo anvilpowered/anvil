@@ -27,6 +27,7 @@ import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.entity.EntityUtils
+import org.anvilpowered.anvil.common.metric.MetricService
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
 import org.anvilpowered.anvil.common.util.CommonTextService
@@ -34,6 +35,7 @@ import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.spigot.command.SpigotCommandExecuteService
 import org.anvilpowered.anvil.spigot.command.SpigotSimpleCommandService
 import org.anvilpowered.anvil.spigot.entity.SpigotEntityUtils
+import org.anvilpowered.anvil.spigot.metric.SpigotMetricService
 import org.anvilpowered.anvil.spigot.server.SpigotLocationService
 import org.anvilpowered.anvil.spigot.util.SpigotKickService
 import org.anvilpowered.anvil.spigot.util.SpigotPermissionService
@@ -58,6 +60,7 @@ class ApiSpigotModule : PlatformModule(
     bind(KickService::class.java).to(SpigotKickService::class.java)
     bind(EntityUtils::class.java).to(SpigotEntityUtils::class.java)
     bind(LocationService::class.java).to(SpigotLocationService::class.java)
+    bind(MetricService::class.java).to(SpigotMetricService::class.java)
     bind(PermissionService::class.java).to(SpigotPermissionService::class.java)
     bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(SpigotSendTextService::class.java)
     bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})

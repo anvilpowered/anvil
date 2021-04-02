@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api(project(':anvil-api'))
 
+    api(bstats)
     api("net.kyori:adventure-text-serializer-legacy:4.5.0")
     api("net.kyori:adventure-text-serializer-plain:4.5.0")
     api(configurate_hocon)
