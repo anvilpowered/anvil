@@ -143,7 +143,7 @@ class CommonInfoDumpService<TCommandSource> : InfoDumpService<TCommandSource> {
       val key = parse(resp.content.readUTF8Line())
       check(key.has("key"))
       val url = "http://dump.anvilpowered.org/${key.get("key").asString}.json"
-      textService.builder
+      textService.builder()
         .appendPrefix()
         .green().append("If a developer has requested you run this command, please provide them with the following link\n")
         .gold().append(url).onClickOpenUrl(url)
