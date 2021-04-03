@@ -234,6 +234,17 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
     }
 
     @Override
+    public Environment.Builder checkUpdates(String owner, String repository) {
+        if (owner == null || owner.isEmpty()) {
+            throw new IllegalStateException("Owner may not be null or empty");
+        }
+        if (repository == null || repository.isEmpty()) {
+            throw new IllegalStateException("Repository may not be null or empty");
+        }
+        return this;
+    }
+
+    @Override
     public Environment.Builder setName(String name) {
         if (name == null || name.isEmpty()) {
             throw new IllegalStateException("Name may not be null or empty");

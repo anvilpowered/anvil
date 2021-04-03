@@ -121,6 +121,8 @@ public interface Environment extends Named, Comparable<Environment> {
 
         <T> Builder addEarlyServices(TypeToken<T> typeToken, Consumer<T> initializer);
 
+        Builder checkUpdates(String owner, String repository);
+
         /**
          * Sets the name for this environment builder.
          *
