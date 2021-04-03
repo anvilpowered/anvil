@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.common.plugin
 
+import com.google.common.collect.ImmutableMap
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Environment
@@ -32,6 +33,7 @@ class FallbackPluginInfo<TCommandSource> : PluginInfo {
         val authors = arrayOf("author")
         const val organizationName = "organizationName"
         const val buildDate = "last night"
+        val metricIds: Map<String, Int> = ImmutableMap.of("fake", 0)
     }
 
     @Inject
@@ -53,4 +55,5 @@ class FallbackPluginInfo<TCommandSource> : PluginInfo {
     override val organizationName: String = Companion.organizationName
     override val buildDate: String = Companion.buildDate
     override val prefix: Component = pluginPrefix
+    override val metricIds: Map<String, Int> = Companion.metricIds
 }

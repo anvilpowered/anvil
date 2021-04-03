@@ -31,11 +31,13 @@ import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.metric.MetricService
 import org.anvilpowered.anvil.common.module.PlatformModule
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService
 import org.anvilpowered.anvil.velocity.command.VelocitySimpleCommandService
+import org.anvilpowered.anvil.velocity.metric.VelocityMetricService
 import org.anvilpowered.anvil.velocity.server.VelocityLocationService
 import org.anvilpowered.anvil.velocity.util.VelocityKickService
 import org.anvilpowered.anvil.velocity.util.VelocityPermissionService
@@ -57,6 +59,7 @@ class ApiVelocityModule : PlatformModule(
       bind<SimpleCommandService<CommandSource>>().to<VelocitySimpleCommandService>()
       bind<KickService>().to<VelocityKickService>()
       bind<LocationService>().to<VelocityLocationService>()
+      bind<MetricService>().to<VelocityMetricService>()
       bind<PermissionService>().to<VelocityPermissionService>()
       bind<TextService<CommandSource>>().to<CommonTextService<CommandSource>>()
       bind<TextService<*>>().to<CommonTextService<CommandSource>>()

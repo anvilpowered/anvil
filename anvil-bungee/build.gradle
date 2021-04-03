@@ -14,6 +14,7 @@ dependencies {
     }
 
     implementation bungee
+    implementation bstats
     implementation configurate_hocon
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
@@ -50,6 +51,7 @@ shadowJar {
         include dependency(apache_commons)
         include dependency(aopalliance)
         include dependency(bson)
+        include dependency(bstats)
         include dependency(configurate_core)
         include dependency(configurate_hocon)
         include dependency(guice)
