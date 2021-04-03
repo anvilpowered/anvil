@@ -25,7 +25,6 @@ import jetbrains.exodus.entitystore.PersistentEntityStore
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader
 import ninja.leaping.configurate.loader.ConfigurationLoader
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
@@ -33,12 +32,13 @@ import org.anvilpowered.anvil.api.misc.withMongoDB
 import org.anvilpowered.anvil.api.misc.withXodus
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.util.InfoDumpService
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
-import org.anvilpowered.anvil.common.coremember.CommonCoreMemberManager
 import org.anvilpowered.anvil.common.coremember.CommonMongoCoreMemberRepository
 import org.anvilpowered.anvil.common.coremember.CommonXodusCoreMemberRepository
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.common.registry.CommonConfigurationService
+import org.anvilpowered.anvil.common.util.CommonInfoDumpService
 import org.bson.types.ObjectId
 import java.nio.file.Paths
 
@@ -58,8 +58,8 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
         .to<CommonXodusCoreMemberRepository>()
       bind<CoreMemberRepository<EntityId, PersistentEntityStore>>()
         .to<CommonXodusCoreMemberRepository>()
-
-      bind<CoreMemberManager>().to<CommonCoreMemberManager>()
+      bind<InfoDumpService<TCommandSource>>()
+        .to<CommonInfoDumpService<TCommandSource>>()
 
       withMongoDB()
       withXodus()
