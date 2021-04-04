@@ -46,7 +46,6 @@ class AnvilSponge8 @Inject constructor(
 
   @Listener(order = Order.EARLY)
   fun onInit(event: LoadedGameEvent) {
-    EnvironmentBuilderImpl.completeInitialization(ApiSponge8Module(), Sponge8FallbackModule())
     Sponge.eventManager().registerListeners(
       plugin,
       environment.injector.getInstance(Sponge8PlayerListener::class.java)

@@ -20,12 +20,7 @@ package org.anvilpowered.anvil.api;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
+import com.google.inject.*;
 import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import org.anvilpowered.anvil.api.misc._AbstractModuleKt;
@@ -33,6 +28,7 @@ import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.registry.RegistryScope;
 import org.anvilpowered.anvil.common.PlatformImpl;
 import org.anvilpowered.anvil.common.module.PlatformModule;
+import org.anvilpowered.anvil.common.util.VersionChecker;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -137,6 +133,7 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
                 ((Consumer) entry.getValue())
                     .accept(injector.getInstance(entry.getKey()));
             }
+            injector.getInstance(VersionChecker.class).checkVersion();
             Registry registry = injector.getInstance(Registry.class);
             for (Consumer<Environment> listener
                 : loadedListeners.get(environment.getName())) {
@@ -230,17 +227,6 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
     @Override
     public <T> Environment.Builder addEarlyServices(TypeToken<T> typeToken, Consumer<T> initializer) {
         earlyServices.put(Key.get(_AbstractModuleKt.toTypeLiteralNoInline(typeToken)), initializer);
-        return this;
-    }
-
-    @Override
-    public Environment.Builder checkUpdates(String owner, String repository) {
-        if (owner == null || owner.isEmpty()) {
-            throw new IllegalStateException("Owner may not be null or empty");
-        }
-        if (repository == null || repository.isEmpty()) {
-            throw new IllegalStateException("Repository may not be null or empty");
-        }
         return this;
     }
 

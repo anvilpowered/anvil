@@ -31,6 +31,7 @@ class FallbackPluginInfo<TCommandSource> : PluginInfo {
         const val url = "URL"
         val authors = arrayOf("author")
         const val organizationName = "organizationName"
+        const val sourceUrl = "sourceUrl"
         const val buildDate = "last night"
     }
 
@@ -51,6 +52,7 @@ class FallbackPluginInfo<TCommandSource> : PluginInfo {
     override val url: String = Companion.url
     override val authors: Array<String> = Companion.authors
     override val organizationName: String = Companion.organizationName
+    override val sourceUrl: String = Companion.sourceUrl
     override val buildDate: String = Companion.buildDate
     override val prefix: Component = pluginPrefix
 }

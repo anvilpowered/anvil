@@ -37,5 +37,7 @@ interface PluginInfo : Named {
 
   val organizationName: String
 
+  val sourceUrl: String
+
   val buildDate: String
 }

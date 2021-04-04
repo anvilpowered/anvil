@@ -65,4 +65,8 @@ class AnvilVelocity @Inject constructor(injector: Injector) :
     super.applyToBuilder(builder)
     builder.addEarlyServices(object : TypeLiteral<CommonAnvilCommandNode<Player, Player, CommandSource>>() {})
   }
+
+  override fun whenLoaded(environment: Environment?) {
+    super.whenLoaded(environment)
+  }
 }
