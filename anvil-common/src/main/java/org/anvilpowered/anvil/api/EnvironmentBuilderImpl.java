@@ -33,6 +33,7 @@ import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.registry.RegistryScope;
 import org.anvilpowered.anvil.common.PlatformImpl;
 import org.anvilpowered.anvil.common.module.PlatformModule;
+import org.anvilpowered.anvil.common.util.VersionChecker;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -138,6 +139,7 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
                     .accept(injector.getInstance(entry.getKey()));
             }
             Registry registry = injector.getInstance(Registry.class);
+            registry.whenLoaded(injector.getInstance(VersionChecker.class)::checkVersion).register();
             for (Consumer<Environment> listener
                 : loadedListeners.get(environment.getName())) {
                 registry.whenLoaded(() -> listener.accept(environment)).register();

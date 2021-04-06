@@ -17,8 +17,10 @@
  */
 package org.anvilpowered.anvil.common.command
 
+import com.google.common.base.MoreObjects
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand

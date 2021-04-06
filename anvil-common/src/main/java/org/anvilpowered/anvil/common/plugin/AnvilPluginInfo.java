@@ -29,6 +29,7 @@ public class AnvilPluginInfo implements PluginInfo {
     public static final String description = "A cross-platform Minecraft plugin framework";
     public static final String url = "https://github.com/AnvilPowered/Anvil";
     public static final String organizationName = "AnvilPowered";
+    public static final String sourceUrl = url;
     public static final String[] authors = {organizationName};
     public static final String buildDate = "$buildDate";
     public Component pluginPrefix = Component.text()
@@ -71,8 +72,12 @@ public class AnvilPluginInfo implements PluginInfo {
     public String getOrganizationName() {
         return organizationName;
     }
-
     @Override
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+  @Override
     public String getBuildDate() {
         return buildDate;
     }

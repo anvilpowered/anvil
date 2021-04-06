@@ -25,6 +25,7 @@ import jetbrains.exodus.entitystore.PersistentEntityStore
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader
 import ninja.leaping.configurate.loader.ConfigurationLoader
+import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
@@ -34,6 +35,7 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.InfoDumpService
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.coremember.CommonCoreMemberManager
 import org.anvilpowered.anvil.common.coremember.CommonMongoCoreMemberRepository
 import org.anvilpowered.anvil.common.coremember.CommonXodusCoreMemberRepository
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
@@ -58,8 +60,8 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
         .to<CommonXodusCoreMemberRepository>()
       bind<CoreMemberRepository<EntityId, PersistentEntityStore>>()
         .to<CommonXodusCoreMemberRepository>()
-      bind<InfoDumpService<TCommandSource>>()
-        .to<CommonInfoDumpService<TCommandSource>>()
+
+      bind<CoreMemberManager>().to<CommonCoreMemberManager>()
 
       withMongoDB()
       withXodus()

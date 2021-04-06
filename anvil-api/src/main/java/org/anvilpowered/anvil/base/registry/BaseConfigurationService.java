@@ -90,6 +90,8 @@ public class BaseConfigurationService extends BaseRegistry implements Configurat
     protected void withCore() {
         setName(Keys.SERVER_NAME, "server.name");
         setDescription(Keys.SERVER_NAME, "\nServer name");
+        setName(Keys.CHECK_VERSIONS, "server.checkUpdates");
+        setDescription(Keys.CHECK_VERSIONS, "\nWhether Anvil should check online for a new version.");
     }
 
     private void withDataStoreCore0() {

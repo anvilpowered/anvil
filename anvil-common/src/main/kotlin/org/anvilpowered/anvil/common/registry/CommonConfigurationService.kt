@@ -23,12 +23,15 @@ import ninja.leaping.configurate.ConfigurationOptions
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.loader.ConfigurationLoader
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection
+import org.anvilpowered.anvil.api.Platform
+import org.anvilpowered.anvil.api.Tristate
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.base.registry.BaseConfigurationService
 
 @Singleton
-open class CommonConfigurationService @Inject constructor(
+class CommonConfigurationService @Inject constructor(
     configLoader: ConfigurationLoader<CommentedConfigurationNode>,
+    platform: Platform
 ) : BaseConfigurationService(configLoader) {
     init {
         withDataStoreCore()
@@ -44,6 +47,9 @@ The server's timezone id. Use "auto" for the local system time, otherwise
 please see https://nodatime.org/TimeZones (note that your system's available timezones may differ).
 This option is useful if your server machine and community are based in different timezones.
 """)
+        if (platform.name.contains("sponge")) {
+          setDefault(Keys.CHECK_VERSIONS, Tristate.UNDEFINED)
+        }
         val serializers = TypeSerializerCollection.defaults().newChild()
         serializers.register(Keys.TIME_ZONE.type, CommonZoneIdSerializer())
         val options = ConfigurationOptions.defaults()
