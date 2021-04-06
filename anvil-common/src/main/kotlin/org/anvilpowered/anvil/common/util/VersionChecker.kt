@@ -15,14 +15,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.TextService
-import org.slf4j.Logger
 import java.net.URL
 import java.util.Scanner
 
 @Singleton
 class VersionChecker @Inject constructor(
   private val pluginInfo: PluginInfo,
-  private val logger: Logger,
   private val textService: TextService<*>
 ) {
 
@@ -35,9 +33,14 @@ class VersionChecker @Inject constructor(
   fun checkVersion() {
     val specified = pluginInfo.sourceUrl
     currentVersion = pluginInfo.version
+    if (currentVersion.isEmpty()) {
+      return
+    }
     if (currentVersion.contains("-SNAPSHOT")) {
-      logger.warn("You are currently running a development build of ${pluginInfo.name}!")
-      logger.warn("Beware, bugs may exist. AnvilPowered does not recommend running development builds in production!")
+      textService.builder()
+        .appendPrefix()
+        .red().append("You are currently running a development build! AnvilPowered does not recommend running development builds in production environments!")
+        .sendToConsole()
       return
     }
     when {
@@ -98,12 +101,6 @@ class VersionChecker @Inject constructor(
         .gold().append("[$latest]")
         .red().append("! (installed: $currentVersion)")
         .sendToConsole()
-    } else if (
-      lMaj < cMaj
-      || lMin < cMin
-      || lBug < cBug
-    ) {
-      logger.warn("You are currently running a unreleased version of ${pluginInfo.name}!")
     }
   }
 }

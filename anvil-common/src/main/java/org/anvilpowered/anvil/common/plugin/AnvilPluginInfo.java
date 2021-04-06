@@ -25,7 +25,7 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo;
 public class AnvilPluginInfo implements PluginInfo {
     public static final String id = "anvil";
     public static final String name = "Anvil";
-    public static final String version = "0.2.0";
+    public static final String version = "$modVersion";
     public static final String description = "A cross-platform Minecraft plugin framework";
     public static final String url = "https://github.com/AnvilPowered/Anvil";
     public static final String organizationName = "AnvilPowered";
