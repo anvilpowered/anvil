@@ -7,7 +7,7 @@ package org.anvilpowered.anvil.api
  * [TRUE] A positive setting
  * [FALSE] A negative setting
  * [UNDEFINED] A non-existent setting
- **/
+ */
 enum class Tristate(state: Boolean?) {
 
   /**
