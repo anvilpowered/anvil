@@ -25,6 +25,7 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.InfoDumpService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
@@ -32,6 +33,7 @@ import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.CommonInfoDumpService
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService
@@ -54,14 +56,16 @@ class ApiVelocityModule : PlatformModule(
     with(binder()) {
       bind<CommonCallbackCommand<CommandSource>>()
       bind<CommandExecuteService>().to<VelocityCommandExecuteService>()
-      bind<SimpleCommandService<CommandSource>>().to<VelocitySimpleCommandService>()
+      bind<InfoDumpService<CommandSource>>().to<CommonInfoDumpService<CommandSource>>()
+      bind<InfoDumpService<*>>().to<CommonInfoDumpService<CommandSource>>()
       bind<KickService>().to<VelocityKickService>()
       bind<LocationService>().to<VelocityLocationService>()
       bind<PermissionService>().to<VelocityPermissionService>()
-      bind<TextService<CommandSource>>().to<CommonTextService<CommandSource>>()
-      bind<TextService<*>>().to<CommonTextService<CommandSource>>()
       bind<SendTextService<CommandSource>>().to<VelocitySendTextService>()
       bind<SendTextService<*>>().to<VelocitySendTextService>()
+      bind<SimpleCommandService<CommandSource>>().to<VelocitySimpleCommandService>()
+      bind<TextService<CommandSource>>().to<CommonTextService<CommandSource>>()
+      bind<TextService<*>>().to<CommonTextService<CommandSource>>()
       bind<UserService<Player, Player>>().to<VelocityUserService>()
     }
   }

@@ -23,11 +23,13 @@ import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.misc.toInternalProvider
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.InfoDumpService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.util.CommonInfoDumpService
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
@@ -55,13 +57,15 @@ class ApiSponge8Module : ApiSpongeModule(
   override fun configure() {
     super.configure()
     with(binder()) {
-      bind<TextService<CommandCause>>().to<CommonTextService<CommandCause>>()
       bind<CommonCallbackCommand<CommandCause>>().toInternalProvider()
       bind<CommandExecuteService>().to<Sponge8CommandExecuteService>()
-      bind<SimpleCommandService<CommandCause>>().to<Sponge8SimpleCommandService>()
+      bind<InfoDumpService<CommandCause>>().to<CommonInfoDumpService<CommandCause>>()
+      bind<InfoDumpService<*>>().to<CommonInfoDumpService<CommandCause>>()
       bind<KickService>().to<Sponge8KickService>()
       bind<LocationService>().to<Sponge8LocationService>()
       bind<SendTextService<CommandCause>>().to<Sponge8SendTextService>()
+      bind<SimpleCommandService<CommandCause>>().to<Sponge8SimpleCommandService>()
+      bind<TextService<CommandCause>>().to<CommonTextService<CommandCause>>()
       bind<UserService<User, ServerPlayer>>().to<Sponge8UserService>()
     }
   }

@@ -22,10 +22,12 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.InfoDumpService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
+import org.anvilpowered.anvil.common.util.CommonInfoDumpService
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
@@ -52,11 +54,13 @@ class ApiSponge7Module : ApiSpongeModule(
     super.configure()
     with(binder()) {
       bind<CommandExecuteService>().to<Sponge7CommandExecuteService>()
-      bind<SimpleCommandService<CommandSource>>().to<Sponge7SimpleCommandService>()
+      bind<InfoDumpService<CommandSource>>().to<CommonInfoDumpService<CommandSource>>()
+      bind<InfoDumpService<*>>().to<CommonInfoDumpService<CommandSource>>()
       bind<KickService>().to<Sponge7KickService>()
       bind<LocationService>().to<Sponge7LocationService>()
       bind<SendTextService<CommandSource>>().to<Sponge7SendTextService>()
       bind<SendTextService<*>>().to<Sponge7SendTextService>()
+      bind<SimpleCommandService<CommandSource>>().to<Sponge7SimpleCommandService>()
       bind<TextService<CommandSource>>().to<CommonTextService<CommandSource>>()
       bind<TextService<*>>().to<CommonTextService<CommandSource>>()
       bind<UserService<User, Player>>().to<Sponge7UserService>()
