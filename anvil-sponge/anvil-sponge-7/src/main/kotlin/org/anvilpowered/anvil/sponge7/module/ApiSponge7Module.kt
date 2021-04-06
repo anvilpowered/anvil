@@ -17,9 +17,10 @@
  */
 package org.anvilpowered.anvil.sponge7.module
 
-import com.google.inject.TypeLiteral
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
+import org.anvilpowered.anvil.api.misc.bind
+import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.TextService
@@ -49,12 +50,16 @@ class ApiSponge7Module : ApiSpongeModule(
 ) {
   override fun configure() {
     super.configure()
-    bind(CommandExecuteService::class.java).to(Sponge7CommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<CommandSource>>() {}).to(Sponge7SimpleCommandService::class.java)
-    bind(KickService::class.java).to(Sponge7KickService::class.java)
-    bind(LocationService::class.java).to(Sponge7LocationService::class.java)
-    bind(object : TypeLiteral<SendTextService<CommandSource>>() {}).to(Sponge7SendTextService::class.java)
-    bind(object : TypeLiteral<TextService<CommandSource>>() {}).to(object : TypeLiteral<CommonTextService<CommandSource>>() {})
-    bind(object : TypeLiteral<UserService<User, Player>>() {}).to(Sponge7UserService::class.java)
+    with(binder()) {
+      bind<CommandExecuteService>().to<Sponge7CommandExecuteService>()
+      bind<SimpleCommandService<CommandSource>>().to<Sponge7SimpleCommandService>()
+      bind<KickService>().to<Sponge7KickService>()
+      bind<LocationService>().to<Sponge7LocationService>()
+      bind<SendTextService<CommandSource>>().to<Sponge7SendTextService>()
+      bind<SendTextService<*>>().to<Sponge7SendTextService>()
+      bind<TextService<CommandSource>>().to<CommonTextService<CommandSource>>()
+      bind<TextService<*>>().to<CommonTextService<CommandSource>>()
+      bind<UserService<User, Player>>().to<Sponge7UserService>()
+    }
   }
 }

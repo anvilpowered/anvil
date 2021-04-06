@@ -17,9 +17,10 @@
  */
 package org.anvilpowered.anvil.spigot.module
 
-import com.google.inject.TypeLiteral
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
+import org.anvilpowered.anvil.api.misc.bind
+import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
@@ -53,14 +54,19 @@ class ApiSpigotModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    bind(CommandExecuteService::class.java).to(SpigotCommandExecuteService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(SpigotSimpleCommandService::class.java)
-    bind(KickService::class.java).to(SpigotKickService::class.java)
-    bind(EntityUtils::class.java).to(SpigotEntityUtils::class.java)
-    bind(LocationService::class.java).to(SpigotLocationService::class.java)
-    bind(PermissionService::class.java).to(SpigotPermissionService::class.java)
-    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(SpigotSendTextService::class.java)
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
-    bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(SpigotUserService::class.java)
+    with(binder()) {
+      bind<CommandExecuteService>().to<SpigotCommandExecuteService>()
+      bind<SimpleCommandService<CommandSender>>().to<SpigotSimpleCommandService>()
+      bind<SimpleCommandService<*>>().to<SpigotSimpleCommandService>()
+      bind<KickService>().to<SpigotKickService>()
+      bind<EntityUtils>().to<SpigotEntityUtils>()
+      bind<LocationService>().to<SpigotLocationService>()
+      bind<PermissionService>().to<SpigotPermissionService>()
+      bind<SendTextService<CommandSender>>().to<SpigotSendTextService>()
+      bind<SendTextService<*>>().to<SpigotSendTextService>()
+      bind<TextService<CommandSender>>().to<CommonTextService<CommandSender>>()
+      bind<TextService<*>>().to<CommonTextService<CommandSender>>()
+      bind<UserService<Player, Player>>().to<SpigotUserService>()
+    }
   }
 }

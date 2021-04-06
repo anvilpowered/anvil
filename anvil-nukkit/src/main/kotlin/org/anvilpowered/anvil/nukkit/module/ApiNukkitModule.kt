@@ -23,6 +23,8 @@ import cn.nukkit.command.CommandSender
 import com.google.inject.TypeLiteral
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
+import org.anvilpowered.anvil.api.misc.bind
+import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
@@ -52,14 +54,18 @@ class ApiNukkitModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    bind(CommandExecuteService::class.java).to(NukkitCommandExecuteService::class.java)
-    bind(KickService::class.java).to(NukkitKickService::class.java)
-    bind(EntityUtils::class.java).to(NukkitEntityUtils::class.java)
-    bind(LocationService::class.java).to(NukkitLocationService::class.java)
-    bind(PermissionService::class.java).to(NukkitPermissionService::class.java)
-    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(NukkitSendTextService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(NukkitSimpleCommandService::class.java)
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
-    bind(object : TypeLiteral<UserService<Player, Player>>() {}).to(NukkitUserService::class.java)
+    with(binder()) {
+      bind<CommandExecuteService>().to<NukkitCommandExecuteService>()
+      bind<KickService>().to<NukkitKickService>()
+      bind<EntityUtils>().to<NukkitEntityUtils>()
+      bind<LocationService>().to<NukkitLocationService>()
+      bind<PermissionService>().to<NukkitPermissionService>()
+      bind<SendTextService<CommandSender>>().to<NukkitSendTextService>()
+      bind<SendTextService<*>>().to<NukkitSendTextService>()
+      bind<SimpleCommandService<CommandSender>>().to<NukkitSimpleCommandService>()
+      bind<TextService<CommandSender>>().to<CommonTextService<CommandSender>>()
+      bind<TextService<*>>().to<CommonTextService<CommandSender>>()
+      bind<UserService<Player, Player>>().to<NukkitUserService>()
+    }
   }
 }

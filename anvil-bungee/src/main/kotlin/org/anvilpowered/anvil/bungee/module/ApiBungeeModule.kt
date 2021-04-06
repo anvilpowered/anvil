@@ -17,19 +17,18 @@
  */
 package org.anvilpowered.anvil.bungee.module
 
-import com.google.inject.TypeLiteral
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import org.anvilpowered.anvil.api.command.CommandExecuteService
-import org.anvilpowered.anvil.api.command.SimpleCommandService
+import org.anvilpowered.anvil.api.misc.bind
+import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.bungee.command.BungeeCommandExecuteService
-import org.anvilpowered.anvil.bungee.command.BungeeSimpleCommandService
 import org.anvilpowered.anvil.bungee.server.BungeeLocationService
 import org.anvilpowered.anvil.bungee.util.BungeeKickService
 import org.anvilpowered.anvil.bungee.util.BungeePermissionService
@@ -51,13 +50,16 @@ class ApiBungeeModule : PlatformModule(
 ) {
   override fun configure() {
     super.configure()
-    bind(CommandExecuteService::class.java).to(BungeeCommandExecuteService::class.java)
-    bind(KickService::class.java).to(BungeeKickService::class.java)
-    bind(LocationService::class.java).to(BungeeLocationService::class.java)
-    bind(PermissionService::class.java).to(BungeePermissionService::class.java)
-    bind(object : TypeLiteral<SendTextService<CommandSender>>() {}).to(BungeeSendTextService::class.java)
-    bind(object : TypeLiteral<SimpleCommandService<CommandSender>>() {}).to(BungeeSimpleCommandService::class.java)
-    bind(object : TypeLiteral<TextService<CommandSender>>() {}).to(object : TypeLiteral<CommonTextService<CommandSender>>() {})
-    bind(object : TypeLiteral<UserService<ProxiedPlayer, ProxiedPlayer>>() {}).to(BungeeUserService::class.java)
+    with(binder()) {
+      bind<CommandExecuteService>().to<BungeeCommandExecuteService>()
+      bind<KickService>().to<BungeeKickService>()
+      bind<LocationService>().to<BungeeLocationService>()
+      bind<PermissionService>().to<BungeePermissionService>()
+      bind<SendTextService<CommandSender>>().to<BungeeSendTextService>()
+      bind<SendTextService<*>>().to<BungeeSendTextService>()
+      bind<TextService<CommandSender>>().to<CommonTextService<CommandSender>>()
+      bind<TextService<*>>().to<CommonTextService<CommandSender>>()
+      bind<UserService<ProxiedPlayer, ProxiedPlayer>>().to<BungeeUserService>()
+    }
   }
 }

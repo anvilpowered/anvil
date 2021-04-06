@@ -61,6 +61,7 @@ class ApiVelocityModule : PlatformModule(
       bind<TextService<CommandSource>>().to<CommonTextService<CommandSource>>()
       bind<TextService<*>>().to<CommonTextService<CommandSource>>()
       bind<SendTextService<CommandSource>>().to<VelocitySendTextService>()
+      bind<SendTextService<*>>().to<VelocitySendTextService>()
       bind<UserService<Player, Player>>().to<VelocityUserService>()
     }
   }
