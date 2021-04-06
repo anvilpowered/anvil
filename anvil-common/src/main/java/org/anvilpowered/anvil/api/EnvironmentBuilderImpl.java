@@ -20,7 +20,12 @@ package org.anvilpowered.anvil.api;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
-import com.google.inject.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import org.anvilpowered.anvil.api.misc._AbstractModuleKt;

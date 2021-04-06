@@ -52,6 +52,7 @@ class AnvilSponge7 @Inject constructor(
 ) : AnvilImpl(injector, object : CommonModule<CommandSource>("config") {}) {
   @Listener(order = Order.EARLY)
   fun onInit(event: GameInitializationEvent) {
+    EnvironmentBuilderImpl.completeInitialization(ApiSponge7Module(), Sponge7FallbackModule())
     Sponge.getEventManager().registerListeners(
       this,
       Anvil.environment.injector.getInstance(Sponge7PlayerListener::class.java)

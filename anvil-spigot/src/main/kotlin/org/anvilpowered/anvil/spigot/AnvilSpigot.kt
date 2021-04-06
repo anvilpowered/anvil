@@ -112,6 +112,7 @@ class AnvilSpigot : JavaPlugin() {
     Bukkit.getPluginManager().registerEvents(object : Listener {
       @EventHandler
       fun onLoad(event: ServerLoadEvent) {
+        EnvironmentBuilderImpl.completeInitialization(ApiSpigotModule(), SpigotFallbackModule())
       }
     }, this)
   }
