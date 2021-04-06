@@ -27,6 +27,7 @@ import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCommandNo
 
 class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor(
   private val commandService: SimpleCommandService<TCommandSource>,
+  private val dumpCommand: CommonAnvilDumpCommand<TCommandSource>,
   private val pluginsCommand: CommonAnvilPluginsCommand<TCommandSource>,
   private val reloadCommand: CommonAnvilReloadCommand<TCommandSource>,
   private val callbackCommand: CommonCallbackCommand<TCommandSource>,
@@ -44,6 +45,7 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
     }
 
     val CALLBACK_ALIAS = listOf("callback")
+    val DUMP_ALIAS = listOf("dump")
     val HELP_ALIAS = listOf("help")
     val PLUGINS_ALIAS = listOf("plugins")
     val RELOAD_ALIAS = listOf("reload")
@@ -71,6 +73,7 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
   private fun loadCommands() {
     val subCommands = listOf(
       commandService.mapTerminal(HELP_ALIAS, commandService.generateHelp { anvilMapping.subCommands }),
+      commandService.mapTerminal(DUMP_ALIAS, dumpCommand),
       commandService.mapTerminal(PLUGINS_ALIAS, pluginsCommand),
       regeditNode.regeditMapping,
       commandService.mapTerminal(RELOAD_ALIAS, reloadCommand),

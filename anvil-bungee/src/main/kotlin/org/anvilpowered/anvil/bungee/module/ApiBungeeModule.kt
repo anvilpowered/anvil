@@ -24,6 +24,7 @@ import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.InfoDumpService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
@@ -37,6 +38,7 @@ import org.anvilpowered.anvil.bungee.util.BungeeUserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.CommonInfoDumpService
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 
@@ -53,6 +55,8 @@ class ApiBungeeModule : PlatformModule(
     with(binder()) {
       bind<CommandExecuteService>().to<BungeeCommandExecuteService>()
       bind<KickService>().to<BungeeKickService>()
+      bind<InfoDumpService<CommandSender>>().to<CommonInfoDumpService<CommandSender>>()
+      bind<InfoDumpService<*>>().to<CommonInfoDumpService<CommandSender>>()
       bind<LocationService>().to<BungeeLocationService>()
       bind<PermissionService>().to<BungeePermissionService>()
       bind<SendTextService<CommandSender>>().to<BungeeSendTextService>()

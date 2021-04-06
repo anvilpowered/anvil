@@ -58,7 +58,6 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
         .to<CommonXodusCoreMemberRepository>()
       bind<CoreMemberRepository<EntityId, PersistentEntityStore>>()
         .to<CommonXodusCoreMemberRepository>()
-
       bind<CoreMemberManager>().to<CommonCoreMemberManager>()
 
       withMongoDB()

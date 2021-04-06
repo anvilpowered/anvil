@@ -26,6 +26,7 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.InfoDumpService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
@@ -33,6 +34,7 @@ import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.common.util.CommonInfoDumpService
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.nukkit.command.NukkitCommandExecuteService
@@ -56,8 +58,10 @@ class ApiNukkitModule : PlatformModule(
     super.configure()
     with(binder()) {
       bind<CommandExecuteService>().to<NukkitCommandExecuteService>()
-      bind<KickService>().to<NukkitKickService>()
       bind<EntityUtils>().to<NukkitEntityUtils>()
+      bind<InfoDumpService<CommandSender>>().to<CommonInfoDumpService<CommandSender>>()
+      bind<InfoDumpService<*>>().to<CommonInfoDumpService<CommandSender>>()
+      bind<KickService>().to<NukkitKickService>()
       bind<LocationService>().to<NukkitLocationService>()
       bind<PermissionService>().to<NukkitPermissionService>()
       bind<SendTextService<CommandSender>>().to<NukkitSendTextService>()

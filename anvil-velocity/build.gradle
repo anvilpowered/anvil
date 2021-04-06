@@ -22,13 +22,29 @@ dependencies {
     implementation javasisst
     implementation(kotlin_reflect + ":" + kotlin_version)
     implementation(kotlin_stdlib + ":" + kotlin_version)
+    implementation(kotlin_stdlib7 + ":" + kotlin_version)
     implementation(kotlin_stdlib8 + ":" + kotlin_version)
-    implementation kotlinx_coroutines
-    implementation kotlinx_serialization
+    implementation(kotlinx_coroutines)
+    implementation(kotlinx_coroutines_core)
+    implementation(kotlinx_coroutines_jvm)
+    implementation(kotlinx_serialization)
+    implementation(ktor_cio)
+    implementation(ktor_core)
+    implementation(ktor_http)
+    implementation(ktor_http_jvm)
+    implementation(ktor_network)
+    implementation(ktor_network_jvm)
+    implementation(ktor_utils)
     implementation microutils_logging
     implementation mongo_java_driver
     implementation velocity
     kapt velocity
+}
+
+tasks.register("copyJars", Copy) {
+    dependsOn(tasks.shadowJar)
+    from(tasks.shadowJar)
+    into("C:\\Users\\Allen\\Desktop\\Velocity\\plugins")
 }
 
 shadowJar {
@@ -51,9 +67,20 @@ shadowJar {
         include dependency(jedis)
         include dependency(kotlin_reflect)
         include dependency(kotlin_stdlib)
+        include dependency(kotlin_stdlib7)
         include dependency(kotlin_stdlib8)
         include dependency(kotlinx_coroutines)
+        include dependency(kotlinx_coroutines_core)
+        include dependency(kotlinx_coroutines_jvm)
         include dependency(kotlinx_serialization)
+        include dependency(ktor_core)
+        include dependency(ktor_cio)
+        include dependency(ktor_http)
+        include dependency(ktor_http_jvm)
+        include dependency(ktor_io)
+        include dependency(ktor_network)
+        include dependency(ktor_network_jvm)
+        include dependency(ktor_utils)
         include dependency(microutils_logging)
         include dependency(mongo_java_driver)
         include dependency(mongodb_driver_sync)
