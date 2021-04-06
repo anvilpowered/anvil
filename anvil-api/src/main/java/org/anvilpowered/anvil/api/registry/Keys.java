@@ -22,6 +22,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Table;
+import com.google.common.reflect.TypeToken;
+import org.anvilpowered.anvil.api.Tristate;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.ZoneId;
@@ -193,6 +195,11 @@ public final class Keys {
             .name("CACHE_INVALIDATION_TIMOUT_SECONDS")
             .fallback(300)
             .build();
+    public static final Key<Tristate> CHECK_VERSIONS =
+        Key.builder(TypeTokens.TRISTATE)
+            .name("CHECK_VERSIONS")
+            .fallback(Tristate.TRUE)
+            .build();
     public static final Key<Boolean> USE_SHARED_ENVIRONMENT =
         Key.builder(TypeTokens.BOOLEAN)
             .name("USE_SHARED_ENVIRONMENT")
@@ -332,6 +339,7 @@ public final class Keys {
             .register(BASE_SCAN_PACKAGE)
             .register(CACHE_INVALIDATION_INTERVAL_SECONDS)
             .register(CACHE_INVALIDATION_TIMOUT_SECONDS)
+            .register(CHECK_VERSIONS)
             .register(USE_SHARED_ENVIRONMENT)
             .register(USE_SHARED_CREDENTIALS)
             .register(DATA_DIRECTORY)

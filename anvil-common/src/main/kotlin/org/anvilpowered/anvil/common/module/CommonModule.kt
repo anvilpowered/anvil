@@ -60,8 +60,6 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
         .to<CommonXodusCoreMemberRepository>()
       bind<CoreMemberRepository<EntityId, PersistentEntityStore>>()
         .to<CommonXodusCoreMemberRepository>()
-      bind<InfoDumpService<TCommandSource>>()
-        .to<CommonInfoDumpService<TCommandSource>>()
 
       bind<CoreMemberManager>().to<CommonCoreMemberManager>()
 

@@ -138,8 +138,8 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
                 ((Consumer) entry.getValue())
                     .accept(injector.getInstance(entry.getKey()));
             }
-            injector.getInstance(VersionChecker.class).checkVersion();
             Registry registry = injector.getInstance(Registry.class);
+            registry.whenLoaded(injector.getInstance(VersionChecker.class)::checkVersion).register();
             for (Consumer<Environment> listener
                 : loadedListeners.get(environment.getName())) {
                 registry.whenLoaded(() -> listener.accept(environment)).register();

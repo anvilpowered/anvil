@@ -13,7 +13,10 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.utils.io.readUTF8Line
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.anvilpowered.anvil.api.Tristate
 import org.anvilpowered.anvil.api.plugin.PluginInfo
+import org.anvilpowered.anvil.api.registry.Keys
+import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.TextService
 import java.net.URL
 import java.util.Scanner
@@ -21,6 +24,7 @@ import java.util.Scanner
 @Singleton
 class VersionChecker @Inject constructor(
   private val pluginInfo: PluginInfo,
+  private val registry: Registry,
   private val textService: TextService<*>
 ) {
 
@@ -31,6 +35,18 @@ class VersionChecker @Inject constructor(
   private val request = HttpRequestBuilder()
 
   fun checkVersion() {
+
+    if (registry.getOrDefault(Keys.CHECK_VERSIONS) == Tristate.UNDEFINED
+      || registry.getOrDefault(Keys.CHECK_VERSIONS) == Tristate.FALSE
+    ) {
+      textService.builder()
+        .appendPrefix()
+        .red().append("Version checking disabled! You will have to manually check for updates. ")
+        .append("If you would like to enable auto-checking, enable 'checkVersions' in the config!")
+        .sendToConsole()
+      return
+    }
+
     val specified = pluginInfo.sourceUrl
     currentVersion = pluginInfo.version
     if (currentVersion.isEmpty()) {

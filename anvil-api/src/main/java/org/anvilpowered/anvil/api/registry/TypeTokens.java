@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.api.registry;
 
 import com.google.common.reflect.TypeToken;
+import org.anvilpowered.anvil.api.Tristate;
 
 import java.time.ZoneId;
 
@@ -32,5 +33,6 @@ public final class TypeTokens {
     public static final TypeToken<Boolean> BOOLEAN = TypeToken.of(Boolean.class);
     public static final TypeToken<Integer> INTEGER = TypeToken.of(Integer.class);
     public static final TypeToken<String> STRING = TypeToken.of(String.class);
+    public static final TypeToken<Tristate> TRISTATE = TypeToken.of(Tristate.class);
     public static final TypeToken<ZoneId> ZONE_ID = TypeToken.of(ZoneId.class);
 }
