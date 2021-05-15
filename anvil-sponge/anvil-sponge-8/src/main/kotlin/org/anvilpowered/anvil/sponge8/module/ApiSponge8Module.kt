@@ -23,6 +23,7 @@ import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.misc.toInternalProvider
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
@@ -35,6 +36,7 @@ import org.anvilpowered.anvil.sponge8.command.Sponge8CommandExecuteService
 import org.anvilpowered.anvil.sponge8.command.Sponge8SimpleCommandService
 import org.anvilpowered.anvil.sponge8.server.Sponge8LocationService
 import org.anvilpowered.anvil.sponge8.util.Log4jAdapter
+import org.anvilpowered.anvil.sponge8.util.Sponge8AudienceService
 import org.anvilpowered.anvil.sponge8.util.Sponge8KickService
 import org.anvilpowered.anvil.sponge8.util.Sponge8SendTextService
 import org.anvilpowered.anvil.sponge8.util.Sponge8UserService
@@ -48,20 +50,21 @@ class ApiSponge8Module : ApiSpongeModule(
   PlatformImpl(
     "sponge",
     false,
-    { Sponge.platform().container(Platform.Component.IMPLEMENTATION).metadata.version },
+    { Sponge.platform().container(Platform.Component.IMPLEMENTATION).metadata().version() },
     Log4jAdapter::bindLogger,
   )
 ) {
   override fun configure() {
     super.configure()
     with(binder()) {
-      bind<TextService<CommandCause>>().to<CommonTextService<CommandCause>>()
-      bind<CommonCallbackCommand<CommandCause>>().toInternalProvider()
+      bind<AudienceService<CommandCause>>().to<Sponge8AudienceService>()
       bind<CommandExecuteService>().to<Sponge8CommandExecuteService>()
-      bind<SimpleCommandService<CommandCause>>().to<Sponge8SimpleCommandService>()
+      bind<CommonCallbackCommand<CommandCause>>().toInternalProvider()
       bind<KickService>().to<Sponge8KickService>()
       bind<LocationService>().to<Sponge8LocationService>()
       bind<SendTextService<CommandCause>>().to<Sponge8SendTextService>()
+      bind<SimpleCommandService<CommandCause>>().to<Sponge8SimpleCommandService>()
+      bind<TextService<CommandCause>>().to<CommonTextService<CommandCause>>()
       bind<UserService<User, ServerPlayer>>().to<Sponge8UserService>()
     }
   }

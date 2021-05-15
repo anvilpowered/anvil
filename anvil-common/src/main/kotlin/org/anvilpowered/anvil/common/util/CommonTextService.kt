@@ -19,12 +19,12 @@
 package org.anvilpowered.anvil.common.util
 
 import com.google.inject.Inject
+import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.StyleBuilderApplicable
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
@@ -57,11 +57,14 @@ class CommonTextService<TCommandSource> @Inject constructor(
   override fun builder(): TextService.Builder<TCommandSource> = CommonTextBuilder()
   override fun paginationBuilder(): CommonExtendedPaginationBuilder = CommonExtendedPaginationBuilder()
   override fun send(text: Component, receiver: TCommandSource) = sendTextService.send(text, receiver)
+  override fun send(text: Component, audience: Audience) = audience.sendMessage(text)
   override fun send(text: Component, receiver: TCommandSource, sourceUUID: UUID) = send(text, receiver)
   override fun send(text: Component, receiver: TCommandSource, source: Any) = send(text, receiver)
   override fun sendToConsole(text: Component) = sendTextService.send(text, sendTextService.console)
   override val console: TCommandSource = sendTextService.console
-  override fun deserializeAmpersand(text: String): Component = LegacyComponentSerializer.legacyAmpersand().deserialize(text)
+  override fun deserializeAmpersand(text: String): Component =
+    LegacyComponentSerializer.legacyAmpersand().deserialize(text)
+
   override fun deserializeSection(text: String): Component = LegacyComponentSerializer.legacySection().deserialize(text)
   override fun serializeAmpersand(text: Component): String = LegacyComponentSerializer.legacyAmpersand().serialize(text)
   override fun serializeSection(text: Component): String = LegacyComponentSerializer.legacySection().serialize(text)
@@ -131,7 +134,11 @@ class CommonTextService<TCommandSource> @Inject constructor(
       return this
     }
 
-    override fun appendWithPaddingLeft(width: Int, padding: Any, vararg contents: Any): TextService.Builder<TCommandSource> {
+    override fun appendWithPaddingLeft(
+      width: Int,
+      padding: Any,
+      vararg contents: Any
+    ): TextService.Builder<TCommandSource> {
       return appendWithPadding(this::appendCount, null, width, padding, *contents)
     }
 
@@ -143,7 +150,11 @@ class CommonTextService<TCommandSource> @Inject constructor(
       return appendWithPaddingLeft(width, padding, contents)
     }
 
-    override fun appendWithPaddingAround(width: Int, padding: Any, vararg contents: Any): TextService.Builder<TCommandSource> {
+    override fun appendWithPaddingAround(
+      width: Int,
+      padding: Any,
+      vararg contents: Any
+    ): TextService.Builder<TCommandSource> {
       val bothEnds = { m: Int, c: Component -> appendCount(m / 2, c); Unit }
       return appendWithPadding(bothEnds, bothEnds, width, padding, *contents)
     }
@@ -156,7 +167,11 @@ class CommonTextService<TCommandSource> @Inject constructor(
       return appendWithPaddingAround(width, padding, contents)
     }
 
-    override fun appendWithPaddingRight(width: Int, padding: Any, vararg contents: Any): TextService.Builder<TCommandSource> {
+    override fun appendWithPaddingRight(
+      width: Int,
+      padding: Any,
+      vararg contents: Any
+    ): TextService.Builder<TCommandSource> {
       return appendWithPadding(null, this::appendCount, width, padding, *contents)
     }
 
@@ -254,7 +269,7 @@ class CommonTextService<TCommandSource> @Inject constructor(
     override fun append(vararg contents: Any): TextService.Builder<TCommandSource> {
       for (o in contents) {
         when (o) {
-          is TextService.Builder<*>, is Component, is TextColor -> elements.add(o)
+          is TextService.Builder<*>, is Component, is NamedTextColor -> elements.add(o)
           else -> elements.add(Component.text(o.toString()))
         }
       }
@@ -269,7 +284,7 @@ class CommonTextService<TCommandSource> @Inject constructor(
       val indexOfLast = contents.size - 1
       for (i in 0..indexOfLast) {
         when (val o = contents[i]) {
-          is TextService.Builder<*>, is Component, is TextColor -> elements.add(o)
+          is TextService.Builder<*>, is Component, is NamedTextColor -> elements.add(o)
           else -> elements.add(Component.text(o.toString()))
         }
         if (i != indexOfLast) {
@@ -326,7 +341,7 @@ class CommonTextService<TCommandSource> @Inject constructor(
       // create first builder
       var currentBuilder = Component.text()
       val firstColor = elements.peekFirst()
-      if (firstColor is TextColor) {
+      if (firstColor is NamedTextColor) {
         currentBuilder.color(firstColor)
         elements.pollFirst() // remove color because its already added to builder
       }
@@ -335,7 +350,7 @@ class CommonTextService<TCommandSource> @Inject constructor(
         when (o) {
           is TextService.Builder<*> -> currentBuilder.append(o.build())
           is Component -> currentBuilder.append(o)
-          is TextColor -> {
+          is NamedTextColor -> {
             // build current builder
             components.offer(currentBuilder.build())
             // create new builder starting at this point until the next color
@@ -459,7 +474,7 @@ class CommonTextService<TCommandSource> @Inject constructor(
           page.appendWithPaddingAround(lineWidth, ' ', header!!).append("\n")
           linesAvailable -= lineCount(header)
         } else {
-          page.appendWithPaddingAround(lineWidth, padding, "").append("\n")
+          page.appendWithPaddingAround(lineWidth, padding, of("")).append("\n")
         }
         var withFooter = false
         if (footer != null) {
@@ -492,7 +507,7 @@ class CommonTextService<TCommandSource> @Inject constructor(
         if (withFooter) {
           page.appendWithPaddingAround(lineWidth, padding, footer!!)
         } else {
-          page.appendWithPaddingAround(lineWidth, padding, "").append("\n")
+          page.appendWithPaddingAround(lineWidth, padding, of(""))
         }
         pages.add(page.build())
       }

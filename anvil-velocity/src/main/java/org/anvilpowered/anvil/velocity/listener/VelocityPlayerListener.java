@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.velocity.listener;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
@@ -28,9 +29,14 @@ import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.util.AudienceService;
+import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages;
 
 public class VelocityPlayerListener {
+
+    @Inject
+    private AudienceService<CommandSource> audienceService;
 
     @Inject
     private CoreMemberManager coreMemberManager;
@@ -62,6 +68,7 @@ public class VelocityPlayerListener {
                     pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc())
                 );
             }
+            audienceService.addToPossible(player);
         }).join();
     }
 

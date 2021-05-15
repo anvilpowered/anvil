@@ -22,6 +22,7 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
@@ -32,6 +33,7 @@ import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
 import org.anvilpowered.anvil.sponge7.command.Sponge7CommandExecuteService
 import org.anvilpowered.anvil.sponge7.command.Sponge7SimpleCommandService
 import org.anvilpowered.anvil.sponge7.server.Sponge7LocationService
+import org.anvilpowered.anvil.sponge7.util.Sponge7AudienceService
 import org.anvilpowered.anvil.sponge7.util.Sponge7KickService
 import org.anvilpowered.anvil.sponge7.util.Sponge7SendTextService
 import org.anvilpowered.anvil.sponge7.util.Sponge7UserService
@@ -51,6 +53,7 @@ class ApiSponge7Module : ApiSpongeModule(
   override fun configure() {
     super.configure()
     with(binder()) {
+      bind<AudienceService<CommandSource>>().to<Sponge7AudienceService>()
       bind<CommandExecuteService>().to<Sponge7CommandExecuteService>()
       bind<SimpleCommandService<CommandSource>>().to<Sponge7SimpleCommandService>()
       bind<KickService>().to<Sponge7KickService>()

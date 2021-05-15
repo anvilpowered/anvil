@@ -18,11 +18,14 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
+import net.kyori.adventure.key.Key
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.util.TextService
+import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCommandNode
 
 class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor(
@@ -32,6 +35,8 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
   private val callbackCommand: CommonCallbackCommand<TCommandSource>,
   private val regeditNode: CommonRegistryEditCommandNode<TUser, TPlayer, TCommandSource>,
   registry: Registry,
+  private val textService: TextService<TCommandSource>,
+  private val userService: UserService<TUser, TPlayer>
 ) {
 
   companion object {

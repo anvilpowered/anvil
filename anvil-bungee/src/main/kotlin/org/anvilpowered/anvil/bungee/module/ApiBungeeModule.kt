@@ -24,12 +24,14 @@ import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
+import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.bungee.command.BungeeCommandExecuteService
 import org.anvilpowered.anvil.bungee.server.BungeeLocationService
+import org.anvilpowered.anvil.bungee.util.BungeeAudienceService
 import org.anvilpowered.anvil.bungee.util.BungeeKickService
 import org.anvilpowered.anvil.bungee.util.BungeePermissionService
 import org.anvilpowered.anvil.bungee.util.BungeeSendTextService
@@ -51,14 +53,15 @@ class ApiBungeeModule : PlatformModule(
   override fun configure() {
     super.configure()
     with(binder()) {
+      bind<AudienceService<CommandSender>>().to<BungeeAudienceService>()
       bind<CommandExecuteService>().to<BungeeCommandExecuteService>()
       bind<KickService>().to<BungeeKickService>()
       bind<LocationService>().to<BungeeLocationService>()
       bind<PermissionService>().to<BungeePermissionService>()
-      bind<SendTextService<CommandSender>>().to<BungeeSendTextService>()
       bind<SendTextService<*>>().to<BungeeSendTextService>()
-      bind<TextService<CommandSender>>().to<CommonTextService<CommandSender>>()
+      bind<SendTextService<CommandSender>>().to<BungeeSendTextService>()
       bind<TextService<*>>().to<CommonTextService<CommandSender>>()
+      bind<TextService<CommandSender>>().to<CommonTextService<CommandSender>>()
       bind<UserService<ProxiedPlayer, ProxiedPlayer>>().to<BungeeUserService>()
     }
   }

@@ -26,6 +26,7 @@ dependencies {
     implementation kotlinx_coroutines
     implementation(kyori_api)
     implementation(kyori_bukkit_serializer)
+    implementation "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
     implementation(kyori_examination)
     implementation(kyori_key)
     implementation(kyori_legacy_serializer)

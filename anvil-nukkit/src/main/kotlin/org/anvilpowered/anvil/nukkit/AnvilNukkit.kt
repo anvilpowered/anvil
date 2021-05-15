@@ -34,6 +34,7 @@ import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.module.CommonModule
+import org.anvilpowered.anvil.nukkit.adventure.NukkitAudiencesImpl
 import org.anvilpowered.anvil.nukkit.listener.NukkitPlayerListener
 import org.anvilpowered.anvil.nukkit.module.ApiNukkitModule
 import org.anvilpowered.anvil.nukkit.module.NukkitFallbackModule
@@ -65,6 +66,10 @@ class AnvilNukkit : PluginBase() {
     EnvironmentBuilderImpl.completeInitialization(ApiNukkitModule(), NukkitFallbackModule())
     Server.getInstance().pluginManager.registerEvents(
       AnvilImpl.getEnvironment().injector.getInstance(NukkitPlayerListener::class.java),
+      this
+    )
+    Server.getInstance().pluginManager.registerEvents(
+      AnvilImpl.getEnvironment().injector.getInstance(NukkitAudiencesImpl::class.java),
       this
     )
   }

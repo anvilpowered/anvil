@@ -29,10 +29,14 @@ import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
 import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.registry.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
+import org.anvilpowered.anvil.api.util.AudienceService;
 import org.anvilpowered.anvil.api.util.TextService;
 import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages;
 
 public class BungeePlayerListener implements Listener {
+
+    @Inject
+    private AudienceService<CommandSender> audienceService;
 
     @Inject
     private CoreMemberManager coreMemberManager;
@@ -68,6 +72,7 @@ public class BungeePlayerListener implements Listener {
                         pluginMessages.getBanMessage(member.getBanReason(), member.getBanEndUtc()))
                 );
             }
+            audienceService.addToPossible(player);
         }).join();
     }
 

@@ -28,6 +28,7 @@ import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.Command
 import org.spongepowered.api.command.CommandCause
+import org.spongepowered.api.command.CommandCompletion
 import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.parameter.ArgumentReader
 import org.spongepowered.api.event.Listener
@@ -67,8 +68,8 @@ class Sponge8SimpleCommandService @Inject constructor(
       return CommandResult.success()
     }
 
-    override fun suggestions(cause: CommandCause, arguments: ArgumentReader.Mutable): List<String> {
-      return delegate.suggest(cause, arguments.remaining().splitContext())
+    override fun complete(cause: CommandCause, arguments: ArgumentReader.Mutable): MutableList<CommandCompletion> {
+      return delegate.suggest(cause, arguments.remaining().splitContext()).map { CommandCompletion.of(it) }.toMutableList()
     }
 
     override fun canExecute(cause: CommandCause): Boolean = delegate.canExecute(cause)

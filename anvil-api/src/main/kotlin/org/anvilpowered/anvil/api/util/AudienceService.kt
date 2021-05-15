@@ -15,23 +15,28 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.api.util
 
-package org.anvilpowered.anvil.velocity.util
+import net.kyori.adventure.key.Key
+import org.anvilpowered.anvil.api.Audiences
 
-import com.google.inject.Inject
-import com.velocitypowered.api.command.CommandSource
-import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.identity.Identity
-import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.common.util.SendTextService
+interface AudienceService<TCommandSource> {
 
-class VelocitySendTextService @Inject constructor(
-  proxyServer: ProxyServer,
-) : SendTextService<CommandSource> {
+  fun create(key: Key, subject: TCommandSource)
 
-  override fun send(text: Component, receiver: CommandSource) {
-    receiver.sendMessage(Identity.nil(), text)
+  fun create(key: Key, permission: String) {
+    Audiences.create(key, permission)
   }
 
-  override val console: CommandSource = proxyServer.consoleCommandSource
+  fun create(key: Key, permission: String, subjects: Array<out TCommandSource>)
+
+  fun add(key: Key, subjects: List<TCommandSource>)
+
+  fun add(key: Key, permission: String, subjects: List<TCommandSource>)
+
+  fun addToPossible(subject: TCommandSource)
+
+  fun updateAll()
+
+  fun updateAudience(key: Key)
 }

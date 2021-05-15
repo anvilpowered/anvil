@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.api.util
 
+import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import java.net.URL
 import java.util.UUID
@@ -62,6 +63,8 @@ interface TextService<TCommandSource> {
    * @param receiver The [receiver][TCommandSource] to send the provided text to
    */
   fun send(text: Component, receiver: TCommandSource)
+
+  fun send(text: Component, audience: Audience)
 
   /**
    * Sends the provided [text][Component] to the provided [receiver][TCommandSource],
