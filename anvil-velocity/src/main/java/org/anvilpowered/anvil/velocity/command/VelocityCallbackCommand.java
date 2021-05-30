@@ -21,11 +21,24 @@ package org.anvilpowered.anvil.velocity.command;
 import com.google.inject.Singleton;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
+
+import java.util.List;
 
 @Singleton
 public class VelocityCallbackCommand
     extends CommonCallbackCommand<TextComponent, CommandSource>
-    implements Command {
+    implements SimpleCommand {
+
+    @Override
+    public void execute(Invocation invocation) {
+        super.execute(invocation.source(), invocation.arguments());
+    }
+
+    @Override
+    public List<String> suggest(Invocation invocation) {
+        return null;
+    }
 }

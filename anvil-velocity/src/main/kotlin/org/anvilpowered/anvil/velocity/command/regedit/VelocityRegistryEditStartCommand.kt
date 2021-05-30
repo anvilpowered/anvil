@@ -17,17 +17,17 @@
  */
 package org.anvilpowered.anvil.velocity.command.regedit
 
-import com.velocitypowered.api.command.Command
 import com.velocitypowered.api.command.CommandSource
+import com.velocitypowered.api.command.SimpleCommand
 import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.text.TextComponent
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditStartCommand
 
 class VelocityRegistryEditStartCommand
-    : CommonRegistryEditStartCommand<Player, Player, TextComponent, CommandSource>(), Command {
-    override fun execute(source: CommandSource, context: Array<String>) =
-        super<CommonRegistryEditStartCommand>.execute(source, context)
+  : CommonRegistryEditStartCommand<Player, Player, TextComponent, CommandSource>(), SimpleCommand {
+  override fun execute(invocation: SimpleCommand.Invocation) =
+    super.execute(invocation.source(), invocation.arguments())
 
-    override fun suggest(source: CommandSource, context: Array<String>): List<String> =
-        super<CommonRegistryEditStartCommand>.suggest(source, context)
+  override fun suggest(invocation: SimpleCommand.Invocation): List<String> =
+    super<CommonRegistryEditStartCommand>.suggest(invocation.source(), invocation.arguments())
 }

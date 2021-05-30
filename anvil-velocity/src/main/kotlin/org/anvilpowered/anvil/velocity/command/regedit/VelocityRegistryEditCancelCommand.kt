@@ -17,15 +17,15 @@
  */
 package org.anvilpowered.anvil.velocity.command.regedit
 
-import com.velocitypowered.api.command.Command
 import com.velocitypowered.api.command.CommandSource
+import com.velocitypowered.api.command.SimpleCommand
 import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.text.TextComponent
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCancelCommand
 
 class VelocityRegistryEditCancelCommand
-    : CommonRegistryEditCancelCommand<Player, Player, TextComponent, CommandSource>(), Command {
-    override fun execute(source: CommandSource, args: Array<String>) {
-        super<CommonRegistryEditCancelCommand>.execute(source, args)
-    }
+  : CommonRegistryEditCancelCommand<Player, Player, TextComponent, CommandSource>(), SimpleCommand {
+  override fun execute(invocation: SimpleCommand.Invocation) {
+    super.execute(invocation.source(), invocation.arguments())
+  }
 }
