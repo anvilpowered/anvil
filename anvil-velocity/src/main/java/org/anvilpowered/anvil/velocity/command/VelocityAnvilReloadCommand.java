@@ -18,12 +18,24 @@
 
 package org.anvilpowered.anvil.velocity.command;
 
-import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.common.command.CommonAnvilReloadCommand;
 
+import java.util.List;
+
 public class VelocityAnvilReloadCommand
     extends CommonAnvilReloadCommand<TextComponent, CommandSource>
-    implements Command {
+    implements SimpleCommand {
+
+    @Override
+    public void execute(Invocation invocation) {
+        super.execute(invocation.source(), invocation.arguments());
+    }
+
+    @Override
+    public List<String> suggest(Invocation invocation) {
+        return super.suggest(invocation.source(), invocation.arguments());
+    }
 }

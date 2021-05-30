@@ -19,8 +19,8 @@
 package org.anvilpowered.anvil.velocity.module;
 
 import com.google.inject.TypeLiteral;
-import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.api.PlatformImpl;
@@ -55,7 +55,7 @@ public class ApiVelocityModule extends PlatformModule {
         bind(new TypeLiteral<CommonCallbackCommand<TextComponent, CommandSource>>() {
         }).toProvider(BindingExtensions.asInternalProvider(VelocityCallbackCommand.class));
         bind(CommandExecuteService.class).to(VelocityCommandExecuteService.class);
-        bind(new TypeLiteral<CommandService<Command, CommandSource>>() {
+        bind(new TypeLiteral<CommandService<SimpleCommand, CommandSource>>() {
         }).to(VelocityCommandService.class);
         bind(KickService.class).to(VelocityKickService.class);
         bind(LocationService.class).to(VelocityLocationService.class);
