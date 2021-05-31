@@ -27,16 +27,19 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
+import net.kyori.adventure.key.Key
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
+import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.velocity.listener.VelocityPlayerListener
 import org.anvilpowered.anvil.velocity.module.ApiVelocityModule
 import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule
+import java.util.function.Predicate
 
 @Plugin(
   id = AnvilPluginInfo.id,

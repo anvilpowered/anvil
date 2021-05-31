@@ -23,13 +23,14 @@ import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.key.Key
 import org.anvilpowered.anvil.api.Audiences
 import org.anvilpowered.anvil.api.util.AudienceService
+import java.util.function.Predicate
 
 class VelocityAudienceService @Inject constructor(
   private val proxyServer: ProxyServer
 ) : AudienceService<CommandSource> {
 
-  override fun create(key: Key, subject: CommandSource) {
-    Audiences.create(key, subject)
+  override fun create(key: Key, condition: Predicate<Any>) {
+    Audiences.create(key, condition)
   }
 
   override fun create(key: Key, permission: String, subjects: Array<out CommandSource>) {
@@ -51,6 +52,12 @@ class VelocityAudienceService @Inject constructor(
   override fun addToPossible(subject: CommandSource) {
     for (audience in Audiences.permissionMap) {
       if (subject.hasPermission(audience.value)) {
+        Audiences.add(audience.key, subject)
+      }
+    }
+
+    for (audience in Audiences.conditionalMap) {
+      if (Audiences.test(audience.key, subject)) {
         Audiences.add(audience.key, subject)
       }
     }

@@ -14,10 +14,6 @@ class NukkitAudienceService @Inject constructor(
   private val nukkitAudience: NukkitAudiences
 ) : AudienceService<CommandSender> {
 
-  override fun create(key: Key, subject: CommandSender) {
-    Audiences.create(key, nukkitAudience.sender(subject))
-  }
-
   override fun create(key: Key, permission: String, subjects: Array<out CommandSender>) {
     val audience = mutableListOf<Audience>()
     for (subject in subjects) {
@@ -43,6 +39,12 @@ class NukkitAudienceService @Inject constructor(
   override fun addToPossible(subject: CommandSender) {
     for (audience in Audiences.permissionMap) {
       if (subject.hasPermission(audience.value)) {
+        Audiences.add(audience.key, subject.asAudience)
+      }
+    }
+
+    for (audience in Audiences.conditionalMap) {
+      if (Audiences.test(audience.key, subject)) {
         Audiences.add(audience.key, subject.asAudience)
       }
     }

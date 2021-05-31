@@ -35,28 +35,24 @@ class SpigotAudienceService @Inject constructor(
     BukkitAudiences.create(plugin)
   }
 
-  override fun create(key: Key, subject: CommandSender) {
-    Audiences.create(key, bukkitAudience.sender(subject))
-  }
-
   override fun create(key: Key, permission: String, subjects: Array<out CommandSender>) {
     val audience = mutableListOf<Audience>()
     for (subject in subjects) {
-      audience.add(subject.audience)
+      audience.add(subject.asAudience)
     }
     Audiences.create(key, permission, Audience.audience(audience))
   }
 
   override fun add(key: Key, subjects: List<CommandSender>) {
     for (subject in subjects) {
-      Audiences.add(key, subject.audience)
+      Audiences.add(key, subject.asAudience)
     }
   }
 
   override fun add(key: Key, permission: String, subjects: List<CommandSender>) {
     for (subject in subjects) {
       if (subject.hasPermission(permission)) {
-        Audiences.add(key, subject.audience)
+        Audiences.add(key, subject.asAudience)
       }
     }
   }
@@ -64,7 +60,13 @@ class SpigotAudienceService @Inject constructor(
   override fun addToPossible(subject: CommandSender) {
     for (audience in Audiences.permissionMap) {
       if (subject.hasPermission(audience.value)) {
-        Audiences.add(audience.key, subject.audience)
+        Audiences.add(audience.key, subject.asAudience)
+      }
+    }
+
+    for (audience in Audiences.conditionalMap) {
+      if (Audiences.test(audience.key, subject)) {
+        Audiences.add(audience.key, subject.asAudience)
       }
     }
   }
@@ -80,10 +82,10 @@ class SpigotAudienceService @Inject constructor(
       Audiences.permissionMap[key] ?: throw IllegalStateException("Permission not defined for ${key.value()}")
     for (subject in Bukkit.getOnlinePlayers()) {
       if (subject.hasPermission(permission)) {
-        Audiences.add(key, subject.audience)
+        Audiences.add(key, subject.asAudience)
       }
     }
   }
 
-  private val CommandSender.audience get() = bukkitAudience.sender(this)
+  private val CommandSender.asAudience get() = bukkitAudience.sender(this)
 }

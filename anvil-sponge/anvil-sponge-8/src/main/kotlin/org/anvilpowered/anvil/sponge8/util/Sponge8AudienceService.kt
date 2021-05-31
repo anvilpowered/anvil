@@ -25,9 +25,6 @@ import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.CommandCause
 
 class Sponge8AudienceService : AudienceService<CommandCause> {
-  override fun create(key: Key, subject: CommandCause) {
-    Audiences.create(key, subject.audience())
-  }
 
   override fun create(key: Key, permission: String, subjects: Array<out CommandCause>) {
     val audience = mutableListOf<Audience>()
@@ -54,6 +51,12 @@ class Sponge8AudienceService : AudienceService<CommandCause> {
   override fun addToPossible(subject: CommandCause) {
     for (audience in Audiences.permissionMap) {
       if (subject.hasPermission(audience.value)) {
+        Audiences.add(audience.key, subject.audience())
+      }
+    }
+
+    for (audience in Audiences.conditionalMap) {
+      if (Audiences.test(audience.key, subject)) {
         Audiences.add(audience.key, subject.audience())
       }
     }

@@ -31,10 +31,6 @@ class Sponge7AudienceService @Inject constructor(
   private val spongeAudience: SpongeAudiences
 ) : AudienceService<CommandSource>{
 
-  override fun create(key: Key, subject: CommandSource) {
-    Audiences.create(key, spongeAudience.receiver(subject))
-  }
-
   override fun create(key: Key, permission: String, subjects: Array<out CommandSource>) {
     val audience = mutableListOf<Audience>()
     for (subject in subjects) {
@@ -60,6 +56,12 @@ class Sponge7AudienceService @Inject constructor(
   override fun addToPossible(subject: CommandSource) {
     for (audience in Audiences.permissionMap) {
       if (subject.hasPermission(audience.value)) {
+        Audiences.add(audience.key, subject.asAudience)
+      }
+    }
+
+    for (audience in Audiences.conditionalMap) {
+      if (Audiences.test(audience.key, subject)) {
         Audiences.add(audience.key, subject.asAudience)
       }
     }

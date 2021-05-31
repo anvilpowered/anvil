@@ -55,6 +55,7 @@ class ApiVelocityModule : PlatformModule(
     super.configure()
     with(binder()) {
       bind<AudienceService<CommandSource>>().to<VelocityAudienceService>()
+      bind<AudienceService<*>>().to<VelocityAudienceService>()
       bind<CommonCallbackCommand<CommandSource>>()
       bind<CommandExecuteService>().to<VelocityCommandExecuteService>()
       bind<KickService>().to<VelocityKickService>()
