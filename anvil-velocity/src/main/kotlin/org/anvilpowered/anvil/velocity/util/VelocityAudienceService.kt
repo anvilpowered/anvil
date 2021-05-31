@@ -23,15 +23,10 @@ import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.key.Key
 import org.anvilpowered.anvil.api.Audiences
 import org.anvilpowered.anvil.api.util.AudienceService
-import java.util.function.Predicate
 
 class VelocityAudienceService @Inject constructor(
   private val proxyServer: ProxyServer
 ) : AudienceService<CommandSource> {
-
-  override fun create(key: Key, condition: Predicate<Any>) {
-    Audiences.create(key, condition)
-  }
 
   override fun create(key: Key, permission: String, subjects: Array<out CommandSource>) {
     Audiences.create(key, permission, *subjects)

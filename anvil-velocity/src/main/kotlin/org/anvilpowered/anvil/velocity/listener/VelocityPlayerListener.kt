@@ -23,7 +23,6 @@ import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
 import com.velocitypowered.api.event.player.PlayerChatEvent
 import net.kyori.adventure.identity.Identity
-import net.kyori.adventure.key.Key
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.model.coremember.CoreMember
 import org.anvilpowered.anvil.api.registry.Keys
@@ -49,7 +48,7 @@ class VelocityPlayerListener @Inject constructor(
         player.uniqueId,
         player.username,
         player.remoteAddress.hostString
-      ).thenAcceptAsync{ optionalMember ->
+      ).thenAcceptAsync { optionalMember ->
         if (!optionalMember.isPresent) {
           return@thenAcceptAsync
         }

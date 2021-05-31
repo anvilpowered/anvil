@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.api.util
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import org.anvilpowered.anvil.api.Audiences
-import java.util.function.Predicate
 
 interface AudienceService<TCommandSource> {
 
@@ -32,9 +31,9 @@ interface AudienceService<TCommandSource> {
   }
 
   /**
-   * Creates a new [Audience] with the given [Key] and [Predicate]
+   * Creates a new [Audience] with the given [Key] and [condition]
    */
-  fun create(key: Key, condition: Predicate<Any>) {
+  fun create(key: Key, condition: (Any) -> Boolean?) {
     Audiences.create(key, condition)
   }
 

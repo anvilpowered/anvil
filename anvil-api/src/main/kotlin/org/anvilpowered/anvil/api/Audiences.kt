@@ -1,3 +1,20 @@
+/*
+ *   Anvil - AnvilPowered
+ *   Copyright (C) 2020-2021
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.anvilpowered.anvil.api
 
 import net.kyori.adventure.audience.Audience
@@ -8,7 +25,7 @@ import java.util.function.Predicate
 object Audiences {
 
   private val audienceMap: MutableMap<Key, Audience> = mutableMapOf()
-  val conditionalMap: MutableMap<Key, Predicate<Any>> = mutableMapOf()
+  val conditionalMap: MutableMap<Key, (Any) -> Boolean?> = mutableMapOf()
   val permissionMap: MutableMap<Key, String> = mutableMapOf()
 
   fun create(key: Key, vararg audience: Audience) {
@@ -23,12 +40,12 @@ object Audiences {
     audienceMap[key] = Audience.audience(*audience)
   }
 
-  fun create(key: Key, condition: Predicate<Any>) {
+  fun create(key: Key, condition: (Any) -> Boolean?) {
     conditionalMap[key] = condition
   }
 
   fun test(key: Key, target: Any): Boolean {
-    return conditionalMap[key]?.test(target) ?: false
+    return conditionalMap[key]?.invoke(target) ?: false
   }
 
   fun create(key: Key, permission: String, vararg audience: Audience?) {
