@@ -48,7 +48,7 @@ class ApiSponge8Module : ApiSpongeModule(
   PlatformImpl(
     "sponge",
     false,
-    { Sponge.platform().container(Platform.Component.IMPLEMENTATION).metadata.version },
+    { Sponge.platform().container(Platform.Component.IMPLEMENTATION).metadata().version() },
     Log4jAdapter::bindLogger,
   )
 ) {

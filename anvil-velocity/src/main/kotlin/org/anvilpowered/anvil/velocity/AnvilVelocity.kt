@@ -26,15 +26,12 @@ import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.Player
-import com.velocitypowered.api.proxy.ProxyServer
-import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
-import org.anvilpowered.anvil.velocity.listener.VelocityPlayerListener
 import org.anvilpowered.anvil.velocity.module.ApiVelocityModule
 import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule
 
@@ -49,16 +46,9 @@ import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule
 class AnvilVelocity @Inject constructor(injector: Injector) :
   AnvilImpl(injector, object : CommonModule<CommandSource>("plugins") {}) {
 
-  @Inject
-  private lateinit var proxyServer: ProxyServer
-
   @Subscribe(order = PostOrder.EARLY)
   fun onInit(event: ProxyInitializeEvent) {
     EnvironmentBuilderImpl.completeInitialization(ApiVelocityModule(), VelocityFallbackModule())
-    proxyServer.eventManager.register(
-      this,
-      Anvil.environment.injector.getInstance(VelocityPlayerListener::class.java)
-    )
   }
 
   override fun applyToBuilder(builder: Environment.Builder) {

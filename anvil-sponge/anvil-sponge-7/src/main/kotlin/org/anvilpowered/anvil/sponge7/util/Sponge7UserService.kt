@@ -53,16 +53,10 @@ class Sponge7UserService @Inject constructor() : CommonUserService<User, Player>
   }
 
   override fun getUUID(userName: String): CompletableFuture<Optional<UUID>> {
-    val userUUID = getPlayer(userName).map { obj: Player -> obj.uniqueId }
-    return if (userUUID.isPresent) {
-      CompletableFuture.completedFuture(userUUID)
-    } else super.getUUID(userName)
+    return CompletableFuture.completedFuture(getPlayer(userName).map { it.uniqueId })
   }
 
   override fun getUserName(userUUID: UUID): CompletableFuture<Optional<String>> {
-    val userName = getPlayer(userUUID).map { obj: Player -> obj.name }
-    return if (userName.isPresent) {
-      CompletableFuture.completedFuture(userName)
-    } else super.getUserName(userUUID)
+    return CompletableFuture.completedFuture(getPlayer(userUUID).map { it.name })
   }
 }

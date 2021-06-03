@@ -28,7 +28,6 @@ import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.module.CommonModule
-import org.anvilpowered.anvil.spigot.listener.SpigotPlayerListener
 import org.anvilpowered.anvil.spigot.module.ApiSpigotModule
 import org.anvilpowered.anvil.spigot.module.SpigotFallbackModule
 import org.bukkit.Bukkit
@@ -60,9 +59,6 @@ class AnvilSpigot : JavaPlugin() {
     AnvilImpl(injector, object : CommonModule<CommandSender>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
-      builder.addEarlyServices(SpigotPlayerListener::class.java) {
-        Bukkit.getPluginManager().registerEvents(it, this@AnvilSpigot)
-      }
       builder.addEarlyServices(object :
         TypeLiteral<CommonAnvilCommandNode<Player, Player, CommandSender>>() {
       })

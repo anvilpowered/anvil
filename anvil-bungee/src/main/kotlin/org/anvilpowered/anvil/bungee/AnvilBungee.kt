@@ -28,7 +28,6 @@ import net.md_5.bungee.api.plugin.Plugin
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
-import org.anvilpowered.anvil.bungee.listener.BungeePlayerListener
 import org.anvilpowered.anvil.bungee.module.ApiBungeeModule
 import org.anvilpowered.anvil.bungee.module.BungeeFallbackModule
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
@@ -51,9 +50,6 @@ class AnvilBungee : Plugin() {
     AnvilImpl(injector, object : CommonModule<CommandSender>("plugins") {}) {
     override fun applyToBuilder(builder: Environment.Builder) {
       super.applyToBuilder(builder)
-      builder.addEarlyServices(BungeePlayerListener::class.java) {
-        proxy.pluginManager.registerListener(this@AnvilBungee, it)
-      }
       builder.addEarlyServices(object :
         TypeLiteral<CommonAnvilCommandNode<ProxiedPlayer, ProxiedPlayer, CommandSender>>() {
       })

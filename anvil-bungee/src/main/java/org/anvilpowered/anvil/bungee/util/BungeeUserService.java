@@ -76,20 +76,12 @@ public class BungeeUserService extends CommonUserService<ProxiedPlayer, ProxiedP
 
     @Override
     public CompletableFuture<Optional<UUID>> getUUID(String userName) {
-        Optional<UUID> userUUID = getPlayer(userName).map(ProxiedPlayer::getUniqueId);
-        if (userUUID.isPresent()) {
-            return CompletableFuture.completedFuture(userUUID);
-        }
-        return super.getUUID(userName);
+        return CompletableFuture.completedFuture(getPlayer(userName).map(ProxiedPlayer::getUniqueId));
     }
 
     @Override
     public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
-        Optional<String> userName = getPlayer(userUUID).map(ProxiedPlayer::getName);
-        if (userName.isPresent()) {
-            return CompletableFuture.completedFuture(userName);
-        }
-        return super.getUserName(userUUID);
+        return CompletableFuture.completedFuture(getPlayer(userUUID).map(ProxiedPlayer::getName));
     }
 
     @Override

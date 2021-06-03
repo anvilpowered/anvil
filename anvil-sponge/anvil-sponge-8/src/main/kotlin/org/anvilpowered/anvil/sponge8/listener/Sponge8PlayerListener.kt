@@ -18,10 +18,7 @@
 package org.anvilpowered.anvil.sponge8.listener
 
 import com.google.inject.Inject
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.entity.RestrictionService
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
 import org.spongepowered.api.entity.Entity
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.event.Cancellable
@@ -35,29 +32,11 @@ import org.spongepowered.api.event.entity.MoveEntityEvent
 import org.spongepowered.api.event.filter.Getter
 import org.spongepowered.api.event.filter.cause.Root
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent
-import org.spongepowered.api.event.network.ClientSideConnectionEvent
 
 class Sponge8PlayerListener {
-  @Inject
-  private lateinit var coreMemberManager: CoreMemberManager
-
-  @Inject
-  private lateinit var registry: Registry
 
   @Inject
   private lateinit var restrictionService: RestrictionService
-
-  @Listener
-  fun onPlayerJoin(event: ClientSideConnectionEvent.Join) {
-    if (registry.getOrDefault(Keys.PROXY_MODE)) {
-      return
-    }
-    coreMemberManager.primaryComponent.getOneOrGenerateForUser(
-      event.player().uniqueId(),
-      event.player().name(),
-      event.connection().address().hostString
-    )
-  }
 
   @Listener
   fun onMovement(event: MoveEntityEvent, @Getter("getTargetEntity") entity: Entity?) {

@@ -80,20 +80,12 @@ public class NukkitUserService extends CommonUserService<Player, Player> {
 
     @Override
     public CompletableFuture<Optional<UUID>> getUUID(String userName) {
-        Optional<UUID> userUUID = get(userName).map(Player::getUniqueId);
-        if (userUUID.isPresent()) {
-            return CompletableFuture.completedFuture(userUUID);
-        }
-        return super.getUUID(userName);
+        return CompletableFuture.completedFuture(get(userName).map(Player::getUniqueId));
     }
 
     @Override
     public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
-        Optional<String> userName = get(userUUID).map(Player::getName);
-        if (userName.isPresent()) {
-            return CompletableFuture.completedFuture(userName);
-        }
-        return super.getUserName(userUUID);
+        return CompletableFuture.completedFuture(get(userUUID).map(Player::getName));
     }
 
     @Override

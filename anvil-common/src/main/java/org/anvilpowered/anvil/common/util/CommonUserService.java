@@ -19,14 +19,10 @@
 package org.anvilpowered.anvil.common.util;
 
 import com.google.common.collect.ImmutableList;
-import org.anvilpowered.anvil.api.Anvil;
-import org.anvilpowered.anvil.api.model.coremember.CoreMember;
 import org.anvilpowered.anvil.api.util.UserService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,18 +43,6 @@ public abstract class CommonUserService<TUser, TPlayer> implements UserService<T
             return matchPlayerNames(context[index]);
         }
         return ImmutableList.of();
-    }
-
-    @Override
-    public CompletableFuture<Optional<UUID>> getUUID(String userName) {
-        return Anvil.getCoreMemberRepository()
-            .getOneForUser(userName).thenApplyAsync(c -> c.map(CoreMember::getUserUUID));
-    }
-
-    @Override
-    public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
-        return Anvil.getCoreMemberRepository()
-            .getOneForUser(userUUID).thenApplyAsync(c -> c.map(CoreMember::getUserName));
     }
 
     @NotNull

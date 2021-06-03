@@ -82,20 +82,12 @@ public class SpigotUserService extends CommonUserService<Player, Player> {
 
     @Override
     public CompletableFuture<Optional<UUID>> getUUID(String userName) {
-        Optional<UUID> userUUID = getPlayer(userName).map(Player::getUniqueId);
-        if (userUUID.isPresent()) {
-            return CompletableFuture.completedFuture(userUUID);
-        }
-        return super.getUUID(userName);
+        return CompletableFuture.completedFuture(getPlayer(userName).map(Player::getUniqueId));
     }
 
     @Override
     public CompletableFuture<Optional<String>> getUserName(UUID userUUID) {
-        Optional<String> userName = getPlayer(userUUID).map(Player::getName);
-        if (userName.isPresent()) {
-            return CompletableFuture.completedFuture(userName);
-        }
-        return super.getUserName(userUUID);
+        return CompletableFuture.completedFuture(getPlayer(userUUID).map(Player::getName));
     }
 
     @Override

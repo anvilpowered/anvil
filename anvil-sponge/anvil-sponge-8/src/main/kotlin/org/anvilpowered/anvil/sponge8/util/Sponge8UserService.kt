@@ -23,6 +23,7 @@ import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import java.util.Optional
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 import kotlin.streams.asSequence
 
 class Sponge8UserService : CommonUserService<User, ServerPlayer>(User::class.java) {
@@ -38,6 +39,13 @@ class Sponge8UserService : CommonUserService<User, ServerPlayer>(User::class.jav
   }
 
   override fun getOnlinePlayers(): Collection<ServerPlayer> = Sponge.server().onlinePlayers()
+  override fun getUUID(userName: String): CompletableFuture<Optional<UUID>> {
+    return CompletableFuture.completedFuture(getPlayer(userName).map { it.uniqueId() })
+  }
+
+  override fun getUserName(userUUID: UUID): CompletableFuture<Optional<String>> {
+    return CompletableFuture.completedFuture(getPlayer(userUUID).map { it.name() })
+  }
   override fun getUUID(user: User): UUID = user.uniqueId()
   override fun getUserName(user: User): String = user.name()
 }

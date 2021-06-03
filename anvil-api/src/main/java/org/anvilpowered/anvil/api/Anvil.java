@@ -22,8 +22,6 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.coremember.CoreMemberRepository;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.base.plugin.BasePlugin;
 
@@ -60,14 +58,6 @@ public class Anvil extends BasePlugin {
 
     public static Registry getRegistry() {
         return getEnvironment().getInjector().getInstance(Registry.class);
-    }
-
-    public static CoreMemberManager getCoreMemberManager() {
-        return getEnvironment().getInjector().getInstance(CoreMemberManager.class);
-    }
-
-    public static CoreMemberRepository<?, ?> getCoreMemberRepository() {
-        return getCoreMemberManager().getPrimaryComponent();
     }
 
     public static ServiceManager getServiceManager() {
