@@ -138,16 +138,16 @@ public interface Environment extends Named, Comparable<Environment> {
         Builder setRootInjector(@Nullable Injector rootInjector);
 
         /**
-         * Sets the logger, currently only necessary on Nukkit.
+         * Sets the logger, only when you are not using SLF4j or JavaUtil
          *
          * <p>
          * The provided logger is adapted to the {@link org.slf4j.Logger}.
-         * If no logger is provided on Nukkit, Anvil's logger will be used.
+         * If no logger is provided, Anvil's logger will be used.
          * (This means logs will be prefixed with "Anvil" instead of your plugin name)
          * </p>
          *
          * <pre><code>
-         *     setLoggerSupplier(MyNukkitPlugin.this::getLogger);
+         *     setLoggerSupplier(MyPlugin.this::getLogger);
          * </code></pre>
          *
          * @param logger to set.

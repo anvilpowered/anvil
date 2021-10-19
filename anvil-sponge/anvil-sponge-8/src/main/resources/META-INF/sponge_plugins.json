@@ -1,11 +1,15 @@
 {
+  "loader": {
+    "name": "java_plain",
+    "version": "1.0"
+  },
+  "license": "LGPL",
   "plugins": [
     {
-      "loader": "java_plain",
       "id": "anvil",
       "name": "Anvil",
       "version": "0.4.0-SNAPSHOT",
-      "main-class": "org.anvilpowered.anvil.sponge8.AnvilSponge8",
+      "entrypoint": "org.anvilpowered.anvil.sponge8.AnvilSponge8",
       "description": "A cross-platform Minecraft plugin framework",
       "links": {
         "homepage": "https://www.anvilpowered.org/",

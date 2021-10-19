@@ -19,6 +19,7 @@ package org.anvilpowered.anvil.spigot.module
 
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
+import org.anvilpowered.anvil.api.entity.RestrictionService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
@@ -28,6 +29,7 @@ import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
+import org.anvilpowered.anvil.common.entity.CommonRestrictionService
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
@@ -57,6 +59,7 @@ class ApiSpigotModule : PlatformModule(
   override fun configure() {
     super.configure()
     with(binder()) {
+      bind<RestrictionService>().to<CommonRestrictionService>()
       bind<AudienceService<CommandSender>>().to<SpigotAudienceService>()
       bind<CommandExecuteService>().to<SpigotCommandExecuteService>()
       bind<EntityUtils>().to<SpigotEntityUtils>()

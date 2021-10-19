@@ -35,7 +35,7 @@ import org.spongepowered.api.event.entity.MoveEntityEvent
 import org.spongepowered.api.event.filter.Getter
 import org.spongepowered.api.event.filter.cause.Root
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent
-import org.spongepowered.api.event.network.ClientSideConnectionEvent
+import org.spongepowered.api.event.network.ServerSideConnectionEvent
 
 class Sponge8PlayerListener {
   @Inject
@@ -48,7 +48,7 @@ class Sponge8PlayerListener {
   private lateinit var restrictionService: RestrictionService
 
   @Listener
-  fun onPlayerJoin(event: ClientSideConnectionEvent.Join) {
+  fun onPlayerJoin(event: ServerSideConnectionEvent.Join) {
     if (registry.getOrDefault(Keys.PROXY_MODE)) {
       return
     }
@@ -60,8 +60,8 @@ class Sponge8PlayerListener {
   }
 
   @Listener
-  fun onMovement(event: MoveEntityEvent, @Getter("getTargetEntity") entity: Entity?) {
-    if (restrictionService.get(entity).movement()) {
+  fun onMovement(event: MoveEntityEvent) {
+    if (restrictionService.get(event.entity()).movement()) {
       event.isCancelled = true
     }
   }
@@ -89,8 +89,8 @@ class Sponge8PlayerListener {
   }
 
   @Listener
-  fun onDamage(event: DamageEntityEvent, @Getter("getTargetEntity") target: Entity?, @Root source: DamageSource?) {
-    if (restrictionService.get(target).damage() || (source is EntityDamageSource
+  fun onDamage(event: DamageEntityEvent, @Root source: DamageSource?) {
+    if (restrictionService.get(event.entity()).damage() || (source is EntityDamageSource
         && restrictionService.get(source.source()).damage())
     ) {
       event.isCancelled = true

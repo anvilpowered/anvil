@@ -25,13 +25,11 @@ import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.splitContext
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
-import org.spongepowered.api.Sponge
 import org.spongepowered.api.command.Command
 import org.spongepowered.api.command.CommandCause
 import org.spongepowered.api.command.CommandCompletion
 import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.parameter.ArgumentReader
-import org.spongepowered.api.event.Listener
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent
 import org.spongepowered.plugin.PluginContainer
 import java.util.Optional
@@ -49,7 +47,6 @@ class Sponge8SimpleCommandService @Inject constructor(
       if (alreadyLoaded) {
         return@whenLoaded
       }
-      Sponge.eventManager().registerListeners(plugin, this)
       alreadyLoaded = true
     }.order(Integer.MIN_VALUE).register()
   }
@@ -89,7 +86,6 @@ class Sponge8SimpleCommandService @Inject constructor(
     )
   }
 
-  @Listener
   fun onRegister(event: RegisterCommandEvent<Command.Raw>) {
     for (registration in registrations) {
       event.register(plugin, registration.command, registration.primaryAlias, *registration.otherAliases)

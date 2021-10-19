@@ -35,8 +35,6 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
   private val callbackCommand: CommonCallbackCommand<TCommandSource>,
   private val regeditNode: CommonRegistryEditCommandNode<TUser, TPlayer, TCommandSource>,
   registry: Registry,
-  private val textService: TextService<TCommandSource>,
-  private val userService: UserService<TUser, TPlayer>
 ) {
 
   companion object {

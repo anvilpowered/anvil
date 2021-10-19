@@ -18,19 +18,16 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
-import com.google.inject.Singleton
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.util.TextService
 import java.util.UUID
 import java.util.function.Consumer
 
-@Singleton
-class CommonCallbackCommand<TCommandSource> @Inject constructor(
-  private val textService: TextService<TCommandSource>,
-) : SimpleCommand<TCommandSource> {
+class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
-  private val callbacks: MutableMap<UUID, (TCommandSource) -> Unit> = mutableMapOf()
+  @Inject
+  private lateinit var textService: TextService<TCommandSource>
 
   private val missingId: Component by lazy {
     textService.builder()
@@ -47,7 +44,7 @@ class CommonCallbackCommand<TCommandSource> @Inject constructor(
   }
 
   fun addCallback(uuid: UUID, callback: Consumer<TCommandSource>) {
-    callbacks[uuid] = callback::accept
+    CallbackCommandData<TCommandSource>().callbacks[uuid] = callback::accept
   }
 
   override fun execute(source: TCommandSource, context: Array<String>) {
@@ -61,7 +58,7 @@ class CommonCallbackCommand<TCommandSource> @Inject constructor(
       textService.send(invalidId, source)
       return
     }
-    val callback = callbacks[uuid]
+    val callback = CallbackCommandData<TCommandSource>().callbacks[uuid]
     if (callback == null) {
       textService.builder()
         .appendPrefix()

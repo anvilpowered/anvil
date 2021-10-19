@@ -26,8 +26,8 @@ import java.util.UUID
 import kotlin.streams.asSequence
 
 class Sponge8UserService : CommonUserService<User, ServerPlayer>(User::class.java) {
-  override fun get(userName: String): Optional<User> = Sponge.server().userManager().find(userName)
-  override fun get(userUUID: UUID): Optional<User> = Sponge.server().userManager().find(userUUID)
+  override fun get(userName: String): Optional<User> = Sponge.server().userManager().load(userName).join()
+  override fun get(userUUID: UUID): Optional<User> = Sponge.server().userManager().load(userUUID).join()
   override fun getPlayer(userName: String): Optional<ServerPlayer> = Sponge.server().player(userName)
   override fun getPlayer(userUUID: UUID): Optional<ServerPlayer> = Sponge.server().player(userUUID)
   override fun getPlayer(user: User): Optional<ServerPlayer> = user.player()

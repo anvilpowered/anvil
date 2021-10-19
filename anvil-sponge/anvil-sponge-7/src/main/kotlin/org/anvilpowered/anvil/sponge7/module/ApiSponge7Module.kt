@@ -19,6 +19,7 @@ package org.anvilpowered.anvil.sponge7.module
 
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
+import org.anvilpowered.anvil.api.entity.RestrictionService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
@@ -27,6 +28,7 @@ import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
+import org.anvilpowered.anvil.common.entity.CommonRestrictionService
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
@@ -53,6 +55,7 @@ class ApiSponge7Module : ApiSpongeModule(
   override fun configure() {
     super.configure()
     with(binder()) {
+      bind<RestrictionService>().to<CommonRestrictionService>()
       bind<AudienceService<CommandSource>>().to<Sponge7AudienceService>()
       bind<CommandExecuteService>().to<Sponge7CommandExecuteService>()
       bind<SimpleCommandService<CommandSource>>().to<Sponge7SimpleCommandService>()

@@ -33,7 +33,6 @@ import org.anvilpowered.anvil.api.misc.withMongoDB
 import org.anvilpowered.anvil.api.misc.withXodus
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.coremember.CommonCoreMemberManager
 import org.anvilpowered.anvil.common.coremember.CommonMongoCoreMemberRepository
 import org.anvilpowered.anvil.common.coremember.CommonXodusCoreMemberRepository
@@ -47,6 +46,8 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
 
   override fun configure() {
     with(binder()) {
+      bind<CoreMemberManager>().to<CommonCoreMemberManager>()
+      bind<Registry>().to<CommonConfigurationService>()
       bind<PluginInfo>().to<AnvilPluginInfo>()
       bind<CoreMemberRepository<*, *>>()
         .annotatedWith(Names.named("mongodb"))
@@ -59,12 +60,9 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
       bind<CoreMemberRepository<EntityId, PersistentEntityStore>>()
         .to<CommonXodusCoreMemberRepository>()
 
-      bind<CoreMemberManager>().to<CommonCoreMemberManager>()
 
       withMongoDB()
       withXodus()
-
-      bind<Registry>().to<CommonConfigurationService>()
     }
 
     val configDirFull = Paths.get("$configDir/anvil").toFile()
@@ -74,7 +72,5 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
     bind(object : TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {}).toInstance(
       HoconConfigurationLoader.builder().setPath(Paths.get("$configDirFull/anvil.conf")).build()
     )
-
-    binder().bind<CommonCallbackCommand<TCommandSource>>(declaring = this)
   }
 }

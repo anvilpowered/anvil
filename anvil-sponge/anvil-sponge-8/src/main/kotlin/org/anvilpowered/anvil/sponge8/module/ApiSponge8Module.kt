@@ -19,16 +19,16 @@ package org.anvilpowered.anvil.sponge8.module
 
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
+import org.anvilpowered.anvil.api.entity.RestrictionService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
-import org.anvilpowered.anvil.api.misc.toInternalProvider
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
-import org.anvilpowered.anvil.common.command.CommonCallbackCommand
+import org.anvilpowered.anvil.common.entity.CommonRestrictionService
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
@@ -50,22 +50,26 @@ class ApiSponge8Module : ApiSpongeModule(
   PlatformImpl(
     "sponge",
     false,
-    { Sponge.platform().container(Platform.Component.IMPLEMENTATION).metadata().version() },
+    //TODO Fix the version
+    { "${Sponge.platform().container(Platform.Component.IMPLEMENTATION).metadata().version().majorVersion}.${Sponge.platform().container(Platform.Component.IMPLEMENTATION).metadata().version().minorVersion} " },
     Log4jAdapter::bindLogger,
   )
 ) {
+
   override fun configure() {
     super.configure()
     with(binder()) {
+      bind<RestrictionService>().to<CommonRestrictionService>()
+      bind<UserService<User, ServerPlayer>>().to<Sponge8UserService>()
+      bind<SendTextService<CommandCause>>().to<Sponge8SendTextService>()
+      bind<SendTextService<*>>().to<Sponge8SendTextService>()
+      bind<TextService<CommandCause>>().to<CommonTextService<CommandCause>>()
+      bind<TextService<*>>().to<CommonTextService<*>>()
       bind<AudienceService<CommandCause>>().to<Sponge8AudienceService>()
       bind<CommandExecuteService>().to<Sponge8CommandExecuteService>()
-      bind<CommonCallbackCommand<CommandCause>>().toInternalProvider()
       bind<KickService>().to<Sponge8KickService>()
       bind<LocationService>().to<Sponge8LocationService>()
-      bind<SendTextService<CommandCause>>().to<Sponge8SendTextService>()
       bind<SimpleCommandService<CommandCause>>().to<Sponge8SimpleCommandService>()
-      bind<TextService<CommandCause>>().to<CommonTextService<CommandCause>>()
-      bind<UserService<User, ServerPlayer>>().to<Sponge8UserService>()
     }
   }
 }

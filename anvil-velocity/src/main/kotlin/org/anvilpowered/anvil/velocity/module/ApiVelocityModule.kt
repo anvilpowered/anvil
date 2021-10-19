@@ -31,7 +31,6 @@ import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
-import org.anvilpowered.anvil.common.command.CommonCallbackCommand
 import org.anvilpowered.anvil.common.module.PlatformModule
 import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
@@ -56,7 +55,6 @@ class ApiVelocityModule : PlatformModule(
     with(binder()) {
       bind<AudienceService<CommandSource>>().to<VelocityAudienceService>()
       bind<AudienceService<*>>().to<VelocityAudienceService>()
-      bind<CommonCallbackCommand<CommandSource>>()
       bind<CommandExecuteService>().to<VelocityCommandExecuteService>()
       bind<KickService>().to<VelocityKickService>()
       bind<LocationService>().to<VelocityLocationService>()
