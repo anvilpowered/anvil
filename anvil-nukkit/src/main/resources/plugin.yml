@@ -1,6 +1,0 @@
-name: Anvil
-version: "${version}"
-main: org.anvilpowered.anvil.nukkit.AnvilNukkit
-api: ["1.0.0"]
-description: A cross-platform Minecraft plugin framework
-website: https://www.anvilpowered.org
