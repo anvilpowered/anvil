@@ -1,8 +1,8 @@
 rootProject.name = 'Anvil'
 
 include ':anvil-api'
-include ':anvil-bungee'
 include ':anvil-common'
+include ':anvil-md5'
 include ':anvil-spigot'
 include ':anvil-sponge'
 include ':anvil-sponge:anvil-sponge-7'

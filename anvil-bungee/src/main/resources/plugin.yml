@@ -1,6 +1,0 @@
-name: Anvil
-version: "${version}"
-main: org.anvilpowered.anvil.bungee.AnvilBungee
-api-version: 1.15
-description: A cross-platform Minecraft plugin framework
-website: https://www.anvilpowered.org
