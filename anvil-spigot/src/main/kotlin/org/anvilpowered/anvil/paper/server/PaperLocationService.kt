@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.spigot.server
+package org.anvilpowered.anvil.paper.server
 
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.util.UserService
@@ -25,7 +25,7 @@ import org.spongepowered.math.vector.Vector3d
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
-class SpigotLocationService : CommonLocationService() {
+class PaperLocationService : CommonLocationService() {
 
     @Inject
     private lateinit var userService: UserService<Player, Player>

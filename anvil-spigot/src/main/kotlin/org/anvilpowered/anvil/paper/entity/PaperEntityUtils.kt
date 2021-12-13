@@ -15,11 +15,12 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.paper.entity
 
-package org.anvilpowered.anvil.spigot.module
+import org.anvilpowered.anvil.common.entity.EntityUtils
+import org.bukkit.entity.Entity
+import java.util.UUID
 
-import org.anvilpowered.anvil.common.module.FallbackModule
-import org.bukkit.command.CommandSender
-
-class SpigotFallbackModule : FallbackModule<CommandSender>() {
+class PaperEntityUtils : EntityUtils {
+  override fun extractUUID(entity: Any?): UUID? = (entity as? Entity)?.uniqueId
 }

@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.spigot.command
+package org.anvilpowered.anvil.paper.command
 
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.command.CommandMapping
@@ -26,7 +26,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.plugin.java.JavaPlugin
 
-class SpigotSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
+class PaperSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
 
   @Inject(optional = true)
   private lateinit var plugin: JavaPlugin

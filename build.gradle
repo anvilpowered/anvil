@@ -39,7 +39,6 @@ String _ringFile = project.hasProperty("ringFile") ? ringFile : ""
 
 subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
-    sourceCompatibility = 1.8
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }

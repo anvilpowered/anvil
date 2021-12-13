@@ -16,16 +16,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.spigot.util;
+package org.anvilpowered.anvil.paper.module
 
-import org.anvilpowered.anvil.api.util.PermissionService;
-import org.bukkit.permissions.Permissible;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.anvilpowered.anvil.common.module.FallbackModule
+import org.bukkit.command.CommandSender
 
-public class SpigotPermissionService implements PermissionService {
-
-    @Override
-    public boolean hasPermission(@Nullable Object subject, String permission) {
-        return subject instanceof Permissible && ((Permissible) subject).hasPermission(permission);
-    }
+class SpigotFallbackModule : FallbackModule<CommandSender>() {
 }
