@@ -24,7 +24,6 @@ import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.util.TextService
 import java.util.function.Predicate
 import java.util.function.Supplier
 

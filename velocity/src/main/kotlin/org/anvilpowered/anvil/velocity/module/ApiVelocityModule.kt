@@ -28,11 +28,9 @@ import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
-import org.anvilpowered.anvil.api.util.TextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.module.PlatformModule
-import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService
 import org.anvilpowered.anvil.velocity.command.VelocitySimpleCommandService

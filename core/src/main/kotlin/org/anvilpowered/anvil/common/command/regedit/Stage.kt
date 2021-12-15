@@ -22,7 +22,6 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.api.util.TextService
 
 class Stage<TCommandSource>(
   val envName: String,

@@ -17,125 +17,122 @@
  */
 package org.anvilpowered.anvil.api.datastore
 
-import com.google.common.base.Preconditions
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.registry.Registry
 import org.reflections.Reflections
-import java.util.ArrayList
+import org.reflections.scanners.SubTypesScanner
+import org.reflections.scanners.TypeAnnotationsScanner
 import java.util.Optional
 import java.util.function.Consumer
+import java.util.stream.Collectors
 
 // TODO: extract to interface
 abstract class DataStoreContext<TKey, TDataStore> protected constructor(registry: Registry) {
-  private val connectionOpenedListeners: MutableList<Consumer<TDataStore?>>
-  private val connectionClosedListeners: MutableList<Consumer<TDataStore>>
-  protected val registry: Registry
-  private var dataStore: TDataStore? = null
-  var entityClasses: Array<Class<*>>
-    private set
-  var tKeyClass: Class<TKey>? = null
-    protected set
+    private val connectionOpenedListeners: MutableList<Consumer<TDataStore?>>
+    private val connectionClosedListeners: MutableList<Consumer<TDataStore>>
+    protected val registry: Registry
+    private var dataStore: TDataStore? = null
+    private lateinit var entityClasses: Array<Class<*>>
+    var tKeyClass: Class<TKey>? = null
+        protected set
 
-  @Inject(optional = true)
-  private val classLoader: ClassLoader? = null
+    @Inject(optional = true)
+    private val classLoader: ClassLoader? = null
 
-  init {
-    connectionOpenedListeners = ArrayList()
-    connectionClosedListeners = ArrayList()
-    this.registry = registry
-    registry.whenLoaded { registryLoaded() }.register()
-  }
-
-  protected fun registryLoaded() {
-    requestCloseConnection()
-    dataStore = null
-  }
-
-  protected abstract fun loadDataStore(): TDataStore
-  fun getDataStore(): TDataStore? {
-    if (dataStore == null) {
-      dataStore = loadDataStore()
-      notifyConnectionOpenedListeners(dataStore)
+    init {
+        connectionOpenedListeners = ArrayList()
+        connectionClosedListeners = ArrayList()
+        this.registry = registry
+        registry.whenLoaded { registryLoaded() }.register()
     }
-    return Preconditions.checkNotNull(dataStore, "An error occurred while loading datastore")
-  }
 
-  @SafeVarargs
-  protected fun calculateEntityClasses(
-    baseScanPackage: String?, vararg entityAnnotations: Class<out Annotation?>?
-  ): Array<Class<*>> {
-    if (entityAnnotations.size == 0) return EMPTY_CLASS_ARRAY
-    val reflections = Reflections(
-      baseScanPackage, TypeAnnotationsScanner(), SubTypesScanner(), classLoader)
-    val types: MutableSet<Class<*>> = reflections.getTypesAnnotatedWith(entityAnnotations[0])
-    for (i in 1 until entityAnnotations.size) {
-      types.addAll(reflections.getTypesAnnotatedWith(entityAnnotations[i]))
+    private fun registryLoaded() {
+        requestCloseConnection()
+        dataStore = null
     }
-    return types.toArray<Class<*>>(EMPTY_CLASS_ARRAY).also { entityClasses = it }
-  }
 
-  /**
-   * @param name The name that the entity class contains
-   * @return First entityClass that contains `name`
-   */
-  fun getEntityClass(name: String): Optional<Class<*>?> {
-    var clazz: Class<*>? = null
-    try {
-      clazz = getEntityClassUnsafe(name)
-    } catch (ignored: RuntimeException) {
+    protected abstract fun loadDataStore(): TDataStore
+    fun getDataStore(): TDataStore {
+        if (dataStore == null) {
+            dataStore = loadDataStore()
+            notifyConnectionOpenedListeners(dataStore)
+        }
+        return dataStore ?: throw java.lang.IllegalStateException("An error occurred while loading datastore")
     }
-    return Optional.ofNullable(clazz)
-  }
 
-  /**
-   * @param name The name that the entity class contains
-   * @return First entityClass that contains (ignored case) the provided name
-   */
-  fun getEntityClassUnsafe(name: String): Class<*> {
-    getDataStore() // ensure that entityClasses is not null
-    val n = name.lowercase()
-    for (entityClass in entityClasses) {
-      if (entityClass.simpleName.lowercase().contains(n)) {
-        return entityClass
-      }
+    @SafeVarargs
+    protected fun calculateEntityClasses(
+        baseScanPackage: String, vararg entityAnnotations: Class<out Annotation>
+    ): Array<Class<*>> {
+        if (entityAnnotations.isEmpty()) return emptyArray()
+        val reflections = Reflections(
+            baseScanPackage, TypeAnnotationsScanner(), SubTypesScanner(), classLoader)
+        val types: MutableSet<Class<*>> = reflections.getTypesAnnotatedWith(entityAnnotations[0])
+        for (i in 1 until entityAnnotations.size) {
+            types.addAll(reflections.getTypesAnnotatedWith(entityAnnotations[i]))
+        }
+        types.stream().map { entityClasses = entityClasses.plus(it) }
+        return entityClasses
     }
-    throw IllegalStateException("Could not find EntityClass for $name")
-  }
 
-  protected abstract fun closeConnection(dataStore: TDataStore)
-  protected fun requestCloseConnection() {
-    if (dataStore != null) {
-      notifyConnectionClosedListeners(dataStore!!)
-      closeConnection(dataStore!!)
-      dataStore = null
+    /**
+     * @param name The name that the entity class contains
+     * @return First entityClass that contains `name`
+     */
+    fun getEntityClass(name: String): Optional<Class<*>> {
+        var clazz: Class<*>? = null
+        try {
+            clazz = getEntityClassUnsafe(name)
+        } catch (ignored: RuntimeException) {
+        }
+        return Optional.ofNullable(clazz)
     }
-  }
 
-  private fun notifyConnectionOpenedListeners(dataStore: TDataStore?) {
-    connectionOpenedListeners.forEach(Consumer { listener: Consumer<TDataStore?> -> listener.accept(dataStore) })
-  }
+    /**
+     * @param name The name that the entity class contains
+     * @return First entityClass that contains (ignored case) the provided name
+     */
+    fun getEntityClassUnsafe(name: String): Class<*> {
+        getDataStore() // ensure that entityClasses is not null
+        val n = name.lowercase()
+        for (entityClass in entityClasses) {
+            if (entityClass.simpleName.lowercase().contains(n)) {
+                return entityClass
+            }
+        }
+        throw IllegalStateException("Could not find EntityClass for $name")
+    }
 
-  fun addConnectionOpenedListener(connectionOpenedListener: Consumer<TDataStore?>) {
-    connectionOpenedListeners.add(connectionOpenedListener)
-  }
+    protected abstract fun closeConnection(dataStore: TDataStore)
+    private fun requestCloseConnection() {
+        if (dataStore != null) {
+            notifyConnectionClosedListeners(dataStore!!)
+            closeConnection(dataStore!!)
+            dataStore = null
+        }
+    }
 
-  fun removeConnectionOpenedListener(connectionOpenedListener: Consumer<TDataStore?>) {
-    connectionOpenedListeners.remove(connectionOpenedListener)
-  }
+    private fun notifyConnectionOpenedListeners(dataStore: TDataStore?) {
+        connectionOpenedListeners.forEach(Consumer { listener: Consumer<TDataStore?> -> listener.accept(dataStore) })
+    }
 
-  private fun notifyConnectionClosedListeners(dataStore: TDataStore) {
-    connectionClosedListeners.forEach(Consumer { listener: Consumer<TDataStore> -> listener.accept(dataStore) })
-  }
+    fun addConnectionOpenedListener(connectionOpenedListener: Consumer<TDataStore?>) {
+        connectionOpenedListeners.add(connectionOpenedListener)
+    }
 
-  fun addConnectionClosedListener(connectionClosedListener: Consumer<TDataStore>) {
-    connectionClosedListeners.add(connectionClosedListener)
-  }
+    fun removeConnectionOpenedListener(connectionOpenedListener: Consumer<TDataStore?>) {
+        connectionOpenedListeners.remove(connectionOpenedListener)
+    }
 
-  fun removeConnectionClosedListener(connectionClosedListener: Consumer<TDataStore>) {
-    connectionClosedListeners.remove(connectionClosedListener)
-  }
+    private fun notifyConnectionClosedListeners(dataStore: TDataStore) {
+        connectionClosedListeners.forEach(Consumer { listener: Consumer<TDataStore> -> listener.accept(dataStore) })
+    }
 
-  companion object {
-    private val EMPTY_CLASS_ARRAY: Array<Class<*>> = arrayOfNulls(0)
-  }
+    fun addConnectionClosedListener(connectionClosedListener: Consumer<TDataStore>) {
+        connectionClosedListeners.add(connectionClosedListener)
+    }
+
+    fun removeConnectionClosedListener(connectionClosedListener: Consumer<TDataStore>) {
+        connectionClosedListeners.remove(connectionClosedListener)
+    }
 }

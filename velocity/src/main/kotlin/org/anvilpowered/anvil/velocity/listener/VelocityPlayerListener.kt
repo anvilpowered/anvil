@@ -31,10 +31,10 @@ import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages
 
 class VelocityPlayerListener @Inject constructor(
-  private val audienceService: AudienceService<CommandSource>,
-  private val coreMemberManager: CoreMemberManager,
-  private val pluginMessages: AnvilPluginMessages,
-  private val registry: Registry
+    private val audienceService: AudienceService<CommandSource>,
+    private val coreMemberManager: CoreMemberManager,
+    private val pluginMessages: AnvilPluginMessages,
+    private val registry: Registry
 ) {
 
   @Subscribe

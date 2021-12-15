@@ -18,15 +18,16 @@
 package org.anvilpowered.anvil.base.model
 
 import dev.morphia.annotations.Id
+import dev.morphia.annotations.PrePersist
 import org.anvilpowered.anvil.api.model.ObjectWithId
+import org.bson.types.ObjectId
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 abstract class MongoDbo : ObjectWithId<ObjectId?> {
     @Id
     private var id: ObjectId? = null
-    private var updatedUtc: Instant? = null
-    override fun getId(): ObjectId {
-        return id
-    }
 
     override fun setId(id: ObjectId) {
         this.id = id

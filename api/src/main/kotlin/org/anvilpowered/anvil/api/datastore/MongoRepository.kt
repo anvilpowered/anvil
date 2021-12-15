@@ -18,25 +18,32 @@
 package org.anvilpowered.anvil.api.datastore
 
 import dev.morphia.Datastore
+import dev.morphia.query.Query
+import dev.morphia.query.Update
+import dev.morphia.query.experimental.updates.UpdateOperator
+import org.anvilpowered.anvil.api.model.ObjectWithId
+import org.bson.types.ObjectId
+import java.time.Instant
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
 
-interface MongoRepository<T : ObjectWithId<ObjectId?>?> : Repository<ObjectId?, T, Datastore?> {
-  override fun getOne(query: Query<T>?): CompletableFuture<Optional<T>?>?
-  fun getAll(query: Query<T>?): CompletableFuture<List<T>?>?
-  fun delete(query: Query<T>?): CompletableFuture<Boolean?>?
-  fun createUpdateOperations(): UpdateOperations<T>?
-  operator fun inc(field: String?, value: Number?): UpdateOperations<T>?
-  operator fun inc(field: String?): UpdateOperations<T>?
-  operator fun set(field: String?, value: Any?): UpdateOperations<T>?
-  fun unSet(field: String?): UpdateOperations<T>?
-  fun update(query: Query<T>?, updateOperations: UpdateOperations<T>?): CompletableFuture<Boolean?>?
-  fun update(
-    optionalQuery: Optional<Query<T>?>?,
-    updateOperations: UpdateOperations<T>?
-  ): CompletableFuture<Boolean?>?
+interface MongoRepository<T : ObjectWithId<ObjectId>> : Repository<ObjectId, T, Datastore> {
+    fun getOne(query: Query<T>): CompletableFuture<Optional<T>>
+    fun getAll(query: Query<T>): CompletableFuture<List<T>>
+    fun delete(query: Query<T>): CompletableFuture<Boolean>
+    fun createUpdateOperations(): Query<T>
+    fun inc(field: String, value: Number): Update<T>
+    fun inc(field: String): Update<T>
+    fun set(field: String, value: Any): Update<T>
+    fun unSet(field: String): Update<T>
+    fun update(query: Query<T>, update: Update<T>): CompletableFuture<Boolean>
+    fun update(
+        optionalQuery: Optional<Query<T>>,
+        vararg update: UpdateOperator
+    ): CompletableFuture<Boolean>
 
-  fun asQuery(): Query<T>?
-  fun asQuery(id: ObjectId?): Query<T>?
-  fun asQuery(createdUtc: Instant?): Query<T>?
-  fun asQueryForIdOrTime(idOrTime: String?): Optional<Query<T>?>?
+    fun asQuery(): Query<T>
+    fun asQuery(id: ObjectId): Query<T>
+    fun asQuery(createdUtc: Instant): Query<T>
+    fun asQueryForIdOrTime(idOrTime: String): Optional<Query<T>>
 }

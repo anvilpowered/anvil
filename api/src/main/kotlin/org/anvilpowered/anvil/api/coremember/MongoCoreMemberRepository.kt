@@ -18,47 +18,55 @@
 package org.anvilpowered.anvil.api.coremember
 
 import dev.morphia.Datastore
+import dev.morphia.query.Query
+import org.anvilpowered.anvil.api.datastore.MongoRepository
+import org.anvilpowered.anvil.api.model.coremember.CoreMember
+import org.bson.types.ObjectId
+import java.time.Instant
+import java.util.*
+import java.util.concurrent.CompletableFuture
 
-interface MongoCoreMemberRepository : CoreMemberRepository<ObjectId?, Datastore?>, MongoRepository<CoreMember<ObjectId?>?> {
-  /**
-   * Creates a [Query] matching documents whose
-   * property `userUUID` matches the provided [UUID]
-   *
-   * @param userUUID [UUID] to create [Query] for
-   * @return [Query] for the provided [UUID]
-   */
-  fun asQuery(userUUID: UUID?): Query<CoreMember<ObjectId?>?>?
+interface MongoCoreMemberRepository : CoreMemberRepository<ObjectId, Datastore>, MongoRepository<CoreMember<ObjectId>> {
+    /**
+     * Creates a [Query] matching documents whose
+     * property `userUUID` matches the provided [UUID]
+     *
+     * @param userUUID [UUID] to create [Query] for
+     * @return [Query] for the provided [UUID]
+     */
+    fun asQuery(userUUID: UUID): Query<CoreMember<ObjectId>>
 
-  /**
-   * Creates a [Query] matching documents whose
-   * property `userName` matches the provided [String]
-   *
-   * @param userName [String] to create [Query] for
-   * @return [Query] for the provided [String]
-   */
-  fun asQuery(userName: String?): Query<CoreMember<ObjectId?>?>?
+    /**
+     * Creates a [Query] matching documents whose
+     * property `userName` matches the provided [String]
+     *
+     * @param userName [String] to create [Query] for
+     * @return [Query] for the provided [String]
+     */
+    fun asQuery(userName: String): Query<CoreMember<ObjectId>>
 
-  /**
-   * Creates a [Query] matching documents whose
-   * property `ipAddress` matches the provided [String]
-   *
-   * @param ipAddress [String] to create [Query] for
-   * @return [Query] for the provided [String]
-   */
-  fun asQueryForIpAddress(ipAddress: String?): Query<CoreMember<ObjectId?>?>?
 
-  /**
-   * Updates the properties `banEndUtc`, `banReason`
-   * and sets `banned` to `true` for documents that
-   * match the provided [Query]
-   *
-   * @param query  [Query] to update documents for
-   * @param endUtc [Instant] end of the ban
-   * @param reason [String] reason for the ban
-   * @return [CompletableFuture] wrapped [Boolean].
-   * true if successful, otherwise false
-   */
-  override fun ban(query: Query<CoreMember<ObjectId?>?>?, endUtc: Instant?, reason: String?): CompletableFuture<Boolean?>?
+    /**
+     * Creates a [Query] matching documents whose
+     * property `ipAddress` matches the provided [String]
+     *
+     * @param ipAddress [String] to create [Query] for
+     * @return [Query] for the provided [String]
+     */
+    fun asQueryForIpAddress(ipAddress: String): Query<CoreMember<ObjectId>>
+
+    /**
+     * Updates the properties `banEndUtc`, `banReason`
+     * and sets `banned` to `true` for documents that
+     * match the provided [Query]
+     *
+     * @param query  [Query] to update documents for
+     * @param endUtc [Instant] end of the ban
+     * @param reason [String] reason for the ban
+     * @return [CompletableFuture] wrapped [Boolean].
+     * true if successful, otherwise false
+     */
+    override fun ban(id: ObjectId, endUtc: Instant, reason: String): CompletableFuture<Boolean>
 
   /**
    * Sets the property `banned` to `false` for
@@ -68,49 +76,49 @@ interface MongoCoreMemberRepository : CoreMemberRepository<ObjectId?, Datastore?
    * @return [CompletableFuture] wrapped [Boolean].
    * true if successful, otherwise false
    */
-  override fun unBan(query: Query<CoreMember<ObjectId?>?>?): CompletableFuture<Boolean?>?
+  fun unBan(query: Query<CoreMember<ObjectId>>): CompletableFuture<Boolean>
 
-  /**
-   * Updates the properties `muteEndUtc`, `muteReason`
-   * and sets `muted` to `true` for documents that
-   * match the provided [Query]
-   *
-   * @param query  [Query] to update documents for
-   * @param endUtc [Instant] end of the mute
-   * @param reason [String] reason for the mute
-   * @return [CompletableFuture] wrapped [Boolean].
-   * true if successful, otherwise false
-   */
-  override fun mute(query: Query<CoreMember<ObjectId?>?>?, endUtc: Instant?, reason: String?): CompletableFuture<Boolean?>?
+    /**
+     * Updates the properties `muteEndUtc`, `muteReason`
+     * and sets `muted` to `true` for documents that
+     * match the provided [Query]
+     *
+     * @param query  [Query] to update documents for
+     * @param endUtc [Instant] end of the mute
+     * @param reason [String] reason for the mute
+     * @return [CompletableFuture] wrapped [Boolean].
+     * true if successful, otherwise false
+     */
+    fun mute(query: Query<CoreMember<ObjectId>>, endUtc: Instant, reason: String): CompletableFuture<Boolean>
 
-  /**
-   * Sets the property `muted` to `false` for
-   * documents that match the provided [Query]
-   *
-   * @param query [Query] to update documents for
-   * @return [CompletableFuture] wrapped [Boolean].
-   * true if successful, otherwise false
-   */
-  override fun unMute(query: Query<CoreMember<ObjectId?>?>?): CompletableFuture<Boolean?>?
+    /**
+     * Sets the property `muted` to `false` for
+     * documents that match the provided [Query]
+     *
+     * @param query [Query] to update documents for
+     * @return [CompletableFuture] wrapped [Boolean].
+     * true if successful, otherwise false
+     */
+    fun unMute(query: Query<CoreMember<ObjectId>>): CompletableFuture<Boolean>
 
-  /**
-   * Updates the property `nickName` for
-   * documents that match the provided [Query]
-   *
-   * @param query    [Query] to update documents for
-   * @param nickName [String] new nickName
-   * @return [CompletableFuture] wrapped [Boolean].
-   * true if successful, otherwise false
-   */
-  override fun setNickName(query: Query<CoreMember<ObjectId?>?>?, nickName: String?): CompletableFuture<Boolean?>?
+    /**
+     * Updates the property `nickName` for
+     * documents that match the provided [Query]
+     *
+     * @param query    [Query] to update documents for
+     * @param nickName [String] new nickName
+     * @return [CompletableFuture] wrapped [Boolean].
+     * true if successful, otherwise false
+     */
+    fun setNickName(query: Query<CoreMember<ObjectId>>, nickName: String): CompletableFuture<Boolean>
 
-  /**
-   * Deletes the property `nickName` for
-   * documents that match the provided [boolean]
-   *
-   * @param query [Query] to update documents for
-   * @return [CompletableFuture] wrapped [Boolean]
-   * true if successful, otherwise false
-   */
-  override fun deleteNickName(query: Query<CoreMember<ObjectId?>?>?): CompletableFuture<Boolean?>?
+    /**
+     * Deletes the property `nickName` for
+     * documents that match the provided [boolean]
+     *
+     * @param query [Query] to update documents for
+     * @return [CompletableFuture] wrapped [Boolean]
+     * true if successful, otherwise false
+     */
+    fun deleteNickName(query: Query<CoreMember<ObjectId>>): CompletableFuture<Boolean>
 }

@@ -19,87 +19,23 @@ package org.anvilpowered.anvil.api.util
 
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
-import java.time.Instant
-import java.time.ZonedDateTime
-import org.anvilpowered.anvil.api.util.TimeFormatService.FormatResult
-import java.time.temporal.TemporalAccessor
-import org.anvilpowered.anvil.api.model.ObjectWithId
-import kotlin.Throws
-import java.io.IOException
-import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
-import org.anvilpowered.anvil.api.model.Mappable
-import java.lang.ClassNotFoundException
-import java.io.ObjectInputStream
-import java.lang.ClassCastException
-import java.lang.UnsupportedOperationException
-import jetbrains.exodus.util.ByteArraySizedInputStream
-import java.lang.SafeVarargs
-import com.google.common.collect.ImmutableList
-import java.util.stream.Collectors
-import org.anvilpowered.anvil.api.entity.RestrictionCriteria
-import com.google.common.base.MoreObjects
-import org.anvilpowered.anvil.api.registry.Keys.KeyRegistrationEnd
-import java.lang.AssertionError
-import com.google.common.collect.HashBasedTable
-import org.anvilpowered.anvil.api.registry.TypeTokens
-import java.time.ZoneId
-import org.anvilpowered.anvil.api.registry.ZoneIdSerializer
-import org.anvilpowered.anvil.api.registry.RegistryScoped
-import java.util.function.BiFunction
-import org.anvilpowered.anvil.api.registry.RegistryScope
-import java.lang.Runnable
-import org.anvilpowered.anvil.api.registry.Registry.ListenerRegistrationEnd
-import org.anvilpowered.anvil.api.datastore.DBComponent
-import org.anvilpowered.anvil.api.datastore.DataStoreContext
-import java.net.URLEncoder
-import java.io.UnsupportedEncodingException
-import jetbrains.exodus.entitystore.EntityId
-import jetbrains.exodus.entitystore.PersistentEntityStore
-import java.nio.file.Paths
-import java.lang.IllegalStateException
-import org.anvilpowered.anvil.api.datastore.XodusEntity
-import org.anvilpowered.anvil.api.datastore.XodusEmbedded
-import java.lang.NoSuchMethodException
-import jetbrains.exodus.entitystore.PersistentEntityStores
-import jetbrains.exodus.entitystore.StoreTransaction
-import org.anvilpowered.anvil.api.datastore.CacheService
-import java.util.function.BiConsumer
-import java.lang.RuntimeException
-import redis.clients.jedis.JedisPool
-import redis.clients.jedis.JedisPubSub
-import org.anvilpowered.anvil.base.plugin.BasePlugin
-import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.EnvironmentManager
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager
-import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
-import java.lang.InstantiationException
-import java.lang.IllegalAccessException
-import org.anvilpowered.anvil.api.datastore.Manager
-import org.anvilpowered.anvil.api.model.coremember.CoreMember
-import org.anvilpowered.anvil.api.datastore.MongoRepository
-import org.anvilpowered.anvil.api.datastore.XodusRepository
-import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.util.TextService
-import com.google.inject.TypeLiteral
-import java.util.Optional
 
 /**
  * Service for translating UUIDs to UserNames or UserNames to UUIDs
  */
 interface UserService<TUser, TPlayer> {
-  operator fun get(userName: String?): Optional<TUser>?
-  operator fun get(userUUID: UUID?): Optional<TUser>?
-  fun getPlayer(userName: String?): Optional<TPlayer>?
-  fun getPlayer(userUUID: UUID?): Optional<TPlayer>?
-  fun getPlayer(user: TUser): Optional<TPlayer>?
+  operator fun get(userName: String?): TUser?
+  operator fun get(userUUID: UUID?): TUser?
+  fun getPlayer(userName: String?): TPlayer?
+  fun getPlayer(userUUID: UUID?): TPlayer?
+  fun getPlayer(user: TUser): TPlayer?
 
   /**
    * Attempts to find all matching userNames that start with the provided String (case-insensitive).
    *
    * @return A list of matching player names
    */
-  fun matchPlayerNames(startsWith: String?): List<String?>?
+  fun matchPlayerNames(startsWith: String?): List<String>
 
   /**
    * Attempts to find all matching userNames that start with the String at the provided index
@@ -108,16 +44,16 @@ interface UserService<TUser, TPlayer> {
    * @param length The length of `context` for which to match the String at `index`
    * @return A list of matching player names
    */
-  fun matchPlayerNames(context: Array<String?>?, index: Int, length: Int): List<String?>?
-  val onlinePlayers: Collection<TPlayer>?
-  fun getUUID(userName: String?): CompletableFuture<Optional<UUID?>?>?
-  fun getUserName(userUUID: UUID?): CompletableFuture<Optional<String?>?>?
+  fun matchPlayerNames(context: Array<String>, index: Int, length: Int): List<String>
+  val onlinePlayers: Collection<TPlayer>
+  fun getUUID(userName: String): CompletableFuture<UUID?>
+  fun getUserName(userUUID: UUID): CompletableFuture<String?>
   fun getUUID(user: TUser): UUID?
 
   /**
    * If the provided object has a [UUID], return it. Otherwise return a constant UUID that is
    * the same for all objects without a UUID.
    */
-  fun getUUIDSafe(`object`: Any?): UUID?
-  fun getUserName(user: TUser): String?
+  fun getUUIDSafe(obj: Any): UUID
+  fun getUserName(user: TUser): String
 }

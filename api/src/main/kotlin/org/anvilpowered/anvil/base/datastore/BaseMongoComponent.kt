@@ -18,19 +18,20 @@
 package org.anvilpowered.anvil.base.datastore
 
 import dev.morphia.Datastore
+import org.anvilpowered.anvil.api.datastore.DBComponent
+import org.bson.types.ObjectId
 import java.util.Optional
 
-interface BaseMongoComponent : DBComponent<ObjectId?, Datastore?> {
-    override fun parseUnsafe(`object`: Any?): ObjectId {
-        if (`object` is ObjectId) {
-            return `object` as ObjectId
-        } else if (`object` is Optional<*>) {
-            val optional = `object`
-            if (optional.isPresent) return parseUnsafe(optional.get())
-            throw IllegalArgumentException("Error while parsing $`object`. Optional not present")
+interface BaseMongoComponent : DBComponent<ObjectId, Datastore> {
+    override fun parseUnsafe(obj: Any): ObjectId {
+        if (obj is ObjectId) {
+            return obj
+        } else if (obj is Optional<*>) {
+            if (obj.isPresent) return parseUnsafe(obj.get())
+            throw IllegalArgumentException("Error while parsing $obj. Optional not present")
         }
-        val string = `object`.toString()
+        val string = obj.toString()
         if (ObjectId.isValid(string)) return ObjectId(string)
-        throw IllegalArgumentException("Error while parsing $`object`. Not a valid ObjectId")
+        throw IllegalArgumentException("Error while parsing $obj. Not a valid ObjectId")
     }
 }

@@ -24,7 +24,6 @@ import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.PermissionService
-import org.anvilpowered.anvil.api.util.TextService
 import java.util.Arrays
 
 class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> {

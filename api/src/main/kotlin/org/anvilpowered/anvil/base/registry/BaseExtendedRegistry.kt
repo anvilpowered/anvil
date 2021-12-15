@@ -22,38 +22,35 @@ import com.google.inject.Singleton
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.RegistryScope
-import java.util.Optional
 
 /**
  * A registry that is backed by the configuration service
  */
 @Singleton
 class BaseExtendedRegistry : BaseRegistry() {
+
     @Inject
-    protected var configurationService: ConfigurationService? = null
-    override fun <T> get(key: Key<T>?): Optional<T> {
+    protected lateinit var configurationService: ConfigurationService
+
+    override fun <T> get(key: Key<T>): T? {
         val result = super.get(key)
-        return if (result.isPresent) result else configurationService!!.get(key)
+        return result ?: configurationService[key]
     }
 
-    override fun <T> getDefault(key: Key<T>): T? {
+    override fun <T> getDefault(key: Key<T>): T {
         val result = defaultMap[key] as T?
-        return result ?: configurationService!!.getDefault(key)
+        return result ?: configurationService.getDefault(key)
     }
 
-    override fun load(registryScope: RegistryScope?) {
-        configurationService!!.load(registryScope)
+    override fun load(registryScope: RegistryScope) {
+        configurationService.load(registryScope)
         super.load(registryScope)
     }
 
     override fun toString(): String {
-        return if (configurationService == null) {
-            super.toString()
-        } else {
-            """
+        return """
    ${super.toString()}
    $configurationService
    """.trimIndent()
-        }
     }
 }

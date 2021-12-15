@@ -17,11 +17,21 @@
  */
 package org.anvilpowered.anvil.base.registry
 
+import com.google.common.reflect.Invokable
 import com.google.common.reflect.TypeToken
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import ninja.leaping.configurate.ConfigurationOptions
+import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
+import org.anvilpowered.anvil.api.registry.Keys
+import org.anvilpowered.anvil.api.registry.RegistryScope
+import org.anvilpowered.anvil.api.registry.RegistryScoped
+import org.spongepowered.configurate.CommentedConfigurationNode
+import org.spongepowered.configurate.ConfigurationOptions
+import org.spongepowered.configurate.loader.ConfigurationLoader
+import org.spongepowered.configurate.serialize.SerializationException
+import org.spongepowered.configurate.util.Types
+import java.io.IOException
 import java.util.function.Function
 import java.util.function.Predicate
 
@@ -31,10 +41,10 @@ import java.util.function.Predicate
  * @author Cableguy20
  */
 @Singleton
-open class BaseConfigurationService @Inject constructor(configLoader: ConfigurationLoader<CommentedConfigurationNode?>) :
+open class BaseConfigurationService @Inject constructor(configLoader: ConfigurationLoader<CommentedConfigurationNode>) :
     BaseRegistry(), ConfigurationService {
-    protected var configLoader: ConfigurationLoader<CommentedConfigurationNode>
-    private var rootConfigurationNode: CommentedConfigurationNode? = null
+    private var configLoader: ConfigurationLoader<CommentedConfigurationNode>
+    private lateinit var rootConfigurationNode: CommentedConfigurationNode
 
     /**
      * Maps Keys to their verification function
@@ -198,47 +208,47 @@ Please note: If this is enabled, the values for above settings in this config fi
         nodeDescriptionMap[key] = description
     }
 
-    override fun <T> set(key: Key<T>?, value: T) {
+    override fun <T> set(key: Key<T>, value: T) {
         super.set(key, value)
         configValuesEdited = true
     }
 
-    override fun <T> remove(key: Key<T>?) {
+    override fun <T> remove(key: Key<T>) {
         super.remove(key)
         configValuesEdited = true
     }
 
-    override fun <T> transform(key: Key<T>?, transformer: BiFunction<in Key<T>?, in T, out T>?) {
-        super.transform<T>(key, transformer)
-        configValuesEdited = true
-    }
-
-    override fun <T> transform(key: Key<T>?, transformer: Function<in T, out T>?) {
+    override fun <T> transform(key: Key<T>, transformer: (Key<T>, T) -> T) {
         super.transform(key, transformer)
         configValuesEdited = true
     }
 
-    override fun <T> addToCollection(key: Key<out MutableCollection<T>?>?, value: T) {
+    override fun <T> transform(key: Key<T>, transformer: Function<in T, out T>) {
+        super.transform(key, transformer)
+        configValuesEdited = true
+    }
+
+    override fun <T> addToCollection(key: Key<out MutableCollection<T>>, value: T) {
         super.addToCollection(key, value)
         configValuesEdited = true
     }
 
-    override fun <T> removeFromCollection(key: Key<out MutableCollection<T>?>?, value: T) {
+    override fun <T> removeFromCollection(key: Key<out MutableCollection<T>>, value: T) {
         super.removeFromCollection(key, value)
         configValuesEdited = true
     }
 
-    override fun <K, T> putInMap(key: Key<out MutableMap<K, T>?>?, mapKey: K, mapValue: T) {
+    override fun <K, T> putInMap(key: Key<out MutableMap<K, T>>, mapKey: K, mapValue: T) {
         super.putInMap(key, mapKey, mapValue)
         configValuesEdited = true
     }
 
-    override fun <K, T> removeFromMap(key: Key<out MutableMap<K, T?>?>?, mapKey: K) {
-        super.removeFromMap<K, T?>(key, mapKey)
+    override fun <K, T> removeFromMap(key: Key<out MutableMap<K, T>>, mapKey: K) {
+        super.removeFromMap(key, mapKey)
         configValuesEdited = true
     }
 
-    override fun load(registryScope: RegistryScope?) {
+    override fun load(registryScope: RegistryScope) {
         val ordinal: Int = registryScope.ordinal
         if (ordinal <= RegistryScope.DEFAULT.ordinal) {
             loadDefaultScope()
@@ -250,11 +260,11 @@ Please note: If this is enabled, the values for above settings in this config fi
     override fun save(): Boolean {
         if (configValuesEdited) {
             for ((key, value) in nodeNameMap) {
-                val node: CommentedConfigurationNode? = fromString(value)
+                val node: CommentedConfigurationNode = fromString(value)
                 try {
                     setNodeValue(node, key)
-                } catch (e: ObjectMappingException) {
-                    logger!!.error("Unable to set config value for $key", e)
+                } catch (e: Exception) {
+                    logger.error("Unable to set config value for $key", e)
                 }
             }
             try {
@@ -268,25 +278,23 @@ Please note: If this is enabled, the values for above settings in this config fi
         return false
     }
 
-    private fun fromString(name: String): CommentedConfigurationNode? {
+    private fun fromString(name: String): CommentedConfigurationNode {
         val path = name.split("[.]").toTypedArray()
-        var node: CommentedConfigurationNode? = rootConfigurationNode
+        var node: CommentedConfigurationNode = rootConfigurationNode
         for (s in path) {
-            node = node.getNode(s)
+            node = node.get(String::class.java, s) as CommentedConfigurationNode
         }
         return node
     }
 
-    @Throws(ObjectMappingException::class)
-    private fun <T> setNodeDefault(node: CommentedConfigurationNode?, key: Key<T?>) {
+    private fun <T> setNodeDefault(node: CommentedConfigurationNode, key: Key<T>) {
         val def = getDefault(key)
-        node.setValue(key.type, def)
+        node.set(key.typeToken.type, def)
         set(key, def)
     }
 
-    @Throws(ObjectMappingException::class)
-    private fun <T> setNodeValue(node: CommentedConfigurationNode?, key: Key<T>) {
-        node.setValue(key.type, getOrDefault(key))
+    private fun <T> setNodeValue(node: CommentedConfigurationNode, key: Key<T>) {
+        node.set(key.typeToken.type, getOrDefault(key))
     }
 
     @RegistryScoped
@@ -302,12 +310,12 @@ Please note: If this is enabled, the values for above settings in this config fi
         }
         var updatedCount = 0
         for ((key, value) in nodeNameMap) {
-            val node: CommentedConfigurationNode? = fromString(value)
-            if (node.isVirtual()) {
+            val node: CommentedConfigurationNode = fromString(value)
+            if (node.virtual()) {
                 try {
                     setNodeDefault(node, key)
                     updatedCount++
-                } catch (e: ObjectMappingException) {
+                } catch (e: SerializationException) {
                     e.printStackTrace()
                 }
             } else {
@@ -317,8 +325,8 @@ Please note: If this is enabled, the values for above settings in this config fi
                     updatedCount++
                 }
             }
-            if (node.isVirtual() || !node.getComment().isPresent()) {
-                node.setComment(nodeDescriptionMap[key])
+            if (node.virtual() || !node.comment().isNullOrBlank()) {
+                node.comment(nodeDescriptionMap[key])
                 updatedCount++
             }
         }
@@ -333,7 +341,7 @@ Please note: If this is enabled, the values for above settings in this config fi
     }
 
     private fun <T> initConfigValue(key: Key<T>, node: CommentedConfigurationNode?, modified: BooleanArray): T? {
-        return initConfigValue(key, key.type, node, modified)
+        return initConfigValue(key, key.typeToken, node, modified)
     }
 
     /**
@@ -343,9 +351,10 @@ Please note: If this is enabled, the values for above settings in this config fi
     private fun <T> initConfigValue(
         key: Key<T>?,
         typeToken: TypeToken<T>,
-        node: CommentedConfigurationNode?,
+        node: CommentedConfigurationNode,
         modified: BooleanArray,
-    ): T? {
+    ): T ?{
+        TODO("Fix this method")
 
         // it ain't pretty but it works
         return if (key != null && typeToken.isSubtypeOf(MutableList::class.java)) {
@@ -354,7 +363,7 @@ Please note: If this is enabled, the values for above settings in this config fi
             try {
                 val getMethod = MutableList::class.java.getMethod("get", Int::class.javaPrimitiveType)
                 val invokable: Invokable<out T, *> = typeToken.method(getMethod)
-                val list = verify(verificationMap[key], node.getList(invokable.getReturnType()), node, modified) as T
+                val list = verify(verificationMap[key], node.getList(invokable.getReturnType()::class.java), node, modified) as T
                 set(key, list)
                 list
             } catch (e: NoSuchMethodException) {
@@ -363,7 +372,7 @@ Please note: If this is enabled, the values for above settings in this config fi
             } catch (e: IllegalArgumentException) {
                 e.printStackTrace()
                 null
-            } catch (e: ObjectMappingException) {
+            } catch (e: SerializationException) {
                 e.printStackTrace()
                 null
             }
@@ -375,9 +384,9 @@ Please note: If this is enabled, the values for above settings in this config fi
                 val invokable: Invokable<*, *> = typeToken.method(getMethod)
                 val subType: TypeToken<*> = invokable.getReturnType()
                 val result: MutableMap<Any, Any> = HashMap()
-                for ((_, value) in node.getChildrenMap().entrySet()) {
+                for ((_, value) in node.childrenMap().entries) {
                     // here comes the recursion
-                    result[value.getKey()] = initConfigValue(null, subType, value, modified)!!
+                    result[value.key() as Any] = initConfigValue(null, subType, value, modified)!!
                 }
                 if (key != null) {
                     val map = verify(verificationMap[key], result, node, modified) as T
@@ -393,20 +402,18 @@ Please note: If this is enabled, the values for above settings in this config fi
             }
         } else if (key != null) {
             try {
-                val value: T = node.getValue(typeToken)
-                set(key, verify(verificationMap[key], value, node, modified) as T)
-                value
+                set(key, verify(verificationMap[key], node.get(typeToken.type), node, modified) as T)
             } catch (e: ClassCastException) {
                 e.printStackTrace()
                 null
-            } catch (e: ObjectMappingException) {
+            } catch (e: SerializationException) {
                 e.printStackTrace()
                 null
             }
         } else {
             try {
-                node.getValue(typeToken)
-            } catch (e: ObjectMappingException) {
+                node.get(typeToken.type)
+            } catch (e: SerializationException) {
                 e.printStackTrace()
                 null
             }
@@ -416,7 +423,7 @@ Please note: If this is enabled, the values for above settings in this config fi
     private fun <T> verify(
         verificationMap: Map<Predicate<T>, Function<T, T>>?,
         value: T,
-        node: CommentedConfigurationNode?,
+        node: CommentedConfigurationNode,
         modified: BooleanArray,
     ): T {
         if (verificationMap == null) return value // if there is no verification function defined
@@ -428,7 +435,7 @@ Please note: If this is enabled, the values for above settings in this config fi
             }
         }
         if (modified[0]) {
-            node.setValue(result)
+            node.set(result)
         }
         return result
     }

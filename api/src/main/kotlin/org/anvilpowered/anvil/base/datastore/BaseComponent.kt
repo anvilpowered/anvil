@@ -23,14 +23,16 @@ import org.anvilpowered.anvil.api.datastore.DataStoreContext
 import java.util.Optional
 
 abstract class BaseComponent<TKey, TDataStore> : DBComponent<TKey, TDataStore> {
-    @Inject
-    override val dataStoreContext: DataStoreContext<TKey, TDataStore>? = null
-    override val tKeyClass: Class<TKey>?
-        get() = dataStoreContext!!.tKeyClass
 
-    override fun parse(`object`: Any?): Optional<TKey>? {
+    @Inject
+    override lateinit var dataStoreContext: DataStoreContext<TKey, TDataStore>
+
+    override val tKeyClass: Class<TKey>
+        get() = dataStoreContext.tKeyClass!!
+
+    override fun parse(obj: Any): Optional<TKey!!> {
         return try {
-            Optional.of(parseUnsafe(`object`))
+            Optional.of(parseUnsafe(obj))
         } catch (e: IllegalArgumentException) {
             Optional.empty()
         } catch (e: UnsupportedOperationException) {

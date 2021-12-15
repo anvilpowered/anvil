@@ -159,93 +159,93 @@ public class XodusCoreMember extends XodusDbo implements CoreMember<EntityId> {
     }
 
     @Override
-    public Entity writeTo(Entity object) {
-        super.writeTo(object);
+    public Entity writeTo(Entity entity) {
+        super.writeTo(entity);
         if (userUUID != null) {
-            object.setProperty("userUUID", userUUID);
+            entity.setProperty("userUUID", userUUID);
         }
         if (userName != null) {
-            object.setProperty("userName", userName);
+            entity.setProperty("userName", userName);
         }
         if (ipAddress != null) {
-            object.setProperty("ipAddress", ipAddress);
+            entity.setProperty("ipAddress", ipAddress);
         }
-        object.setProperty("lastJoinedUtcSeconds", lastJoinedUtcSeconds);
-        object.setProperty("lastJoinedUtcNanos", lastJoinedUtcNanos);
+        entity.setProperty("lastJoinedUtcSeconds", lastJoinedUtcSeconds);
+        entity.setProperty("lastJoinedUtcNanos", lastJoinedUtcNanos);
         if (nickName != null) {
-            object.setProperty("nickname", nickName);
+            entity.setProperty("nickname", nickName);
         }
-        object.setProperty("banned", banned);
-        object.setProperty("muted", muted);
-        object.setProperty("banEndUtcSeconds", banEndUtcSeconds);
-        object.setProperty("banEndUtcNanos", banEndUtcNanos);
-        object.setProperty("muteEndUtcSeconds", muteEndUtcSeconds);
-        object.setProperty("muteEndUtcNanos", muteEndUtcNanos);
+        entity.setProperty("banned", banned);
+        entity.setProperty("muted", muted);
+        entity.setProperty("banEndUtcSeconds", banEndUtcSeconds);
+        entity.setProperty("banEndUtcNanos", banEndUtcNanos);
+        entity.setProperty("muteEndUtcSeconds", muteEndUtcSeconds);
+        entity.setProperty("muteEndUtcNanos", muteEndUtcNanos);
         if (banReason != null) {
-            object.setProperty("banReason", banReason);
+            entity.setProperty("banReason", banReason);
         }
         if (muteReason != null) {
-            object.setProperty("muteReason", muteReason);
+            entity.setProperty("muteReason", muteReason);
         }
-        return object;
+        return entity;
     }
 
     @Override
-    public void readFrom(Entity object) {
-        super.readFrom(object);
-        Comparable<?> userUUID = object.getProperty("userUUID");
+    public void readFrom(Entity entity) {
+        super.readFrom(entity);
+        Comparable<?> userUUID = entity.getProperty("userUUID");
         if (userUUID instanceof String) {
             this.userUUID = (String) userUUID;
         }
-        Comparable<?> userName = object.getProperty("userName");
+        Comparable<?> userName = entity.getProperty("userName");
         if (userName instanceof String) {
             this.userName = (String) userName;
         }
-        Comparable<?> ipAddress = object.getProperty("ipAddress");
+        Comparable<?> ipAddress = entity.getProperty("ipAddress");
         if (ipAddress instanceof String) {
             this.ipAddress = (String) ipAddress;
         }
-        Comparable<?> lastJoinedUtcSeconds = object.getProperty("lastJoinedUtcSeconds");
+        Comparable<?> lastJoinedUtcSeconds = entity.getProperty("lastJoinedUtcSeconds");
         if (lastJoinedUtcSeconds instanceof Long) {
             this.lastJoinedUtcSeconds = (Long) lastJoinedUtcSeconds;
         }
-        Comparable<?> lastJoinedUtcNanos = object.getProperty("lastJoinedUtcNanos");
+        Comparable<?> lastJoinedUtcNanos = entity.getProperty("lastJoinedUtcNanos");
         if (lastJoinedUtcNanos instanceof Integer) {
             this.lastJoinedUtcNanos = (Integer) lastJoinedUtcNanos;
         }
-        Comparable<?> nickName = object.getProperty("nickName");
+        Comparable<?> nickName = entity.getProperty("nickName");
         if (nickName instanceof String) {
             this.nickName = (String) nickName;
         }
-        Comparable<?> banned = object.getProperty("banned");
+        Comparable<?> banned = entity.getProperty("banned");
         if (banned instanceof Boolean) {
             this.banned = (Boolean) banned;
         }
-        Comparable<?> muted = object.getProperty("muted");
+        Comparable<?> muted = entity.getProperty("muted");
         if (muted instanceof Boolean) {
             this.muted = (Boolean) muted;
         }
-        Comparable<?> banEndUtcSeconds = object.getProperty("banEndUtcSeconds");
+        Comparable<?> banEndUtcSeconds = entity.getProperty("banEndUtcSeconds");
         if (banEndUtcSeconds instanceof Long) {
             this.banEndUtcSeconds = (Long) banEndUtcSeconds;
         }
-        Comparable<?> banEndUtcNanos = object.getProperty("banEndUtcNanos");
+        Comparable<?> banEndUtcNanos = entity.getProperty("banEndUtcNanos");
         if (banEndUtcNanos instanceof Integer) {
             this.banEndUtcNanos = (Integer) banEndUtcNanos;
         }
-        Comparable<?> muteEndUtcSeconds = object.getProperty("muteEndUtcSeconds");
+        Comparable<?> muteEndUtcSeconds = entity.getProperty("muteEndUtcSeconds");
         if (muteEndUtcSeconds instanceof Long) {
             this.muteEndUtcSeconds = (Long) muteEndUtcSeconds;
         }
-        Comparable<?> muteEndUtcNanos = object.getProperty("muteEndUtcNanos");
+        Comparable<?> muteEndUtcNanos = entity.getProperty("muteEndUtcNanos");
         if (muteEndUtcNanos instanceof Integer) {
             this.muteEndUtcNanos = (Integer) muteEndUtcNanos;
         }
-        Comparable<?> banReason = object.getProperty("banReason");
+        Comparable<?> banReason = entity.getProperty("banReason");
         if (banReason instanceof String) {
             this.banReason = (String) banReason;
         }
-        Comparable<?> muteReason = object.getProperty("muteReason");
+        Comparable<?> muteReason = entity.getProperty("muteReason");
         if (muteReason instanceof String) {
             this.muteReason = (String) muteReason;
         }

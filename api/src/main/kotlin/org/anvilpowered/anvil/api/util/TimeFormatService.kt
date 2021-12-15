@@ -17,71 +17,9 @@
  */
 package org.anvilpowered.anvil.api.util
 
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
 import java.time.Instant
 import java.time.ZonedDateTime
-import org.anvilpowered.anvil.api.util.TimeFormatService.FormatResult
 import java.time.temporal.TemporalAccessor
-import org.anvilpowered.anvil.api.model.ObjectWithId
-import kotlin.Throws
-import java.io.IOException
-import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
-import org.anvilpowered.anvil.api.model.Mappable
-import java.lang.ClassNotFoundException
-import java.io.ObjectInputStream
-import java.lang.ClassCastException
-import java.lang.UnsupportedOperationException
-import jetbrains.exodus.util.ByteArraySizedInputStream
-import java.lang.SafeVarargs
-import com.google.common.collect.ImmutableList
-import java.util.stream.Collectors
-import org.anvilpowered.anvil.api.entity.RestrictionCriteria
-import com.google.common.base.MoreObjects
-import org.anvilpowered.anvil.api.registry.Keys.KeyRegistrationEnd
-import java.lang.AssertionError
-import com.google.common.collect.HashBasedTable
-import org.anvilpowered.anvil.api.registry.TypeTokens
-import java.time.ZoneId
-import org.anvilpowered.anvil.api.registry.ZoneIdSerializer
-import org.anvilpowered.anvil.api.registry.RegistryScoped
-import java.util.function.BiFunction
-import org.anvilpowered.anvil.api.registry.RegistryScope
-import java.lang.Runnable
-import org.anvilpowered.anvil.api.registry.Registry.ListenerRegistrationEnd
-import org.anvilpowered.anvil.api.datastore.DBComponent
-import org.anvilpowered.anvil.api.datastore.DataStoreContext
-import java.net.URLEncoder
-import java.io.UnsupportedEncodingException
-import jetbrains.exodus.entitystore.EntityId
-import jetbrains.exodus.entitystore.PersistentEntityStore
-import java.nio.file.Paths
-import java.lang.IllegalStateException
-import org.anvilpowered.anvil.api.datastore.XodusEntity
-import org.anvilpowered.anvil.api.datastore.XodusEmbedded
-import java.lang.NoSuchMethodException
-import jetbrains.exodus.entitystore.PersistentEntityStores
-import jetbrains.exodus.entitystore.StoreTransaction
-import org.anvilpowered.anvil.api.datastore.CacheService
-import java.util.function.BiConsumer
-import java.lang.RuntimeException
-import redis.clients.jedis.JedisPool
-import redis.clients.jedis.JedisPubSub
-import org.anvilpowered.anvil.base.plugin.BasePlugin
-import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.EnvironmentManager
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager
-import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
-import java.lang.InstantiationException
-import java.lang.IllegalAccessException
-import org.anvilpowered.anvil.api.datastore.Manager
-import org.anvilpowered.anvil.api.model.coremember.CoreMember
-import org.anvilpowered.anvil.api.datastore.MongoRepository
-import org.anvilpowered.anvil.api.datastore.XodusRepository
-import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.util.TextService
-import com.google.inject.TypeLiteral
 import java.time.Duration
 import java.util.Optional
 
@@ -99,13 +37,13 @@ import java.util.Optional
  */
 interface TimeFormatService {
   fun parseSecondsUnsafe(input: String?): Long
-  fun parseSeconds(input: String?): Optional<Long?>?
+  fun parseSeconds(input: String?): Long?
   fun parseDurationUnsafe(input: String?): Duration?
-  fun parseDuration(input: String?): Optional<Duration?>?
+  fun parseDuration(input: String?): Duration?
   fun parseFutureInstantUnsafe(input: String?): Instant?
-  fun parseFutureInstant(input: String?): Optional<Instant?>?
+  fun parseFutureInstant(input: String?): Instant?
   fun parseInstantUnsafe(input: String?): Instant?
-  fun parseInstant(input: String?): Optional<Instant?>?
+  fun parseInstant(input: String?): Instant?
 
   /**
    * Interprets the provided [Instant] as UTC and converts it into the time zone defined in the config.
@@ -125,9 +63,9 @@ interface TimeFormatService {
    */
   fun format(temporal: TemporalAccessor?): FormatResult?
   fun formatDurationUnsafe(input: String?): FormatResult?
-  fun formatDuration(input: String?): Optional<FormatResult?>?
+  fun formatDuration(input: String?): FormatResult?
   fun formatInstantUnsafe(input: String?): FormatResult?
-  fun formatInstant(input: String?): Optional<FormatResult?>?
+  fun formatInstant(input: String?): FormatResult?
   interface FormatResult {
     /**
      * Sets the maximum amount of characters in the result. Providing a
@@ -148,7 +86,7 @@ interface TimeFormatService {
     fun maxUnits(maxUnits: Int): FormatResult?
 
     /**
-     * Removes the nano second component of the result
+     * Removes the nano-second component of the result
      *
      * @return `this`
      */

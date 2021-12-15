@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.common.command.regedit
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.api.util.TextService
 
 class Change<T, TCommandSource>(
   private val registry: Registry,

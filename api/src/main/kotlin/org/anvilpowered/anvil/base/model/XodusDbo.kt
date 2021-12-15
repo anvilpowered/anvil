@@ -25,7 +25,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-abstract class XodusDbo protected constructor() : ObjectWithId<EntityId?>, Mappable<Entity?> {
+abstract class XodusDbo protected constructor() : ObjectWithId<EntityId>, Mappable<Entity> {
     private var id: EntityId? = null
     private var createdUtcSeconds: Long
     private var createdUtcNanos: Int
@@ -54,36 +54,36 @@ abstract class XodusDbo protected constructor() : ObjectWithId<EntityId?>, Mappa
     override val updatedUtc: Instant
         get() = Instant.ofEpochSecond(updatedUtcSeconds, updatedUtcNanos.toLong())
 
-    protected fun prePersist() {
+    private fun prePersist() {
         val now = OffsetDateTime.now(ZoneOffset.UTC).toInstant()
         updatedUtcSeconds = now.epochSecond
         updatedUtcNanos = now.nano
     }
 
-    override fun writeTo(`object`: Entity): Entity {
+    override fun writeTo(entity: Entity): Entity {
         // id cannot be written to object
-        `object`.setProperty("createdUtcSeconds", createdUtcSeconds)
-        `object`.setProperty("createdUtcNanos", createdUtcNanos)
-        `object`.setProperty("updatedUtcSeconds", updatedUtcSeconds)
-        `object`.setProperty("updatedUtcNanos", updatedUtcNanos)
-        return `object`
+        entity.setProperty("createdUtcSeconds", createdUtcSeconds)
+        entity.setProperty("createdUtcNanos", createdUtcNanos)
+        entity.setProperty("updatedUtcSeconds", updatedUtcSeconds)
+        entity.setProperty("updatedUtcNanos", updatedUtcNanos)
+        return entity
     }
 
-    override fun readFrom(`object`: Entity) {
-        id = `object`.id
-        val createdUtcSeconds = `object`.getProperty("createdUtcSeconds")
+    override fun readFrom(entity: Entity) {
+        id = entity.id
+        val createdUtcSeconds = entity.getProperty("createdUtcSeconds")
         if (createdUtcSeconds is Long) {
             this.createdUtcSeconds = createdUtcSeconds
         }
-        val createdUtcNanos = `object`.getProperty("createdUtcNanos")
+        val createdUtcNanos = entity.getProperty("createdUtcNanos")
         if (createdUtcNanos is Int) {
             this.createdUtcNanos = createdUtcNanos
         }
-        val updatedUtcSeconds = `object`.getProperty("updatedUtcSeconds")
+        val updatedUtcSeconds = entity.getProperty("updatedUtcSeconds")
         if (updatedUtcSeconds is Long) {
             this.updatedUtcSeconds = updatedUtcSeconds
         }
-        val updatedUtcNanos = `object`.getProperty("updatedUtcNanos")
+        val updatedUtcNanos = entity.getProperty("updatedUtcNanos")
         if (updatedUtcNanos is Int) {
             this.updatedUtcNanos = updatedUtcNanos
         }

@@ -20,11 +20,11 @@ package org.anvilpowered.anvil.common.plugin
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.util.TextService
 
-class FallbackPluginInfo<TCommandSource> : PluginInfo {
+class FallbackPluginInfo : PluginInfo {
     companion object {
         const val version = "v0"
         const val description = "description"
@@ -37,11 +37,14 @@ class FallbackPluginInfo<TCommandSource> : PluginInfo {
     @Inject
     private lateinit var environment: Environment
 
-    lateinit var pluginPrefix: Component
+    private lateinit var pluginPrefix: Component
 
     @Inject
-    fun setPluginPrefix(textService: TextService<TCommandSource>) {
-        pluginPrefix = textService.builder().gold().append("[", name, "] ").build()
+    fun setPluginPrefix() {
+        pluginPrefix = Component.text()
+            .append(Component.text("[$name]")
+                .color(NamedTextColor.GOLD))
+            .build()
     }
 
     override val id: String = environment.name

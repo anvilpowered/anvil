@@ -17,23 +17,28 @@
  */
 package org.anvilpowered.anvil.base.datastore
 
-import com.google.common.base.Preconditions
 import com.google.common.reflect.TypeToken
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.name.Named
+import com.google.inject.name.Names
+import org.anvilpowered.anvil.api.datastore.DBComponent
+import org.anvilpowered.anvil.api.datastore.Manager
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.RegistryScoped
 import org.slf4j.Logger
+import java.util.Locale
 
 abstract class BaseManager<C : DBComponent<*, *>?> protected constructor(protected var registry: Registry) : Manager<C> {
+
     private val componentType: TypeToken<C>
 
     @Inject
-    private val injector: Injector? = null
+    private lateinit var injector: Injector
 
     @Inject
-    private val logger: Logger? = null
+    private lateinit var logger: Logger
 
     @RegistryScoped
     private var currentComponent: C? = null
@@ -48,11 +53,10 @@ abstract class BaseManager<C : DBComponent<*, *>?> protected constructor(protect
     }
 
     private fun loadComponent() {
-        val dataStoreName: String = registry.getExtraSafe<Any>(Keys.DATA_STORE_NAME)
-            .toLowerCase(Locale.ENGLISH)
+        val dataStoreName: String = registry.getExtraSafe(Keys.DATA_STORE_NAME).lowercase(Locale.ENGLISH)
         val type = componentType.rawType.canonicalName
         val named: Named = Names.named(dataStoreName)
-        for ((k, value) in injector!!.bindings) {
+        for ((k, value) in injector.bindings) {
             if (k.typeLiteral.type.typeName.contains(type)
                 && named == k.annotation
             ) {
@@ -62,22 +66,21 @@ abstract class BaseManager<C : DBComponent<*, *>?> protected constructor(protect
         }
         val message = ("Anvil: Could not find requested data store: \"" + dataStoreName
             + "\". Did you bind it correctly?")
-        logger!!.error(message, IllegalStateException(message))
+        logger.error(message, IllegalStateException(message))
     }
 
     @get:RegistryScoped
-    val primaryComponent: C?
+    override val primaryComponent: C
         get() = try {
             if (currentComponent == null) {
                 loadComponent()
             }
-            Preconditions.checkNotNull(currentComponent,
-                "An error occurred while loading current component")
+            currentComponent!!
         } catch (e: RuntimeException) {
             val message = "Anvil: DataStoreName has not been loaded yet!" +
                 "Make sure your Registry and ConfigurationService implementations" +
                 "are annotated with @Singleton!"
-            logger!!.error(message)
+            logger.error(message)
             throw IllegalStateException(message, e)
         }
 }

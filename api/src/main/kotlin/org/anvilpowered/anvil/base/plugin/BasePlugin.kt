@@ -17,84 +17,93 @@
  */
 package org.anvilpowered.anvil.base.plugin
 
+import com.google.common.base.MoreObjects
 import com.google.common.reflect.TypeToken
 import com.google.inject.Injector
 import com.google.inject.Key
 import com.google.inject.Module
+import com.google.inject.TypeLiteral
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
 import org.anvilpowered.anvil.api.Anvil
+import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.plugin.PluginInfo
+import org.anvilpowered.anvil.api.util.AudienceService
 
 /**
  * A helper class for quickly creating an environment. While not strictly necessary, it can
  * simplify the start up process in most cases.
  */
 abstract class BasePlugin {
-    protected var environment: Environment? = null
+    
+    protected lateinit var environment: Environment
 
     protected constructor(
-        name: String?,
-        rootInjector: Injector?,
-        module: Module?,
-        vararg earlyServices: Key<*>?,
+        name: String,
+        rootInjector: Injector,
+        module: Module,
+        vararg earlyServices: Key<*>,
     ) {
         createDefaultBuilder(name, rootInjector, module)
-            .addEarlyServices(earlyServices)
+            .addEarlyServices(*earlyServices)
             .register(this)
     }
 
     protected constructor(
-        name: String?,
-        rootInjector: Injector?,
-        module: Module?,
-        vararg earlyServices: Class<*>?,
+        name: String,
+        rootInjector: Injector,
+        module: Module,
+        vararg earlyServices: Class<*>,
     ) {
         createDefaultBuilder(name, rootInjector, module)
-            .addEarlyServices(earlyServices)
+            .addEarlyServices(*earlyServices)
             .register(this)
     }
 
     protected constructor(
-        name: String?,
-        rootInjector: Injector?,
-        module: Module?,
-        vararg earlyServices: TypeLiteral<*>?,
+            name: String,
+            rootInjector: Injector,
+            module: Module,
+            vararg earlyServices: TypeLiteral<*>,
     ) {
         createDefaultBuilder(name, rootInjector, module)
-            .addEarlyServices(earlyServices)
+            .addEarlyServices(*earlyServices)
             .register(this)
     }
 
     protected constructor(
-        name: String?,
-        rootInjector: Injector?,
-        module: Module?,
-        vararg earlyServices: TypeToken<*>?,
+        name: String,
+        rootInjector: Injector,
+        module: Module,
+        vararg earlyServices: TypeToken<*>,
     ) {
         createDefaultBuilder(name, rootInjector, module)
-            .addEarlyServices(earlyServices)
+            .addEarlyServices(*earlyServices)
             .register(this)
     }
 
     protected constructor(
-        name: String?,
-        rootInjector: Injector?,
-        module: Module?,
+        name: String,
+        rootInjector: Injector,
+        module: Module,
     ) {
         createDefaultBuilder(name, rootInjector, module)
             .register(this)
     }
 
-    protected fun createDefaultBuilder(
-        name: String?,
-        rootInjector: Injector?,
+    private fun createDefaultBuilder(
+        name: String,
+        rootInjector: Injector,
         module: Module?,
     ): Environment.Builder {
-        val builder: Environment.Builder = Anvil.getEnvironmentBuilder()
+        val builder: Environment.Builder = Anvil.environmentBuilder
             .setName(name)
             .setRootInjector(rootInjector)
-            .whenLoaded { environment: Environment? -> whenLoaded(environment) }
+            .whenLoaded { environment: Environment -> whenLoaded(environment) }
             .whenReady { e -> environment = e }
-            .whenReady { environment: Environment? -> whenReady(environment) }
-            .whenReloaded { environment: Environment? -> whenReloaded(environment) }
+            .whenReady { environment: Environment -> whenReady(environment) }
+            .whenReloaded { environment: Environment -> whenReloaded(environment) }
         if (module != null) {
             builder.addModules(module)
         }
@@ -102,30 +111,31 @@ abstract class BasePlugin {
         return builder
     }
 
-    protected fun applyToBuilder(builder: Environment.Builder?) {}
+    private fun applyToBuilder(builder: Environment.Builder) {}
+
     private fun sendLoaded(status: String) {
-        val pluginInfo: PluginInfo = environment.getPluginInfo()
-        environment.getTextService().builder()
+        val pluginInfo: PluginInfo = environment.pluginInfo
+        Component.text()
             .append(pluginInfo.prefix)
-            .green().append(pluginInfo.version)
-            .aqua().append(" by ")
-            .appendJoining(", ", pluginInfo.authors)
-            .append(" - ", status, "!")
-            .sendToConsole()
+                .append(Component.text(pluginInfo.version).color(NamedTextColor.GREEN))
+                .append(Component.text(" by ").color(NamedTextColor.AQUA))
+                .append(Component.text(pluginInfo.authors.toString()))
+                .append(Component.text(" - $status!"))
+        TODO("Expand AudienceService to encapsulate the SendTextService and expand upon the functionality")
     }
 
-    protected fun whenLoaded(environment: Environment?) {}
-    protected fun whenReady(environment: Environment?) {
+    protected fun whenLoaded(environment: Environment) {}
+    private fun whenReady(environment: Environment) {
         sendLoaded("Loaded")
     }
 
-    protected fun whenReloaded(environment: Environment?) {
+    private fun whenReloaded(environment: Environment) {
         sendLoaded("Reloaded")
     }
 
     override fun toString(): String {
         return MoreObjects.toStringHelper(this)
-            .add("name", if (environment == null) "null" else environment.getName())
+            .add("name", if (environment == null) "null" else environment.name)
             .toString()
     }
 }

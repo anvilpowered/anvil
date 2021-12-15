@@ -29,7 +29,6 @@ import org.anvilpowered.anvil.common.entity.CommonRestrictionService
 import org.anvilpowered.anvil.common.entity.EntityUtils
 import org.anvilpowered.anvil.common.module.JavaUtilLoggingAdapter
 import org.anvilpowered.anvil.common.module.PlatformModule
-import org.anvilpowered.anvil.common.util.CommonTextService
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.anvilpowered.anvil.paper.command.PaperCommandExecuteService
 import org.anvilpowered.anvil.paper.command.PaperSimpleCommandService

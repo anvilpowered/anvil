@@ -30,7 +30,7 @@ import org.anvilpowered.anvil.common.plugin.FallbackPluginInfo
 abstract class FallbackModule<TCommandSource> : AbstractModule() {
   override fun configure() {
     with(binder()) {
-      bind<PluginInfo>().to<FallbackPluginInfo<TCommandSource>>(declaring = this@FallbackModule)
+      bind<PluginInfo>().to<FallbackPluginInfo>(declaring = this@FallbackModule)
       bind<Registry>().to<BaseRegistry>()
     }
   }

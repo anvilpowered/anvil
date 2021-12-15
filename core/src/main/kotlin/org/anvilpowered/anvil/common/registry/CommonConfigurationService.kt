@@ -45,7 +45,7 @@ please see https://nodatime.org/TimeZones (note that your system's available tim
 This option is useful if your server machine and community are based in different timezones.
 """)
         val serializers = TypeSerializerCollection.defaults().newChild()
-        serializers.register(Keys.TIME_ZONE.type, CommonZoneIdSerializer())
+        serializers.register(Keys.TIME_ZONE.typeToken, CommonZoneIdSerializer())
         val options = ConfigurationOptions.defaults()
         setOptions(options.withSerializers(serializers))
     }
