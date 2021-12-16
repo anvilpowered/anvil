@@ -23,7 +23,7 @@ import org.anvilpowered.anvil.api.datastore.MongoRepository
 import org.anvilpowered.anvil.api.model.coremember.CoreMember
 import org.bson.types.ObjectId
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 interface MongoCoreMemberRepository : CoreMemberRepository<ObjectId, Datastore>, MongoRepository<CoreMember<ObjectId>> {
@@ -68,15 +68,15 @@ interface MongoCoreMemberRepository : CoreMemberRepository<ObjectId, Datastore>,
      */
     override fun ban(id: ObjectId, endUtc: Instant, reason: String): CompletableFuture<Boolean>
 
-  /**
-   * Sets the property `banned` to `false` for
-   * documents that match the provided [Query]
-   *
-   * @param query [Query] to update documents for
-   * @return [CompletableFuture] wrapped [Boolean].
-   * true if successful, otherwise false
-   */
-  fun unBan(query: Query<CoreMember<ObjectId>>): CompletableFuture<Boolean>
+    /**
+     * Sets the property `banned` to `false` for
+     * documents that match the provided [Query]
+     *
+     * @param query [Query] to update documents for
+     * @return [CompletableFuture] wrapped [Boolean].
+     * true if successful, otherwise false
+     */
+    fun unBan(query: Query<CoreMember<ObjectId>>): CompletableFuture<Boolean>
 
     /**
      * Updates the properties `muteEndUtc`, `muteReason`

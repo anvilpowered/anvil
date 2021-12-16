@@ -22,20 +22,20 @@ import java.util.function.Function
 import java.util.function.Supplier
 
 interface ServiceManager {
-  fun <T> provideSupplier(typeToken: TypeToken<T>?): Supplier<T>?
-  fun <T> provideSupplier(clazz: Class<T>?): Supplier<T>?
-  fun <T> provideSupplier(name: String?): Supplier<T>?
-  fun <T, R> provideFunction(typeToken: TypeToken<R>?): Function<T, R>?
-  fun <T, R> provideFunction(clazz: Class<R>?): Function<T, R>?
-  fun <T, R> provideFunction(name: String?): Function<T, R>?
-  fun <T> provide(typeToken: TypeToken<T>?): T
-  fun <T> provide(clazz: Class<T>?): T
-  fun <T> provide(name: String?): T
-  fun <T, R> provide(typeToken: TypeToken<R>?, input: T): R
-  fun <T, R> provide(clazz: Class<R>?, input: T): R
-  fun <T, R> provide(name: String?, input: T): R
-  fun <T> registerBinding(typeToken: TypeToken<T>?, supplier: Supplier<T>?)
-  fun <T> registerBinding(clazz: Class<T>?, supplier: Supplier<T>?)
-  fun <T, R> registerBinding(typeToken: TypeToken<R>?, function: Function<T, R>?)
-  fun <T, R> registerBinding(clazz: Class<R>?, function: Function<T, R>?)
+  fun <T> provideSupplier(typeToken: TypeToken<T>): Supplier<T>
+  fun <T> provideSupplier(clazz: Class<T>): Supplier<T>
+  fun <T> provideSupplier(name: String): Supplier<T>
+  fun <T, R> provideFunction(typeToken: TypeToken<R>): Function<T, R>
+  fun <T, R> provideFunction(clazz: Class<R>): Function<T, R>
+  fun <T, R> provideFunction(name: String): Function<T, R>
+  fun <T> provide(typeToken: TypeToken<T>): T
+  fun <T> provide(clazz: Class<T>): T
+  fun <T> provide(name: String): T
+  fun <T, R> provide(typeToken: TypeToken<R>, input: T): R
+  fun <T, R> provide(clazz: Class<R>, input: T): R
+  fun <T, R> provide(name: String, input: T): R
+  fun <T> registerBinding(typeToken: TypeToken<T>, supplier: Supplier<T>)
+  fun <T> registerBinding(clazz: Class<T>, supplier: Supplier<T>)
+  fun <T, R> registerBinding(typeToken: TypeToken<R>, function: Function<T, R>)
+  fun <T, R> registerBinding(clazz: Class<R>, function: Function<T, R>)
 }

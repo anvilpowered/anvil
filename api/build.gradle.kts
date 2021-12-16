@@ -15,11 +15,13 @@ val xodusVersion: String by project
 
 dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
-    api("org.spongepowered:configurate-core:$configurateVersion")
     api("com.google.inject:guice:$guiceVersion")
     api("redis.clients:jedis:$jedisVersion")
     api("net.kyori:adventure-api:$kyoriVersion")
+    api("net.kyori:adventure-text-feature-pagination:4.0.0-SNAPSHOT")
     api("dev.morphia.morphia:morphia-core:$morphiaVersion")
+    api("org.spongepowered:configurate-core:$configurateVersion")
+    api("org.spongepowered:configurate-hocon:$configurateVersion")
     api("org.spongepowered:math:$spongeMathVersion")
     api("org.jetbrains.xodus:xodus-entity-store:$xodusVersion")
     api("org.reflections:reflections:$reflectionsVersion")

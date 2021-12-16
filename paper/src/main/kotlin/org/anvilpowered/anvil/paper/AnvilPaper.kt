@@ -29,8 +29,8 @@ import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.paper.listener.PaperPlayerListener
-import org.anvilpowered.anvil.paper.module.ApiSpigotModule
-import org.anvilpowered.anvil.paper.module.SpigotFallbackModule
+import org.anvilpowered.anvil.paper.module.ApiPaperModule
+import org.anvilpowered.anvil.paper.module.PaperFallbackModule
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -71,16 +71,16 @@ class AnvilPaper : JavaPlugin() {
                 serverProxyMode = Bukkit.spigot().config.getBoolean("settings.bungeecord", false)
             }
             val configurationService = environment.injector.getInstance(ConfigurationService::class.java)
-            val anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE)
+            val anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE) ?: false
             if (serverProxyMode && !anvilProxyMode) {
-                getLogger().error(
+                logger?.error(
                     """
           It looks like you are running this server behind a proxy.
           If this is the case, set server.proxyMode=true in the anvil config.
           """.trimIndent()
                 )
             } else if (anvilProxyMode && !serverProxyMode) {
-                getLogger().error(
+                logger?.error(
                     """
           It looks like you are not running this server behind a proxy.
           If this is the case, set server.proxyMode=false in the anvil config
@@ -94,7 +94,7 @@ class AnvilPaper : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(object : Listener {
             @EventHandler
             fun onLoad(event: ServerLoadEvent) {
-                EnvironmentBuilderImpl.completeInitialization(ApiSpigotModule(), SpigotFallbackModule())
+                EnvironmentBuilderImpl.completeInitialization(ApiPaperModule(), PaperFallbackModule())
             }
         }, this)
     }

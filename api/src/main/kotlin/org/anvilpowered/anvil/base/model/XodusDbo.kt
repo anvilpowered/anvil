@@ -47,12 +47,9 @@ abstract class XodusDbo protected constructor() : ObjectWithId<EntityId>, Mappab
         this.id = id
     }
 
-    override val idAsString: String
-        get() = id.toString()
-    override val createdUtc: Instant
-        get() = Instant.ofEpochSecond(createdUtcSeconds, createdUtcNanos.toLong())
-    override val updatedUtc: Instant
-        get() = Instant.ofEpochSecond(updatedUtcSeconds, updatedUtcNanos.toLong())
+    override var idAsString: String = id.toString()
+    override val createdUtc: Instant = Instant.ofEpochSecond(createdUtcSeconds, createdUtcNanos.toLong())
+    override var updatedUtc: Instant = Instant.ofEpochSecond(updatedUtcSeconds, updatedUtcNanos.toLong())
 
     private fun prePersist() {
         val now = OffsetDateTime.now(ZoneOffset.UTC).toInstant()

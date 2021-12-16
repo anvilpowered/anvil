@@ -18,17 +18,17 @@
 
 package org.anvilpowered.anvil.common.registry
 
-import com.google.common.reflect.TypeToken
-import ninja.leaping.configurate.ConfigurationNode
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer
 import org.anvilpowered.anvil.api.registry.ZoneIdSerializer
+import org.spongepowered.configurate.ConfigurationNode
+import org.spongepowered.configurate.serialize.TypeSerializer
+import java.lang.reflect.Type
 import java.time.ZoneId
 
 @Suppress("UnstableApiUsage")
 class CommonZoneIdSerializer : ZoneIdSerializer(), TypeSerializer<ZoneId> {
 
-    override fun deserialize(type: TypeToken<*>, node: ConfigurationNode): ZoneId = parse(node.string)
-    override fun serialize(type: TypeToken<*>, zoneId: ZoneId?, node: ConfigurationNode) {
-        node.value = toString(zoneId)
+    override fun deserialize(type: Type?, node: ConfigurationNode): ZoneId = parse(node.string)
+    override fun serialize(type: Type?, zoneId: ZoneId?, node: ConfigurationNode?) {
+        node?.set(toString(zoneId))
     }
 }

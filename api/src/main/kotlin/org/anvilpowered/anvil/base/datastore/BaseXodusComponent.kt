@@ -23,8 +23,9 @@ import jetbrains.exodus.entitystore.PersistentEntityStore
 import org.anvilpowered.anvil.api.datastore.DBComponent
 import java.util.Optional
 
-interface BaseXodusComponent : DBComponent<EntityId?, PersistentEntityStore?> {
-    override fun parseUnsafe(`object`: Any?): EntityId {
+interface BaseXodusComponent : DBComponent<EntityId, PersistentEntityStore> {
+
+    override fun parseUnsafe(`object`: Any): EntityId {
         if (`object` is EntityId) {
             return `object`
         } else if (`object` is Optional<*>) {

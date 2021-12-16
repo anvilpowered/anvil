@@ -39,9 +39,9 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class ApiSpigotModule : PlatformModule(
+class ApiPaperModule : PlatformModule(
     PlatformImpl(
-        "spigot",
+        "paper",
         false,
         { Bukkit.getVersion() },
         JavaUtilLoggingAdapter::bindLogger,
@@ -61,8 +61,6 @@ class ApiSpigotModule : PlatformModule(
             bind<SimpleCommandService<CommandSender>>().to<PaperSimpleCommandService>()
             bind<SendTextService<*>>().to<PaperSendTextService>()
             bind<SendTextService<CommandSender>>().to<PaperSendTextService>()
-            bind<TextService<*>>().to<CommonTextService<CommandSender>>()
-            bind<TextService<CommandSender>>().to<CommonTextService<CommandSender>>()
             bind<UserService<Player, Player>>().to<PaperUserService>()
         }
     }

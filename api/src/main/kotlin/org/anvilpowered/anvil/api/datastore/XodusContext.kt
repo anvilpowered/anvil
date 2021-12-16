@@ -17,50 +17,51 @@
  */
 package org.anvilpowered.anvil.api.datastore
 
-import org.anvilpowered.anvil.api.model.Mappable
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import jetbrains.exodus.entitystore.Entity
 import jetbrains.exodus.entitystore.EntityId
 import jetbrains.exodus.entitystore.PersistentEntityStore
-import java.nio.file.Paths
-import java.lang.IllegalStateException
-import java.lang.NoSuchMethodException
 import jetbrains.exodus.entitystore.PersistentEntityStores
-import jetbrains.exodus.entitystore.Entity
+import org.anvilpowered.anvil.api.model.Mappable
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
+import java.nio.file.Paths
 
 @Singleton
-class XodusContext @Inject constructor(registry: Registry) : DataStoreContext<EntityId?, PersistentEntityStore>(registry) {
-  override fun closeConnection(dataStore: PersistentEntityStore) {
-    dataStore.close()
-  }
-
-  override fun loadDataStore(): PersistentEntityStore {
-
-    /* === Initialize storage location === */
-    val dbFilesLocation = Paths.get(registry.getOrDefault<String>(Keys.Companion.DATA_DIRECTORY) + "/data/xodus").toFile()
-    if (!dbFilesLocation.exists()) {
-      check(dbFilesLocation.mkdirs()) { "Unable to create xodus directory" }
+class XodusContext @Inject constructor(registry: Registry) : DataStoreContext<EntityId, PersistentEntityStore>(registry) {
+    override fun closeConnection(dataStore: PersistentEntityStore) {
+        dataStore.close()
     }
 
-    /* === Find objects to map === */
-    val entityClasses = calculateEntityClasses(registry.getOrDefault(Keys.Companion.BASE_SCAN_PACKAGE),
-      XodusEntity::class.java,
-      XodusEmbedded::class.java)
+    override fun loadDataStore(): PersistentEntityStore {
 
-    /* === Create collections if not present === */for (entityClass in entityClasses!!) {
-      if (Mappable::class.java.isAssignableFrom(entityClass)) {
-        try {
-          entityClass!!.getDeclaredMethod("writeTo", Entity::class.java)
-          entityClass.getDeclaredMethod("readFrom", Entity::class.java)
-        } catch (e: NoSuchMethodException) {
-          throw IllegalStateException("Xodus entity class " + entityClass!!.name + " must implement Mappable#writeTo(T) and Mappable#readFrom(T)",
-            e)
+        /* === Initialize storage location === */
+        val dbFilesLocation = Paths.get(registry.getOrDefault(Keys.DATA_DIRECTORY) + "/data/xodus").toFile()
+        if (!dbFilesLocation.exists()) {
+            check(dbFilesLocation.mkdirs()) { "Unable to create xodus directory" }
         }
-      } else check(!entityClass!!.isAnnotationPresent(XodusEntity::class.java)) { "Xodus entity class " + entityClass.name + " must extend org.anvilpowered.anvil.model.data.dbo.Mappable" }
+
+        /* === Find objects to map === */
+        val entityClasses = calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE),
+            XodusEntity::class.java,
+            XodusEmbedded::class.java)
+
+        /* === Create collections if not present === */
+        for (entityClass in entityClasses) {
+            if (Mappable::class.java.isAssignableFrom(entityClass)) {
+                try {
+                    entityClass.getDeclaredMethod("writeTo", Entity::class.java)
+                    entityClass.getDeclaredMethod("readFrom", Entity::class.java)
+                } catch (e: NoSuchMethodException) {
+                    throw IllegalStateException("Xodus entity class " + entityClass.name + " must implement Mappable#writeTo(T) and Mappable#readFrom(T)",
+                        e)
+                }
+            } else check(!entityClass.isAnnotationPresent(XodusEntity::class.java)) {
+                "Xodus entity class " + entityClass.name + " must extend org.anvilpowered.anvil.model.data.dbo.Mappable"
+            }
+        }
+        tKeyClass = EntityId::class.java
+        return PersistentEntityStores.newInstance(dbFilesLocation.path)
     }
-    setTKeyClass(EntityId::class.java)
-    return PersistentEntityStores.newInstance(dbFilesLocation.path)
-  }
 }

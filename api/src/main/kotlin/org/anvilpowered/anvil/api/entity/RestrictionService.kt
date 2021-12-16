@@ -37,7 +37,7 @@ interface RestrictionService {
    * @param entity   The entity to restrict
    * @param criteria The [RestrictionCriteria] to restrict with
    */
-  fun put(entity: Any?, criteria: RestrictionCriteria?)
+  fun put(entity: Any, criteria: RestrictionCriteria)
 
   /**
    *
@@ -49,7 +49,7 @@ interface RestrictionService {
    * @param uuid     The uuid of the entity to restrict
    * @param criteria The [RestrictionCriteria] to restrict with
    */
-  fun put(uuid: UUID?, criteria: RestrictionCriteria?)
+  fun put(uuid: UUID, criteria: RestrictionCriteria)
 
   /**
    *
@@ -67,7 +67,7 @@ interface RestrictionService {
    * @return An [Optional] containing the removed [RestrictionCriteria] if it existed,
    * otherwise [Optional.empty]
    */
-  fun remove(entity: Any?): Optional<RestrictionCriteria?>?
+  fun remove(entity: Any): Optional<RestrictionCriteria>
 
   /**
    *
@@ -79,7 +79,7 @@ interface RestrictionService {
    * @return An [Optional] containing the removed [RestrictionCriteria] if it existed,
    * otherwise [Optional.empty]
    */
-  fun remove(uuid: UUID?): Optional<RestrictionCriteria?>?
+  fun remove(uuid: UUID): Optional<RestrictionCriteria>
 
   /**
    *
@@ -91,7 +91,7 @@ interface RestrictionService {
    * @return The [RestrictionCriteria] associated with the provided entity, otherwise
    * [RestrictionCriteria.none]
    */
-  operator fun get(entity: Any?): RestrictionCriteria?
+  operator fun get(entity: Any): RestrictionCriteria
 
   /**
    *
@@ -103,5 +103,5 @@ interface RestrictionService {
    * @return The [RestrictionCriteria] associated with the provided [UUID], otherwise
    * [RestrictionCriteria.none]
    */
-  operator fun get(uuid: UUID?): RestrictionCriteria?
+  operator fun get(uuid: UUID): RestrictionCriteria
 }

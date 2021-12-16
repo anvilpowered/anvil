@@ -24,7 +24,6 @@ import org.reflections.scanners.SubTypesScanner
 import org.reflections.scanners.TypeAnnotationsScanner
 import java.util.Optional
 import java.util.function.Consumer
-import java.util.stream.Collectors
 
 // TODO: extract to interface
 abstract class DataStoreContext<TKey, TDataStore> protected constructor(registry: Registry) {
@@ -33,8 +32,7 @@ abstract class DataStoreContext<TKey, TDataStore> protected constructor(registry
     protected val registry: Registry
     private var dataStore: TDataStore? = null
     private lateinit var entityClasses: Array<Class<*>>
-    var tKeyClass: Class<TKey>? = null
-        protected set
+    lateinit var tKeyClass: Class<TKey>
 
     @Inject(optional = true)
     private val classLoader: ClassLoader? = null

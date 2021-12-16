@@ -19,12 +19,10 @@ package org.anvilpowered.anvil.common.registry
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import ninja.leaping.configurate.ConfigurationOptions
-import ninja.leaping.configurate.commented.CommentedConfigurationNode
-import ninja.leaping.configurate.loader.ConfigurationLoader
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.base.registry.BaseConfigurationService
+import org.spongepowered.configurate.CommentedConfigurationNode
+import org.spongepowered.configurate.loader.ConfigurationLoader
 
 @Singleton
 open class CommonConfigurationService @Inject constructor(
@@ -44,9 +42,10 @@ The server's timezone id. Use "auto" for the local system time, otherwise
 please see https://nodatime.org/TimeZones (note that your system's available timezones may differ).
 This option is useful if your server machine and community are based in different timezones.
 """)
-        val serializers = TypeSerializerCollection.defaults().newChild()
+        TODO("Fix the serializer for updated configurate")
+        /*val serializers = TypeSerializerCollection.defaults().newChild()
         serializers.register(Keys.TIME_ZONE.typeToken, CommonZoneIdSerializer())
         val options = ConfigurationOptions.defaults()
-        setOptions(options.withSerializers(serializers))
+        setOptions(options.withSerializers(serializers))*/
     }
 }

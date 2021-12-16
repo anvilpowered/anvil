@@ -24,18 +24,17 @@ import java.util.concurrent.CompletableFuture
  * Service for translating UUIDs to UserNames or UserNames to UUIDs
  */
 interface UserService<TUser, TPlayer> {
-  operator fun get(userName: String?): TUser?
-  operator fun get(userUUID: UUID?): TUser?
-  fun getPlayer(userName: String?): TPlayer?
-  fun getPlayer(userUUID: UUID?): TPlayer?
-  fun getPlayer(user: TUser): TPlayer?
+  operator fun get(userName: String): TUser?
+  operator fun get(userUUID: UUID): TUser?
+  fun getPlayer(userName: String): TPlayer?
+  fun getPlayer(userUUID: UUID): TPlayer?
 
   /**
    * Attempts to find all matching userNames that start with the provided String (case-insensitive).
    *
    * @return A list of matching player names
    */
-  fun matchPlayerNames(startsWith: String?): List<String>
+  fun matchPlayerNames(startsWith: String): List<String>
 
   /**
    * Attempts to find all matching userNames that start with the String at the provided index

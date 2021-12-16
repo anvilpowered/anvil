@@ -18,45 +18,48 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.event.HoverEvent
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
 
 class Change<T, TCommandSource>(
-  private val registry: Registry,
-  private val textService: TextService<TCommandSource>,
-  val key: Key<T>,
-  var newValue: T? = null,
+    private val registry: Registry,
+    val key: Key<T>,
+    var newValue: T? = null,
 ) {
 
-  private val remove: Component by lazy {
-    textService.builder()
-      .red().append("[R]")
-      .onHoverShowText(
-        textService.builder()
-          .red().append("Remove this change\n")
-          .gray().append("/$anvilAlias regedit key $key unstage")
-      ).onClickRunCommand("/$anvilAlias regedit key $key unstage")
+  private val remove = Component.text()
+      .append(Component.text("[R]")
+          .color(NamedTextColor.RED)
+          .hoverEvent(HoverEvent.showText(
+              Component.text()
+                  .append(Component.text("Remove this change\n").color(NamedTextColor.RED))
+                  .append(Component.text("/$anvilAlias regedit key $key unstage").color(NamedTextColor.GRAY))
+                  .build()
+          ))
+          .clickEvent(ClickEvent.runCommand("/$anvilAlias regedit $key unstage")))
       .build()
-  }
 
   constructor(stage: Stage<TCommandSource>, key: Key<T>, newValue: T? = null)
-    : this(stage.registry.second, stage.textService, key, newValue)
+      : this(stage.registry.second, key, newValue)
 
-  fun apply(registry: Registry) {
-    registry.set(key, newValue)
-  }
+    fun apply(registry: Registry) {
+      registry[key] = newValue
+    }
 
-  fun <T : Comparable<T>> max(a: T, b: T): T {
-    return if (a > b) a else b
-  }
+    fun <T : Comparable<T>> max(a: T, b: T): T {
+        return if (a > b) a else b
+    }
 
-  fun print(): Component {
-    return textService.builder()
-      .append(remove, " ")
-      .gold().append(key.name, " > ")
-      .append(textService.printValueYellow(key, registry.get(key).orElse(null)))
-      .gray().append(" -> ")
-      .append(textService.printValueGreen(key, newValue))
-      .build()
-  }
+    fun print(): Component {
+      return Component.text()
+          .append(Component.text("$remove "))
+          .append(Component.text("$key.name > ").color(NamedTextColor.GOLD))
+          .append(printValueYellow(key, registry[key]))
+          .append(Component.text(" -> ").color(NamedTextColor.GRAY))
+          .append(printValueGreen(key, newValue))
+          .build()
+    }
 }

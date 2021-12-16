@@ -25,5 +25,5 @@ class VelocityVersion(
     val version: ServerPing.Version
 ) : Version {
     override val name: String = version.name
-    override fun getProtocol(): Int = version.protocol
+    override val protocol: Int = version.protocol
 }

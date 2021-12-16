@@ -25,22 +25,18 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-abstract class MongoDbo : ObjectWithId<ObjectId?> {
+abstract class MongoDbo : ObjectWithId<ObjectId> {
+
     @Id
-    private var id: ObjectId? = null
+    private lateinit var id: ObjectId
+    override lateinit var updatedUtc: Instant
 
     override fun setId(id: ObjectId) {
         this.id = id
     }
 
-    val idAsString: String
-        get() = id.toHexString()
-    val createdUtc: Instant
-        get() = Instant.ofEpochSecond(id.getTimestamp())
-
-    override fun getUpdatedUtc(): Instant? {
-        return updatedUtc
-    }
+    override var idAsString: String = id.toHexString()
+    override val createdUtc: Instant = Instant.ofEpochSecond(id.timestamp.toLong())
 
     @PrePersist
     private fun prePersist() {

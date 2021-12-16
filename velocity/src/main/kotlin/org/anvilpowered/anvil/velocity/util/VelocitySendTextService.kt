@@ -21,17 +21,16 @@ package org.anvilpowered.anvil.velocity.util
 import com.google.inject.Inject
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.ComponentBuilder
 import org.anvilpowered.anvil.common.util.SendTextService
 
 class VelocitySendTextService @Inject constructor(
-  proxyServer: ProxyServer,
+    proxyServer: ProxyServer,
 ) : SendTextService<CommandSource> {
 
-  override fun send(text: Component, receiver: CommandSource) {
-    receiver.sendMessage(Identity.nil(), text)
-  }
-
-  override val console: CommandSource = proxyServer.consoleCommandSource
+    override fun CommandSource.send(text: Component) = sendMessage(text)
+    override fun ComponentBuilder<*, *>.sendTo(source: CommandSource) = source.sendMessage(build())
+    override val console: CommandSource = proxyServer.consoleCommandSource
+    override fun ComponentBuilder<*, *>.sendToConsole() = console.sendMessage(build())
 }

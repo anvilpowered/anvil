@@ -20,48 +20,59 @@ package org.anvilpowered.anvil.base.datastore
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.datastore.Repository
+import org.anvilpowered.anvil.api.model.ObjectWithId
 import org.anvilpowered.anvil.api.util.TimeFormatService
 import org.slf4j.Logger
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.function.Function
 import java.util.function.Supplier
 
-abstract class BaseRepository<TKey, T : ObjectWithId<TKey>?, TDataStore> : BaseComponent<TKey, TDataStore>(),
+abstract class BaseRepository<TKey, T : ObjectWithId<TKey>, TDataStore> : BaseComponent<TKey, TDataStore>(),
     Repository<TKey, T, TDataStore> {
+
     @Inject
-    private val logger: Logger? = null
+    private lateinit var logger: Logger
+
     override fun generateEmpty(): T {
-        val tClass = tClass!!
+        val tClass = tClass
         return try {
             tClass.getConstructor().newInstance()
         } catch (e: Exception) {
             val message =
                 "There was an error creating an instance of " + tClass.name + "! Make sure it has an accessible no-args constructor!"
-            logger!!.error(message)
+            logger.error(message)
             throw IllegalStateException(message, e)
         }
     }
 
-    override fun parseAndGetOne(idOrTime: Any?): CompletableFuture<Optional<T>?>? {
-        return parse(idOrTime).map<CompletableFuture<Optional<T>>>(Function<TKey, CompletableFuture<Optional<T?>>> { id: TKey ->
-            this.getOne(id)
-        }).orElseGet(
-            Supplier<CompletableFuture<Optional<T>>> {
-                Anvil.getEnvironmentManager().getCoreEnvironment().getInjector()
-                    .getInstance(TimeFormatService::class.java).parseInstant(idOrTime.toString())
-                    .map(this::getOne).orElse(CompletableFuture.completedFuture(Optional.empty<Any>()))
-            })
+
+    override fun parseAndGetOne(idOrTime: Any): CompletableFuture<T?> {
+        parse(idOrTime).also {
+            if (it == null) {
+                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                    .parseInstant(idOrTime.toString()).also { time ->
+                        if (time == null) {
+                            return CompletableFuture.completedFuture(null)
+                        }
+                        return getOne(time)
+                    }
+            }
+            return getOne(it!!) as CompletableFuture<T?>
+        }
     }
 
-    override fun parseAndDeleteOne(idOrTime: Any?): CompletableFuture<Boolean?>? {
-        return parse(idOrTime).map<CompletableFuture<Boolean>>(Function<TKey, CompletableFuture<Boolean?>?> { id: TKey ->
-            this.deleteOne(id)
-        }).orElseGet(
-            Supplier<CompletableFuture<Boolean>> {
-                Anvil.getEnvironmentManager().getCoreEnvironment().getInjector()
-                    .getInstance(TimeFormatService::class.java).parseInstant(idOrTime.toString())
-                    .map(this::deleteOne).orElse(CompletableFuture.completedFuture(false))
-            })
+    override fun parseAndDeleteOne(idOrTime: Any): CompletableFuture<Boolean> {
+        parse(idOrTime).also {
+            if (it == null) {
+                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                    .parseInstant(idOrTime.toString()).also { time ->
+                        if (time == null) {
+                            return CompletableFuture.completedFuture(false)
+                        }
+                        return deleteOne(time)
+                    }
+            }
+            return deleteOne(it!!)
+        }
     }
 }

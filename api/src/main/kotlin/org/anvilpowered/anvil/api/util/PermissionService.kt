@@ -39,5 +39,5 @@ interface PermissionService {
    * @return Whether the provided `subject` has
    * the provided `permission` or is the console.
    */
-  fun hasPermission(subject: Any?, permission: String?): Boolean
+  fun hasPermission(subject: Any?, permission: String): Boolean
 }

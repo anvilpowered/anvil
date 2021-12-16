@@ -40,7 +40,7 @@ interface DBComponent<TKey, TDataStore> {
      * @throws UnsupportedOperationException If not implemented
      * @throws IllegalArgumentException      if object was unsuccessfully parsed
      */
-    fun parseUnsafe(obj: Any): TKey!! {
+    fun parseUnsafe(obj: Any): TKey {
         throw UnsupportedOperationException()
     }
 
@@ -50,7 +50,7 @@ interface DBComponent<TKey, TDataStore> {
      * @param obj To try to parse
      * @return [Optional] containing (if parsing successful) the [TKey] representing this `object`
      */
-    fun parse(obj: Any): Optional<TKey!!> {
-        return Optional.empty()
+    fun parse(obj: Any): TKey? {
+        return null
     }
 }

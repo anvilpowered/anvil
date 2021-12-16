@@ -17,243 +17,234 @@
  */
 package org.anvilpowered.anvil.base.datastore
 
+import com.google.common.collect.ImmutableList
 import jetbrains.exodus.entitystore.Entity
+import jetbrains.exodus.entitystore.EntityId
+import jetbrains.exodus.entitystore.EntityIterable
+import jetbrains.exodus.entitystore.EntityIterator
+import jetbrains.exodus.entitystore.EntityRemovedInDatabaseException
+import jetbrains.exodus.entitystore.StoreTransaction
 import org.anvilpowered.anvil.api.Anvil
+import org.anvilpowered.anvil.api.datastore.XodusRepository
+import org.anvilpowered.anvil.api.model.Mappable
+import org.anvilpowered.anvil.api.model.ObjectWithId
+import org.anvilpowered.anvil.api.util.TimeFormatService
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import java.util.function.Function
-import java.util.function.Supplier
 
-interface BaseXodusRepository<T : ObjectWithId<EntityId?>?> : XodusRepository<T>, BaseXodusComponent {
-    override fun insertOne(item: T): CompletableFuture<Optional<T>?>? {
-        return CompletableFuture.supplyAsync<Optional<T>>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInTransaction<Optional<T?>>(
-                StoreTransactionalComputable<Optional<T>> { txn: StoreTransaction ->
-                    val entity: Entity = txn.newEntity(tClass.getSimpleName())
+interface BaseXodusRepository<T : ObjectWithId<EntityId>> : XodusRepository<T>, BaseXodusComponent {
+
+    override fun insertOne(item: T): CompletableFuture<T?> {
+        return CompletableFuture.supplyAsync<T?> {
+            dataStoreContext.getDataStore().computeInTransaction<T?> {
+                val entity: Entity = it.newEntity(tClass.simpleName)
+                (item as Mappable<Entity?>).writeTo(entity)
+                item.setId(entity.id)
+                if (it.commit()) item else null
+            }
+        }
+    }
+
+    override fun insert(list: List<T>): CompletableFuture<List<T>> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInTransaction {
+                list.forEach(Consumer { item: T ->
+                    val entity: Entity = it.newEntity(tClass.simpleName)
                     (item as Mappable<Entity?>).writeTo(entity)
                     item.setId(entity.id)
-                    if (txn.commit()) Optional.of(item) else Optional.empty()
                 })
-        }
-        )
-    }
-
-    fun insert(list: List<T>?): CompletableFuture<List<T>?>? {
-        return CompletableFuture.supplyAsync<List<T>>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInTransaction<List<T?>>(
-                StoreTransactionalComputable<List<T>> { txn: StoreTransaction ->
-                    list!!.forEach(Consumer { item: T ->
-                        val entity: Entity = txn.newEntity(tClass.getSimpleName())
-                        (item as Mappable<Entity?>).writeTo(entity)
-                        item.setId(entity.id)
-                    })
-                    txn.commit()
-                    list
-                })
-        }
-        )
-    }
-
-    @JvmOverloads
-    fun iterator(
-        query: Function<in StoreTransaction?, out Iterable<Entity?>?>? = Function<StoreTransaction?, Iterable<Entity?>?> { txn: StoreTransaction? ->
-            txn.getAll(tClass.getSimpleName())
-        },
-    ): Iterator<T>? {
-        return dataStoreContext!!.getDataStore()!!.computeInReadonlyTransaction(
-            StoreTransactionalComputable<Iterator<T>> { txn: StoreTransaction? ->
-                query.apply(txn).asSequence<Entity>().map<Entity, T> { entity: Entity? ->
-                    val item: T = generateEmpty()
-                    (item as Mappable<Entity?>).readFrom(entity)
-                    item
-                }.iterator()
+                it.commit()
+                list
             }
-        )
-    }
-
-    fun getAll(query: Function<in StoreTransaction?, out Iterable<Entity?>?>?): CompletableFuture<List<T>?>? {
-        return CompletableFuture.supplyAsync<List<T>>(Supplier<List<T>> { ImmutableList.copyOf<T>(iterator(query)) })
-    }
-
-    val all: CompletableFuture<List<T>>
-        get() = CompletableFuture.supplyAsync<List<T>>(Supplier<List<T>> { ImmutableList.copyOf<T>(iterator()) })
-
-    fun getOne(
-        query: Function<in StoreTransaction?, out Iterable<Entity?>?>?,
-    ): CompletableFuture<Optional<T>?>? {
-        return CompletableFuture.supplyAsync<Optional<T>>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInReadonlyTransaction<Optional<T?>>(
-                StoreTransactionalComputable<Optional<T>> { txn: StoreTransaction? ->
-                    val iterator: Iterator<Entity> = query.apply(txn).iterator()
-                    if (iterator.hasNext()) {
-                        val item: T = generateEmpty()
-                        (item as Mappable<Entity?>).readFrom(iterator.next())
-                        return@computeInReadonlyTransaction Optional.of(item)
-                    } else {
-                        return@computeInReadonlyTransaction Optional.empty<T>()
-                    }
-                })
         }
-        )
     }
 
-    override fun getOne(id: EntityId): CompletableFuture<Optional<T>> {
-        return CompletableFuture.supplyAsync<Optional<T>>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInReadonlyTransaction<Optional<T?>>(
-                StoreTransactionalComputable<Optional<T>> { txn: StoreTransaction ->
-                    val entity: Entity
-                    entity = try {
-                        txn.getEntity(id)
-                    } catch (ignored: EntityRemovedInDatabaseException) {
-                        return@computeInReadonlyTransaction Optional.empty<T>()
-                    }
+    override fun iterator(query: Function<in StoreTransaction, out Iterable<Entity>>): Iterator<T> {
+        return dataStoreContext.getDataStore().computeInReadonlyTransaction {
+            query.apply(it).asSequence<Entity>().map<Entity, T> { entity: Entity? ->
+                val item: T = generateEmpty()
+                (item as Mappable<Entity?>).readFrom(entity)
+                item
+            }.iterator()
+        }
+    }
+
+    override fun getAll(query: Function<in StoreTransaction, out Iterable<Entity>>): CompletableFuture<List<T>> {
+        return CompletableFuture.supplyAsync { ImmutableList.copyOf(iterator(query)) }
+    }
+
+    fun iterator(): Iterator<T> {
+        return iterator { txn -> txn.getAll(tClass.simpleName) }
+    }
+
+    override val all: CompletableFuture<List<T>>
+        get() = CompletableFuture.supplyAsync { ImmutableList.copyOf(iterator()) }
+
+    override fun getOne(
+        query: Function<in StoreTransaction, out Iterable<Entity>>,
+    ): CompletableFuture<T?> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInReadonlyTransaction {
+                val iterator: Iterator<Entity> = query.apply(it).iterator()
+                if (iterator.hasNext()) {
                     val item: T = generateEmpty()
-                    (item as Mappable<Entity?>).readFrom(entity)
-                    Optional.of(item)
-                })
+                    (item as Mappable<Entity?>).readFrom(iterator.next())
+                    return@computeInReadonlyTransaction item
+                } else {
+                    return@computeInReadonlyTransaction null
+                }
+            }
         }
-        )
     }
 
-    override fun getOne(createdUtc: Instant?): CompletableFuture<Optional<T>?>? {
-        return CompletableFuture.supplyAsync<Optional<T>>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInReadonlyTransaction<Optional<T?>>(
-                StoreTransactionalComputable<Optional<T>> { txn: StoreTransaction? ->
-                    val entity: Entity
-                    entity = try {
-                        val it: Iterator<Entity> = asQuery(createdUtc).apply(txn).iterator()
-                        if (!it.hasNext()) {
-                            return@computeInReadonlyTransaction Optional.empty<T>()
-                        }
-                        it.next()
-                    } catch (ignored: EntityRemovedInDatabaseException) {
-                        return@computeInReadonlyTransaction Optional.empty<T>()
-                    }
-                    val item: T = generateEmpty()
-                    (item as Mappable<Entity?>).readFrom(entity)
-                    Optional.of(item)
-                })
+    override fun getOne(id: EntityId): CompletableFuture<T?> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInReadonlyTransaction {
+                val entity: Entity = try {
+                    it.getEntity(id)
+                } catch (ignored: EntityRemovedInDatabaseException) {
+                    return@computeInReadonlyTransaction null
+                }
+                val item: T = generateEmpty()
+                (item as Mappable<Entity?>).readFrom(entity)
+                item
+            }
         }
-        )
+    }
+
+    override fun getOne(createdUtc: Instant): CompletableFuture<T?> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInReadonlyTransaction {
+                val entity = try {
+                    val iterator = asQuery(createdUtc).apply(it).iterator()
+                    if (!iterator.hasNext()) {
+                        return@computeInReadonlyTransaction null
+                    }
+                    iterator.next()
+                } catch (ignored: EntityRemovedInDatabaseException) {
+                    return@computeInReadonlyTransaction null
+                }
+                val item: T = generateEmpty()
+                (item as Mappable<Entity?>).readFrom(entity)
+                item
+            }
+        }
     }
 
     // woah
-    val allIds: CompletableFuture<List<EntityId>>
-        get() = CompletableFuture.supplyAsync<List<EntityId>>(Supplier<List<EntityId?>> {
-            dataStoreContext!!.getDataStore()!!.computeInReadonlyTransaction<List<EntityId?>>(
-                StoreTransactionalComputable<List<EntityId>> { txn: StoreTransaction ->
-                    val iterable: EntityIterable = txn.getAll(tClass.getSimpleName())
-                    val iterator: EntityIterator = iterable.iterator()
-                    val roughCount: Long = iterable.getRoughCount()
-                    val buffer = 50
-                    val listSize = if (roughCount > Int.MAX_VALUE - buffer) Int.MAX_VALUE - buffer // woah
-                    else (roughCount + buffer).toInt()
-                    val list: MutableList<EntityId> = ArrayList<EntityId>(listSize)
-                    while (iterator.hasNext()) {
-                        list.add(iterator.nextId())
-                    }
-                    if (iterator.shouldBeDisposed()) {
-                        iterator.dispose()
-                    }
-                    list
-                })
+    override val allIds: CompletableFuture<List<EntityId>>
+        get() = CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInReadonlyTransaction {
+                val iterable: EntityIterable = it.getAll(tClass.simpleName)
+                val iterator: EntityIterator = iterable.iterator()
+                val roughCount: Long = iterable.roughCount
+                val buffer = 50
+                val listSize = if (roughCount > Int.MAX_VALUE - buffer) Int.MAX_VALUE - buffer // woah
+                else (roughCount + buffer).toInt()
+                val list: MutableList<EntityId> = ArrayList(listSize)
+                while (iterator.hasNext()) {
+                    list.add(iterator.nextId() ?: break)
+                }
+                if (iterator.shouldBeDisposed()) {
+                    iterator.dispose()
+                }
+                list
+            }
         }
-        )
 
-    fun delete(
-        query: Function<in StoreTransaction?, out Iterable<Entity?>?>?,
-    ): CompletableFuture<Boolean?>? {
-        return CompletableFuture.supplyAsync<Boolean>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInTransaction<Boolean>(
-                StoreTransactionalComputable<Boolean> { txn: StoreTransaction ->
-                    var success = false
-                    for (entity in query.apply(txn)) {
-                        if (entity.delete()) {
-                            success = true
-                        }
+    override fun delete(
+        query: Function<in StoreTransaction, out Iterable<Entity>>,
+    ): CompletableFuture<Boolean> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInTransaction {
+                var success = false
+                for (entity in query.apply(it)) {
+                    if (entity.delete()) {
+                        success = true
                     }
-                    txn.commit() && success
-                })
+                }
+                it.commit() && success
+            }
         }
-        )
     }
 
-    override fun deleteOne(id: EntityId): CompletableFuture<Boolean?>? {
-        return CompletableFuture.supplyAsync<Boolean>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInTransaction<Boolean>(
-                StoreTransactionalComputable<Boolean> { txn: StoreTransaction -> txn.getEntity(id).delete() && txn.commit() })
+    override fun deleteOne(id: EntityId): CompletableFuture<Boolean> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInTransaction {
+                it.getEntity(id).delete() && it.commit()
+            }
         }
-        )
     }
 
-    override fun deleteOne(createdUtc: Instant?): CompletableFuture<Boolean?>? {
-        return CompletableFuture.supplyAsync<Boolean>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInTransaction<Boolean>(
-                StoreTransactionalComputable<Boolean> { txn: StoreTransaction ->
-                    val it: Iterator<Entity> = asQuery(createdUtc).apply(txn).iterator()
-                    it.hasNext() && it.next().delete() && txn.commit()
-                })
+    override fun deleteOne(createdUtc: Instant): CompletableFuture<Boolean> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInTransaction {
+                val iterator: Iterator<Entity> = asQuery(createdUtc).apply(it).iterator()
+                iterator.hasNext() && iterator.next().delete() && it.commit()
+            }
         }
-        )
-    }
 
-    fun update(
-        query: Function<in StoreTransaction?, out Iterable<Entity?>?>?,
-        update: Consumer<in Entity?>?,
-    ): CompletableFuture<Boolean?>? {
-        return CompletableFuture.supplyAsync<Boolean>(Supplier {
-            dataStoreContext!!.getDataStore()!!.computeInTransaction<Boolean>(
-                StoreTransactionalComputable<Boolean> { txn: StoreTransaction ->
-                    query.apply(txn).forEach(Consumer { e: Entity ->
-                        update!!.accept(e)
-                        val now: Instant = OffsetDateTime.now(ZoneOffset.UTC).toInstant()
-                        e.setProperty("updatedUtcSeconds", now.getEpochSecond())
-                        e.setProperty("updatedUtcNanos", now.getNano())
-                    })
-                    txn.commit()
-                })
-        }
-        )
     }
 
     override fun update(
-        optionalQuery: Optional<Function<in StoreTransaction?, out Iterable<Entity?>?>?>?,
-        update: Consumer<in Entity?>?,
-    ): CompletableFuture<Boolean?>? {
-        return optionalQuery.map<CompletableFuture<Boolean>>(Function<Function<in StoreTransaction?, out Iterable<Entity?>?>, CompletableFuture<Boolean>> { q: Function<in StoreTransaction?, out Iterable<Entity?>?>? ->
-            update(q,
-                update)
-        })
-            .orElse(CompletableFuture.completedFuture<Boolean>(false))
-    }
-
-    override fun asQuery(
-        id: EntityId?,
-    ): Function<in StoreTransaction?, out Iterable<Entity?>?>? {
-        return Function<StoreTransaction?, Iterable<Entity?>?> { txn: StoreTransaction? -> listOf<Entity>(txn.getEntity(id)) }
-    }
-
-    override fun asQuery(
-        createdUtc: Instant?,
-    ): Function<in StoreTransaction?, out Iterable<Entity?>?>? {
-        return Function<StoreTransaction?, Iterable<Entity?>?> { txn: StoreTransaction? ->
-            txn.find(tClass.getSimpleName(),
-                "createdUtcSeconds", createdUtc.getEpochSecond())
-                .union(txn.find(tClass.getSimpleName(),
-                    "createdUtcNanos", createdUtc.getNano()))
+        query: Function<in StoreTransaction, out Iterable<Entity>>,
+        update: Consumer<in Entity>,
+    ): CompletableFuture<Boolean> {
+        return CompletableFuture.supplyAsync {
+            dataStoreContext.getDataStore().computeInTransaction {
+                query.apply(it).forEach(Consumer { e ->
+                    update.accept(e)
+                    val now: Instant = OffsetDateTime.now(ZoneOffset.UTC).toInstant()
+                    e.setProperty("updatedUtcSeconds", now.epochSecond)
+                    e.setProperty("updatedUtcNanos", now.nano)
+                })
+                it.commit()
+            }
         }
     }
 
-    override fun asQueryForIdOrTime(idOrTime: String?): Optional<Function<in StoreTransaction?, out Iterable<Entity?>?>?>? {
-        return parse(idOrTime).map<Optional<Function<in StoreTransaction, out Iterable<Entity>>>>(
-            Function<EntityId, Optional<Function<in StoreTransaction?, out Iterable<Entity?>?>>> { entityId: EntityId? ->
-                Optional.of<Function<in StoreTransaction?, out Iterable<Entity?>?>>(asQuery(entityId))
-            })
-            .orElseGet(Supplier<Optional<Function<in StoreTransaction, out Iterable<Entity>>>> {
-                Anvil.getEnvironmentManager().getCoreEnvironment()
-                    .getInjector().getInstance(TimeFormatService::class.java).parseInstant(idOrTime)
-                    .map { obj: Instant -> obj.getEpochSecond() }
-                    .map { s -> { txn -> txn.find(tClass.getSimpleName(), "createdUtcSeconds", s) } }
-            })
+    override fun update(
+        optionalQuery: Optional<Function<in StoreTransaction, out Iterable<Entity>>>,
+        update: Consumer<in Entity>,
+    ): CompletableFuture<Boolean> {
+        return optionalQuery.map { q -> update(q, update) }
+            .orElse(CompletableFuture.completedFuture(false))
+    }
+
+    override fun asQuery(
+        id: EntityId,
+    ): Function<in StoreTransaction, out Iterable<Entity>> {
+        return Function<StoreTransaction, Iterable<Entity>> { listOf(it.getEntity(id)) }
+    }
+
+    override fun asQuery(
+        createdUtc: Instant,
+    ): Function<in StoreTransaction, out Iterable<Entity>> {
+        return Function<StoreTransaction?, Iterable<Entity>> {
+            it.find(tClass.simpleName, "createdUtcSeconds", createdUtc.epochSecond)
+                .union(it.find(tClass.simpleName, "createdUtcNanos", createdUtc.nano))
+        }
+    }
+
+    override fun asQueryForIdOrTime(idOrTime: String): Function<in StoreTransaction, out Iterable<Entity>>? {
+        parse(idOrTime).also {
+            if (it == null) {
+                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                    .parseInstant(idOrTime).also { time ->
+                        if (time == null) {
+                            return null
+                        }
+                        return Function<StoreTransaction, Iterable<Entity>> { txn ->
+                            txn.find(tClass.simpleName, "createdUtcSeconds", time)
+                        }
+                    }
+            }
+            return asQuery(it!!)
+        }
     }
 }

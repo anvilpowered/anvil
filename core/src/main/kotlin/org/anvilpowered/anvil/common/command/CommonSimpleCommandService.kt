@@ -19,11 +19,13 @@ package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.plugin.PluginInfo
+import org.anvilpowered.anvil.common.util.SendTextService
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -36,39 +38,37 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
   protected lateinit var pluginInfo: PluginInfo
 
   @Inject
-  protected lateinit var textService: TextService<TCommandSource>
+  private lateinit var sendTextService: SendTextService<TCommandSource>
 
-  private val HELP_DESCRIPTION: Component by lazy {
-    textService.builder()
-      .append("help command")
-      .build()
-  }
+  private val HELP_DESCRIPTION: Component = Component.text("help command")
+  private val VERSION_DESCRIPTION: Component = Component.text("Anvil version command")
 
-  private val noPermission: Component by lazy {
-    textService.builder()
-      .appendPrefix()
-      .red().append("You do not have permission for this command!")
-      .build()
-  }
+  private val noPermission: Component =
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("You do not have permission for this command!").color(NamedTextColor.RED))
+          .build()
 
-  private val successfullyReloaded: Component by lazy {
-    textService.builder()
-      .appendPrefix()
-      .green().append("Successfully reloaded!")
-      .build()
-  }
-
-  private val VERSION_DESCRIPTION: Component by lazy {
-    textService.builder()
-      .append("Anvil version command")
-      .build()
-  }
+  private val successfullyReloaded: Component =
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("Successfully reloaded!").color(NamedTextColor.GREEN))
+          .build()
 
   private fun sendSubCommandError(
     source: TCommandSource,
     alias: String?,
     subCommands: List<CommandMapping<SimpleCommand<TCommandSource>>>,
   ) {
+    var fAlias = alias ?: "null"
+    sendTextService.send(
+        Component.text()
+            .append(Component.text("Input command $fAlias was not a valid subcommand!\n").color(NamedTextColor.RED))
+            .append(Component.text("\nAvailable: "))
+            .append(Component.text(subCommands.asSequence().map { it.name }.joinToString { ", " }))
+            .build(),
+        source
+    )
     textService.builder()
       .red().append("Input command ", alias ?: "null", " was not a valid subcommand!\n")
       .appendIf(alias != null, alias!!, "\n^")

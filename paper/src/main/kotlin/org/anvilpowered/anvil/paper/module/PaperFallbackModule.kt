@@ -15,9 +15,11 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.api.datastore
 
-import com.zaxxer.hikari.HikariDataSource
+package org.anvilpowered.anvil.paper.module
 
-@Deprecated("") // will probably break in 0.4
-interface SqlRepository<T : ObjectWithId<UUID?>?> : Repository<UUID?, T, HikariDataSource?>
+import org.anvilpowered.anvil.common.module.FallbackModule
+import org.bukkit.command.CommandSender
+
+class PaperFallbackModule : FallbackModule<CommandSender>() {
+}

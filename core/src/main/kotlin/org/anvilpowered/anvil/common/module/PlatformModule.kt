@@ -15,26 +15,13 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.common.module
 
-package org.anvilpowered.anvil.common.module;
+import org.anvilpowered.anvil.api.Platform
 
-import org.anvilpowered.anvil.api.Platform;
-
-public class PlatformModule extends ApiCommonModule {
-
-    private final Platform platform;
-
-    public PlatformModule(Platform platform) {
-        this.platform = platform;
-    }
-
-    public Platform getPlatform() {
-        return platform;
-    }
-
-    @Override
-    protected void configure() {
-        super.configure();
-        bind(Platform.class).toInstance(getPlatform());
+open class PlatformModule(val platform: Platform) : ApiCommonModule() {
+    override fun configure() {
+        super.configure()
+        bind(Platform::class.java).toInstance(platform)
     }
 }

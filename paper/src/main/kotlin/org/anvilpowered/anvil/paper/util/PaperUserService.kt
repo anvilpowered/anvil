@@ -28,36 +28,28 @@ import java.util.stream.Stream
 
 class PaperUserService : CommonUserService<Player, Player>(Player::class.java) {
 
-
-    override fun get(userName: String): Optional<Player> = Optional.ofNullable(Bukkit.getPlayer(userName))
-    override fun get(userUUID: UUID): Optional<Player> = Optional.ofNullable(Bukkit.getPlayer(userUUID))
-    override fun getPlayer(userName: String): Optional<Player> = get(userName)
-    override fun getPlayer(userUUID: UUID): Optional<Player> = get(userUUID)
-    override fun getPlayer(player: Player): Optional<Player> = Optional.of(player)
-    override fun getOnlinePlayers(): Collection<Player> = Bukkit.getOnlinePlayers()
+    override fun get(userName: String): Player? = Bukkit.getPlayer(userName)
+    override fun get(userUUID: UUID): Player? = Bukkit.getPlayer(userUUID)
+    override fun getPlayer(userName: String): Player? = get(userName)
+    override fun getPlayer(userUUID: UUID): Player? = get(userUUID)
+    override  val onlinePlayers: Collection<Player> = Bukkit.getOnlinePlayers()
     override fun getUUID(user: Player): UUID = user.uniqueId
     override fun getUserName(user: Player): String = user.name
 
     override fun matchPlayerNames(startsWith: String): List<String> {
-        val startsWithLowerCase = startsWith.toLowerCase()
+        val startsWithLowerCase = startsWith.lowercase(Locale.getDefault())
         return Stream.of(*Bukkit.getOfflinePlayers())
             .map { obj: OfflinePlayer -> obj.name }
             .filter { Objects.nonNull(it) }
-            .filter { it!!.toLowerCase().startsWith(startsWithLowerCase) }
+            .filter { it!!.lowercase(Locale.getDefault()).startsWith(startsWithLowerCase) }
             .collect(Collectors.toList()) as List<String>
     }
 
-    override fun getUUID(userName: String): CompletableFuture<Optional<UUID>> {
-        val userUUID = getPlayer(userName).map { obj: Player -> obj.uniqueId }
-        return if (userUUID.isPresent) {
-            CompletableFuture.completedFuture(userUUID)
-        } else super.getUUID(userName)
+    override fun getUUID(userName: String): CompletableFuture<UUID?> {
+        return CompletableFuture.completedFuture(getPlayer(userName)?.uniqueId)
     }
 
-    override fun getUserName(userUUID: UUID): CompletableFuture<Optional<String>> {
-        val userName = getPlayer(userUUID).map { obj: Player -> obj.name }
-        return if (userName.isPresent) {
-            CompletableFuture.completedFuture(userName)
-        } else super.getUserName(userUUID)
+    override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
+        return CompletableFuture.completedFuture(getPlayer(userUUID)?.name)
     }
 }

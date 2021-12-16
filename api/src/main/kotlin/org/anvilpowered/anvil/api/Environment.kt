@@ -42,7 +42,6 @@ interface Environment : Named, Comparable<Environment> {
   val injector: Injector
   val plugin: Any
   val pluginInfo: PluginInfo
-  fun <TCommandSource> getTextService(): TextService<TCommandSource>
   val registry: Registry
 
   interface Builder {

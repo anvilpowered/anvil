@@ -18,6 +18,7 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.feature.pagination.Pagination
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
@@ -27,13 +28,14 @@ class Stage<TCommandSource>(
   val envName: String,
   val registries: MutableMap<String, Registry>,
   val pluginInfo: PluginInfo,
-  val textService: TextService<TCommandSource>,
 ) {
 
   lateinit var registry: Pair<String, Registry>
 
   private val changes: MutableList<Change<*, TCommandSource>> = ArrayList()
   private val availableRegistries: Component
+
+  // TODO("Implement Pagination")
 
   private val border = textService.builder()
     .dark_gray().appendCount(15, '=')

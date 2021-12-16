@@ -34,11 +34,11 @@ abstract class CommonUserService<TUser, TPlayer> protected constructor(
     }
 
     override fun getUUID(userName: String): CompletableFuture<UUID?> {
-        return coreMemberRepository?.getOneForUser(userName)?.thenApplyAsync { it.map { coreMember -> coreMember.userUUID }.get() }!!
+        return coreMemberRepository.getOneForUser(userName).thenApplyAsync { it?.userUUID }
     }
 
     override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
-        return coreMemberRepository?.getOneForUser(userUUID)?.thenApplyAsync { it.map { coreMember -> coreMember.userName }.get() }!!
+        return coreMemberRepository.getOneForUser(userUUID).thenApplyAsync { it?.userName }
     }
 
     override fun getUUIDSafe(obj: Any): UUID {

@@ -24,11 +24,10 @@ import dev.morphia.query.experimental.updates.UpdateOperator
 import org.anvilpowered.anvil.api.model.ObjectWithId
 import org.bson.types.ObjectId
 import java.time.Instant
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 
 interface MongoRepository<T : ObjectWithId<ObjectId>> : Repository<ObjectId, T, Datastore> {
-    fun getOne(query: Query<T>): CompletableFuture<Optional<T>>
+    fun getOne(query: Query<T>): CompletableFuture<T?>
     fun getAll(query: Query<T>): CompletableFuture<List<T>>
     fun delete(query: Query<T>): CompletableFuture<Boolean>
     fun createUpdateOperations(): Query<T>
@@ -38,12 +37,12 @@ interface MongoRepository<T : ObjectWithId<ObjectId>> : Repository<ObjectId, T, 
     fun unSet(field: String): Update<T>
     fun update(query: Query<T>, update: Update<T>): CompletableFuture<Boolean>
     fun update(
-        optionalQuery: Optional<Query<T>>,
+        query: Query<T>?,
         vararg update: UpdateOperator
     ): CompletableFuture<Boolean>
 
     fun asQuery(): Query<T>
     fun asQuery(id: ObjectId): Query<T>
     fun asQuery(createdUtc: Instant): Query<T>
-    fun asQueryForIdOrTime(idOrTime: String): Optional<Query<T>>
+    fun asQueryForIdOrTime(idOrTime: String): Query<T>?
 }

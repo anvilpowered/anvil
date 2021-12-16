@@ -28,8 +28,9 @@ import org.anvilpowered.anvil.api.datastore.XodusRepository
 import jetbrains.exodus.entitystore.Entity
 import java.util.function.Function
 
-interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, PersistentEntityStore?>,
-  XodusRepository<CoreMember<EntityId?>?> {
+interface XodusCoreMemberRepository : 
+    CoreMemberRepository<EntityId, PersistentEntityStore>, 
+    XodusRepository<CoreMember<EntityId>> {
   /**
    * Creates a [Function] that acts as a `query`
    * matching documents whose property `userUUID`
@@ -38,7 +39,7 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * @param userUUID [UUID] to create `query` for
    * @return `query` for the provided [UUID]
    */
-  fun asQuery(userUUID: UUID?): Function<in StoreTransaction?, out Iterable<Entity?>?>?
+  fun asQuery(userUUID: UUID): Function<in StoreTransaction, out Iterable<Entity>>
 
   /**
    * Creates a [Function] that acts as a `query`
@@ -48,7 +49,7 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * @param userName [String] to create `query` for
    * @return `query` for the provided [UUID]
    */
-  fun asQuery(userName: String?): Function<in StoreTransaction?, out Iterable<Entity?>?>?
+  fun asQuery(userName: String): Function<in StoreTransaction, out Iterable<Entity>>
 
   /**
    * Creates a [Function] that acts as a `query`
@@ -58,7 +59,7 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * @param ipAddress [String] to create `query` for
    * @return `query` for the provided [UUID]
    */
-  fun asQueryForIpAddress(ipAddress: String?): Function<in StoreTransaction?, out Iterable<Entity?>?>?
+  fun asQueryForIpAddress(ipAddress: String): Function<in StoreTransaction, out Iterable<Entity>>
 
   /**
    * Updates the properties `banEndUtc`, `banReason`
@@ -72,10 +73,10 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * true if successful, otherwise false
    */
   fun ban(
-    query: Function<in StoreTransaction?, out Iterable<Entity?>?>?,
-    endUtc: Instant?,
-    reason: String?
-  ): CompletableFuture<Boolean?>?
+    query: Function<in StoreTransaction, out Iterable<Entity>>,
+    endUtc: Instant,
+    reason: String
+  ): CompletableFuture<Boolean>
 
   /**
    * Sets the property `banned` to `false` for
@@ -85,7 +86,7 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * @return [CompletableFuture] wrapped [Boolean].
    * true if successful, otherwise false
    */
-  fun unBan(query: Function<in StoreTransaction?, out Iterable<Entity?>?>?): CompletableFuture<Boolean?>?
+  fun unBan(query: Function<in StoreTransaction, out Iterable<Entity>>): CompletableFuture<Boolean>
 
   /**
    * Updates the properties `muteEndUtc`, `muteReason`
@@ -99,10 +100,10 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * true if successful, otherwise false
    */
   fun mute(
-    query: Function<in StoreTransaction?, out Iterable<Entity?>?>?,
-    endUtc: Instant?,
-    reason: String?
-  ): CompletableFuture<Boolean?>?
+    query: Function<in StoreTransaction, out Iterable<Entity>>,
+    endUtc: Instant,
+    reason: String
+  ): CompletableFuture<Boolean>
 
   /**
    * Sets the property `muted` to `false` for
@@ -112,7 +113,7 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * @return [CompletableFuture] wrapped [Boolean].
    * true if successful, otherwise false
    */
-  fun unMute(query: Function<in StoreTransaction?, out Iterable<Entity?>?>?): CompletableFuture<Boolean?>?
+  fun unMute(query: Function<in StoreTransaction, out Iterable<Entity>>): CompletableFuture<Boolean>
 
   /**
    * Updates the property `nickName` for
@@ -123,6 +124,6 @@ interface XodusCoreMemberRepository : CoreMemberRepository<EntityId?, Persistent
    * @return [CompletableFuture] wrapped [Boolean].
    * true if successful, otherwise false
    */
-  fun setNickName(query: Function<in StoreTransaction?, out Iterable<Entity?>?>?, nickName: String?): CompletableFuture<Boolean?>?
-  fun deleteNickName(query: Function<in StoreTransaction?, out Iterable<Entity?>?>?): CompletableFuture<Boolean?>?
+  fun setNickName(query: Function<in StoreTransaction, out Iterable<Entity>>, nickName: String): CompletableFuture<Boolean>
+  fun deleteNickName(query: Function<in StoreTransaction, out Iterable<Entity>>): CompletableFuture<Boolean>
 }

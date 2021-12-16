@@ -19,28 +19,29 @@ package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.command.SimpleCommand
+import org.anvilpowered.anvil.api.plugin.PluginInfo
+import java.awt.event.ComponentEvent
 import java.util.UUID
 import java.util.function.Consumer
 
 class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
   @Inject
-  private lateinit var textService: TextService<TCommandSource>
+  private lateinit var pluginInfo: PluginInfo
 
-  private val missingId: Component by lazy {
-    textService.builder()
-      .appendPrefix()
-      .red().append("Missing callback id")
-      .build()
-  }
+  private val missingId: Component =
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("Missing callback id").color(NamedTextColor.RED))
+          .build()
 
-  private val invalidId: Component by lazy {
-    textService.builder()
-      .appendPrefix()
-      .red().append("Callback id must be a valid UUID")
-      .build()
-  }
+  private val invalidId: Component =
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("Callback id must be a valid UUID").color(NamedTextColor.RED))
+          .build()
 
   fun addCallback(uuid: UUID, callback: Consumer<TCommandSource>) {
     CallbackCommandData<TCommandSource>().callbacks[uuid] = callback::accept
@@ -48,23 +49,24 @@ class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
   override fun execute(source: TCommandSource, context: Array<String>) {
     if (context.isEmpty()) {
-      textService.send(missingId, source)
+      //textService.send(missingId, source)
       return
     }
     val uuid: UUID = try {
       UUID.fromString(context[0])
     } catch (e: IllegalArgumentException) {
-      textService.send(invalidId, source)
+      //textService.send(invalidId, source)
       return
     }
     val callback = CallbackCommandData<TCommandSource>().callbacks[uuid]
     if (callback == null) {
-      textService.builder()
-        .appendPrefix()
-        .red().append("Callback id ")
-        .gold().append(uuid)
-        .red().append(" does not match any callbacks")
-        .sendTo(source)
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("Callback id ").color(NamedTextColor.RED))
+          .append(Component.text(uuid.toString()).color(NamedTextColor.GOLD))
+          .append(Component.text(" does not match any callbacks").color(NamedTextColor.RED))
+          .build()
+      //sendTo(source)
       return
     }
     callback(source)

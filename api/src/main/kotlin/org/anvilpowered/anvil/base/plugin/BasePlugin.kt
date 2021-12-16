@@ -111,7 +111,7 @@ abstract class BasePlugin {
         return builder
     }
 
-    private fun applyToBuilder(builder: Environment.Builder) {}
+    protected open fun applyToBuilder(builder: Environment.Builder) {}
 
     private fun sendLoaded(status: String) {
         val pluginInfo: PluginInfo = environment.pluginInfo
@@ -124,7 +124,7 @@ abstract class BasePlugin {
         TODO("Expand AudienceService to encapsulate the SendTextService and expand upon the functionality")
     }
 
-    protected fun whenLoaded(environment: Environment) {}
+    protected open fun whenLoaded(environment: Environment) {}
     private fun whenReady(environment: Environment) {
         sendLoaded("Loaded")
     }

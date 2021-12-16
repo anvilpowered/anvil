@@ -34,30 +34,28 @@ class PaperLocationService : CommonLocationService() {
         val teleporter = userService[teleportingUserUUID]
         val target = userService[targetUserUUID]
         return CompletableFuture.completedFuture(
-            if (teleporter.isPresent && target.isPresent) {
-                teleporter.get().teleport(target.get().location)
+            if (teleporter != null && target != null) {
+                teleporter.teleport(target.location)
             } else false
         )
     }
 
     override fun getWorldName(userUUID: UUID): String? {
-        return userService[userUUID].map { it.world }.map { it.name }.orElse(null)
+        return userService[userUUID]?.world?.name
     }
 
     override fun getWorldName(userName: String): String? {
-        return userService[userName].map { it.world }.map { it.name }.orElse(null)
+        return userService[userName]?.world?.name
     }
 
-    private fun extractCoords(player: Player): Vector3d {
+    private fun extractCoords(player: Player?): Vector3d? {
+        if (player == null) {
+            return null
+        }
         val pos = player.location
         return Vector3d(pos.x, pos.y, pos.z)
     }
 
-    override fun getPosition(userUUID: UUID): Vector3d? {
-        return userService[userUUID].map(::extractCoords).orElse(null)
-    }
-
-    override fun getPosition(userName: String): Vector3d? {
-        return userService[userName].map(::extractCoords).orElse(null)
-    }
+    override fun getPosition(userUUID: UUID): Vector3d? = extractCoords(userService[userUUID])
+    override fun getPosition(userName: String): Vector3d? = extractCoords(userService[userName])
 }

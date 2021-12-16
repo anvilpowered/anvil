@@ -24,5 +24,5 @@ interface ObjectWithId<TKey> {
   fun setId(id: TKey)
   var idAsString: String
   val createdUtc: Instant
-  val updatedUtc: Instant
+  var updatedUtc: Instant
 }

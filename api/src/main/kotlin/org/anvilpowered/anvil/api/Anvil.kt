@@ -25,12 +25,12 @@ import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.base.plugin.BasePlugin
 
-open class Anvil internal constructor(name: String, rootInjector: Injector, module: Module) :
+open class Anvil constructor(name: String, rootInjector: Injector, module: Module) :
     BasePlugin(name, rootInjector, module) {
     companion object {
         val bindingsCache: MutableMap<Long, Binding<*>> = HashMap()
 
-        private var serviceManager: ServiceManager? = null
+        var serviceManager: ServiceManager? = null
             get() {
                 return field
                     ?: try {
@@ -48,7 +48,7 @@ open class Anvil internal constructor(name: String, rootInjector: Injector, modu
                     }
             }
 
-        val environment: Environment? = null
+        var environment: Environment? = null
             get() = field ?: throw java.lang.IllegalStateException(NOT_LOADED)
 
         private const val NOT_LOADED = "Anvil has not been loaded yet!"

@@ -28,7 +28,8 @@ class CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>
 
   override fun execute(source: TCommandSource, context: Array<String>) {
     val builder = textService.builder().append(pluginInfo.prefix)
-    val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source))
+    //TODO I really don't like this "as Any" crap
+    val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source as Any))
     if (removed == null) {
       builder.red().append("Could not find stage")
     } else {

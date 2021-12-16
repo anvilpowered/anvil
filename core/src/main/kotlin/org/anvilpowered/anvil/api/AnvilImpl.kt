@@ -15,11 +15,17 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.api
 
-package org.anvilpowered.anvil.paper.module
+import com.google.inject.Injector
+import com.google.inject.Module
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
+import org.slf4j.Logger
 
-import org.anvilpowered.anvil.common.module.FallbackModule
-import org.bukkit.command.CommandSender
+open class AnvilImpl(injector: Injector, module: Module) : Anvil(AnvilPluginInfo.id, injector, module) {
+    override fun applyToBuilder(builder: Environment.Builder) {}
 
-class SpigotFallbackModule : FallbackModule<CommandSender>() {
+    companion object {
+        val logger: Logger? = environment?.injector!!.getInstance(Logger::class.java) ?: null
+    }
 }

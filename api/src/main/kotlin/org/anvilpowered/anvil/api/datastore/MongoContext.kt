@@ -19,29 +19,36 @@ package org.anvilpowered.anvil.api.datastore
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.mongodb.MongoClient
+import dev.morphia.Datastore
+import dev.morphia.Morphia
+import dev.morphia.annotations.Entity
+import dev.morphia.mapping.MapperOptions
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
+import org.bson.types.ObjectId
+import java.io.UnsupportedEncodingException
+import java.net.URLEncoder
 
 @Singleton
-class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<ObjectId?, Datastore>(registry) {
-  override fun closeConnection(dataStore: Datastore) {
-    dataStore.getMongo().close()
+class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<ObjectId, Datastore>(registry) {
+
+  override fun closeConnection(morphia: Datastore) {
+    morphia.
   }
 
   override fun loadDataStore(): Datastore {
 
     /* === Get values from config === */
-    val connectionString = registry.getExtraSafe<String>(Keys.Companion.MONGODB_CONNECTION_STRING)
-    val hostname = registry.getExtraSafe<String>(Keys.Companion.MONGODB_HOSTNAME)
-    val port = registry.getExtraSafe<Int>(Keys.Companion.MONGODB_PORT)
-    val dbName = registry.getExtraSafe<String>(Keys.Companion.MONGODB_DBNAME)
-    val username = registry.getExtraSafe<String>(Keys.Companion.MONGODB_USERNAME)
-    val password = registry.getExtraSafe<String>(Keys.Companion.MONGODB_PASSWORD)
-    val authDb = registry.getExtraSafe<String>(Keys.Companion.MONGODB_AUTH_DB)
-    val useAuth = registry.getExtraSafe<Boolean?>(Keys.Companion.MONGODB_USE_AUTH)!!
-    val useSrv = registry.getExtraSafe<Boolean?>(Keys.Companion.MONGODB_USE_SRV)!!
-    val useConnectionString = registry.getExtraSafe<Boolean?>(Keys.Companion.MONGODB_USE_CONNECTION_STRING)!!
+    val connectionString = registry.getExtraSafe(Keys.MONGODB_CONNECTION_STRING)
+    val hostname = registry.getExtraSafe(Keys.MONGODB_HOSTNAME)
+    val port = registry.getExtraSafe(Keys.MONGODB_PORT)
+    val dbName: String = registry.getExtraSafe(Keys.MONGODB_DBNAME)
+    val username = registry.getExtraSafe(Keys.MONGODB_USERNAME)
+    val password = registry.getExtraSafe(Keys.MONGODB_PASSWORD)
+    val authDb = registry.getExtraSafe(Keys.MONGODB_AUTH_DB)
+    val useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH)!!
+    val useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV)!!
+    val useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING)!!
 
     /* === Determine credentials for MongoDB === */
     val clientUrl: String?
@@ -61,20 +68,16 @@ class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<Ob
     }
 
     /* === Establish MongoDB connection === */
-    val uri = MongoClientURI(clientUrl)
-    val mongoClient = MongoClient(uri)
-    val morphia = Morphia()
-    val dataStore: Datastore = morphia.createDatastore(mongoClient, dbName)
-    dataStore.ensureIndexes()
+    /* === Set class loader to prevent morphia from breaking === */
+    val morphia = Morphia.createDatastore(dbName, MapperOptions.legacy()
+        .classLoader(javaClass.classLoader)
+        .build())
+    morphia.ensureIndexes()
 
-    /* === Save mapped objects and register with morphia === */morphia.map(calculateEntityClasses(registry.getOrDefault(Keys.Companion.BASE_SCAN_PACKAGE),
-      Entity::class.java,
-      Embedded::class.java))
+    /* === Save mapped objects and register with morphia === */
+    morphia.mapper.map(*calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE)), Entity::class.java)
 
-    /* === Set class loader to prevent morphia from breaking === */morphia.getMapper().setOptions(MapperOptions.legacy()
-      .classLoader(javaClass.classLoader)
-      .build())
     tKeyClass = ObjectId::class.java
-    return dataStore
+    return morphia
   }
 }

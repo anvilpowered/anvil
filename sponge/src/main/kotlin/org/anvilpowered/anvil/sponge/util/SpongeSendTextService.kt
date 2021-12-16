@@ -22,6 +22,7 @@ import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.identity.Identified
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.ComponentBuilder
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.block.BlockSnapshot
@@ -35,9 +36,9 @@ import java.util.Optional
 
 class SpongeSendTextService : SendTextService<CommandCause> {
 
-    override fun send(text: Component, receiver: CommandCause) {
-        receiver.sendMessage(Identity.nil(), text)
-    }
+    override fun CommandCause.send(text: Component) = sendMessage(Identity.nil(), text)
+    override fun ComponentBuilder<*, *>.sendTo(source: CommandCause) = source.send(build())
+    override fun ComponentBuilder<*, *>.sendToConsole() = console.send(build())
 
     // yes, this is a hack and fundamentally flawed
     // yes, there will be a permanent, correct (and API breaking) fix in the future

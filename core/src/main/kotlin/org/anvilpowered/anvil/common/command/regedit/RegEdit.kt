@@ -19,55 +19,87 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.ComponentBuilder
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.event.HoverEvent
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
+
 
 val anvilAlias by lazy { CommonAnvilCommandNode.ALIAS }
 
 val whitespace = "\\s+".toRegex()
 
-fun <TCommandSource> TextService<TCommandSource>.undo(cmd: String): Component {
-  return builder()
-    .light_purple().append("[ Undo ]")
-    .onHoverShowText(builder()
-      .light_purple().append("Undo this action\n")
-      .gray().append(cmd)
-    ).onClickRunCommand(cmd)
-    .build()
+fun appendJoining(delimiter: Any, vararg contents: Any): Component {
+    var delim = delimiter
+    if (!(delimiter is Component || delimiter is ComponentBuilder<*, *>)) {
+        delim = Component.text(delimiter.toString())
+    }
+
+    val indexOfLast = contents.size - 1
+    val elements = Component.text()
+
+    for (i in 0..indexOfLast) {
+        val o = contents[i]
+        if (o is Component) {
+            elements.append(o)
+        } else {
+            elements.append(Component.text(o.toString()))
+        }
+        if (i != indexOfLast) {
+            elements.append(Component.text(delim.toString()))
+        }
+    }
+    return elements.build()
 }
 
-fun <T, TCommandSource> TextService<TCommandSource>.info(key: Key<T>, registry: Registry): Component {
-  return builder()
-    .gold().append(key, " >").gray()
-    .append("\nValue: ", printValueYellow(key, registry.get(key).orElse(null)))
-    .append("\nDefault: ", printValueYellow(key, registry.getDefault(key)))
-    .append("\nFallback: ", printValueYellow(key, key.fallbackValue))
-    .build()
+fun undo(cmd: String): Component {
+    return Component.text()
+        .append(
+            Component.text("[ Undo ]")
+                .color(NamedTextColor.LIGHT_PURPLE)
+                .hoverEvent(HoverEvent.showText(
+                    Component.text()
+                        .append(Component.text("Undo this action\n").color(NamedTextColor.LIGHT_PURPLE))
+                        .append(Component.text(cmd).color(NamedTextColor.GRAY))
+                        .build()))
+                .clickEvent(ClickEvent.runCommand(cmd)))
+        .build()
 }
 
-fun <T, TCommandSource> TextService<TCommandSource>.printValueGreen(key: Key<T>, value: T?): Component {
-  if (value == null) {
-    return builder().red().append("none").build()
-  }
-  val primary = key.toString(value)
-  val secondary = value.toString()
-  val builder = builder().green().append(primary)
-  if (primary != secondary) {
-    builder.gray().append(" (", secondary, ")")
-  }
-  return builder.build()
+fun <T> info(key: Key<T>, registry: Registry): Component {
+    return Component.text()
+        .append(Component.text("$key > ").color(NamedTextColor.GOLD))
+        .append(Component.text("\nValue: ${printValueYellow(key, registry[key])}").color(NamedTextColor.GRAY))
+        .append(Component.text("\nDefault: ${printValueYellow(key, registry.getDefault(key))}").color(NamedTextColor.GRAY))
+        .append(Component.text("\nFallback: ${printValueYellow(key, key.fallbackValue)}").color(NamedTextColor.GRAY))
+        .build()
 }
 
-fun <T, TCommandSource> TextService<TCommandSource>.printValueYellow(key: Key<T>, value: T?): Component {
-  if (value == null) {
-    return builder().red().append("none").build()
-  }
-  val primary = key.toString(value)
-  val secondary = value.toString()
-  val builder = builder().yellow().append(primary)
-  if (primary != secondary) {
-    builder.gray().append(" (", secondary, ")")
-  }
-  return builder.build()
+fun <T> printValueGreen(key: Key<T>, value: T?): Component {
+    if (value == null) {
+        return Component.text("none").color(NamedTextColor.RED)
+    }
+    val primary = key.toString(value)
+    val secondary = value.toString()
+    val builder = Component.text().append(Component.text(primary).color(NamedTextColor.GREEN))
+    if (primary != secondary) {
+        builder.append(Component.text(" ( $secondary )").color(NamedTextColor.GRAY))
+    }
+    return builder.build()
+}
+
+fun <T> printValueYellow(key: Key<T>, value: T?): Component {
+    if (value == null) {
+        return Component.text("none").color(NamedTextColor.RED)
+    }
+    val primary = key.toString(value)
+    val secondary = value.toString()
+    val builder = Component.text().append(Component.text(primary).color(NamedTextColor.YELLOW))
+    if (primary != secondary) {
+        builder.append(Component.text(" ( $secondary )").color(NamedTextColor.GRAY))
+    }
+    return builder.build()
 }

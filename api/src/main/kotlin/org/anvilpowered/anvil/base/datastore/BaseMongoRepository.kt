@@ -36,20 +36,19 @@ import java.util.stream.Collectors
 
 interface BaseMongoRepository<T : ObjectWithId<ObjectId>> : MongoRepository<T>, BaseMongoComponent {
 
-    override fun getCreatedUtc(id: ObjectId): CompletableFuture<Optional<Instant>> {
-        return CompletableFuture.completedFuture(
-                Optional.of(Instant.ofEpochSecond(id.timestamp.toLong())))
+    override fun getCreatedUtc(id: ObjectId): CompletableFuture<Instant?> {
+        return CompletableFuture.completedFuture(Instant.ofEpochSecond(id.timestamp.toLong()))
     }
 
-    override fun insertOne(item: T): CompletableFuture<Optional<T>> {
+    override fun insertOne(item: T): CompletableFuture<T?> {
         return CompletableFuture.supplyAsync {
             try {
                 dataStoreContext.getDataStore().save(item)
             } catch (e: RuntimeException) {
                 e.printStackTrace()
-                return@supplyAsync Optional.empty<T>()
+                return@supplyAsync null
             }
-            Optional.of(item)
+            item
         }
     }
 
@@ -67,12 +66,12 @@ interface BaseMongoRepository<T : ObjectWithId<ObjectId>> : MongoRepository<T>, 
         }
     }
 
-    override fun getOne(query: Query<T>): CompletableFuture<Optional<T>> {
-        return CompletableFuture.supplyAsync { Optional.ofNullable(query.first()) }
+    override fun getOne(query: Query<T>): CompletableFuture<T?> {
+        return CompletableFuture.supplyAsync { query.first() }
     }
 
-    override fun getOne(id: ObjectId): CompletableFuture<Optional<T>> = getOne(asQuery(id))
-    override fun getOne(createdUtc: Instant): CompletableFuture<Optional<T>> = getOne(asQuery(createdUtc))
+    override fun getOne(id: ObjectId): CompletableFuture<T?> = getOne(asQuery(id))
+    override fun getOne(createdUtc: Instant): CompletableFuture<T?> = getOne(asQuery(createdUtc))
 
     override val allIds: CompletableFuture<List<ObjectId>>
         get() = CompletableFuture.supplyAsync {
@@ -125,9 +124,13 @@ interface BaseMongoRepository<T : ObjectWithId<ObjectId>> : MongoRepository<T>, 
         return CompletableFuture.supplyAsync { dataStoreContext.getDataStore().find(query.entityClass).update(updateOperations).execute().modifiedCount > 0 }
     }
 
-    override fun update(optionalQuery: Optional<Query<T>>, vararg update: UpdateOperator): CompletableFuture<Boolean> {
-        return optionalQuery.map { q: Query<T> -> update(q, Arrays.stream(update).collect(Collectors.toList())) }
-                .orElse(CompletableFuture.completedFuture(false))
+    override fun update(query: Query<T>?, vararg update: UpdateOperator): CompletableFuture<Boolean> {
+        query.also {
+            if (it == null) {
+                 return CompletableFuture.completedFuture(false)
+            }
+            return update(it, Arrays.stream(update).collect(Collectors.toList()))
+        }
     }
 
     override val all: CompletableFuture<List<T>>
@@ -148,17 +151,23 @@ interface BaseMongoRepository<T : ObjectWithId<ObjectId>> : MongoRepository<T>, 
     override fun asQuery(createdUtc: Instant): Query<T> {
         val time = Integer.toHexString(createdUtc.epochSecond.toInt())
         return dataStoreContext.getDataStore().find(tClass).filter(
-                Filters.gt("_id", ObjectId(time + "0000000000000000")),
-                Filters.lt("_id", ObjectId(time + "ffffffffffffffff"))
+            Filters.gt("_id", ObjectId(time + "0000000000000000")),
+            Filters.lt("_id", ObjectId(time + "ffffffffffffffff"))
         );
     }
 
-    override fun asQueryForIdOrTime(idOrTime: String): Optional<Query<T>> {
-        return Objects.requireNonNull(parse(idOrTime)).map { Optional.of(asQuery(it)) }
-                .orElseGet {
-                    Objects.requireNonNull(Objects.requireNonNull(environmentManager.coreEnvironment)
-                            !!.injector.getInstance(TimeFormatService::class.java).parseInstant(idOrTime))
-                            ?.map { this.asQuery(it!!) }
-                }
+    override fun asQueryForIdOrTime(idOrTime: String): Query<T>? {
+        parse(idOrTime).also {
+            if (it == null) {
+                environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                    .parseInstant(idOrTime).also { time ->
+                        if (time == null) {
+                            return null
+                        }
+                        return asQuery(time)
+                    }
+            }
+            return asQuery(it!!)
+        }
     }
 }

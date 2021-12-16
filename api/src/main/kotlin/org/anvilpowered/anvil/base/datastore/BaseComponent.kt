@@ -30,13 +30,13 @@ abstract class BaseComponent<TKey, TDataStore> : DBComponent<TKey, TDataStore> {
     override val tKeyClass: Class<TKey>
         get() = dataStoreContext.tKeyClass!!
 
-    override fun parse(obj: Any): Optional<TKey!!> {
+    override fun parse(obj: Any): TKey? {
         return try {
-            Optional.of(parseUnsafe(obj))
+            parseUnsafe(obj)
         } catch (e: IllegalArgumentException) {
-            Optional.empty()
+            null
         } catch (e: UnsupportedOperationException) {
-            Optional.empty()
+            null
         }
     }
 }

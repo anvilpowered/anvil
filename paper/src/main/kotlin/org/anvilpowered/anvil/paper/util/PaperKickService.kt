@@ -19,7 +19,6 @@ package org.anvilpowered.anvil.paper.util
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
-import net.md_5.bungee.api.chat.TextComponent
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.UserService
 import org.bukkit.entity.Player
@@ -30,16 +29,16 @@ class PaperKickService : KickService {
     @Inject
     private lateinit var userService: UserService<Player, Player>
 
-    private fun getReason(reason: Any): TextComponent {
-        return if (reason is TextComponent) reason else TextComponent(reason.toString())
+    private fun getReason(reason: Any): Component {
+        return if (reason is Component) reason else Component.text(reason.toString())
     }
 
     override fun kick(userUUID: UUID, reason: Any) {
-        userService.getPlayer(userUUID).ifPresent { player: Player -> player.kick(Component.text(reason.toString())) }
+        userService.getPlayer(userUUID)?.kick(getReason(reason))
     }
 
     override fun kick(userName: String, reason: Any) {
-        userService.getPlayer(userName).ifPresent { player: Player -> player.kick(Component.text(reason.toString())) }
+        userService.getPlayer(userName)?.kick(getReason(reason))
     }
 
     override fun kick(userUUID: UUID) {

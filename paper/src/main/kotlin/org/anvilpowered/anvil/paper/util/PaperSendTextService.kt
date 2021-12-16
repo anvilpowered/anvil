@@ -19,16 +19,15 @@
 package org.anvilpowered.anvil.paper.util
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.text.ComponentBuilder
 import org.anvilpowered.anvil.common.util.SendTextService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
 class PaperSendTextService : SendTextService<CommandSender> {
 
-  override fun send(text: Component, receiver: CommandSender) {
-    receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(text))
-  }
-
+  override fun CommandSender.send(text: Component) = sendMessage(text)
+  override fun ComponentBuilder<*, *>.sendTo(source: CommandSender) = source.sendMessage(build())
+  override fun ComponentBuilder<*, *>.sendToConsole() = console.sendMessage(build())
   override val console: CommandSender = Bukkit.getConsoleSender()
 }

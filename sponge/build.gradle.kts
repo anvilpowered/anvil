@@ -2,7 +2,9 @@ plugins {
     kotlin("jvm")
 }
 
+val spongeVersion: String by project
+
 dependencies {
     implementation(project(":anvil-core"))
-    implementation("net.kyori:adventure-platform-spongeapi:4.0.0-SNAPSHOT")
+    implementation("org.spongepowered:spongeapi:$spongeVersion")
 }

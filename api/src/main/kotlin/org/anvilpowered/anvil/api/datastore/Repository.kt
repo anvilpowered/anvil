@@ -34,15 +34,15 @@ interface Repository<TKey, T : ObjectWithId<TKey>?, TDataStore> : DBComponent<TK
      * @param id The id of the document
      * @return The time of creation of this document as an [Instant]
      */
-    fun getCreatedUtc(id: TKey): CompletableFuture<Optional<Instant>> {
-        return getOne(id).thenApplyAsync { it.map { i -> i!!.createdUtc } }
+    fun getCreatedUtc(id: TKey): CompletableFuture<Instant?> {
+        return getOne(id).thenApplyAsync { it?.createdUtc }
     }
 
     /**
      * @param item A [document][T] to insert
      * @return An [Optional] containing the inserted [document][T] if successful, otherwise [Optional.empty]
      */
-    fun insertOne(item: T): CompletableFuture<Optional<T>>
+    fun insertOne(item: T): CompletableFuture<T?>
 
     /**
      * @param list A [List] of [documents][T] to insert
@@ -66,7 +66,7 @@ interface Repository<TKey, T : ObjectWithId<TKey>?, TDataStore> : DBComponent<TK
      * @param id An [id][TKey] to query the repository with
      * @return An [Optional] containing a matching [document][T] if successful, otherwise [Optional.empty]
      */
-    fun getOne(id: TKey): CompletableFuture<Optional<T>>
+    fun getOne(id: TKey): CompletableFuture<T?>
 
     /**
      * Attempts to find the first [document][T] where [Instant.getEpochSecond] retrieved from
@@ -75,7 +75,7 @@ interface Repository<TKey, T : ObjectWithId<TKey>?, TDataStore> : DBComponent<TK
      * @param createdUtc An [Instant] to query the repository with
      * @return An [Optional] containing  if successful, otherwise [Optional.empty]
      */
-    fun getOne(createdUtc: Instant): CompletableFuture<Optional<T>>
+    fun getOne(createdUtc: Instant): CompletableFuture<T?>
 
     /**
      * Attempts to find a matching [document][T] by parsing provided id or time.
@@ -105,7 +105,7 @@ interface Repository<TKey, T : ObjectWithId<TKey>?, TDataStore> : DBComponent<TK
      * @see TimeFormatService.parseInstantUnsafe
      * @see TimeFormatService.parseInstant
      */
-    fun parseAndGetOne(idOrTime: Any): CompletableFuture<Optional<T>>
+    fun parseAndGetOne(idOrTime: Any): CompletableFuture<T?>
 
     /**
      * Attempts to delete a matching [document][T] with the provided [id][TKey]

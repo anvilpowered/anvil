@@ -21,9 +21,11 @@ import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.command.SimpleCommand
+import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.PermissionService
+import org.anvilpowered.anvil.common.command.regedit.appendJoining
 import java.util.Arrays
 
 class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> {
@@ -35,11 +37,9 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
   private lateinit var registry: Registry
 
   @Inject
-  private lateinit var textService: TextService<TCommandSource>
+  private lateinit var pluginInfo: PluginInfo
 
-  private val DESCRIPTION: Component by lazy {
-    textService.of("Anvil plugins command")
-  }
+  private val DESCRIPTION: Component = Component.text("Anvil plugins command")
 
   override fun execute(source: TCommandSource, context: Array<String>) {
     val values = Anvil.environmentManager
@@ -50,11 +50,12 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
       .iterator()
     val names = Array(values.size) { mappedValues.next() }
     Arrays.sort(names)
-    textService.builder()
-      .appendPrefix()
-      .green().append("Plugins (", names.size, "): ")
-      .appendJoining(", ", *names)
-      .sendTo(source)
+    Component.text()
+        .append(pluginInfo.prefix)
+        .append(Component.text("Plugins ( $names.size ): "))
+        .append(appendJoining(", ", *names))
+        .build()
+    TODO("Create function to handle building and sendTo(target: TCommandSource)")
   }
 
   override fun canExecute(source: TCommandSource): Boolean {

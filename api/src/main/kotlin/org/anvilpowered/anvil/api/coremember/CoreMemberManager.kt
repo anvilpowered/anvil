@@ -19,4 +19,4 @@ package org.anvilpowered.anvil.api.coremember
 
 import org.anvilpowered.anvil.api.datastore.Manager
 
-interface CoreMemberManager : Manager<CoreMemberRepository<*, *>?>
+interface CoreMemberManager : Manager<CoreMemberRepository<*, *>>

@@ -30,7 +30,7 @@ import org.anvilpowered.anvil.api.registry.RegistryScoped
 import org.slf4j.Logger
 import java.util.Locale
 
-abstract class BaseManager<C : DBComponent<*, *>?> protected constructor(protected var registry: Registry) : Manager<C> {
+abstract class BaseManager<C : DBComponent<*, *>> protected constructor(protected var registry: Registry) : Manager<C> {
 
     private val componentType: TypeToken<C>
 

@@ -22,9 +22,6 @@ import com.google.inject.name.Names
 import dev.morphia.Datastore
 import jetbrains.exodus.entitystore.EntityId
 import jetbrains.exodus.entitystore.PersistentEntityStore
-import ninja.leaping.configurate.commented.CommentedConfigurationNode
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader
-import ninja.leaping.configurate.loader.ConfigurationLoader
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
 import org.anvilpowered.anvil.api.misc.bind
@@ -39,38 +36,41 @@ import org.anvilpowered.anvil.common.coremember.CommonXodusCoreMemberRepository
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.common.registry.CommonConfigurationService
 import org.bson.types.ObjectId
+import org.spongepowered.configurate.CommentedConfigurationNode
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader
+import org.spongepowered.configurate.loader.ConfigurationLoader
 import java.nio.file.Paths
 
 @Suppress("UnstableApiUsage")
 abstract class CommonModule<TCommandSource>(private val configDir: String) : ApiCommonModule() {
 
-  override fun configure() {
-    with(binder()) {
-      bind<CoreMemberManager>().to<CommonCoreMemberManager>()
-      bind<Registry>().to<CommonConfigurationService>()
-      bind<PluginInfo>().to<AnvilPluginInfo>()
-      bind<CoreMemberRepository<*, *>>()
-        .annotatedWith(Names.named("mongodb"))
-        .to<CommonMongoCoreMemberRepository>()
-      bind<CoreMemberRepository<ObjectId, Datastore>>()
-        .to<CommonMongoCoreMemberRepository>()
-      bind<CoreMemberRepository<*, *>>()
-        .annotatedWith(Names.named("xodus"))
-        .to<CommonXodusCoreMemberRepository>()
-      bind<CoreMemberRepository<EntityId, PersistentEntityStore>>()
-        .to<CommonXodusCoreMemberRepository>()
+    override fun configure() {
+        with(binder()) {
+            bind<CoreMemberManager>().to<CommonCoreMemberManager>()
+            bind<Registry>().to<CommonConfigurationService>()
+            bind<PluginInfo>().to<AnvilPluginInfo>()
+            bind<CoreMemberRepository<*, *>>()
+                .annotatedWith(Names.named("mongodb"))
+                .to<CommonMongoCoreMemberRepository>()
+            bind<CoreMemberRepository<ObjectId, Datastore>>()
+                .to<CommonMongoCoreMemberRepository>()
+            bind<CoreMemberRepository<*, *>>()
+                .annotatedWith(Names.named("xodus"))
+                .to<CommonXodusCoreMemberRepository>()
+            bind<CoreMemberRepository<EntityId, PersistentEntityStore>>()
+                .to<CommonXodusCoreMemberRepository>()
 
 
-      withMongoDB()
-      withXodus()
+            withMongoDB()
+            withXodus()
+        }
+
+        val configDirFull = Paths.get("$configDir/anvil").toFile()
+        if (!configDirFull.exists()) {
+            check(configDirFull.mkdirs()) { "Unable to create config directory" }
+        }
+        bind(object : TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {}).toInstance(
+            HoconConfigurationLoader.builder().path(Paths.get("$configDirFull/anvil.conf")).build()
+        )
     }
-
-    val configDirFull = Paths.get("$configDir/anvil").toFile()
-    if (!configDirFull.exists()) {
-      check(configDirFull.mkdirs()) { "Unable to create config directory" }
-    }
-    bind(object : TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {}).toInstance(
-      HoconConfigurationLoader.builder().setPath(Paths.get("$configDirFull/anvil.conf")).build()
-    )
-  }
 }

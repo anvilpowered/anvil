@@ -28,42 +28,42 @@ import java.util.Optional
 import java.util.function.Consumer
 import java.util.function.Function
 
-interface XodusRepository<T : ObjectWithId<EntityId?>?> : Repository<EntityId?, T, PersistentEntityStore?> {
+interface XodusRepository<T : ObjectWithId<EntityId>> : Repository<EntityId, T, PersistentEntityStore> {
   fun iterator(
-    query: Function<in StoreTransaction?, out Iterable<Entity?>?>?
-  ): Iterator<T>?
+    query: Function<in StoreTransaction, out Iterable<Entity>>
+  ): Iterator<T>
 
   fun getAll(
-    query: Function<in StoreTransaction?, out Iterable<Entity?>?>?
-  ): CompletableFuture<List<T>?>?
+    query: Function<in StoreTransaction, out Iterable<Entity>>
+  ): CompletableFuture<List<T>>
 
   fun getOne(
-    query: Function<in StoreTransaction?, out Iterable<Entity?>?>?
-  ): CompletableFuture<Optional<T>?>?
+    query: Function<in StoreTransaction, out Iterable<Entity>>
+  ): CompletableFuture<T?>
 
   fun delete(
-    query: Function<in StoreTransaction?, out Iterable<Entity?>?>?
-  ): CompletableFuture<Boolean?>?
+    query: Function<in StoreTransaction, out Iterable<Entity>>
+  ): CompletableFuture<Boolean>
 
   fun update(
-    query: Function<in StoreTransaction?, out Iterable<Entity?>?>?,
-    update: Consumer<in Entity?>?
-  ): CompletableFuture<Boolean?>?
+    query: Function<in StoreTransaction, out Iterable<Entity>>,
+    update: Consumer<in Entity>
+  ): CompletableFuture<Boolean>
 
   fun update(
-    optionalQuery: Optional<Function<in StoreTransaction?, out Iterable<Entity?>?>?>?,
-    update: Consumer<in Entity?>?
-  ): CompletableFuture<Boolean?>?
+    optionalQuery: Optional<Function<in StoreTransaction, out Iterable<Entity>>>,
+    update: Consumer<in Entity>
+  ): CompletableFuture<Boolean>
 
   fun asQuery(
-    id: EntityId?
-  ): Function<in StoreTransaction?, out Iterable<Entity?>?>?
+    id: EntityId
+  ): Function<in StoreTransaction, out Iterable<Entity>>
 
   fun asQuery(
-    createdUtc: Instant?
-  ): Function<in StoreTransaction?, out Iterable<Entity?>?>?
+    createdUtc: Instant
+  ): Function<in StoreTransaction, out Iterable<Entity>>
 
   fun asQueryForIdOrTime(
-    idOrTime: String?
-  ): Optional<Function<in StoreTransaction?, out Iterable<Entity?>?>?>?
+    idOrTime: String
+  ): Function<in StoreTransaction, out Iterable<Entity>>?
 }

@@ -22,7 +22,6 @@ import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.server.RegisteredServer
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonBackendServer
-import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import kotlin.streams.toList
@@ -31,15 +30,14 @@ class VelocityBackendServer(
     private val server: RegisteredServer,
     userService: UserService<Player, Player>,
 ) : CommonBackendServer<Player, Player>(userService) {
-    override val name: String = server.serverInfo.name
-    override fun getVersion(): CompletableFuture<VelocityVersion> {
-        return server.ping().thenApply { VelocityVersion(it.version) }
-    }
-    override fun Optional<Player>.connect(): CompletableFuture<Boolean> {
-        return map { it.createConnectionRequest(server).connect().thenApply { c -> c.isSuccessful } }
-            .orElse(CompletableFuture.completedFuture(false))
-    }
 
-    override fun connect(player: Any?): CompletableFuture<Boolean> = Optional.ofNullable(player as? Player).connect()
-    override fun getPlayerUUIDs(): List<UUID> = server.playersConnected.stream().map { it.uniqueId }.toList()
+    override val name: String = server.serverInfo.name
+    override val playerUUIDs: List<UUID> = server.playersConnected.stream().map { it.uniqueId }.toList()
+    override val version: CompletableFuture<VelocityVersion> = server.ping().thenApply { VelocityVersion(it.version) }
+
+    override fun connect(player: Any): CompletableFuture<Boolean> = (player as? Player)?.commenceConnection()
+        ?: CompletableFuture.completedFuture(false)
+
+    override fun Player.commenceConnection(): CompletableFuture<Boolean> =
+        createConnectionRequest(server).connect().thenApply { it.isSuccessful }
 }

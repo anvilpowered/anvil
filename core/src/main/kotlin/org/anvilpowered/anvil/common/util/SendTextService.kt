@@ -19,10 +19,15 @@
 package org.anvilpowered.anvil.common.util
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.ComponentBuilder
 
 interface SendTextService<TCommandSource> {
 
-  fun send(text: Component, receiver: TCommandSource)
-
   val console: TCommandSource
+
+  fun TCommandSource.send(text: Component)
+
+  fun ComponentBuilder<*, *>.sendTo(source: TCommandSource)
+
+  fun ComponentBuilder<*, *>.sendToConsole()
 }

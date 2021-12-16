@@ -17,7 +17,7 @@ open class ApiCommonModule : AbstractModule() {
         bind(RedisService::class.java).to(CommonRedisService::class.java)
         bind(RestrictionService::class.java).toProvider(
             Provider {
-                Anvil.getEnvironment().injector.getInstance(CommonRestrictionService::class.java)
+                Anvil.environment?.injector?.getInstance(CommonRestrictionService::class.java)
             }
         )
     }

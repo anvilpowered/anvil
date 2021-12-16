@@ -15,19 +15,12 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.common.coremember
 
-package org.anvilpowered.anvil.common.coremember;
+import com.google.inject.Inject
+import org.anvilpowered.anvil.base.datastore.BaseManager
+import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
+import org.anvilpowered.anvil.api.coremember.CoreMemberManager
+import org.anvilpowered.anvil.api.registry.Registry
 
-import com.google.inject.Inject;
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager;
-import org.anvilpowered.anvil.api.coremember.CoreMemberRepository;
-import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.base.datastore.BaseManager;
-
-public class CommonCoreMemberManager extends BaseManager<CoreMemberRepository<?, ?>> implements CoreMemberManager {
-
-    @Inject
-    public CommonCoreMemberManager(Registry registry) {
-    super(registry);
-  }
-}
+class CommonCoreMemberManager @Inject constructor(registry: Registry?) : BaseManager<CoreMemberRepository<*, *>>(registry!!), CoreMemberManager
