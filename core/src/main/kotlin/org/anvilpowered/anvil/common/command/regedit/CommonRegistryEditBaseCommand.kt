@@ -24,6 +24,7 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.PermissionService
+import org.anvilpowered.anvil.api.util.SendTextService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages
 
@@ -42,10 +43,10 @@ abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> : S
   protected lateinit var pluginMessages: AnvilPluginMessages
 
   @Inject
-  protected lateinit var textService: TextService<TCommandSource>
+  protected lateinit var userService: UserService<TUser, TPlayer>
 
   @Inject
-  protected lateinit var userService: UserService<TUser, TPlayer>
+  protected lateinit var sendTextService: SendTextService
 
   override fun canExecute(source: TCommandSource): Boolean {
     return permissionService.hasPermission(source, registry.getOrDefault(Keys.REGEDIT_PERMISSION))

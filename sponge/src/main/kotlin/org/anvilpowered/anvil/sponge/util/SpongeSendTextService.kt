@@ -23,7 +23,7 @@ import net.kyori.adventure.identity.Identified
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentBuilder
-import org.anvilpowered.anvil.common.util.SendTextService
+import org.anvilpowered.anvil.api.util.SendTextService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.block.BlockSnapshot
 import org.spongepowered.api.command.CommandCause

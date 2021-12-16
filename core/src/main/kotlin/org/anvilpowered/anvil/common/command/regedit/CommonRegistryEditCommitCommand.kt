@@ -30,7 +30,7 @@ class CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>
     val uuid = userService.getUUIDSafe(source)
     val stage = registryEditRootCommand.stages[uuid]
     if (stage == null) {
-      textService.send(registryEditRootCommand.notInStage, source)
+      sendTextService.send(source, registryEditRootCommand.notInStage)
       return
     }
     if (stage.commit(source)) {

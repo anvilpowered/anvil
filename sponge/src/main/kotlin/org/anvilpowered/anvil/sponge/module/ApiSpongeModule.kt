@@ -28,7 +28,7 @@ import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.entity.CommonRestrictionService
-import org.anvilpowered.anvil.common.util.SendTextService
+import org.anvilpowered.anvil.api.util.SendTextService
 import org.anvilpowered.anvil.sponge.command.SpongeCommandExecuteService
 import org.anvilpowered.anvil.sponge.command.SpongeSimpleCommandService
 import org.anvilpowered.anvil.sponge.server.Sponge8LocationService

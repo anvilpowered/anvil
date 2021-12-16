@@ -31,7 +31,7 @@ import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.module.PlatformModule
-import org.anvilpowered.anvil.common.util.SendTextService
+import org.anvilpowered.anvil.api.util.SendTextService
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecuteService
 import org.anvilpowered.anvil.velocity.command.VelocitySimpleCommandService
 import org.anvilpowered.anvil.velocity.server.VelocityLocationService

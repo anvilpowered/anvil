@@ -38,11 +38,13 @@ class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
     override fun execute(source: TCommandSource, context: Array<String>) {
         val uuid = userService.getUUIDSafe(source)
         val stage = registryEditRootCommand.stages[uuid]
-        textService.send(when {
-            stage == null -> registryEditRootCommand.notInStage
-            context.size == 1 -> stage.setRegistry(context[0])
-            else -> usage
-        }, source)
+        sendTextService.send(source,
+            when {
+                stage == null -> registryEditRootCommand.notInStage
+                context.size == 1 -> stage.setRegistry(context[0])
+                else -> usage
+            }
+        )
     }
 
     override fun suggest(source: TCommandSource, context: Array<String>): List<String> {

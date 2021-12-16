@@ -19,21 +19,22 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import java.util.UUID
 
 class CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
-  : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
-  val stages: MutableMap<UUID, Stage<TCommandSource>> = HashMap()
+    val stages: MutableMap<UUID, Stage<TCommandSource>> = HashMap()
 
-  val notInStage: Component by lazy {
-    textService.builder()
-      .append(pluginInfo.prefix)
-      .red().append("You are not currently in a regedit session. Use /$anvilAlias regedit help")
-      .build()
-  }
+    val notInStage =
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("You are not currently in a regedit session. Use /$anvilAlias regedit help")
+                .color(NamedTextColor.RED))
+            .build()
 
-  override fun execute(source: TCommandSource, context: Array<String>) {
-    textService.send(stages[userService.getUUIDSafe(source)]?.print() ?: notInStage, source)
-  }
+    override fun execute(source: TCommandSource, context: Array<String>) {
+      sendTextService.send(source, stages[userService.getUUIDSafe(source)]?.print() ?: notInStage)
+    }
 }

@@ -16,18 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.common.util
+package org.anvilpowered.anvil.api.util
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentBuilder
 
-interface SendTextService<TCommandSource> {
+interface SendTextService {
 
-  val console: TCommandSource
+  fun <T> send(source: T, component: Component)
 
-  fun TCommandSource.send(text: Component)
-
-  fun ComponentBuilder<*, *>.sendTo(source: TCommandSource)
-
-  fun ComponentBuilder<*, *>.sendToConsole()
+  fun sendToConsole(component: Component)
 }

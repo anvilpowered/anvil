@@ -41,7 +41,7 @@ abstract class CommonUserService<TUser, TPlayer> protected constructor(
         return coreMemberRepository.getOneForUser(userUUID).thenApplyAsync { it?.userName }
     }
 
-    override fun getUUIDSafe(obj: Any): UUID {
+    override fun <T> getUUIDSafe(obj: T): UUID {
         return if (userClass.isInstance(obj)) {
             getUUID(obj as TUser)!!
         } else {

@@ -53,6 +53,6 @@ interface UserService<TUser, TPlayer> {
    * If the provided object has a [UUID], return it. Otherwise return a constant UUID that is
    * the same for all objects without a UUID.
    */
-  fun getUUIDSafe(obj: Any): UUID
+  fun <T> getUUIDSafe(obj: T): UUID
   fun getUserName(user: TUser): String
 }

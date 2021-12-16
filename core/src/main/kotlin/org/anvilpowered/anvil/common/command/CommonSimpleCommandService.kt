@@ -25,7 +25,16 @@ import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.common.util.SendTextService
+import org.anvilpowered.anvil.api.util.SendTextService
+import org.anvilpowered.anvil.common.append
+import org.anvilpowered.anvil.common.appendIf
+import org.anvilpowered.anvil.common.appendJoining
+import org.anvilpowered.anvil.common.aqua
+import org.anvilpowered.anvil.common.gold
+import org.anvilpowered.anvil.common.gray
+import org.anvilpowered.anvil.common.green
+import org.anvilpowered.anvil.common.red
+import org.anvilpowered.anvil.common.sendTo
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -36,9 +45,6 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
 
   @Inject
   protected lateinit var pluginInfo: PluginInfo
-
-  @Inject
-  private lateinit var sendTextService: SendTextService<TCommandSource>
 
   private val HELP_DESCRIPTION: Component = Component.text("help command")
   private val VERSION_DESCRIPTION: Component = Component.text("Anvil version command")
@@ -60,24 +66,15 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
     alias: String?,
     subCommands: List<CommandMapping<SimpleCommand<TCommandSource>>>,
   ) {
-    var fAlias = alias ?: "null"
-    sendTextService.send(
+    val fAlias = alias ?: "null"
         Component.text()
-            .append(Component.text("Input command $fAlias was not a valid subcommand!\n").color(NamedTextColor.RED))
+            .append(Component.text("Input command $fAlias was not a valid subcommand!\n").red())
             .append(Component.text("\nAvailable: "))
             .append(Component.text(subCommands.asSequence().map { it.name }.joinToString { ", " }))
-            .build(),
-        source
-    )
-    textService.builder()
-      .red().append("Input command ", alias ?: "null", " was not a valid subcommand!\n")
-      .appendIf(alias != null, alias!!, "\n^")
-      .append("\nAvailable: ")
-      .append(subCommands.asSequence().map { it.name }.joinToString(", "))
-      .sendTo(source)
+            .sendTo(source)
   }
 
-  protected fun TCommandSource.sendNoPermission() = textService.send(noPermission, this)
+  protected fun TCommandSource.sendNoPermission() = noPermission.sendTo(this)
 
   private fun CommandMapping<out SimpleCommand<TCommandSource>>.getFullPath(): String {
     val stack: MutableList<String> = mutableListOf()
@@ -167,23 +164,18 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
   ) : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, context: Array<String>) {
       val isExtended = extended(source)
-      textService.builder()
-        .appendPrefix()
-        .aqua().append("Running version ")
-        .green().append(pluginInfo.version)
-        .aqua().append(" by ")
-        .appendJoining(", ", *pluginInfo.authors)
-        .append("\n")
-        .appendIf(
-          isExtended, textService.builder()
-            .green().append("Use ")
-            .gold().append(helpUsage)
-            .green().append(" for help")
-        )
-        .appendIf(
-          !isExtended, textService.builder()
-            .red().append("You do not have permission for any sub-commands")
-        )
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text(pluginInfo.version).green())
+          .append(Component.text(" by ").aqua())
+          .appendJoining(", ", *pluginInfo.authors)
+          .append("\n")
+          .appendIf(isExtended, Component.text()
+              .append(Component.text("Use ").green())
+              .append(Component.text(helpUsage).gold())
+              .append(Component.text(" for help").green())
+              .build())
+          .appendIf(!isExtended, Component.text("You do not have permission for any sub-commands!").red())
         .sendTo(source)
     }
   }
@@ -194,24 +186,21 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
   ) : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, context: Array<String>) {
       val isExtended = extended(source)
-      textService.builder()
-        .appendPrefix()
-        .aqua().append("Running version ")
-        .green().append(pluginInfo.version)
-        .aqua().append(" by ")
-        .appendJoining(", ", *pluginInfo.authors)
-        .gray().append("\nBuild date: ")
-        .aqua().append(pluginInfo.buildDate, "\n")
-        .appendIf(
-          isExtended, textService.builder()
-            .green().append("Use ")
-            .gold().append(helpUsage)
-            .green().append(" for help")
-        )
-        .appendIf(
-          !isExtended, textService.builder()
-            .red().append("You do not have permission for any sub-commands")
-        )
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("Running version ").aqua())
+          .append(Component.text(pluginInfo.version).green())
+          .append(Component.text(" by ").aqua())
+          .appendJoining(", ", *pluginInfo.authors)
+          .append(Component.text("\nBuild date: ").gray())
+          .append(Component.text("${pluginInfo.buildDate}\n").aqua())
+          .appendIf(isExtended, Component.text()
+              .append(Component.text("Use ").green())
+              .append(Component.text(helpUsage).gold())
+              .append(Component.text(" for help").green())
+              .build()
+          )
+        .appendIf(!isExtended, Component.text("You do not have permission for any sub-commands").red())
         .sendTo(source)
     }
 
@@ -228,25 +217,26 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
           val command = mapping.command
           val fullPath = mapping.getFullPath()
           val otherAliases = mapping.otherAliases
-          val builder = textService.builder().gold().append(fullPath)
-          command.shortDescription(source)?.let { builder.append("- ", it) }
-          command.longDescription(source)?.let { builder.append("\n", it) }
-          builder.gray().append("\nUsage: ", fullPath)
+          val builder = Component.text().append(Component.text(fullPath).gold())
+          command.shortDescription(source)?.let { builder.append(Component.text("- $it")) }
+          command.longDescription(source)?.let { builder.append(Component.text("\n$it")) }
+          builder.append(Component.text("\nUsage: $fullPath").gray())
           command.usage(source)?.let { usage ->
-            builder.appendIf(otherAliases.isNotEmpty(), ", ")
+            builder.appendIf(otherAliases.isNotEmpty(), Component.text(", "))
               .appendJoining(", ", *otherAliases.toTypedArray())
               //Only append a space before the usage if the aliases are empty
-              .appendIf(otherAliases.isNotEmpty(), " ")
+              .appendIf(otherAliases.isNotEmpty(), Component.text(" "))
               .append(usage)
           }
           builder.build()
         }.toList()
-      textService.paginationBuilder()
+      //TODO implement pagination
+      /*textService.paginationBuilder()
         .title(textService.builder().gold().append(pluginInfo.name, " - ", pluginInfo.organizationName).build())
         .padding(textService.builder().dark_green().append("-").build())
         .contents(helpList)
         .build()
-        .sendTo(source)
+        .sendTo(source)*/
     }
 
     override fun shortDescription(source: TCommandSource): Component = HELP_DESCRIPTION
@@ -255,7 +245,7 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
   private inner class ReloadCommand : SimpleCommand<TCommandSource> {
     override fun execute(source: TCommandSource, context: Array<String>) {
       environment.reload()
-      textService.send(successfullyReloaded, source)
+      successfullyReloaded.sendTo(source)
     }
   }
 

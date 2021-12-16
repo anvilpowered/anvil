@@ -23,8 +23,10 @@ import net.kyori.adventure.text.ComponentBuilder
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.util.SendTextService
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 
 
@@ -103,3 +105,4 @@ fun <T> printValueYellow(key: Key<T>, value: T?): Component {
     }
     return builder.build()
 }
+

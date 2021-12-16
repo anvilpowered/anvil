@@ -22,6 +22,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
+import org.anvilpowered.anvil.common.sendTo
 import java.awt.event.ComponentEvent
 import java.util.UUID
 import java.util.function.Consumer
@@ -49,13 +50,13 @@ class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
   override fun execute(source: TCommandSource, context: Array<String>) {
     if (context.isEmpty()) {
-      //textService.send(missingId, source)
+      missingId.sendTo(source)
       return
     }
     val uuid: UUID = try {
       UUID.fromString(context[0])
     } catch (e: IllegalArgumentException) {
-      //textService.send(invalidId, source)
+      invalidId.sendTo(source)
       return
     }
     val callback = CallbackCommandData<TCommandSource>().callbacks[uuid]

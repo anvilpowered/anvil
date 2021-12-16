@@ -25,18 +25,17 @@ import com.google.inject.Module
 import com.google.inject.TypeLiteral
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.TextColor
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.util.AudienceService
+import org.anvilpowered.anvil.api.util.SendTextService
 
 /**
  * A helper class for quickly creating an environment. While not strictly necessary, it can
- * simplify the start up process in most cases.
+ * simplify the start-up process in most cases.
  */
 abstract class BasePlugin {
-    
+
     protected lateinit var environment: Environment
 
     protected constructor(
@@ -62,10 +61,10 @@ abstract class BasePlugin {
     }
 
     protected constructor(
-            name: String,
-            rootInjector: Injector,
-            module: Module,
-            vararg earlyServices: TypeLiteral<*>,
+        name: String,
+        rootInjector: Injector,
+        module: Module,
+        vararg earlyServices: TypeLiteral<*>,
     ) {
         createDefaultBuilder(name, rootInjector, module)
             .addEarlyServices(*earlyServices)
@@ -115,13 +114,16 @@ abstract class BasePlugin {
 
     private fun sendLoaded(status: String) {
         val pluginInfo: PluginInfo = environment.pluginInfo
-        Component.text()
-            .append(pluginInfo.prefix)
+        val sendTextService = environment.injector.getInstance(SendTextService::class.java)
+        sendTextService.sendToConsole(
+            Component.text()
+                .append(pluginInfo.prefix)
                 .append(Component.text(pluginInfo.version).color(NamedTextColor.GREEN))
                 .append(Component.text(" by ").color(NamedTextColor.AQUA))
                 .append(Component.text(pluginInfo.authors.toString()))
                 .append(Component.text(" - $status!"))
-        TODO("Expand AudienceService to encapsulate the SendTextService and expand upon the functionality")
+                .build()
+        )
     }
 
     protected open fun whenLoaded(environment: Environment) {}

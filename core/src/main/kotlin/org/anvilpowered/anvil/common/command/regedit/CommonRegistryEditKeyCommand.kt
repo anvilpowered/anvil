@@ -19,89 +19,93 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Keys
 import kotlin.streams.toList
 
 class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
-  : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
-  @Inject
-  private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
+    @Inject
+    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
-  private val keyActions = listOf("info", "set", "unset", "unstage")
+    private val keyActions = listOf("info", "set", "unset", "unstage")
 
-  private val usage: Component by lazy {
-    textService.builder()
-      .red().append("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]")
-      .build()
-  }
-
-  private val setUsage: Component by lazy {
-    textService.builder()
-      .append(pluginInfo.prefix)
-      .red().append("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>")
-      .build()
-  }
-
-  private fun unknownKey(keyName: String) = textService.builder()
-    .append(pluginInfo.prefix)
-    .red().append("Unknown key: ")
-    .gold().append(keyName)
-    .build()
-
-  private fun String.resolveKey(envName: String): Key<Any>? {
-    return Keys.resolveLocalAndGlobal<Any>(this, envName).orElse(null)
-  }
-
-  override fun execute(source: TCommandSource, context: Array<String>) {
-    val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)]
-    if (stage == null) {
-      textService.send(registryEditRootCommand.notInStage, source)
-      return
-    }
-    textService.send(when (context.size) {
-      0, 1 -> usage
-      2 -> when (val key = context[0].resolveKey(stage.envName)) {
-        null -> unknownKey(context[0])
-        else -> when (context[1]) {
-          "info" -> stage.info(key)
-          "set" -> setUsage
-          "unset" -> stage.addChange(key)
-          "unstage" -> stage.unstageChange(key)
-          else -> usage
-        }
-      }
-      3 -> when (val key = context[0].resolveKey(stage.envName)) {
-        null -> unknownKey(context[0])
-        else -> when (context[1]) {
-          "set" -> {
-            try {
-              stage.addChange(key, key.parse(context[2]))
-            } catch (e: Exception) {
-              textService.builder()
-                .append(pluginInfo.prefix)
-                .red().append("Error: ", e.message ?: "")
-                .build()
-            }
-          }
-          "info", "unset", "unstage" -> textService.builder()
-            .append(pluginInfo.prefix)
-            .red().append("Too many args for ${context[1]}! ", usage)
+    private val usage =
+        Component.text()
+            .append(Component.text("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]")
+                .color(NamedTextColor.RED))
             .build()
-          else -> usage
-        }
-      }
-      else -> usage
-    }, source)
-  }
 
-  override fun suggest(source: TCommandSource, context: Array<String>): List<String> {
-    val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)] ?: return listOf()
-    return when (context.size) {
-      1 -> Keys.getAll(stage.envName).keys.stream().filter { it.startsWith(context[0]) }.toList()
-      2 -> keyActions.stream().filter { it.startsWith(context[1]) }.toList()
-      else -> listOf()
+    private val setUsage =
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>")
+                .color(NamedTextColor.RED))
+            .build()
+
+    private fun unknownKey(keyName: String) =
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("Unknown key: ").color(NamedTextColor.RED))
+            .append(Component.text(keyName).color(NamedTextColor.GOLD))
+            .build()
+
+    private fun String.resolveKey(envName: String): Key<Any>? {
+        return Keys.resolveLocalAndGlobal<Any>(this, envName).orElse(null)
     }
-  }
+
+    override fun execute(source: TCommandSource, context: Array<String>) {
+        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)]
+        if (stage == null) {
+            sendTextService.send(source, registryEditRootCommand.notInStage)
+            return
+        }
+        sendTextService.send(source, when (context.size) {
+            0, 1 -> usage
+            2 -> when (val key = context[0].resolveKey(stage.envName)) {
+                null -> unknownKey(context[0])
+                else -> when (context[1]) {
+                    "info" -> stage.info(key)
+                    "set" -> setUsage
+                    "unset" -> stage.addChange(key)
+                    "unstage" -> stage.unstageChange(key)
+                    else -> usage
+                }
+            }
+            3 -> when (val key = context[0].resolveKey(stage.envName)) {
+                null -> unknownKey(context[0])
+                else -> when (context[1]) {
+                    "set" -> {
+                        try {
+                            stage.addChange(key, key.parse(context[2]))
+                        } catch (e: Exception) {
+                            Component.text()
+                                .append(pluginInfo.prefix)
+                                .append(Component.text("Error: ${e.message ?: ""}").color(NamedTextColor.RED))
+                                .build()
+                        }
+                    }
+                    "info", "unset", "unstage" ->
+                        Component.text()
+                            .append(pluginInfo.prefix)
+                            .append(Component.text("Too many arguments for ${context[1]}! $usage")
+                                .color(NamedTextColor.RED))
+                            .build()
+                    else -> usage
+                }
+            }
+            else -> usage
+        })
+    }
+
+    override fun suggest(source: TCommandSource, context: Array<String>): List<String> {
+        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)] ?: return listOf()
+        return when (context.size) {
+            1 -> Keys.getAll(stage.envName)?.keys?.stream()?.filter { it.startsWith(context[0]) }?.toList() ?: listOf()
+            2 -> keyActions.stream().filter { it.startsWith(context[1]) }.toList()
+            else -> listOf()
+        }
+    }
 }

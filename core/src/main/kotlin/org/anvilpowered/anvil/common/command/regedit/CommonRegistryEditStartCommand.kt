@@ -21,10 +21,13 @@ package org.anvilpowered.anvil.common.command.regedit
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.common.gold
+import org.anvilpowered.anvil.common.red
 import java.util.stream.Collectors
 import java.util.stream.Stream
 import kotlin.streams.toList
@@ -49,17 +52,17 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
       .map { it.name }
       .sorted().collect(Collectors.joining(", "))
 
-  private fun parseEnv(envName: String?): Environment? {
-    return Anvil.environmentManager.getEnvironment(envName).orElse(null)
+  private fun parseEnv(envName: String): Environment? {
+    return Anvil.environmentManager.getEnvironment(envName)
   }
 
   private fun parseEnv(envName: String, then: (Environment) -> Component): Component {
     return parseEnv(envName)?.let { then(it) }
-      ?: textService.builder()
-        .append(pluginInfo.prefix)
-        .red().append("Could not find environment ")
-        .gold().append(envName)
-        .build()
+      ?: Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("Could not find environment ").red())
+          .append(Component.text(envName).gold())
+          .build()
   }
 
   private fun Environment.getRegistries(): Map<String, Registry> {
@@ -84,18 +87,23 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
 
   override fun execute(source: TCommandSource, context: Array<String>) {
     if (context.isEmpty()) {
-      textService.builder()
-        .append(pluginInfo.prefix)
-        .red().append("Please select an environment. Usage: /$anvilAlias regedit select <env>\n")
-        .append("Available environments: ").gold().append(environmentsPrinted)
-        .sendTo(source)
+      sendTextService.send(source,
+      Component.text()
+          .append(pluginInfo.prefix)
+          .append(Component.text("Please select an environment. Usage: /$anvilAlias regedit select <env>\n").red())
+          .append(Component.text("Available environments: $environmentsPrinted").gold())
+          .build()
+      )
       return
     }
-    textService.send(parseEnv(context[0]) {
-      val newStage = Stage(context[0], it.getRegistries().toMutableMap(), it.pluginInfo, textService)
-      registryEditRootCommand.stages[userService.getUUIDSafe(source)] = newStage
-      newStage.print()
-    }, source)
+    sendTextService.send(
+        source,
+        parseEnv(context[0]) {
+          val newStage = Stage<TCommandSource>(context[0], it.getRegistries().toMutableMap(), it.pluginInfo, sendTextService)
+          registryEditRootCommand.stages[userService.getUUIDSafe(source)] = newStage
+          newStage.print()
+        }
+    )
   }
 
   override fun suggest(source: TCommandSource, context: Array<String>): MutableList<String> {

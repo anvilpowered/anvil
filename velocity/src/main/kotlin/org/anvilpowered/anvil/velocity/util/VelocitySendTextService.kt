@@ -23,7 +23,7 @@ import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentBuilder
-import org.anvilpowered.anvil.common.util.SendTextService
+import org.anvilpowered.anvil.api.util.SendTextService
 
 class VelocitySendTextService @Inject constructor(
     proxyServer: ProxyServer,

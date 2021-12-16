@@ -19,15 +19,20 @@
 package org.anvilpowered.anvil.paper.util
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.ComponentBuilder
-import org.anvilpowered.anvil.common.util.SendTextService
+import org.anvilpowered.anvil.api.util.SendTextService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-class PaperSendTextService : SendTextService<CommandSender> {
+class PaperSendTextService : SendTextService {
 
-  override fun CommandSender.send(text: Component) = sendMessage(text)
-  override fun ComponentBuilder<*, *>.sendTo(source: CommandSender) = source.sendMessage(build())
-  override fun ComponentBuilder<*, *>.sendToConsole() = console.sendMessage(build())
-  override val console: CommandSender = Bukkit.getConsoleSender()
+    override fun sendTo(source: Any, component: Component) {
+        if (source is CommandSender || source is Player) {
+            (source as CommandSender).sendMessage(component)
+        }
+    }
+
+    override fun sendToConsole(component: Component) {
+        Bukkit.getConsoleSender().sendMessage(component)
+    }
 }
