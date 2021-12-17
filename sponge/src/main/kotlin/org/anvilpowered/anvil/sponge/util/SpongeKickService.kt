@@ -39,8 +39,19 @@ class SpongeKickService : KickService {
         }
     }
 
-    override fun kick(userUUID: UUID, reason: Any) = userService.getPlayer(userUUID).kick(reason)
-    override fun kick(userName: String, reason: Any) = userService.getPlayer(userName).kick(reason)
-    override fun kick(userUUID: UUID) = userService.getPlayer(userUUID).kick()
-    override fun kick(userName: String) = userService.getPlayer(userName).kick()
+    override fun kick(userUUID: UUID, reason: Any) {
+        userService.getPlayer(userUUID)?.kick(reason as Component)
+    }
+
+    override fun kick(userName: String, reason: Any) {
+        userService.getPlayer(userName)?.kick(reason as Component)
+    }
+
+    override fun kick(userUUID: UUID) {
+        userService.getPlayer(userUUID)?.kick()
+    }
+
+    override fun kick(userName: String) {
+        userService.getPlayer(userName)?.kick()
+    }
 }

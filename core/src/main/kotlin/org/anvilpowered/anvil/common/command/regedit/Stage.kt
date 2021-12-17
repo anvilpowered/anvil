@@ -272,7 +272,7 @@ class Stage<TCommandSource>(
         return print(
             Component.text()
                 .append(Component.text("Successfully unstaged change for ").green())
-                .append(Component.text("$key ${undo("/$anvilAlias regedit key $key set ${key.toString(removed.newValue)}")}"))
+                .append(Component.text("$key ${undo("/$anvilAlias regedit key $key set ${key.toString(removed.newValue!!)}")}"))
                 .build())
     }
 

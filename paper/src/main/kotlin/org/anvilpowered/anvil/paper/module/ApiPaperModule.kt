@@ -59,8 +59,7 @@ class ApiPaperModule : PlatformModule(
             bind<PermissionService>().to<PaperPermissionService>()
             bind<SimpleCommandService<*>>().to<PaperSimpleCommandService>()
             bind<SimpleCommandService<CommandSender>>().to<PaperSimpleCommandService>()
-            bind<SendTextService<*>>().to<PaperSendTextService>()
-            bind<SendTextService<CommandSender>>().to<PaperSendTextService>()
+            bind<SendTextService>().to<PaperSendTextService>()
             bind<UserService<Player, Player>>().to<PaperUserService>()
         }
     }

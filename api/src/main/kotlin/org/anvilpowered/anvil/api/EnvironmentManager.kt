@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.api
 
 
-import java.util.Optional
 import java.util.regex.Pattern
 import java.util.stream.Stream
 

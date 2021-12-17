@@ -26,18 +26,16 @@ import java.util.UUID
 import kotlin.streams.asSequence
 
 class SpongeUserService : CommonUserService<User, ServerPlayer>(User::class.java) {
-    override fun get(userName: String): Optional<User> = Sponge.server().userManager().load(userName).join()
-    override fun get(userUUID: UUID): Optional<User> = Sponge.server().userManager().load(userUUID).join()
-    override fun getPlayer(userName: String): Optional<ServerPlayer> = Sponge.server().player(userName)
-    override fun getPlayer(userUUID: UUID): Optional<ServerPlayer> = Sponge.server().player(userUUID)
-    override fun getPlayer(user: User): Optional<ServerPlayer> = user.player()
+    override val onlinePlayers: Collection<ServerPlayer> = Sponge.server().onlinePlayers()
+    override fun get(userName: String): User? = Sponge.server().userManager().load(userName).join().orElse(null)
+    override fun get(userUUID: UUID): User? = Sponge.server().userManager().load(userUUID).join().orElse(null)
+    override fun getPlayer(userName: String): ServerPlayer? = Sponge.server().player(userName).orElse(null)
+    override fun getPlayer(userUUID: UUID): ServerPlayer? = Sponge.server().player(userUUID).orElse(null)
+    override fun getUUID(user: User): UUID = user.uniqueId()
+    override fun getUserName(user: User): String = user.name()
 
     override fun matchPlayerNames(startsWith: String): List<String> {
         return Sponge.server().userManager().streamOfMatches(startsWith).asSequence()
             .map { it.name().orElse(null) }.filter { it != null }.toList()
     }
-
-    override fun getOnlinePlayers(): Collection<ServerPlayer> = Sponge.server().onlinePlayers()
-    override fun getUUID(user: User): UUID = user.uniqueId()
-    override fun getUserName(user: User): String = user.name()
 }

@@ -58,7 +58,7 @@ object Audiences {
         if (!audienceMap.containsKey(key)) {
             create(key, *audience)
         } else {
-            audienceMap[key] = Audience.audience(audienceMap[key], *audience)
+            audienceMap[key] = Audience.audience(audienceMap[key]!!, *audience)
         }
     }
 }

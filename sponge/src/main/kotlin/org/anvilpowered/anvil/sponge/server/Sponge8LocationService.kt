@@ -35,8 +35,8 @@ class Sponge8LocationService : CommonLocationService() {
   private lateinit var userService: UserService<User, ServerPlayer>
 
   override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
-    val teleporter = userService[teleportingUserUUID].orElse(null)
-    val target = userService[targetUserUUID].orElse(null)
+    val teleporter = userService[teleportingUserUUID]
+    val target = userService[targetUserUUID]
     return CompletableFuture.completedFuture(
       teleporter != null && target != null && teleporter.setLocation(target.worldKey(), target.position())
     )
@@ -48,8 +48,8 @@ class Sponge8LocationService : CommonLocationService() {
       .map { PlainComponentSerializer.plain().serialize(it) }
 
   private fun Optional<User>.getPosition(): Optional<Vector3d> = map { it.position() }
-  override fun getWorldName(userUUID: UUID): String? = userService[userUUID].getWorldName().orElse(null)
-  override fun getWorldName(userName: String): String? = userService[userName].getWorldName().orElse(null)
-  override fun getPosition(userUUID: UUID): Vector3d? = userService[userUUID].getPosition().orElse(null)
-  override fun getPosition(userName: String): Vector3d? = userService[userName].getPosition().orElse(null)
+  override fun getWorldName(userUUID: UUID): String? = userService[userUUID]?.worldKey()?.examinableName()
+  override fun getWorldName(userName: String): String? = userService[userName]?.worldKey()?.examinableName()
+  override fun getPosition(userUUID: UUID): Vector3d? = userService[userUUID]?.position()
+  override fun getPosition(userName: String): Vector3d? = userService[userName]?.position()
 }

@@ -17,7 +17,6 @@
  */
 package org.anvilpowered.anvil.api.coremember
 
-import jetbrains.exodus.entitystore.EntityId
 import org.anvilpowered.anvil.api.datastore.Repository
 import org.anvilpowered.anvil.api.model.coremember.CoreMember
 import java.time.Instant
@@ -92,19 +91,19 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      * @param userUUID [UUID] userUUID of user
      * @return An [Optional] containing a matching [CoreMember] if successful, otherwise [Optional.empty]
      */
-    fun getOneForUser(userUUID: UUID): CompletableFuture<CoreMember<EntityId>?>
+    fun getOneForUser(userUUID: UUID): CompletableFuture<CoreMember<TKey>?>
 
     /**
      * @param userName [String] Name of user
      * @return An [Optional] containing a matching [CoreMember] if successful, otherwise [Optional.empty]
      */
-    fun getOneForUser(userName: String): CompletableFuture<CoreMember<EntityId>?>
+    fun getOneForUser(userName: String): CompletableFuture<CoreMember<TKey>?>
 
     /**
      * @param ipAddress [String] IP Address of user
      * @return A [List] of matching [CoreMember] if successful, otherwise [Optional.empty]
      */
-    fun getForIpAddress(ipAddress: String): CompletableFuture<List<CoreMember<EntityId>>>
+    fun getForIpAddress(ipAddress: String): CompletableFuture<List<CoreMember<TKey>>>
 
     /**
      * Updates the properties `banEndUtc`, `banReason`

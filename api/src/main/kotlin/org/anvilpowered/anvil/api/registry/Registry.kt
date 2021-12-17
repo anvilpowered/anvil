@@ -17,6 +17,7 @@
  */
 package org.anvilpowered.anvil.api.registry
 
+import java.lang.IllegalStateException
 import java.lang.Runnable
 import java.util.function.Function
 
@@ -55,7 +56,7 @@ interface Registry {
   </T> */
   @RegistryScoped
   fun <T> getDefault(key: Key<T>): T {
-    return key.fallbackValue
+    return key.fallbackValue ?: throw IllegalStateException("Fallback value may not be null for ${key.name}")
   }
 
   /**

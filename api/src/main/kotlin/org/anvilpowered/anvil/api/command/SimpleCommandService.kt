@@ -28,7 +28,7 @@ interface SimpleCommandService<TCommandSource> {
    * The definition of the "plugin type" depends on the platform. Here are some examples:
    * <ul>
    *   <li>Spigot - org.bukkit.plugin.java.JavaPlugin</li>
-   *   <li>Sponge - org.spongepowered.api.plugin.PluginContainer</li>
+   *   <li>Sponge - org.spongepowered.plugin.PluginContainer</li>
    *   <li>Velocity - com.velocitypowered.api.plugin</li>
    * </ul>
    * <h3>A few platform-specific tips</h3>

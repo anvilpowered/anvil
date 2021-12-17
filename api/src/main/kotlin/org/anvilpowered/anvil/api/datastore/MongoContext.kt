@@ -19,9 +19,11 @@ package org.anvilpowered.anvil.api.datastore
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import com.mongodb.client.MongoClients
 import dev.morphia.Datastore
 import dev.morphia.Morphia
 import dev.morphia.annotations.Entity
+import dev.morphia.mapping.DateStorage
 import dev.morphia.mapping.MapperOptions
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
@@ -33,7 +35,7 @@ import java.net.URLEncoder
 class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<ObjectId, Datastore>(registry) {
 
   override fun closeConnection(morphia: Datastore) {
-    morphia.
+    morphia.session?.close()
   }
 
   override fun loadDataStore(): Datastore {
@@ -69,7 +71,9 @@ class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<Ob
 
     /* === Establish MongoDB connection === */
     /* === Set class loader to prevent morphia from breaking === */
-    val morphia = Morphia.createDatastore(dbName, MapperOptions.legacy()
+    val client = MongoClients.create(clientUrl)
+    val morphia = Morphia.createDatastore(client, dbName, MapperOptions.legacy()
+        .dateStorage(DateStorage.UTC)
         .classLoader(javaClass.classLoader)
         .build())
     morphia.ensureIndexes()

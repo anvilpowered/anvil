@@ -204,11 +204,11 @@ class EnvironmentBuilderImpl internal constructor() : Environment.Builder {
                 })
                 var injector: Injector? = environment.injector
                 injector = if (injector != null) {
-                    injector.createChildInjector(environment.modules)
+                    injector.createChildInjector(environment.getModules())
                 } else {
-                    Guice.createInjector(environment.modules)
+                    Guice.createInjector(environment.getModules())
                 }
-                environment.setInjector(injector)
+                environment.injector = injector
                 if ("anvil" == environment.name) {
                     Anvil.environment = environment
                     (Anvil.serviceManager as ServiceManagerImpl)

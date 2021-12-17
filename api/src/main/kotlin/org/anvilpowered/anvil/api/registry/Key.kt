@@ -19,6 +19,7 @@ package org.anvilpowered.anvil.api.registry
 
 import com.google.common.reflect.TypeToken
 import org.anvilpowered.anvil.api.misc.Named
+import java.lang.IllegalStateException
 import java.util.function.Function
 
 abstract class Key<T> internal constructor(
@@ -29,14 +30,14 @@ abstract class Key<T> internal constructor(
     sensitive: Boolean,
     description: String?,
     parser: Function<String, T>?,
-    toStringer: Function<T, String>?
+    toStringer: Function<T, String>
 ) : Named, Comparable<Key<T>> {
-    val fallbackValue: T
+    val fallbackValue: T?
     val isUserImmutable: Boolean
-    val isSensitive: Boolean
+    private val isSensitive: Boolean
     val description: String?
-    private val parser: Function<String, T>? = null
-    private val toStringer: Function<T?, String>?
+    private lateinit var parser: Function<String, T>
+    private lateinit var toStringer: Function<T, String>
 
     init {
         this.fallbackValue = fallbackValue
@@ -116,33 +117,42 @@ abstract class Key<T> internal constructor(
         fun build(): Key<T>
     }
 
-    private fun extractParser(value: T?): Function<String, T>? {
-        if (value is String) {
-            return Function { s: String -> s as T }
-        } else if (value is Boolean) {
-            return Function { s: String? -> java.lang.Boolean.valueOf(s) as T }
-        } else if (value is Double) {
-            return Function { s: String? -> java.lang.Double.valueOf(s) as T }
-        } else if (value is Float) {
-            return Function { s: String? -> java.lang.Float.valueOf(s) as T }
-        } else if (value is Long) {
-            return Function { s: String? -> java.lang.Long.valueOf(s) as T }
-        } else if (value is Int) {
-            return Function { s: String? -> Integer.valueOf(s) as T }
-        } else if (value is Short) {
-            return Function { s: String -> s.toShort() as T }
-        } else if (value is Byte) {
-            return Function { s: String? -> java.lang.Byte.valueOf(s) as T }
+    private fun extractParser(value: T?): Function<String, T> {
+        when (value) {
+            is String -> {
+                return Function { s: String -> s as T }
+            }
+            is Boolean -> {
+                return Function { s: String? -> java.lang.Boolean.valueOf(s) as T }
+            }
+            is Double -> {
+                return Function { s: String? -> java.lang.Double.valueOf(s) as T }
+            }
+            is Float -> {
+                return Function { s: String? -> java.lang.Float.valueOf(s) as T }
+            }
+            is Long -> {
+                return Function { s: String? -> java.lang.Long.valueOf(s) as T }
+            }
+            is Int -> {
+                return Function { s: String? -> Integer.valueOf(s) as T }
+            }
+            is Short -> {
+                return Function { s: String -> s.toShort() as T }
+            }
+            is Byte -> {
+                return Function { s: String? -> java.lang.Byte.valueOf(s) as T }
+            }
+            else -> throw IllegalArgumentException("Could not parse $name")
         }
-        return null
     }
 
-    fun parse(value: String): T? {
-        return parser?.apply(value)
+    fun parse(value: String): T {
+        return parser.apply(value)
     }
 
-    fun toString(value: T?): String {
-        return toStringer?.apply(value) ?: value.toString()
+    fun toString(value: T): String {
+        return toStringer.apply(value)
     }
 
     override fun compareTo(o: Key<T>): Int {
@@ -162,7 +172,7 @@ abstract class Key<T> internal constructor(
     }
 
     fun isSensitive(registry: Registry): Boolean {
-        return isSensitive && !registry.get<Boolean?>(Keys.Companion.REGEDIT_ALLOW_SENSITIVE).orElse(false)!!
+        return isSensitive && !registry[Keys.REGEDIT_ALLOW_SENSITIVE]!!
     }
 
     companion object {

@@ -26,6 +26,7 @@ import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.registry.RegistryScope
 import org.anvilpowered.anvil.api.registry.RegistryScoped
 import org.slf4j.Logger
+import java.lang.IllegalStateException
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.stream.Collectors
@@ -58,7 +59,7 @@ open class BaseRegistry : Registry {
 
     override fun <T> getDefault(key: Key<T>): T {
         val result = defaultMap[key] as T?
-        return result ?: key.fallbackValue
+        return result ?: key.fallbackValue ?: throw IllegalStateException("Could not find a default value for ${key.name}")
     }
 
     override fun <T> set(key: Key<T>, value: T) {

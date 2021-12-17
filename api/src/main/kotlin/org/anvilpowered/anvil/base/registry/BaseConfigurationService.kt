@@ -340,7 +340,7 @@ Please note: If this is enabled, the values for above settings in this config fi
         }
     }
 
-    private fun <T> initConfigValue(key: Key<T>, node: CommentedConfigurationNode?, modified: BooleanArray): T? {
+    private fun <T> initConfigValue(key: Key<T>, node: CommentedConfigurationNode, modified: BooleanArray): T? {
         return initConfigValue(key, key.typeToken, node, modified)
     }
 
@@ -353,9 +353,9 @@ Please note: If this is enabled, the values for above settings in this config fi
         typeToken: TypeToken<T>,
         node: CommentedConfigurationNode,
         modified: BooleanArray,
-    ): T ?{
+    ): T? {
         TODO("Fix this method")
-
+/*
         // it ain't pretty but it works
         return if (key != null && typeToken.isSubtypeOf(MutableList::class.java)) {
 
@@ -417,7 +417,8 @@ Please note: If this is enabled, the values for above settings in this config fi
                 e.printStackTrace()
                 null
             }
-        }
+        }*/
+        return null
     }
 
     private fun <T> verify(
