@@ -46,7 +46,7 @@ class Change<T, TCommandSource>(
       : this(stage.registry.second, key, newValue)
 
     fun apply(registry: Registry) {
-      registry[key] = newValue
+      registry[key] = newValue ?: throw IllegalArgumentException("New value may not be null!")
     }
 
     fun <T : Comparable<T>> max(a: T, b: T): T {

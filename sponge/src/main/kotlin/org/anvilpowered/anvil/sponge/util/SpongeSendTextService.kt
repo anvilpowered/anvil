@@ -34,15 +34,11 @@ import org.spongepowered.api.world.server.ServerLocation
 import org.spongepowered.math.vector.Vector3d
 import java.util.Optional
 
-class SpongeSendTextService : SendTextService<CommandCause> {
-
-    override fun CommandCause.send(text: Component) = sendMessage(Identity.nil(), text)
-    override fun ComponentBuilder<*, *>.sendTo(source: CommandCause) = source.send(build())
-    override fun ComponentBuilder<*, *>.sendToConsole() = console.send(build())
+class SpongeSendTextService : SendTextService {
 
     // yes, this is a hack and fundamentally flawed
     // yes, there will be a permanent, correct (and API breaking) fix in the future
-    override val console: CommandCause =
+    private val console: CommandCause =
         object : CommandCause {
             override fun subject(): Subject = Sponge.systemSubject()
             override fun cause(): Cause = Cause.of(EventContext.empty(), subject())
@@ -53,4 +49,14 @@ class SpongeSendTextService : SendTextService<CommandCause> {
             override fun sendMessage(source: Identified, message: Component) = audience().sendMessage(source, message)
             override fun sendMessage(source: Identity, message: Component) = audience().sendMessage(source, message)
         }
+
+    override fun <T> send(source: T, component: Component) {
+        if (source is CommandCause) {
+            source.sendMessage(Identity.nil(), component)
+        }
+    }
+
+    override fun sendToConsole(component: Component) {
+        console.sendMessage(Identity.nil(), component)
+    }
 }

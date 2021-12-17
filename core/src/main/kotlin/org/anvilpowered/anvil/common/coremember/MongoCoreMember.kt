@@ -15,35 +15,26 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.base.model
+package org.anvilpowered.anvil.common.coremember
 
-import dev.morphia.annotations.Id
-import dev.morphia.annotations.PrePersist
-import org.anvilpowered.anvil.api.model.ObjectWithId
+import dev.morphia.annotations.Entity
+import org.anvilpowered.anvil.api.model.coremember.CoreMember
+import org.anvilpowered.anvil.base.model.MongoDbo
 import org.bson.types.ObjectId
 import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
+import java.util.UUID
 
-abstract class MongoDbo : ObjectWithId<ObjectId> {
-
-    @Id
-    private lateinit var id: ObjectId
-    override lateinit var updatedUtc: Instant
-
-    override fun setId(id: ObjectId) {
-        this.id = id
-    }
-
-    override fun getId(): ObjectId {
-        return id
-    }
-
-    override var idAsString: String = id.toHexString()
-    override val createdUtc: Instant = Instant.ofEpochSecond(id.timestamp.toLong())
-
-    @PrePersist
-    private fun prePersist() {
-        updatedUtc = OffsetDateTime.now(ZoneOffset.UTC).toInstant()
-    }
+@Entity("coreMembers")
+class MongoCoreMember : MongoDbo(), CoreMember<ObjectId> {
+    override lateinit var userUUID: UUID
+    override lateinit var userName: String
+    override lateinit var ipAddress: String
+    override lateinit var lastJoinedUtc: Instant
+    override lateinit var nickName: String
+    override var isBanned = false
+    override var isMuted = false
+    override lateinit var banEndUtc: Instant
+    override lateinit var muteEndUtc: Instant
+    override lateinit var banReason: String
+    override lateinit var muteReason: String
 }

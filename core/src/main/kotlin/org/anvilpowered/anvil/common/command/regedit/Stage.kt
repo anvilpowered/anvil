@@ -21,10 +21,20 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.append
+import org.anvilpowered.anvil.api.appendCount
+import org.anvilpowered.anvil.api.appendIf
+import org.anvilpowered.anvil.api.aqua
+import org.anvilpowered.anvil.api.dark_gray
+import org.anvilpowered.anvil.api.gold
+import org.anvilpowered.anvil.api.gray
+import org.anvilpowered.anvil.api.green
 import org.anvilpowered.anvil.api.plugin.PluginInfo
+import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.sendTo
 import org.anvilpowered.anvil.api.util.SendTextService
 
 class Stage<TCommandSource>(
@@ -39,12 +49,13 @@ class Stage<TCommandSource>(
     private val changes: MutableList<Change<*, TCommandSource>> = ArrayList()
     private val availableRegistries: Component
 
-    // TODO("Implement Pagination")
 
-    private val border = textService.builder()
-        .dark_gray().appendCount(15, '=')
-        .append(" [ ").gold().append("Anvil RegEdit")
-        .dark_gray().append(" ] ").appendCount(15, '=')
+    private val border = Component.text()
+        .append(Component.text().appendCount(15, Component.text("=").dark_gray()).build())
+        .append(Component.text(" [ ").dark_gray())
+        .append(Component.text("Anvil RegEdit").gold())
+        .append(Component.text(" ] ").dark_gray())
+        .append(Component.text().appendCount(15, Component.text("=").dark_gray()))
         .build()
 
     private val view = Component.text()
@@ -185,28 +196,28 @@ class Stage<TCommandSource>(
         }
         val reg = registry.second
         if (changes.isEmpty()) {
-                Component.text()
-                    .append(pluginInfo.prefix)
-                    .append(Component.text("You have no changes!").color(NamedTextColor.RED))
-                    .sendTo(source)
+            Component.text()
+                .append(pluginInfo.prefix)
+                .append(Component.text("You have no changes!").color(NamedTextColor.RED))
+                .sendTo(source)
             return false
         }
         changes.forEach { it.apply(reg) }
         if (reg is ConfigurationService) {
             if (reg.save()) {
                 reg.load()
-                    Component.text()
-                        .append(pluginInfo.prefix)
-                        .append(Component.text("Successfully committed and saved ").color(NamedTextColor.GREEN))
-                        .append(Component.text(changes.size).color(NamedTextColor.GOLD))
-                        .append(Component.text(" changes!").color(NamedTextColor.GREEN))
-                        .sendTo(source)
+                Component.text()
+                    .append(pluginInfo.prefix)
+                    .append(Component.text("Successfully committed and saved ").color(NamedTextColor.GREEN))
+                    .append(Component.text(changes.size).color(NamedTextColor.GOLD))
+                    .append(Component.text(" changes!").color(NamedTextColor.GREEN))
+                    .sendTo(source)
             } else {
-                    Component.text()
-                        .append(pluginInfo.prefix)
-                        .append(Component.text("There was an error saving the config!")
-                            .color(NamedTextColor.RED)
-                        ).sendTo(source)
+                Component.text()
+                    .append(pluginInfo.prefix)
+                    .append(Component.text("There was an error saving the config!")
+                        .color(NamedTextColor.RED)
+                    ).sendTo(source)
                 return false
             }
         } else {
@@ -245,11 +256,8 @@ class Stage<TCommandSource>(
         return print(
             Component.text()
                 .append(Component.text("Successfully $action change for ").color(NamedTextColor.GREEN))
-                .append(Component.text())
-            textService.builder()
-            .green().append("Successfully $action change for ")
-            .gold().append(key, " ", textService.undo("/$anvilAlias regedit key $key unstage"))
-            .build())
+                .append(Component.text("$key ${undo("/$anvilAlias regedit key $key unstage")}"))
+                .build())
     }
 
     fun <T> unstageChange(key: Key<T>): Component {
@@ -261,37 +269,39 @@ class Stage<TCommandSource>(
             return noSuchChange
         }
         val removed = changes.removeAt(index) as Change<T, TCommandSource>
-        return print(textService.builder()
-            .green().append("Successfully unstaged change for ")
-            .gold().append(key, " ", textService.undo("/$anvilAlias regedit key $key set ${key.toString(removed.newValue)}"))
-            .build())
+        return print(
+            Component.text()
+                .append(Component.text("Successfully unstaged change for ").green())
+                .append(Component.text("$key ${undo("/$anvilAlias regedit key $key set ${key.toString(removed.newValue)}")}"))
+                .build())
     }
 
     fun print(message: Component? = null): Component {
         if (!::registry.isInitialized) {
-            return textService.builder()
-                .append(border, "\n\n")
-                .green().append("Started a regedit session for ")
-                .gold().append(pluginInfo.name, "\n\n")
-                .gray().append("Please select one of the following registries:\n\n", availableRegistries)
-                .gray().append("\nor ", cancel, "\n\n", border)
+            return Component.text()
+                .append("$border \n\n")
+                .append(Component.text("Started a regedit session for ").green())
+                .append(Component.text("${pluginInfo.name}\n\n").gold())
+                .append(Component.text("Please select one of the following registries:\n\n$availableRegistries").gray())
+                .append(Component.text("\nor $cancel \n\n $border").gray())
                 .build()
         }
-        val builder = textService.builder()
-            .append(border, "\n\n")
-            .appendIf(message != null, message!!, "\n\n")
-            .aqua().append("[ ", registry.first, " ]")
-            .gray().append(" Queued changes:")
+        val builder = Component.text()
+            .append("$border \n\n")
+            .appendIf(message != null, message!!.append(Component.text("\n\n")))
+            .append(Component.text("[ ${registry.first} ]").aqua())
+            .append(Component.text(" Queued changes:").gray())
+
         if (changes.isEmpty()) {
-            builder.red().append(" (none)")
+            builder.append(Component.text(" (none)").red())
         } else {
             builder.append("\n")
             for (change in changes) {
-                builder.append("\n", change.print())
+                builder.append(Component.text("\n").append(change.print()))
             }
         }
-        return builder.gray().append("\n\nPlease select an action:\n\n")
-            .append(view, " ", commit, " ", cancel, "\n\n", border)
+        return builder.append(Component.text("\n\nPlease select an action:\n\n"))
+            .append(Component.text("$view $commit $cancel\n\n$border"))
             .build()
     }
 }

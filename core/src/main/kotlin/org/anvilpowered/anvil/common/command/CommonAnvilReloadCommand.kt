@@ -28,6 +28,7 @@ import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.sendTo
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.jetbrains.annotations.Contract
 import java.util.regex.Pattern
@@ -112,14 +113,13 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
         Component.text()
             .append(pluginInfo.prefix)
             .append(Component.text("Plugin is required if '--all' is not set").color(NamedTextColor.RED))
-            .build()
+            .sendTo(source)
         return false
-      TODO("Implement sendTo")
     }
 
     private fun doRegex(source: TCommandSource, regex: String, reloadedResult: Array<String>): Boolean {
         try {
-            reloadedResult[0] = Anvil.environmentManager
+            reloadedResult[0] = environmentManager
                 .getEnvironmentsAsStream(Pattern.compile(regex))
                 .map(reloadEnvironment)
                 .collect(Collectors.joining(", "))
@@ -129,8 +129,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
                   .append(Component.text("Regex ").color(NamedTextColor.RED))
                   .append(Component.text(regex).color(NamedTextColor.GOLD))
                   .append(Component.text(" did not match any plugins").color(NamedTextColor.RED))
-                  .build()
-              //sendTo source
+                  .sendTo(source)
                 return false
             }
         } catch (e: PatternSyntaxException) {
@@ -138,8 +137,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
               .append(pluginInfo.prefix)
               .append(Component.text("Failed to parse ").color(NamedTextColor.RED))
               .append(Component.text(regex).color(NamedTextColor.GOLD))
-              .build()
-          //sendTo source
+              .sendTo(source)
             return false
         }
         return true
@@ -152,8 +150,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
               .append(pluginInfo.prefix)
               .append(Component.text("Could not find plugin ").color(NamedTextColor.RED))
               .append(Component.text(plugin).color(NamedTextColor.GOLD))
-              .build()
-          //sendTo(source)
+              .sendTo(source)
             return false
         }
         return true
@@ -164,7 +161,6 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
           .append(pluginInfo.prefix)
           .append(Component.text("Successfully reloaded ").color(NamedTextColor.GREEN))
           .append(Component.text(reloadedResult[0]).color(NamedTextColor.GOLD))
-          .build()
-      //sendTo(source)
+          .sendTo(source)
     }
 }

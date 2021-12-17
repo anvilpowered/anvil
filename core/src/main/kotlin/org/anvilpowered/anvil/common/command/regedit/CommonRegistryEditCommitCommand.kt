@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
+import org.anvilpowered.anvil.api.sendTo
 
 class CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>
   : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
@@ -30,7 +31,7 @@ class CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>
     val uuid = userService.getUUIDSafe(source)
     val stage = registryEditRootCommand.stages[uuid]
     if (stage == null) {
-      sendTextService.send(source, registryEditRootCommand.notInStage)
+      registryEditRootCommand.notInStage.sendTo(source)
       return
     }
     if (stage.commit(source)) {

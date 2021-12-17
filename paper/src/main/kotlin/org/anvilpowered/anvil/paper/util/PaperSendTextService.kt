@@ -26,7 +26,7 @@ import org.bukkit.entity.Player
 
 class PaperSendTextService : SendTextService {
 
-    override fun sendTo(source: Any, component: Component) {
+    override fun <T> send(source: T, component: Component) {
         if (source is CommandSender || source is Player) {
             (source as CommandSender).sendMessage(component)
         }

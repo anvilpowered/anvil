@@ -19,6 +19,10 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
+import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.api.green
+import org.anvilpowered.anvil.api.red
+import org.anvilpowered.anvil.api.sendTo
 
 class CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>
   : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
@@ -27,14 +31,14 @@ class CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>
   private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
   override fun execute(source: TCommandSource, context: Array<String>) {
-    val builder = textService.builder().append(pluginInfo.prefix)
+    val builder = Component.text().append(pluginInfo.prefix)
     //TODO I really don't like this "as Any" crap
     val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source as Any))
     if (removed == null) {
-      builder.red().append("Could not find stage")
+      builder.append(Component.text("Could not find stage").red())
     } else {
-      builder.green().append("Successfully cancelled changes. Didn't mean to? ")
-        .append(textService.undo("/$anvilAlias regedit start ${removed.envName}"))
+      builder.append(Component.text("Successfully cancelled changes. Didn't mean to? ").green())
+          .append(undo("/$anvilAlias regedit start ${removed.envName}"))
     }.sendTo(source)
   }
 }

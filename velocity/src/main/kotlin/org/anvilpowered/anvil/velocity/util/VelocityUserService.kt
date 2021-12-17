@@ -21,67 +21,45 @@ import com.google.inject.Inject
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.common.util.CommonUserService
+import java.util.Locale
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.function.Function
 import java.util.stream.Collectors
 
-class VelocityUserService @Inject constructor() : CommonUserService<Player?, Player?>(
-    Player::class.java) {
+class VelocityUserService @Inject constructor() : CommonUserService<Player, Player>(Player::class.java) {
+
     @Inject
-    private val proxyServer: ProxyServer? = null
-    override fun get(userName: String): Optional<Player?>? {
-        return proxyServer!!.getPlayer(userName)
-    }
+    private lateinit var proxyServer: ProxyServer
 
-    override fun get(userUUID: UUID): Optional<Player?>? {
-        return proxyServer!!.getPlayer(userUUID)
-    }
-
-    override fun getPlayer(userName: String): Optional<Player?>? {
-        return get(userName)
-    }
-
-    override fun getPlayer(userUUID: UUID): Optional<Player?>? {
-        return get(userUUID)
-    }
-
-    override fun getPlayer(player: Player): Optional<Player> {
-        return Optional.of(player)
-    }
+    override val onlinePlayers: Collection<Player> = proxyServer.allPlayers
+    override fun getPlayer(userName: String): Player? = get(userName)
+    override fun get(userUUID: UUID): Player? = proxyServer.getPlayer(userUUID).orElse(null)
+    override fun get(userName: String): Player? = proxyServer.getPlayer(userName).orElse(null)
+    override fun getPlayer(userUUID: UUID): Player? = get(userUUID)
+    override fun getUUID(player: Player): UUID = player.uniqueId
+    override fun getUserName(player: Player): String = player.username
 
     override fun matchPlayerNames(startsWith: String): List<String> {
-        val startsWithLowerCase = startsWith.toLowerCase()
+        val startsWithLowerCase = startsWith.lowercase(Locale.getDefault())
         return onlinePlayers.stream()
             .map { obj: Player -> obj.username }
-            .filter { name: String -> name.toLowerCase().startsWith(startsWithLowerCase) }
+            .filter { name: String -> name.lowercase(Locale.getDefault()).startsWith(startsWithLowerCase) }
             .collect(Collectors.toList())
     }
 
-    override fun getOnlinePlayers(): Collection<Player> {
-        return proxyServer!!.allPlayers
-    }
-
-    override fun getUUID(userName: String): CompletableFuture<Optional<UUID>> {
-        val userUUID = getPlayer(userName).map<UUID>(Function { obj: Player -> obj.uniqueId })
-        return if (userUUID.isPresent) {
+    override fun getUUID(userName: String): CompletableFuture<UUID?> {
+        val userUUID = getPlayer(userName)?.uniqueId
+        return if (userUUID != null) {
             CompletableFuture.completedFuture(userUUID)
         } else super.getUUID(userName)
     }
 
-    override fun getUserName(userUUID: UUID): CompletableFuture<Optional<String>> {
-        val userName = getPlayer(userUUID).map<String>(Function { obj: Player -> obj.username })
-        return if (userName.isPresent) {
+    override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
+        val userName = getPlayer(userUUID)?.username
+        return if (userName != null) {
             CompletableFuture.completedFuture(userName)
         } else super.getUserName(userUUID)
-    }
-
-    override fun getUUID(player: Player): UUID {
-        return player.uniqueId
-    }
-
-    override fun getUserName(player: Player): String {
-        return player.username
     }
 }

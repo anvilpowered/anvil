@@ -25,16 +25,21 @@ import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
 import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.api.util.KickService
+import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.PlatformImpl
 import org.anvilpowered.anvil.common.entity.CommonRestrictionService
 import org.anvilpowered.anvil.api.util.SendTextService
+import org.anvilpowered.anvil.common.entity.EntityUtils
+import org.anvilpowered.anvil.common.module.PlatformModule
 import org.anvilpowered.anvil.sponge.command.SpongeCommandExecuteService
 import org.anvilpowered.anvil.sponge.command.SpongeSimpleCommandService
+import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils
 import org.anvilpowered.anvil.sponge.server.Sponge8LocationService
 import org.anvilpowered.anvil.sponge.util.Log4jAdapter
 import org.anvilpowered.anvil.sponge.util.SpongeAudienceService
 import org.anvilpowered.anvil.sponge.util.SpongeKickService
+import org.anvilpowered.anvil.sponge.util.SpongePermissionService
 import org.anvilpowered.anvil.sponge.util.SpongeSendTextService
 import org.anvilpowered.anvil.sponge.util.SpongeUserService
 import org.spongepowered.api.Platform
@@ -43,7 +48,7 @@ import org.spongepowered.api.command.CommandCause
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
-class ApiSpongeModule : ApiSpongeModule(
+class ApiSpongeModule : PlatformModule(
     PlatformImpl(
         "sponge",
         false,
@@ -62,10 +67,7 @@ class ApiSpongeModule : ApiSpongeModule(
         with(binder()) {
             bind<RestrictionService>().to<CommonRestrictionService>()
             bind<UserService<User, ServerPlayer>>().to<SpongeUserService>()
-            bind<SendTextService<CommandCause>>().to<SpongeSendTextService>()
-            bind<SendTextService<*>>().to<SpongeSendTextService>()
-            bind<TextService<CommandCause>>().to<CommonTextService<CommandCause>>()
-            bind<TextService<*>>().to<CommonTextService<*>>()
+            bind<SendTextService>().to<SpongeSendTextService>()
             bind<AudienceService<CommandCause>>().to<SpongeAudienceService>()
             bind<CommandExecuteService>().to<SpongeCommandExecuteService>()
             bind<KickService>().to<SpongeKickService>()

@@ -48,7 +48,7 @@ class SpongePlayerListener {
 
   @Listener
   fun onPlayerJoin(event: ServerSideConnectionEvent.Join) {
-    if (registry.getOrDefault(Keys.PROXY_MODE)) {
+    if (registry.getOrDefault(Keys.PROXY_MODE) == true) {
       return
     }
     coreMemberManager.primaryComponent.getOneOrGenerateForUser(
@@ -60,21 +60,21 @@ class SpongePlayerListener {
 
   @Listener
   fun onMovement(event: MoveEntityEvent) {
-    if (restrictionService.get(event.entity()).movement()) {
+    if (restrictionService[event.entity()].movement()) {
       event.isCancelled = true
     }
   }
 
   @Listener
-  fun onInteraction(event: InteractEvent, @Root entity: Entity?) {
-    if (event is Cancellable && restrictionService.get(entity).interaction()) {
+  fun onInteraction(event: InteractEvent, @Root entity: Entity) {
+    if (event is Cancellable && restrictionService[entity].interaction()) {
       (event as Cancellable).isCancelled = true
     }
   }
 
   @Listener
   fun onInventory(event: ChangeInventoryEvent, @Root player: Player) {
-    if (restrictionService.get(player.uniqueId()).inventory()
+    if (restrictionService[player.uniqueId()].inventory()
     ) {
       (event as Cancellable).isCancelled = true
     }
@@ -82,15 +82,15 @@ class SpongePlayerListener {
 
   @Listener
   fun onCommands(event: ExecuteCommandEvent.Pre, @Root player: Player) {
-    if (restrictionService.get(player.uniqueId()).commands()) {
+    if (restrictionService[player.uniqueId()].commands()) {
       event.isCancelled = true
     }
   }
 
   @Listener
   fun onDamage(event: DamageEntityEvent, @Root source: DamageSource?) {
-    if (restrictionService.get(event.entity()).damage() || (source is EntityDamageSource
-        && restrictionService.get(source.source()).damage())
+    if (restrictionService[event.entity()].damage() || (source is EntityDamageSource
+        && restrictionService[source.source()].damage())
     ) {
       event.isCancelled = true
     }

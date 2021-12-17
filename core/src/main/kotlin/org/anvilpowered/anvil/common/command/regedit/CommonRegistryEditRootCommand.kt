@@ -20,6 +20,8 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.red
+import org.anvilpowered.anvil.api.sendTo
 import java.util.UUID
 
 class CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
@@ -31,10 +33,10 @@ class CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
         Component.text()
             .append(pluginInfo.prefix)
             .append(Component.text("You are not currently in a regedit session. Use /$anvilAlias regedit help")
-                .color(NamedTextColor.RED))
+                .red())
             .build()
 
     override fun execute(source: TCommandSource, context: Array<String>) {
-      sendTextService.send(source, stages[userService.getUUIDSafe(source)]?.print() ?: notInStage)
+        stages[userService.getUUIDSafe(source)]?.print()?.sendTo(source) ?: notInStage.sendTo(source)
     }
 }

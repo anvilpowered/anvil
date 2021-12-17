@@ -57,9 +57,9 @@ class AnvilSponge @Inject constructor(
         EnvironmentBuilderImpl.completeInitialization(ApiSpongeModule(), SpongeFallbackModule())
         Sponge.eventManager().registerListeners(
             plugin,
-            Anvil.getEnvironment().injector.getInstance(SpongePlayerListener::class.java)
+            Anvil.environment?.injector?.getInstance(SpongePlayerListener::class.java)
         )
-        Anvil.environment.injector.getInstance(SpongeSimpleCommandService::class.java).onRegister(registrationEvent)
+        Anvil.environment?.injector?.getInstance(SpongeSimpleCommandService::class.java)?.onRegister(registrationEvent)
     }
 
     override fun applyToBuilder(builder: Environment.Builder) {

@@ -27,7 +27,7 @@ import org.anvilpowered.anvil.api.registry.RegistryScope
  * A registry that is backed by the configuration service
  */
 @Singleton
-class BaseExtendedRegistry : BaseRegistry() {
+open class BaseExtendedRegistry : BaseRegistry() {
 
     @Inject
     protected lateinit var configurationService: ConfigurationService

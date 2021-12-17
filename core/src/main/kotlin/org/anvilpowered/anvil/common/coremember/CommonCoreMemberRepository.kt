@@ -18,13 +18,12 @@
 package org.anvilpowered.anvil.common.coremember
 
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
-import org.anvilpowered.anvil.base.datastore.BaseRepository
 import org.anvilpowered.anvil.api.model.coremember.CoreMember
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
+import org.anvilpowered.anvil.base.datastore.BaseRepository
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.util.Optional
+import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 abstract class CommonCoreMemberRepository<TKey, TDataStore> : BaseRepository<TKey, CoreMember<TKey>, TDataStore>(), CoreMemberRepository<TKey, TDataStore> {
 
@@ -35,15 +34,17 @@ abstract class CommonCoreMemberRepository<TKey, TDataStore> : BaseRepository<TKe
     }
 
     override fun checkBanned(coreMember: CoreMember<*>): Boolean {
-        if (coreMember.isBanned && coreMember.banEndUtc!!.isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
+        if (coreMember.isBanned && coreMember.banEndUtc.isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
             return true
         } else if (coreMember.isBanned) {
-            unBanUser(coreMember.userUUID!!)
+            unBanUser(coreMember.userUUID)
         }
         return false
     }
 
-    override fun checkBanned(id: TKey): CompletableFuture<Boolean> = getOne(id).thenApplyAsync { checkBanned(it) }
+    override fun checkBanned(id: TKey): CompletableFuture<Boolean> = getOne(id).thenApplyAsync {
+        checkBanned(it ?: return@thenApplyAsync false)
+    }
 
     override fun checkBannedForUser(userUUID: UUID): CompletableFuture<Boolean> {
         return getOneForUser(userUUID).thenApply {
@@ -64,15 +65,17 @@ abstract class CommonCoreMemberRepository<TKey, TDataStore> : BaseRepository<TKe
     }
 
     override fun checkMuted(coreMember: CoreMember<*>): Boolean {
-        if (coreMember.isMuted && coreMember.muteEndUtc!!.isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
+        if (coreMember.isMuted && coreMember.muteEndUtc.isAfter(OffsetDateTime.now(ZoneOffset.UTC).toInstant())) {
             return true
         } else if (coreMember.isMuted) {
-            unMuteUser(coreMember.userUUID!!)
+            unMuteUser(coreMember.userUUID)
         }
         return false
     }
 
-    override fun checkMuted(id: TKey): CompletableFuture<Boolean> = getOne(id).thenApplyAsync { checkMuted(it) }
+    override fun checkMuted(id: TKey): CompletableFuture<Boolean> = getOne(id).thenApplyAsync {
+        checkMuted(it ?: return@thenApplyAsync false)
+    }
 
     override fun checkMutedForUser(userUUID: UUID): CompletableFuture<Boolean> {
         return getOneForUser(userUUID).thenApplyAsync {

@@ -22,54 +22,52 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.common.sendTo
-import java.awt.event.ComponentEvent
+import org.anvilpowered.anvil.api.sendTo
 import java.util.UUID
 import java.util.function.Consumer
 
 class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
-  @Inject
-  private lateinit var pluginInfo: PluginInfo
+    @Inject
+    private lateinit var pluginInfo: PluginInfo
 
-  private val missingId: Component =
-      Component.text()
-          .append(pluginInfo.prefix)
-          .append(Component.text("Missing callback id").color(NamedTextColor.RED))
-          .build()
+    private val missingId: Component =
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("Missing callback id").color(NamedTextColor.RED))
+            .build()
 
-  private val invalidId: Component =
-      Component.text()
-          .append(pluginInfo.prefix)
-          .append(Component.text("Callback id must be a valid UUID").color(NamedTextColor.RED))
-          .build()
+    private val invalidId: Component =
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("Callback id must be a valid UUID").color(NamedTextColor.RED))
+            .build()
 
-  fun addCallback(uuid: UUID, callback: Consumer<TCommandSource>) {
-    CallbackCommandData<TCommandSource>().callbacks[uuid] = callback::accept
-  }
-
-  override fun execute(source: TCommandSource, context: Array<String>) {
-    if (context.isEmpty()) {
-      missingId.sendTo(source)
-      return
+    fun addCallback(uuid: UUID, callback: Consumer<TCommandSource>) {
+        CallbackCommandData<TCommandSource>().callbacks[uuid] = callback::accept
     }
-    val uuid: UUID = try {
-      UUID.fromString(context[0])
-    } catch (e: IllegalArgumentException) {
-      invalidId.sendTo(source)
-      return
+
+    override fun execute(source: TCommandSource, context: Array<String>) {
+        if (context.isEmpty()) {
+            missingId.sendTo(source)
+            return
+        }
+        val uuid: UUID = try {
+            UUID.fromString(context[0])
+        } catch (e: IllegalArgumentException) {
+            invalidId.sendTo(source)
+            return
+        }
+        val callback = CallbackCommandData<TCommandSource>().callbacks[uuid]
+        if (callback == null) {
+            Component.text()
+                .append(pluginInfo.prefix)
+                .append(Component.text("Callback id ").color(NamedTextColor.RED))
+                .append(Component.text(uuid.toString()).color(NamedTextColor.GOLD))
+                .append(Component.text(" does not match any callbacks").color(NamedTextColor.RED))
+                .sendTo(source)
+            return
+        }
+        callback(source)
     }
-    val callback = CallbackCommandData<TCommandSource>().callbacks[uuid]
-    if (callback == null) {
-      Component.text()
-          .append(pluginInfo.prefix)
-          .append(Component.text("Callback id ").color(NamedTextColor.RED))
-          .append(Component.text(uuid.toString()).color(NamedTextColor.GOLD))
-          .append(Component.text(" does not match any callbacks").color(NamedTextColor.RED))
-          .build()
-      //sendTo(source)
-      return
-    }
-    callback(source)
-  }
 }

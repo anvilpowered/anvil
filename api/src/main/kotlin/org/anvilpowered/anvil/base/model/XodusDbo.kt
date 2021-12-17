@@ -26,7 +26,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 abstract class XodusDbo protected constructor() : ObjectWithId<EntityId>, Mappable<Entity> {
-    private var id: EntityId? = null
+    private lateinit var id: EntityId
     private var createdUtcSeconds: Long
     private var createdUtcNanos: Int
     private var updatedUtcSeconds: Long = 0
@@ -40,7 +40,7 @@ abstract class XodusDbo protected constructor() : ObjectWithId<EntityId>, Mappab
     }
 
     override fun getId(): EntityId {
-        return id!!
+        return id
     }
 
     override fun setId(id: EntityId) {

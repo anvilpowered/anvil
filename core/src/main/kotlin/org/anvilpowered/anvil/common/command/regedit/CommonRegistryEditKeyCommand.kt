@@ -20,8 +20,11 @@ package org.anvilpowered.anvil.common.command.regedit
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.gold
+import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Keys
+import org.anvilpowered.anvil.api.sendTo
 import kotlin.streams.toList
 
 class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
@@ -34,22 +37,20 @@ class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
 
     private val usage =
         Component.text()
-            .append(Component.text("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]")
-                .color(NamedTextColor.RED))
+            .append(Component.text("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]").red())
             .build()
 
     private val setUsage =
         Component.text()
             .append(pluginInfo.prefix)
-            .append(Component.text("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>")
-                .color(NamedTextColor.RED))
+            .append(Component.text("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>").red())
             .build()
 
     private fun unknownKey(keyName: String) =
         Component.text()
             .append(pluginInfo.prefix)
-            .append(Component.text("Unknown key: ").color(NamedTextColor.RED))
-            .append(Component.text(keyName).color(NamedTextColor.GOLD))
+            .append(Component.text("Unknown key: ").red())
+            .append(Component.text(keyName).gold())
             .build()
 
     private fun String.resolveKey(envName: String): Key<Any>? {
@@ -59,10 +60,10 @@ class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
     override fun execute(source: TCommandSource, context: Array<String>) {
         val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)]
         if (stage == null) {
-            sendTextService.send(source, registryEditRootCommand.notInStage)
+            registryEditRootCommand.notInStage.sendTo(source)
             return
         }
-        sendTextService.send(source, when (context.size) {
+        when (context.size) {
             0, 1 -> usage
             2 -> when (val key = context[0].resolveKey(stage.envName)) {
                 null -> unknownKey(context[0])
@@ -97,7 +98,7 @@ class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
                 }
             }
             else -> usage
-        })
+        }.sendTo(source)
     }
 
     override fun suggest(source: TCommandSource, context: Array<String>): List<String> {

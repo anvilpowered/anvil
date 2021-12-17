@@ -20,7 +20,8 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.red
+import org.anvilpowered.anvil.api.sendTo
 import kotlin.streams.toList
 
 class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
@@ -31,20 +32,17 @@ class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
 
     private val usage = Component.text()
         .append(pluginInfo.prefix)
-        .append(Component.text("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>")
-            .color(NamedTextColor.RED))
+        .append(Component.text("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>").red())
         .build()
 
     override fun execute(source: TCommandSource, context: Array<String>) {
         val uuid = userService.getUUIDSafe(source)
         val stage = registryEditRootCommand.stages[uuid]
-        sendTextService.send(source,
-            when {
-                stage == null -> registryEditRootCommand.notInStage
-                context.size == 1 -> stage.setRegistry(context[0])
-                else -> usage
-            }
-        )
+        when {
+            stage == null -> registryEditRootCommand.notInStage
+            context.size == 1 -> stage.setRegistry(context[0])
+            else -> usage
+        }.sendTo(source)
     }
 
     override fun suggest(source: TCommandSource, context: Array<String>): List<String> {

@@ -39,7 +39,7 @@ class VelocityPlayerListener @Inject constructor(
 
   @Subscribe
   fun onPlayerJoin(event: LoginEvent) {
-    if (registry.getOrDefault(Keys.PROXY_MODE)) {
+    if (registry.getOrDefault(Keys.PROXY_MODE) == true) {
       return
     }
     val player = event.player
@@ -48,11 +48,10 @@ class VelocityPlayerListener @Inject constructor(
         player.uniqueId,
         player.username,
         player.remoteAddress.hostString
-      ).thenAcceptAsync { optionalMember ->
-        if (!optionalMember.isPresent) {
+      ).thenAcceptAsync { member ->
+        if (member == null) {
           return@thenAcceptAsync
         }
-        val member: CoreMember<*> = optionalMember.get()
         if (coreMemberManager.primaryComponent.checkBanned(member)) {
           player.disconnect(
             pluginMessages.getBanMessage(member.banReason, member.banEndUtc)
@@ -64,18 +63,17 @@ class VelocityPlayerListener @Inject constructor(
 
   @Subscribe
   fun onPlayerChat(event: PlayerChatEvent) {
-    if (registry.getOrDefault(Keys.PROXY_MODE)) {
+    if (registry.getOrDefault(Keys.PROXY_MODE) == true) {
       return
     }
     val player = event.player
     coreMemberManager.primaryComponent
       .getOneForUser(
         player.uniqueId
-      ).thenAcceptAsync { optionalMember ->
-        if (!optionalMember.isPresent) {
+      ).thenAcceptAsync { member ->
+        if (member == null) {
           return@thenAcceptAsync
         }
-        val member: CoreMember<*> = optionalMember.get()
         if (coreMemberManager.primaryComponent.checkMuted(member)) {
           event.result = PlayerChatEvent.ChatResult.denied()
           player.sendMessage(

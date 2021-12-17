@@ -23,6 +23,7 @@ import com.google.inject.Injector
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.Platform
+import java.lang.IllegalStateException
 
 class PlatformImpl(
   override val name: String,
@@ -31,7 +32,7 @@ class PlatformImpl(
   private val loggerBinder: ((Environment, Binder) -> Unit)? = null,
 ) : Platform {
 
-  private val versionStringKt: String by lazy { versionFetcher(Anvil.getEnvironment().injector) }
+  private val versionStringKt: String by lazy { versionFetcher(Anvil.environment?.injector ?: throw IllegalStateException("Injector may not be null!")) }
 
   fun bindLoggerOptionally(environment: Environment, binder: Binder) = loggerBinder?.let { it(environment, binder) }
 

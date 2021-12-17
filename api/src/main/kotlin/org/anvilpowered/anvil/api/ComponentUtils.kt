@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.common
+package org.anvilpowered.anvil.api
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentBuilder
@@ -14,6 +14,14 @@ fun <T> ComponentBuilder<*, *>.sendTo(source: T) {
 
 fun <T> Component.sendTo(source: T) {
     Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.send(source, this)
+}
+
+
+fun ComponentBuilder<*, *>.appendCount(count: Int, contents: Component): ComponentBuilder<*, *> {
+    for (i in 0..count) {
+        this.append(contents)
+    }
+    return this
 }
 
 fun ComponentBuilder<*, *>.appendJoining(delimiter: Any, vararg contents: Any): ComponentBuilder<*,*> {
