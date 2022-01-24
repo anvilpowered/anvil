@@ -6,5 +6,5 @@ import java.util.UUID
 @Singleton
 open class CallbackCommandData<TCommandSource> {
 
-  val callbacks: MutableMap<UUID, (TCommandSource) -> Unit> = mutableMapOf()
+    val callbacks: MutableMap<UUID, (TCommandSource) -> Unit> = mutableMapOf()
 }

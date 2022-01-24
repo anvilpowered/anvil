@@ -1,19 +1,35 @@
+/*
+ *   Anvil - AnvilPowered
+ *   Copyright (C) 2020-2021
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.anvilpowered.anvil.api
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentBuilder
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.util.SendTextService
 
 
 fun <T> ComponentBuilder<*, *>.sendTo(source: T) {
-    Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.send(source, build())
+    Anvil.getEnvironment()?.injector?.getInstance(SendTextService::class.java)?.send(source, build())
 }
 
 fun <T> Component.sendTo(source: T) {
-    Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.send(source, this)
+    Anvil.getEnvironment()?.injector?.getInstance(SendTextService::class.java)?.send(source, this)
 }
 
 
@@ -24,7 +40,7 @@ fun ComponentBuilder<*, *>.appendCount(count: Int, contents: Component): Compone
     return this
 }
 
-fun ComponentBuilder<*, *>.appendJoining(delimiter: Any, vararg contents: Any): ComponentBuilder<*,*> {
+fun ComponentBuilder<*, *>.appendJoining(delimiter: Any, vararg contents: Any): ComponentBuilder<*, *> {
     var delim = delimiter
     if (!(delimiter is Component || delimiter is ComponentBuilder<*, *>)) {
         delim = Component.text(delimiter.toString())
@@ -48,7 +64,7 @@ fun ComponentBuilder<*, *>.appendJoining(delimiter: Any, vararg contents: Any): 
 }
 
 fun ComponentBuilder<*, *>.appendIf(condition: Boolean, contents: Component): ComponentBuilder<*, *> {
-    return if(condition) {
+    return if (condition) {
         append(contents)
     } else this
 }
@@ -227,7 +243,8 @@ fun ComponentBuilder<*, *>.bold(): ComponentBuilder<*, *> {
     this.decorate(TextDecoration.BOLD)
     return this
 }
-fun Component.bold():Component {
+
+fun Component.bold(): Component {
     this.decorate(TextDecoration.BOLD)
     return this
 }

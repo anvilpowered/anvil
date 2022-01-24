@@ -17,53 +17,53 @@
  */
 package org.anvilpowered.anvil.api.datastore
 
-import java.util.concurrent.CompletableFuture
-import java.time.Instant
-import org.anvilpowered.anvil.api.model.ObjectWithId
+import jetbrains.exodus.entitystore.Entity
 import jetbrains.exodus.entitystore.EntityId
 import jetbrains.exodus.entitystore.PersistentEntityStore
 import jetbrains.exodus.entitystore.StoreTransaction
-import jetbrains.exodus.entitystore.Entity
+import org.anvilpowered.anvil.api.model.ObjectWithId
+import java.time.Instant
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import java.util.function.Function
 
 interface XodusRepository<T : ObjectWithId<EntityId>> : Repository<EntityId, T, PersistentEntityStore> {
-  fun iterator(
-    query: Function<in StoreTransaction, out Iterable<Entity>>
-  ): Iterator<T>
+    fun iterator(
+        query: Function<in StoreTransaction, out Iterable<Entity>>
+    ): Iterator<T>
 
-  fun getAll(
-    query: Function<in StoreTransaction, out Iterable<Entity>>
-  ): CompletableFuture<List<T>>
+    fun getAll(
+        query: Function<in StoreTransaction, out Iterable<Entity>>
+    ): CompletableFuture<List<T>>
 
-  fun getOne(
-    query: Function<in StoreTransaction, out Iterable<Entity>>
-  ): CompletableFuture<T?>
+    fun getOne(
+        query: Function<in StoreTransaction, out Iterable<Entity>>
+    ): CompletableFuture<T?>
 
-  fun delete(
-    query: Function<in StoreTransaction, out Iterable<Entity>>
-  ): CompletableFuture<Boolean>
+    fun delete(
+        query: Function<in StoreTransaction, out Iterable<Entity>>
+    ): CompletableFuture<Boolean>
 
-  fun update(
-    query: Function<in StoreTransaction, out Iterable<Entity>>,
-    update: Consumer<in Entity>
-  ): CompletableFuture<Boolean>
+    fun update(
+        query: Function<in StoreTransaction, out Iterable<Entity>>,
+        update: Consumer<in Entity>
+    ): CompletableFuture<Boolean>
 
-  fun update(
-    optionalQuery: Optional<Function<in StoreTransaction, out Iterable<Entity>>>,
-    update: Consumer<in Entity>
-  ): CompletableFuture<Boolean>
+    fun update(
+        optionalQuery: Optional<Function<in StoreTransaction, out Iterable<Entity>>>,
+        update: Consumer<in Entity>
+    ): CompletableFuture<Boolean>
 
-  fun asQuery(
-    id: EntityId
-  ): Function<in StoreTransaction, out Iterable<Entity>>
+    fun asQuery(
+        id: EntityId
+    ): Function<in StoreTransaction, out Iterable<Entity>>
 
-  fun asQuery(
-    createdUtc: Instant
-  ): Function<in StoreTransaction, out Iterable<Entity>>
+    fun asQuery(
+        createdUtc: Instant
+    ): Function<in StoreTransaction, out Iterable<Entity>>
 
-  fun asQueryForIdOrTime(
-    idOrTime: String
-  ): Function<in StoreTransaction, out Iterable<Entity>>?
+    fun asQueryForIdOrTime(
+        idOrTime: String
+    ): Function<in StoreTransaction, out Iterable<Entity>>?
 }

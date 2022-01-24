@@ -28,10 +28,10 @@ import org.anvilpowered.anvil.common.plugin.FallbackPluginInfo
 
 @Suppress("UnstableApiUsage")
 abstract class FallbackModule<TCommandSource> : AbstractModule() {
-  override fun configure() {
-    with(binder()) {
-      bind<PluginInfo>().to<FallbackPluginInfo>(declaring = this@FallbackModule)
-      bind<Registry>().to<BaseRegistry>()
+    override fun configure() {
+        with(binder()) {
+            bind<PluginInfo>().to<FallbackPluginInfo>(declaring = this@FallbackModule)
+            bind<Registry>().to<BaseRegistry>()
+        }
     }
-  }
 }

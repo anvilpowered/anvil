@@ -30,25 +30,25 @@ import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages
 
 abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> : SimpleCommand<TCommandSource> {
 
-  @Inject
-  protected lateinit var registry: Registry
+    @Inject
+    protected lateinit var registry: Registry
 
-  @Inject
-  protected lateinit var permissionService: PermissionService
+    @Inject
+    protected lateinit var permissionService: PermissionService
 
-  @Inject
-  protected lateinit var pluginInfo: PluginInfo
+    @Inject
+    protected lateinit var pluginInfo: PluginInfo
 
-  @Inject
-  protected lateinit var pluginMessages: AnvilPluginMessages
+    @Inject
+    protected lateinit var pluginMessages: AnvilPluginMessages
 
-  @Inject
-  protected lateinit var userService: UserService<TUser, TPlayer>
+    @Inject
+    protected lateinit var userService: UserService<TUser, TPlayer>
 
-  @Inject
-  protected lateinit var sendTextService: SendTextService
+    @Inject
+    protected lateinit var sendTextService: SendTextService
 
-  override fun canExecute(source: TCommandSource): Boolean {
-    return permissionService.hasPermission(source, registry.getOrDefault(Keys.REGEDIT_PERMISSION))
-  }
+    override fun canExecute(source: TCommandSource): Boolean {
+        return permissionService.hasPermission(source, registry.getOrDefault(Keys.REGEDIT_PERMISSION))
+    }
 }

@@ -32,7 +32,6 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
-import java.util.function.Consumer
 import java.util.function.Function
 
 class CommonXodusCoreMemberRepository

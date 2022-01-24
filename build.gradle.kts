@@ -14,7 +14,7 @@ subprojects {
         maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://repo.spongepowered.org/repository/maven-public/")
         maven("https://packages.jetbrains.team/maven/p/xodus/xodus-daily")
-        maven("https://dl.bintray.com/kotlin/kotlinx")
+        maven("https://papermc.io/repo/repository/maven-public/")
     }
     project.findProperty("buildNumber")
         ?.takeIf { version.toString().contains("SNAPSHOT") }

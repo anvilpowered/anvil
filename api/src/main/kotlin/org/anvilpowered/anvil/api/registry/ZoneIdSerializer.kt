@@ -20,18 +20,18 @@ package org.anvilpowered.anvil.api.registry
 import java.time.ZoneId
 
 open class ZoneIdSerializer {
-  companion object {
-    private const val AUTO = "auto"
-    fun parse(input: String?): ZoneId {
-      return if (input == null || AUTO == input) {
-        ZoneId.systemDefault()
-      } else {
-        ZoneId.of(input)
-      }
-    }
+    companion object {
+        private const val AUTO = "auto"
+        fun parse(input: String?): ZoneId {
+            return if (input == null || AUTO == input) {
+                ZoneId.systemDefault()
+            } else {
+                ZoneId.of(input)
+            }
+        }
 
-    fun toString(zoneId: ZoneId?): String {
-      return if (zoneId == null || zoneId == ZoneId.systemDefault()) AUTO else zoneId.id
+        fun toString(zoneId: ZoneId?): String {
+            return if (zoneId == null || zoneId == ZoneId.systemDefault()) AUTO else zoneId.id
+        }
     }
-  }
 }

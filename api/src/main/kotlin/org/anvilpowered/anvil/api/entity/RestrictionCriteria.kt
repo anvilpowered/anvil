@@ -20,235 +20,235 @@ package org.anvilpowered.anvil.api.entity
 import com.google.common.base.MoreObjects
 
 class RestrictionCriteria(
-  /**
-   * Prevents entity movement. This includes all movement keys (WASD + space) in addition to external influences.
-   */
-  private val movement: Boolean,
-  /**
-   * Prevents all interactions that occurs as the result of a right-click.
-   */
-  private val interaction: Boolean,
-  /**
-   * Prevents all inventory transactions.
-   */
-  private val inventory: Boolean,
-  /**
-   * Prevents all commands.
-   */
-  private val commands: Boolean,
-  /**
-   * Prevents damage dealt and taken.
-   */
-  private val damage: Boolean
+    /**
+     * Prevents entity movement. This includes all movement keys (WASD + space) in addition to external influences.
+     */
+    private val movement: Boolean,
+    /**
+     * Prevents all interactions that occurs as the result of a right-click.
+     */
+    private val interaction: Boolean,
+    /**
+     * Prevents all inventory transactions.
+     */
+    private val inventory: Boolean,
+    /**
+     * Prevents all commands.
+     */
+    private val commands: Boolean,
+    /**
+     * Prevents damage dealt and taken.
+     */
+    private val damage: Boolean
 ) {
-  class Builder {
-    private var movement = false
-    private var interaction = false
-    private var inventory = false
-    private var commands = false
-    private var damage = false
-    fun movement(movement: Boolean): Builder {
-      this.movement = movement
-      return this
+    class Builder {
+        private var movement = false
+        private var interaction = false
+        private var inventory = false
+        private var commands = false
+        private var damage = false
+        fun movement(movement: Boolean): Builder {
+            this.movement = movement
+            return this
+        }
+
+        fun interaction(interaction: Boolean): Builder {
+            this.interaction = interaction
+            return this
+        }
+
+        fun inventory(inventory: Boolean): Builder {
+            this.inventory = inventory
+            return this
+        }
+
+        fun commands(commands: Boolean): Builder {
+            this.commands = commands
+            return this
+        }
+
+        fun damage(damage: Boolean): Builder {
+            this.damage = damage
+            return this
+        }
+
+        fun build(): RestrictionCriteria {
+            return RestrictionCriteria(
+                movement,
+                interaction,
+                inventory,
+                commands,
+                damage
+            )
+        }
     }
 
-    fun interaction(interaction: Boolean): Builder {
-      this.interaction = interaction
-      return this
+    fun union(criteria: RestrictionCriteria): RestrictionCriteria {
+        val movement = movement || criteria.movement
+        val interaction = interaction || criteria.interaction
+        val inventory = inventory || criteria.inventory
+        val commands = commands || criteria.commands
+        val damage = damage || criteria.damage
+        return RestrictionCriteria(
+            movement,
+            interaction,
+            inventory,
+            commands,
+            damage
+        )
     }
 
-    fun inventory(inventory: Boolean): Builder {
-      this.inventory = inventory
-      return this
+    fun intersect(criteria: RestrictionCriteria): RestrictionCriteria {
+        val movement = movement && criteria.movement
+        val interaction = interaction && criteria.interaction
+        val inventory = inventory && criteria.inventory
+        val commands = commands && criteria.commands
+        val damage = damage && criteria.damage
+        return RestrictionCriteria(
+            movement,
+            interaction,
+            inventory,
+            commands,
+            damage
+        )
     }
 
-    fun commands(commands: Boolean): Builder {
-      this.commands = commands
-      return this
+    fun hasAll(): Boolean {
+        return (movement
+            && interaction
+            && inventory
+            && commands
+            && damage)
     }
 
-    fun damage(damage: Boolean): Builder {
-      this.damage = damage
-      return this
+    fun hasAny(): Boolean {
+        return (movement
+            || interaction
+            || inventory
+            || commands
+            || damage)
     }
 
-    fun build(): RestrictionCriteria {
-      return RestrictionCriteria(
-        movement,
-        interaction,
-        inventory,
-        commands,
-        damage
-      )
-    }
-  }
-
-  fun union(criteria: RestrictionCriteria): RestrictionCriteria {
-    val movement = movement || criteria.movement
-    val interaction = interaction || criteria.interaction
-    val inventory = inventory || criteria.inventory
-    val commands = commands || criteria.commands
-    val damage = damage || criteria.damage
-    return RestrictionCriteria(
-      movement,
-      interaction,
-      inventory,
-      commands,
-      damage
-    )
-  }
-
-  fun intersect(criteria: RestrictionCriteria): RestrictionCriteria {
-    val movement = movement && criteria.movement
-    val interaction = interaction && criteria.interaction
-    val inventory = inventory && criteria.inventory
-    val commands = commands && criteria.commands
-    val damage = damage && criteria.damage
-    return RestrictionCriteria(
-      movement,
-      interaction,
-      inventory,
-      commands,
-      damage
-    )
-  }
-
-  fun hasAll(): Boolean {
-    return (movement
-      && interaction
-      && inventory
-      && commands
-      && damage)
-  }
-
-  fun hasAny(): Boolean {
-    return (movement
-      || interaction
-      || inventory
-      || commands
-      || damage)
-  }
-
-  fun movement(): Boolean {
-    return movement
-  }
-
-  fun interaction(): Boolean {
-    return interaction
-  }
-
-  fun inventory(): Boolean {
-    return inventory
-  }
-
-  fun commands(): Boolean {
-    return commands
-  }
-
-  fun damage(): Boolean {
-    return damage
-  }
-
-  override fun equals(obj: Any?): Boolean {
-    if (obj !is RestrictionCriteria) {
-      return false
-    }
-    val other = obj
-    return movement == other.movement && interaction == other.interaction && inventory == other.inventory && commands == other.commands && damage == other.damage
-  }
-
-  override fun toString(): String {
-    return MoreObjects.toStringHelper(this)
-      .add("movement", movement)
-      .add("interaction", interaction)
-      .add("inventory", inventory)
-      .add("commands", commands)
-      .add("damage", damage)
-      .toString()
-  }
-
-  companion object {
-    private val ALL = RestrictionCriteria(
-      true,
-      true,
-      true,
-      true,
-      true
-    )
-    private val NONE = RestrictionCriteria(
-      false,
-      false,
-      false,
-      false,
-      false
-    )
-    private val MOVEMENT_ONLY = RestrictionCriteria(
-      true,
-      false,
-      false,
-      false,
-      false
-    )
-    private val INTERACTION_ONLY = RestrictionCriteria(
-      false,
-      true,
-      false,
-      false,
-      false
-    )
-    private val INVENTORY_ONLY = RestrictionCriteria(
-      false,
-      false,
-      true,
-      false,
-      false
-    )
-    private val COMMANDS_ONLY = RestrictionCriteria(
-      false,
-      false,
-      false,
-      true,
-      false
-    )
-    private val DAMAGE_ONLY = RestrictionCriteria(
-      false,
-      false,
-      false,
-      false,
-      true
-    )
-
-    fun all(): RestrictionCriteria {
-      return ALL
+    fun movement(): Boolean {
+        return movement
     }
 
-    @kotlin.jvm.JvmStatic
-    fun none(): RestrictionCriteria {
-      return NONE
+    fun interaction(): Boolean {
+        return interaction
     }
 
-    fun movementOnly(): RestrictionCriteria {
-      return MOVEMENT_ONLY
+    fun inventory(): Boolean {
+        return inventory
     }
 
-    fun interactionOnly(): RestrictionCriteria {
-      return INTERACTION_ONLY
+    fun commands(): Boolean {
+        return commands
     }
 
-    fun inventoryOnly(): RestrictionCriteria {
-      return INVENTORY_ONLY
+    fun damage(): Boolean {
+        return damage
     }
 
-    fun commandsOnly(): RestrictionCriteria {
-      return COMMANDS_ONLY
+    override fun equals(obj: Any?): Boolean {
+        if (obj !is RestrictionCriteria) {
+            return false
+        }
+        val other = obj
+        return movement == other.movement && interaction == other.interaction && inventory == other.inventory && commands == other.commands && damage == other.damage
     }
 
-    fun damageOnly(): RestrictionCriteria {
-      return DAMAGE_ONLY
+    override fun toString(): String {
+        return MoreObjects.toStringHelper(this)
+            .add("movement", movement)
+            .add("interaction", interaction)
+            .add("inventory", inventory)
+            .add("commands", commands)
+            .add("damage", damage)
+            .toString()
     }
 
-    fun builder(): Builder {
-      return Builder()
+    companion object {
+        private val ALL = RestrictionCriteria(
+            true,
+            true,
+            true,
+            true,
+            true
+        )
+        private val NONE = RestrictionCriteria(
+            false,
+            false,
+            false,
+            false,
+            false
+        )
+        private val MOVEMENT_ONLY = RestrictionCriteria(
+            true,
+            false,
+            false,
+            false,
+            false
+        )
+        private val INTERACTION_ONLY = RestrictionCriteria(
+            false,
+            true,
+            false,
+            false,
+            false
+        )
+        private val INVENTORY_ONLY = RestrictionCriteria(
+            false,
+            false,
+            true,
+            false,
+            false
+        )
+        private val COMMANDS_ONLY = RestrictionCriteria(
+            false,
+            false,
+            false,
+            true,
+            false
+        )
+        private val DAMAGE_ONLY = RestrictionCriteria(
+            false,
+            false,
+            false,
+            false,
+            true
+        )
+
+        fun all(): RestrictionCriteria {
+            return ALL
+        }
+
+        @kotlin.jvm.JvmStatic
+        fun none(): RestrictionCriteria {
+            return NONE
+        }
+
+        fun movementOnly(): RestrictionCriteria {
+            return MOVEMENT_ONLY
+        }
+
+        fun interactionOnly(): RestrictionCriteria {
+            return INTERACTION_ONLY
+        }
+
+        fun inventoryOnly(): RestrictionCriteria {
+            return INVENTORY_ONLY
+        }
+
+        fun commandsOnly(): RestrictionCriteria {
+            return COMMANDS_ONLY
+        }
+
+        fun damageOnly(): RestrictionCriteria {
+            return DAMAGE_ONLY
+        }
+
+        fun builder(): Builder {
+            return Builder()
+        }
     }
-  }
 }

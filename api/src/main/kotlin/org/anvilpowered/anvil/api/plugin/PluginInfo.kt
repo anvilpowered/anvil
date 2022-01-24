@@ -23,19 +23,19 @@ import org.anvilpowered.anvil.api.misc.Named
 
 interface PluginInfo : Named {
 
-  val prefix: Component
+    val prefix: Component
 
-  val id: String
+    val id: String
 
-  val version: String
+    val version: String
 
-  val description: String
+    val description: String
 
-  val url: String
+    val url: String
 
-  val authors: Array<String>
+    val authors: Array<String>
 
-  val organizationName: String
+    val organizationName: String
 
-  val buildDate: String
+    val buildDate: String
 }

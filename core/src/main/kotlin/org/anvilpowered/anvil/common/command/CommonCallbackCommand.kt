@@ -31,17 +31,19 @@ class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
     @Inject
     private lateinit var pluginInfo: PluginInfo
 
-    private val missingId: Component =
+    private val missingId by lazy {
         Component.text()
             .append(pluginInfo.prefix)
             .append(Component.text("Missing callback id").color(NamedTextColor.RED))
             .build()
+    }
 
-    private val invalidId: Component =
+    private val invalidId by lazy {
         Component.text()
             .append(pluginInfo.prefix)
             .append(Component.text("Callback id must be a valid UUID").color(NamedTextColor.RED))
             .build()
+    }
 
     fun addCallback(uuid: UUID, callback: Consumer<TCommandSource>) {
         CallbackCommandData<TCommandSource>().callbacks[uuid] = callback::accept

@@ -17,10 +17,10 @@
  */
 package org.anvilpowered.anvil.base.registry
 
-import com.google.common.reflect.Invokable
-import com.google.common.reflect.TypeToken
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import io.leangen.geantyref.GenericTypeReflector
+import io.leangen.geantyref.TypeToken
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Keys
@@ -30,7 +30,6 @@ import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.loader.ConfigurationLoader
 import org.spongepowered.configurate.serialize.SerializationException
-import org.spongepowered.configurate.util.Types
 import java.io.IOException
 import java.util.function.Function
 import java.util.function.Predicate
@@ -279,17 +278,13 @@ Please note: If this is enabled, the values for above settings in this config fi
     }
 
     private fun fromString(name: String): CommentedConfigurationNode {
-        val path = name.split("[.]").toTypedArray()
-        var node: CommentedConfigurationNode = rootConfigurationNode
-        for (s in path) {
-            node = node.get(String::class.java, s) as CommentedConfigurationNode
-        }
-        return node
+        val path = name.split(".").toTypedArray()
+        return rootConfigurationNode.node(*path)
     }
 
     private fun <T> setNodeDefault(node: CommentedConfigurationNode, key: Key<T>) {
         val def = getDefault(key)
-        node.set(key.typeToken.type, def)
+        node.set(key.typeToken, def)
         set(key, def)
     }
 
@@ -325,7 +320,7 @@ Please note: If this is enabled, the values for above settings in this config fi
                     updatedCount++
                 }
             }
-            if (node.virtual() || !node.comment().isNullOrBlank()) {
+            if (node.virtual() || node.comment().isNullOrBlank()) {
                 node.comment(nodeDescriptionMap[key])
                 updatedCount++
             }
@@ -354,7 +349,57 @@ Please note: If this is enabled, the values for above settings in this config fi
         node: CommentedConfigurationNode,
         modified: BooleanArray,
     ): T? {
-        TODO("Fix this method")
+        if (key != null && GenericTypeReflector.isSuperType(key.typeToken.type, MutableList::class.java)) {
+            return try {
+                val method = MutableList::class.java.getMethod("get", Int::class.javaPrimitiveType)
+                val list = node.getList(method.returnType) ?: return null
+                val listVerified = verify(verificationMap[key], list, node, modified) as T
+
+                set(key, listVerified)
+                listVerified
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        } else if (GenericTypeReflector.isSuperType(MutableMap::class.java, typeToken.type)) {
+            try {
+                val method = MutableMap::class.java.getMethod("get", Object::class.java)
+                val subType = TypeToken.get(method.returnType)
+
+                val result: MutableMap<Any, Any> = hashMapOf()
+
+                for (entry: Map.Entry<*, CommentedConfigurationNode?> in node.childrenMap().entries) {
+                    // here comes the recursion
+                    val entryKey = entry.value?.key() ?: return null
+                    result[entryKey] = initConfigValue(null, subType, entry.value!!, modified)!!
+                }
+
+                if (key != null) {
+                    val map: T = verify(verificationMap[key], result, node, modified) as (T)
+                    set(key, map)
+                }
+                return result as T
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }
+        } else if (key != null) {
+            return try {
+                val value = node.get(typeToken) ?: return null
+                set(key, verify(verificationMap[key], value, node, modified) as T)
+                value
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        } else {
+            return try {
+                node.get(typeToken)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
 /*
         // it ain't pretty but it works
         return if (key != null && typeToken.isSubtypeOf(MutableList::class.java)) {
@@ -418,7 +463,6 @@ Please note: If this is enabled, the values for above settings in this config fi
                 null
             }
         }*/
-        return null
     }
 
     private fun <T> verify(

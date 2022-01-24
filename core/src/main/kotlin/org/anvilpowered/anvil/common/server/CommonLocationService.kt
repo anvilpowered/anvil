@@ -26,16 +26,16 @@ import java.util.concurrent.CompletableFuture
 
 abstract class CommonLocationService : LocationService {
 
-  override fun getServer(userUUID: UUID): BackendServer? = null
-  override fun getServer(userName: String): BackendServer? = null
-  override fun getServerForName(serverName: String): BackendServer? = null
-  override fun getServers(): List<BackendServer> = listOf()
-  override fun getWorldName(userUUID: UUID): String? = null
-  override fun getWorldName(userName: String): String? = null
-  override fun getPosition(userUUID: UUID): Vector3d? = null
-  override fun getPosition(userName: String): Vector3d? = null
+    override fun getServer(userUUID: UUID): BackendServer? = null
+    override fun getServer(userName: String): BackendServer? = null
+    override fun getServerForName(serverName: String): BackendServer? = null
+    override fun getServers(): List<BackendServer> = listOf()
+    override fun getWorldName(userUUID: UUID): String? = null
+    override fun getWorldName(userName: String): String? = null
+    override fun getPosition(userUUID: UUID): Vector3d? = null
+    override fun getPosition(userName: String): Vector3d? = null
 
-  override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
-    return CompletableFuture.completedFuture(false)
-  }
+    override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
+        return CompletableFuture.completedFuture(false)
+    }
 }

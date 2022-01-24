@@ -24,8 +24,6 @@ import org.anvilpowered.anvil.api.model.ObjectWithId
 import org.anvilpowered.anvil.api.util.TimeFormatService
 import org.slf4j.Logger
 import java.util.concurrent.CompletableFuture
-import java.util.function.Function
-import java.util.function.Supplier
 
 abstract class BaseRepository<TKey, T : ObjectWithId<TKey>, TDataStore> : BaseComponent<TKey, TDataStore>(),
     Repository<TKey, T, TDataStore> {
@@ -49,7 +47,7 @@ abstract class BaseRepository<TKey, T : ObjectWithId<TKey>, TDataStore> : BaseCo
     override fun parseAndGetOne(idOrTime: Any): CompletableFuture<T?> {
         parse(idOrTime).also {
             if (it == null) {
-                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                Anvil.getEnvironmentManager().coreEnvironment.injector.getInstance(TimeFormatService::class.java)
                     .parseInstant(idOrTime.toString()).also { time ->
                         if (time == null) {
                             return CompletableFuture.completedFuture(null)
@@ -57,14 +55,14 @@ abstract class BaseRepository<TKey, T : ObjectWithId<TKey>, TDataStore> : BaseCo
                         return getOne(time)
                     }
             }
-            return getOne(it!!) as CompletableFuture<T?>
+            return getOne(it!!)
         }
     }
 
     override fun parseAndDeleteOne(idOrTime: Any): CompletableFuture<Boolean> {
         parse(idOrTime).also {
             if (it == null) {
-                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                Anvil.getEnvironmentManager().coreEnvironment.injector.getInstance(TimeFormatService::class.java)
                     .parseInstant(idOrTime.toString()).also { time ->
                         if (time == null) {
                             return CompletableFuture.completedFuture(false)

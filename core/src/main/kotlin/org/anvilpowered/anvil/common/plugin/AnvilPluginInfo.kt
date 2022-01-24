@@ -18,9 +18,8 @@
 package org.anvilpowered.anvil.common.plugin
 
 import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.api.plugin.PluginInfo
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
+import org.anvilpowered.anvil.api.plugin.PluginInfo
 
 class AnvilPluginInfo : PluginInfo {
     override var prefix: Component = Component.text()

@@ -25,20 +25,19 @@ import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.sendTo
 
 class CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>
-  : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
-  @Inject
-  private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
+    @Inject
+    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
-  override fun execute(source: TCommandSource, context: Array<String>) {
-    val builder = Component.text().append(pluginInfo.prefix)
-    //TODO I really don't like this "as Any" crap
-    val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source as Any))
-    if (removed == null) {
-      builder.append(Component.text("Could not find stage").red())
-    } else {
-      builder.append(Component.text("Successfully cancelled changes. Didn't mean to? ").green())
-          .append(undo("/$anvilAlias regedit start ${removed.envName}"))
-    }.sendTo(source)
-  }
+    override fun execute(source: TCommandSource, context: Array<String>) {
+        val builder = Component.text().append(pluginInfo.prefix)
+        val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source as Any))
+        if (removed == null) {
+            builder.append(Component.text("Could not find stage").red())
+        } else {
+            builder.append(Component.text("Successfully cancelled changes. Didn't mean to? ").green())
+                .append(undo("/$anvilAlias regedit start ${removed.envName}"))
+        }.sendTo(source)
+    }
 }

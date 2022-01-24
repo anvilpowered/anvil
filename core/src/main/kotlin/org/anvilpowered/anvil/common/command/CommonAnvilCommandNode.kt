@@ -26,67 +26,67 @@ import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCommandNode
 
 class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor(
-  private val commandService: SimpleCommandService<TCommandSource>,
-  private val pluginsCommand: CommonAnvilPluginsCommand<TCommandSource>,
-  private val reloadCommand: CommonAnvilReloadCommand<TCommandSource>,
-  private val callbackCommand: CommonCallbackCommand<TCommandSource>,
-  private val regeditNode: CommonRegistryEditCommandNode<TUser, TPlayer, TCommandSource>,
-  registry: Registry,
+    private val commandService: SimpleCommandService<TCommandSource>,
+    private val pluginsCommand: CommonAnvilPluginsCommand<TCommandSource>,
+    private val reloadCommand: CommonAnvilReloadCommand<TCommandSource>,
+    private val callbackCommand: CommonCallbackCommand<TCommandSource>,
+    private val regeditNode: CommonRegistryEditCommandNode<TUser, TPlayer, TCommandSource>,
+    registry: Registry,
 ) {
 
-  companion object {
-    val ALIAS: String by lazy {
-      when (Anvil.platform.name) {
-        "bungee" -> "anvilb"
-        "velocity" -> "anvilv"
-        else -> "anvil"
-      }
+    companion object {
+        val ALIAS: String by lazy {
+            when (Anvil.getPlatform().name) {
+                "bungee" -> "anvilb"
+                "velocity" -> "anvilv"
+                else -> "anvil"
+            }
+        }
+
+        val CALLBACK_ALIAS = listOf("callback")
+        val HELP_ALIAS = listOf("help")
+        val PLUGINS_ALIAS = listOf("plugins")
+        val RELOAD_ALIAS = listOf("reload")
+        val VERSION_ALIAS = listOf("version")
+        val ANVIL_ALIAS = listOf(ALIAS)
+        val HELP_USAGE: String = "/$ALIAS help"
     }
 
-    val CALLBACK_ALIAS = listOf("callback")
-    val HELP_ALIAS = listOf("help")
-    val PLUGINS_ALIAS = listOf("plugins")
-    val RELOAD_ALIAS = listOf("reload")
-    val VERSION_ALIAS = listOf("version")
-    val ANVIL_ALIAS = listOf(ALIAS)
-    val HELP_USAGE: String = "/$ALIAS help"
-  }
+    lateinit var anvilMapping: CommandMapping<SimpleCommand<TCommandSource>>
+        private set
+    lateinit var callbackMapping: CommandMapping<SimpleCommand<TCommandSource>>
+        private set
+    private var alreadyLoaded = false
 
-  lateinit var anvilMapping: CommandMapping<SimpleCommand<TCommandSource>>
-    private set
-  lateinit var callbackMapping: CommandMapping<SimpleCommand<TCommandSource>>
-    private set
-  private var alreadyLoaded = false
-
-  init {
-    registry.whenLoaded {
-      if (alreadyLoaded) {
-        return@whenLoaded
-      }
-      loadCommands()
-      alreadyLoaded = true
-    }.register()
-  }
-
-  private fun loadCommands() {
-    val subCommands = listOf(
-      commandService.mapTerminal(HELP_ALIAS, commandService.generateHelp { anvilMapping.subCommands }),
-      commandService.mapTerminal(PLUGINS_ALIAS, pluginsCommand),
-      regeditNode.regeditMapping,
-      commandService.mapTerminal(RELOAD_ALIAS, reloadCommand),
-      commandService.mapTerminal(VERSION_ALIAS, commandService.generateVersion(HELP_USAGE)),
-    )
-    anvilMapping = commandService.mapRouting(
-      ANVIL_ALIAS,
-      commandService.generateRoot(HELP_USAGE),
-      subCommands,
-      false
-    )
-    commandService.register(anvilMapping)
-    // we'll use sponge's callback command on sponge
-    if (Anvil.platform.name != "sponge") {
-      callbackMapping = commandService.mapTerminal(CALLBACK_ALIAS, callbackCommand)
-      commandService.register(callbackMapping)
+    init {
+        registry.whenLoaded {
+            if (alreadyLoaded) {
+                return@whenLoaded
+            }
+            loadCommands()
+            alreadyLoaded = true
+        }.register()
     }
-  }
+
+    private fun loadCommands() {
+        val subCommands = listOf(
+            commandService.mapTerminal(HELP_ALIAS, commandService.generateHelp { anvilMapping.subCommands }),
+            commandService.mapTerminal(PLUGINS_ALIAS, pluginsCommand),
+            regeditNode.regeditMapping,
+            commandService.mapTerminal(RELOAD_ALIAS, reloadCommand),
+            commandService.mapTerminal(VERSION_ALIAS, commandService.generateVersion(HELP_USAGE)),
+        )
+        anvilMapping = commandService.mapRouting(
+            ANVIL_ALIAS,
+            commandService.generateRoot(HELP_USAGE),
+            subCommands,
+            false
+        )
+        commandService.register(anvilMapping)
+        // we'll use sponge's callback command on sponge
+        if (Anvil.getPlatform().name != "sponge") {
+            callbackMapping = commandService.mapTerminal(CALLBACK_ALIAS, callbackCommand)
+            commandService.register(callbackMapping)
+        }
+    }
 }

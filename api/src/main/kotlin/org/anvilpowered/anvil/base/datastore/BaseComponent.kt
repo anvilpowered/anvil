@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.base.datastore
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.datastore.DBComponent
 import org.anvilpowered.anvil.api.datastore.DataStoreContext
-import java.util.Optional
 
 abstract class BaseComponent<TKey, TDataStore> : DBComponent<TKey, TDataStore> {
 

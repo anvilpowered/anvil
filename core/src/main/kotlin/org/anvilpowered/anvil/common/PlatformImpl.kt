@@ -23,29 +23,28 @@ import com.google.inject.Injector
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.Platform
-import java.lang.IllegalStateException
 
 class PlatformImpl(
-  override val name: String,
-  private val isProxy: Boolean,
-  private val versionFetcher: (Injector) -> String,
-  private val loggerBinder: ((Environment, Binder) -> Unit)? = null,
+    override val name: String,
+    private val isProxy: Boolean,
+    private val versionFetcher: (Injector) -> String,
+    private val loggerBinder: ((Environment, Binder) -> Unit)? = null,
 ) : Platform {
 
-  private val versionStringKt: String by lazy { versionFetcher(Anvil.environment?.injector ?: throw IllegalStateException("Injector may not be null!")) }
+    private val versionStringKt: String by lazy { versionFetcher(Anvil.getEnvironment().injector) }
 
-  fun bindLoggerOptionally(environment: Environment, binder: Binder) = loggerBinder?.let { it(environment, binder) }
+    fun bindLoggerOptionally(environment: Environment, binder: Binder) = loggerBinder?.let { it(environment, binder) }
 
-  override fun getVersionString(): String = versionStringKt
-  override fun isProxy(): Boolean = isProxy
+    override fun getVersionString(): String = versionStringKt
+    override fun isProxy(): Boolean = isProxy
 
-  private val stringRepresentation: String by lazy {
-    MoreObjects.toStringHelper(this)
-      .add("name", name)
-      .add("version", getVersionString())
-      .add("isProxy", isProxy)
-      .toString()
-  }
+    private val stringRepresentation: String by lazy {
+        MoreObjects.toStringHelper(this)
+            .add("name", name)
+            .add("version", getVersionString())
+            .add("isProxy", isProxy)
+            .toString()
+    }
 
-  override fun toString(): String = stringRepresentation
+    override fun toString(): String = stringRepresentation
 }

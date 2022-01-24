@@ -17,20 +17,20 @@
  */
 package org.anvilpowered.anvil.api.model.coremember
 
-import java.util.UUID
-import java.time.Instant
 import org.anvilpowered.anvil.api.model.ObjectWithId
+import java.time.Instant
+import java.util.UUID
 
 interface CoreMember<TKey> : ObjectWithId<TKey> {
-  var userUUID: UUID
-  var userName: String
-  var ipAddress: String
-  var lastJoinedUtc: Instant
-  var nickName: String
-  var isBanned: Boolean
-  var isMuted: Boolean
-  var banEndUtc: Instant
-  var muteEndUtc: Instant
-  var banReason: String
-  var muteReason: String
+    var userUUID: UUID
+    var userName: String
+    var ipAddress: String
+    var lastJoinedUtc: Instant
+    var nickName: String
+    var isBanned: Boolean
+    var isMuted: Boolean
+    var banEndUtc: Instant
+    var muteEndUtc: Instant
+    var banReason: String
+    var muteReason: String
 }

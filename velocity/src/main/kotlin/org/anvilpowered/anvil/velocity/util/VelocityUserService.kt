@@ -33,7 +33,7 @@ class VelocityUserService @Inject constructor() : CommonUserService<Player, Play
     @Inject
     private lateinit var proxyServer: ProxyServer
 
-    override val onlinePlayers: Collection<Player> = proxyServer.allPlayers
+    override val onlinePlayers: Collection<Player> by lazy { proxyServer.allPlayers }
     override fun getPlayer(userName: String): Player? = get(userName)
     override fun get(userUUID: UUID): Player? = proxyServer.getPlayer(userUUID).orElse(null)
     override fun get(userName: String): Player? = proxyServer.getPlayer(userName).orElse(null)

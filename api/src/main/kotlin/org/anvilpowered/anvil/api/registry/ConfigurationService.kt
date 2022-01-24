@@ -18,11 +18,11 @@
 package org.anvilpowered.anvil.api.registry
 
 interface ConfigurationService : Registry {
-  /**
-   * Updates the config with values from the registry. Will only update the file if changes were made
-   *
-   * @return `true` if there were updated values to save and they were saved successfully
-   * otherwise `false`
-   */
-  fun save(): Boolean
+    /**
+     * Updates the config with values from the registry. Will only update the file if changes were made
+     *
+     * @return `true` if there were updated values to save and they were saved successfully
+     * otherwise `false`
+     */
+    fun save(): Boolean
 }

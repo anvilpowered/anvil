@@ -22,23 +22,23 @@ import org.anvilpowered.anvil.api.command.CommandMapping
 import java.util.Optional
 
 open class BaseCommandMapping<C>(
-  aliases: List<String>,
-  override val command: C,
+    aliases: List<String>,
+    override val command: C,
 ) : CommandMapping<C> {
 
-  init {
-    require(aliases.isNotEmpty()) { "aliases is empty" }
-  }
+    init {
+        require(aliases.isNotEmpty()) { "aliases is empty" }
+    }
 
-  override val name: String = aliases[0]
-  override val otherAliases: List<String> = aliases.drop(1)
-  override var parentCommand: CommandMapping<C>? = null
-  override val subCommands: List<CommandMapping<C>> = listOf()
+    override val name: String = aliases[0]
+    override val otherAliases: List<String> = aliases.drop(1)
+    override var parentCommand: CommandMapping<C>? = null
+    override val subCommands: List<CommandMapping<C>> = listOf()
 
-  @JvmName("setParentCommand1")
-  fun setParentCommand(command: CommandMapping<C>) {
-    parentCommand = command
-  }
+    @JvmName("setParentCommand1")
+    fun setParentCommand(command: CommandMapping<C>) {
+        parentCommand = command
+    }
 
-  fun getParentCommand(): Optional<CommandMapping<C>> = Optional.ofNullable(parentCommand)
+    fun getParentCommand(): Optional<CommandMapping<C>> = Optional.ofNullable(parentCommand)
 }

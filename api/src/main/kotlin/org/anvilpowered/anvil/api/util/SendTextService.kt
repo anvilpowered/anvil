@@ -19,11 +19,10 @@
 package org.anvilpowered.anvil.api.util
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.ComponentBuilder
 
 interface SendTextService {
 
-  fun <T> send(source: T, component: Component)
+    fun <T> send(source: T, component: Component)
 
-  fun sendToConsole(component: Component)
+    fun sendToConsole(component: Component)
 }

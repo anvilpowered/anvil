@@ -17,20 +17,18 @@
  */
 package org.anvilpowered.anvil.api.registry
 
-import java.lang.AssertionError
-import com.google.common.reflect.TypeToken
+import io.leangen.geantyref.TypeToken
 import java.time.ZoneId
 
 class TypeTokens private constructor() {
-  init {
-    throw AssertionError("**boss music** No instance for you!")
-  }
+    init {
+        throw AssertionError("**boss music** No instance for you!")
+    }
 
-  companion object {
-    val BOOLEAN = TypeToken.of(Boolean::class.java)
-    val INTEGER = TypeToken.of(Int::class.java)
-    val STRING = TypeToken.of(
-      String::class.java)
-    val ZONE_ID = TypeToken.of(ZoneId::class.java)
-  }
+    companion object {
+        val BOOLEAN = TypeToken.get(Boolean::class.javaObjectType)
+        val INTEGER = TypeToken.get(Int::class.javaObjectType)
+        val STRING = TypeToken.get(String::class.javaObjectType)
+        val ZONE_ID = TypeToken.get(ZoneId::class.javaObjectType)
+    }
 }

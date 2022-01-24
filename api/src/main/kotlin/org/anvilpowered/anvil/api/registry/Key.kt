@@ -17,9 +17,8 @@
  */
 package org.anvilpowered.anvil.api.registry
 
-import com.google.common.reflect.TypeToken
+import io.leangen.geantyref.TypeToken
 import org.anvilpowered.anvil.api.misc.Named
-import java.lang.IllegalStateException
 import java.util.function.Function
 
 abstract class Key<T> internal constructor(
@@ -30,14 +29,14 @@ abstract class Key<T> internal constructor(
     sensitive: Boolean,
     description: String?,
     parser: Function<String, T>?,
-    toStringer: Function<T, String>
+    toStringer: Function<T, String>?
 ) : Named, Comparable<Key<T>> {
     val fallbackValue: T?
     val isUserImmutable: Boolean
     private val isSensitive: Boolean
     val description: String?
-    private lateinit var parser: Function<String, T>
-    private lateinit var toStringer: Function<T, String>
+    private var parser: Function<String, T>
+    private var toStringer: Function<T, String>?
 
     init {
         this.fallbackValue = fallbackValue
@@ -152,7 +151,7 @@ abstract class Key<T> internal constructor(
     }
 
     fun toString(value: T): String {
-        return toStringer.apply(value)
+        return toStringer?.apply(value) ?: "No toStringer set for $name!"
     }
 
     override fun compareTo(o: Key<T>): Int {

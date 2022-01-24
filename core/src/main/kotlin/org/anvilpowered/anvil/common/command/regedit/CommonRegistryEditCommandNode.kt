@@ -25,57 +25,57 @@ import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.api.registry.Registry
 
 class CommonRegistryEditCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor(
-  private val commandService: SimpleCommandService<TCommandSource>,
-  registry: Registry,
-  private val registryEditCancelCommand: CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>,
-  private val registryEditCommitCommand: CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>,
-  private val registryEditKeyCommand: CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>,
-  private val registryEditSelectCommand: CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>,
-  private val registryEditStartCommand: CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>,
+    private val commandService: SimpleCommandService<TCommandSource>,
+    registry: Registry,
+    private val registryEditCancelCommand: CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>,
+    private val registryEditCommitCommand: CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>,
+    private val registryEditKeyCommand: CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>,
+    private val registryEditSelectCommand: CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>,
+    private val registryEditStartCommand: CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>,
 ) {
 
-  companion object {
-    val CANCEL_ALIAS = listOf("cancel")
-    val COMMIT_ALIAS = listOf("commit")
-    val KEY_ALIAS = listOf("key")
-    val SELECT_ALIAS = listOf("select")
-    val START_ALIAS = listOf("start")
-    val HELP_ALIAS = listOf("help")
+    companion object {
+        val CANCEL_ALIAS = listOf("cancel")
+        val COMMIT_ALIAS = listOf("commit")
+        val KEY_ALIAS = listOf("key")
+        val SELECT_ALIAS = listOf("select")
+        val START_ALIAS = listOf("start")
+        val HELP_ALIAS = listOf("help")
 
-    val REGEDIT_ALIAS = listOf("regedit")
+        val REGEDIT_ALIAS = listOf("regedit")
 
-    val HELP_USAGE: String = "/$anvilAlias regedit help"
-  }
+        val HELP_USAGE: String = "/$anvilAlias regedit help"
+    }
 
-  private var alreadyLoaded = false
+    private var alreadyLoaded = false
 
-  lateinit var regeditMapping: CommandMapping<SimpleCommand<TCommandSource>>
-    private set
+    lateinit var regeditMapping: CommandMapping<SimpleCommand<TCommandSource>>
+        private set
 
-  init {
-    registry.whenLoaded {
-      if (alreadyLoaded) {
-        return@whenLoaded
-      }
-      loadCommands()
-      alreadyLoaded = true
-    }.order(-10).register() // has to load before main node
-  }
+    init {
+        registry.whenLoaded {
+            if (alreadyLoaded) {
+                return@whenLoaded
+            }
+            loadCommands()
+            alreadyLoaded = true
+        }.order(-10).register() // has to load before main node
+    }
 
-  private fun loadCommands() {
-    val subCommands = listOf(
-      commandService.mapTerminal(CANCEL_ALIAS, registryEditCancelCommand),
-      commandService.mapTerminal(COMMIT_ALIAS, registryEditCommitCommand),
-      commandService.mapTerminal(KEY_ALIAS, registryEditKeyCommand),
-      commandService.mapTerminal(SELECT_ALIAS, registryEditSelectCommand),
-      commandService.mapTerminal(START_ALIAS, registryEditStartCommand),
-      commandService.mapTerminal(HELP_ALIAS, commandService.generateHelp { regeditMapping.subCommands }),
-    )
-    regeditMapping = commandService.mapRouting(
-      REGEDIT_ALIAS,
-      commandService.generateRoot(HELP_USAGE),
-      subCommands,
-      false
-    )
-  }
+    private fun loadCommands() {
+        val subCommands = listOf(
+            commandService.mapTerminal(CANCEL_ALIAS, registryEditCancelCommand),
+            commandService.mapTerminal(COMMIT_ALIAS, registryEditCommitCommand),
+            commandService.mapTerminal(KEY_ALIAS, registryEditKeyCommand),
+            commandService.mapTerminal(SELECT_ALIAS, registryEditSelectCommand),
+            commandService.mapTerminal(START_ALIAS, registryEditStartCommand),
+            commandService.mapTerminal(HELP_ALIAS, commandService.generateHelp { regeditMapping.subCommands }),
+        )
+        regeditMapping = commandService.mapRouting(
+            REGEDIT_ALIAS,
+            commandService.generateRoot(HELP_USAGE),
+            subCommands,
+            false
+        )
+    }
 }

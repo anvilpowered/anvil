@@ -23,21 +23,21 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 interface LocationService {
-  fun getServer(userUUID: UUID): BackendServer?
+    fun getServer(userUUID: UUID): BackendServer?
 
-  fun getServer(userName: String): BackendServer?
+    fun getServer(userName: String): BackendServer?
 
-  fun getServerForName(serverName: String): BackendServer?
+    fun getServerForName(serverName: String): BackendServer?
 
-  fun getServers(): List<BackendServer>
+    fun getServers(): List<BackendServer>
 
-  fun getWorldName(userUUID: UUID): String?
+    fun getWorldName(userUUID: UUID): String?
 
-  fun getWorldName(userName: String): String?
+    fun getWorldName(userName: String): String?
 
-  fun getPosition(userUUID: UUID): Vector3d?
+    fun getPosition(userUUID: UUID): Vector3d?
 
-  fun getPosition(userName: String): Vector3d?
+    fun getPosition(userName: String): Vector3d?
 
-  fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean>
+    fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean>
 }

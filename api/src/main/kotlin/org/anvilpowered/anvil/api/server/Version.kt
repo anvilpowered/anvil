@@ -20,5 +20,5 @@ package org.anvilpowered.anvil.api.server
 import org.anvilpowered.anvil.api.misc.Named
 
 interface Version : Named {
-  val protocol: Int
+    val protocol: Int
 }

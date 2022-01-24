@@ -36,9 +36,9 @@ import org.anvilpowered.anvil.api.util.SendTextService
  */
 abstract class BasePlugin {
 
-    protected lateinit var environment: Environment
+    private lateinit var environment: Environment
 
-    protected constructor(
+    constructor(
         name: String,
         rootInjector: Injector,
         module: Module,
@@ -49,7 +49,7 @@ abstract class BasePlugin {
             .register(this)
     }
 
-    protected constructor(
+    constructor(
         name: String,
         rootInjector: Injector,
         module: Module,
@@ -60,7 +60,7 @@ abstract class BasePlugin {
             .register(this)
     }
 
-    protected constructor(
+    constructor(
         name: String,
         rootInjector: Injector,
         module: Module,
@@ -82,7 +82,7 @@ abstract class BasePlugin {
             .register(this)
     }
 
-    protected constructor(
+    constructor(
         name: String,
         rootInjector: Injector,
         module: Module,
@@ -96,7 +96,7 @@ abstract class BasePlugin {
         rootInjector: Injector,
         module: Module?,
     ): Environment.Builder {
-        val builder: Environment.Builder = Anvil.environmentBuilder
+        val builder: Environment.Builder = Anvil.getEnvironmentBuilder()
             .setName(name)
             .setRootInjector(rootInjector)
             .whenLoaded { environment: Environment -> whenLoaded(environment) }
@@ -120,7 +120,7 @@ abstract class BasePlugin {
                 .append(pluginInfo.prefix)
                 .append(Component.text(pluginInfo.version).color(NamedTextColor.GREEN))
                 .append(Component.text(" by ").color(NamedTextColor.AQUA))
-                .append(Component.text(pluginInfo.authors.toString()))
+                .append(Component.text(pluginInfo.authors.joinToString()))
                 .append(Component.text(" - $status!"))
                 .build()
         )

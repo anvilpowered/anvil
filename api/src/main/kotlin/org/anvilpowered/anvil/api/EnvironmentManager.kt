@@ -22,10 +22,10 @@ import java.util.regex.Pattern
 import java.util.stream.Stream
 
 interface EnvironmentManager {
-  val coreEnvironment: Environment
-  fun getEnvironmentUnsafe(name: String): Environment
-  var environments: MutableMap<String, Environment>
-  fun getEnvironmentsAsStream(pattern: Pattern): Stream<Environment>
-  fun getEnvironment(pattern: Pattern): Environment?
-  fun getEnvironment(name: String): Environment?
+    val coreEnvironment: Environment
+    fun getEnvironmentUnsafe(name: String): Environment
+    var environments: MutableMap<String, Environment>
+    fun getEnvironmentsAsStream(pattern: Pattern): Stream<Environment>
+    fun getEnvironment(pattern: Pattern): Environment?
+    fun getEnvironment(name: String): Environment?
 }

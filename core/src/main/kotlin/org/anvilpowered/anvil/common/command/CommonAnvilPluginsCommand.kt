@@ -30,37 +30,36 @@ import java.util.Arrays
 
 class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
-  @Inject
-  private lateinit var permissionService: PermissionService
+    @Inject
+    private lateinit var permissionService: PermissionService
 
-  @Inject
-  private lateinit var registry: Registry
+    @Inject
+    private lateinit var registry: Registry
 
-  @Inject
-  private lateinit var pluginInfo: PluginInfo
+    @Inject
+    private lateinit var pluginInfo: PluginInfo
 
-  private val DESCRIPTION: Component = Component.text("Anvil plugins command")
+    private val DESCRIPTION: Component = Component.text("Anvil plugins command")
 
-  override fun execute(source: TCommandSource, context: Array<String>) {
-    val values = Anvil.environmentManager
-      .environments.values
-    val mappedValues = values
-      .asSequence()
-      .map { it.pluginInfo.name }
-      .iterator()
-    val names = Array(values.size) { mappedValues.next() }
-    Arrays.sort(names)
-    Component.text()
-        .append(pluginInfo.prefix)
-        .append(Component.text("Plugins ( $names.size ): "))
-        .append(appendJoining(", ", *names))
-        .build()
-    TODO("Create function to handle building and sendTo(target: TCommandSource)")
-  }
+    override fun execute(source: TCommandSource, context: Array<String>) {
+        val values = Anvil.getEnvironmentManager().environments.values
+        val mappedValues = values
+            .asSequence()
+            .map { it.pluginInfo.name }
+            .iterator()
+        val names = Array(values.size) { mappedValues.next() }
+        Arrays.sort(names)
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("Plugins ( $names.size ): "))
+            .append(appendJoining(", ", *names))
+            .build()
+        TODO("Create function to handle building and sendTo(target: TCommandSource)")
+    }
 
-  override fun canExecute(source: TCommandSource): Boolean {
-    return permissionService.hasPermission(source, registry.getOrDefault(Keys.PLUGINS_PERMISSION))
-  }
+    override fun canExecute(source: TCommandSource): Boolean {
+        return permissionService.hasPermission(source, registry.getOrDefault(Keys.PLUGINS_PERMISSION))
+    }
 
-  override fun shortDescription(source: TCommandSource): Component = DESCRIPTION
+    override fun shortDescription(source: TCommandSource): Component = DESCRIPTION
 }

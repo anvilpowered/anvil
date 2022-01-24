@@ -23,9 +23,9 @@ import redis.clients.jedis.JedisPubSub
 
 interface RedisService {
 
-  @get:RegistryScoped
-  var jedisPool: JedisPool?
+    @get:RegistryScoped
+    var jedisPool: JedisPool?
 
-  @RegistryScoped
-  fun registerSubscriber(subscriber: JedisPubSub?)
+    @RegistryScoped
+    fun registerSubscriber(subscriber: JedisPubSub?)
 }

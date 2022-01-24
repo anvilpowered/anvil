@@ -20,5 +20,5 @@ package org.anvilpowered.anvil.common.entity
 import java.util.UUID
 
 interface EntityUtils {
-  fun extractUUID(entity: Any?): UUID?
+    fun extractUUID(entity: Any?): UUID?
 }

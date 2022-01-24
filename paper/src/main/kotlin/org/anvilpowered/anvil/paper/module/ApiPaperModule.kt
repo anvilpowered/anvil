@@ -50,7 +50,6 @@ class ApiPaperModule : PlatformModule(
     override fun configure() {
         super.configure()
         with(binder()) {
-            bind<RestrictionService>().to<CommonRestrictionService>()
             bind<AudienceService<CommandSender>>().to<PaperAudienceService>()
             bind<CommandExecuteService>().to<PaperCommandExecuteService>()
             bind<EntityUtils>().to<PaperEntityUtils>()

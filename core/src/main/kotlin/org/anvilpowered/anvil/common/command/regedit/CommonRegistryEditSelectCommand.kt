@@ -30,10 +30,12 @@ class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
     @Inject
     private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
-    private val usage = Component.text()
-        .append(pluginInfo.prefix)
-        .append(Component.text("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>").red())
-        .build()
+    private val usage by lazy {
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>").red())
+            .build()
+    }
 
     override fun execute(source: TCommandSource, context: Array<String>) {
         val uuid = userService.getUUIDSafe(source)

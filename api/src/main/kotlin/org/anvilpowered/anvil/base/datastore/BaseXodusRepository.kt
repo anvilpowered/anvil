@@ -234,7 +234,7 @@ interface BaseXodusRepository<T : ObjectWithId<EntityId>> : XodusRepository<T>, 
     override fun asQueryForIdOrTime(idOrTime: String): Function<in StoreTransaction, out Iterable<Entity>>? {
         parse(idOrTime).also {
             if (it == null) {
-                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                Anvil.getEnvironmentManager().coreEnvironment.injector.getInstance(TimeFormatService::class.java)
                     .parseInstant(idOrTime).also { time ->
                         if (time == null) {
                             return null

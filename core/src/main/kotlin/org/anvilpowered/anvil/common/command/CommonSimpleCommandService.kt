@@ -40,25 +40,27 @@ import java.util.function.Supplier
 abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService<TCommandSource> {
 
     @Inject
-    protected lateinit var environment: Environment
+    lateinit var environment: Environment
 
     @Inject
-    protected lateinit var pluginInfo: PluginInfo
+    lateinit var pluginInfo: PluginInfo
 
-    private val HELP_DESCRIPTION: Component = Component.text("help command")
-    private val VERSION_DESCRIPTION: Component = Component.text("Anvil version command")
+    private val HELP_DESCRIPTION by lazy { Component.text("help command") }
+    private val VERSION_DESCRIPTION by lazy { Component.text("Anvil version command") }
 
-    private val noPermission: Component =
+    private val noPermission by lazy {
         Component.text()
             .append(pluginInfo.prefix)
             .append(Component.text("You do not have permission for this command!").color(NamedTextColor.RED))
             .build()
+    }
 
-    private val successfullyReloaded: Component =
+    private val successfullyReloaded by lazy {
         Component.text()
             .append(pluginInfo.prefix)
             .append(Component.text("Successfully reloaded!").color(NamedTextColor.GREEN))
             .build()
+    }
 
     private fun sendSubCommandError(
         source: TCommandSource,

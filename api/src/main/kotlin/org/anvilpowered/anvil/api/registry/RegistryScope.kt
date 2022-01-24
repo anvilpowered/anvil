@@ -18,23 +18,23 @@
 package org.anvilpowered.anvil.api.registry
 
 enum class RegistryScope {
-  /**
-   * The annotated value persists only between deep reloads.
-   *
-   *
-   * Use this scope for values that should be reloadable but not necessarily
-   * during normal operation of the plugin.
-   *
-   */
-  DEEP,
+    /**
+     * The annotated value persists only between deep reloads.
+     *
+     *
+     * Use this scope for values that should be reloadable but not necessarily
+     * during normal operation of the plugin.
+     *
+     */
+    DEEP,
 
-  /**
-   * The annotated value persists only between normal reloads.
-   * This value is the default value for the [RegistryScoped] annotation.
-   *
-   *
-   * Use this scope for
-   *
-   */
-  DEFAULT
+    /**
+     * The annotated value persists only between normal reloads.
+     * This value is the default value for the [RegistryScoped] annotation.
+     *
+     *
+     * Use this scope for
+     *
+     */
+    DEFAULT
 }

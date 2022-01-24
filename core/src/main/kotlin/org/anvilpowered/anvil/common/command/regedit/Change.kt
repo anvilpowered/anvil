@@ -30,23 +30,23 @@ class Change<T, TCommandSource>(
     var newValue: T? = null,
 ) {
 
-  private val remove = Component.text()
-      .append(Component.text("[R]")
-          .color(NamedTextColor.RED)
-          .hoverEvent(HoverEvent.showText(
-              Component.text()
-                  .append(Component.text("Remove this change\n").color(NamedTextColor.RED))
-                  .append(Component.text("/$anvilAlias regedit key $key unstage").color(NamedTextColor.GRAY))
-                  .build()
-          ))
-          .clickEvent(ClickEvent.runCommand("/$anvilAlias regedit $key unstage")))
-      .build()
+    private val remove = Component.text()
+        .append(Component.text("[R]")
+            .color(NamedTextColor.RED)
+            .hoverEvent(HoverEvent.showText(
+                Component.text()
+                    .append(Component.text("Remove this change\n").color(NamedTextColor.RED))
+                    .append(Component.text("/$anvilAlias regedit key $key unstage").color(NamedTextColor.GRAY))
+                    .build()
+            ))
+            .clickEvent(ClickEvent.runCommand("/$anvilAlias regedit $key unstage")))
+        .build()
 
-  constructor(stage: Stage<TCommandSource>, key: Key<T>, newValue: T? = null)
-      : this(stage.registry.second, key, newValue)
+    constructor(stage: Stage<TCommandSource>, key: Key<T>, newValue: T? = null)
+        : this(stage.registry.second, key, newValue)
 
     fun apply(registry: Registry) {
-      registry[key] = newValue ?: throw IllegalArgumentException("New value may not be null!")
+        registry[key] = newValue ?: throw IllegalArgumentException("New value may not be null!")
     }
 
     fun <T : Comparable<T>> max(a: T, b: T): T {
@@ -54,12 +54,12 @@ class Change<T, TCommandSource>(
     }
 
     fun print(): Component {
-      return Component.text()
-          .append(Component.text("$remove "))
-          .append(Component.text("$key.name > ").color(NamedTextColor.GOLD))
-          .append(printValueYellow(key, registry[key]))
-          .append(Component.text(" -> ").color(NamedTextColor.GRAY))
-          .append(printValueGreen(key, newValue))
-          .build()
+        return Component.text()
+            .append(Component.text("$remove "))
+            .append(Component.text("$key.name > ").color(NamedTextColor.GOLD))
+            .append(printValueYellow(key, registry[key]))
+            .append(Component.text(" -> ").color(NamedTextColor.GRAY))
+            .append(printValueGreen(key, newValue))
+            .build()
     }
 }

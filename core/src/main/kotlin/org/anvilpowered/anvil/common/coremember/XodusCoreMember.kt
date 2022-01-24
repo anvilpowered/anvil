@@ -18,12 +18,12 @@
 package org.anvilpowered.anvil.common.coremember
 
 import jetbrains.exodus.entitystore.Entity
-import org.anvilpowered.anvil.api.model.coremember.CoreMember
-import java.util.UUID
-import java.time.Instant
-import org.anvilpowered.anvil.api.datastore.XodusEntity
-import org.anvilpowered.anvil.base.model.XodusDbo
 import jetbrains.exodus.entitystore.EntityId
+import org.anvilpowered.anvil.api.datastore.XodusEntity
+import org.anvilpowered.anvil.api.model.coremember.CoreMember
+import org.anvilpowered.anvil.base.model.XodusDbo
+import java.time.Instant
+import java.util.UUID
 
 @XodusEntity
 class XodusCoreMember : XodusDbo(), CoreMember<EntityId> {

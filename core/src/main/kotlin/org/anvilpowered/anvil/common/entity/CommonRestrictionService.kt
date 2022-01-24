@@ -19,10 +19,9 @@ package org.anvilpowered.anvil.common.entity
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.anvilpowered.anvil.api.entity.RestrictionCriteria
 import org.anvilpowered.anvil.api.entity.RestrictionCriteria.Companion.none
 import org.anvilpowered.anvil.api.entity.RestrictionService
-import org.anvilpowered.anvil.api.entity.RestrictionCriteria
-import java.util.HashMap
 import java.util.Optional
 import java.util.UUID
 

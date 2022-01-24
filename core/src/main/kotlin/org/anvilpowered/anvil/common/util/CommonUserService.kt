@@ -18,7 +18,7 @@
 package org.anvilpowered.anvil.common.util
 
 import com.google.common.collect.ImmutableList
-import org.anvilpowered.anvil.api.Anvil.Companion.coreMemberRepository
+import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.util.UserService
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
@@ -34,11 +34,11 @@ abstract class CommonUserService<TUser, TPlayer> protected constructor(
     }
 
     override fun getUUID(userName: String): CompletableFuture<UUID?> {
-        return coreMemberRepository.getOneForUser(userName).thenApplyAsync { it?.userUUID }
+        return Anvil.getCoreMemberRepository().getOneForUser(userName).thenApplyAsync { it?.userUUID }
     }
 
     override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
-        return coreMemberRepository.getOneForUser(userUUID).thenApplyAsync { it?.userName }
+        return Anvil.getCoreMemberRepository().getOneForUser(userUUID).thenApplyAsync { it?.userName }
     }
 
     override fun <T> getUUIDSafe(obj: T): UUID {

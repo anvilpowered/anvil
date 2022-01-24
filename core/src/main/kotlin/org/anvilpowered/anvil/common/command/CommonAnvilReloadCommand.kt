@@ -21,7 +21,6 @@ import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.Anvil.Companion.environmentManager
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
@@ -81,7 +80,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
         source: TCommandSource,
         context: Array<String>,
     ): List<String> {
-        val suggestions = environmentManager
+        val suggestions = Anvil.getEnvironmentManager()
             .environments.values.stream()
             .map { obj: Environment -> obj.name }
             .sorted().collect(Collectors.toList())
@@ -98,7 +97,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
     override fun shortDescription(source: TCommandSource): Component = DESCRIPTION
 
     private fun doAll(): String {
-        return Anvil.environmentManager
+        return Anvil.getEnvironmentManager()
             .environments.values.asSequence()
             .map(reloadEnvironment)
             .joinToString(", ")
@@ -118,48 +117,48 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
     private fun doRegex(source: TCommandSource, regex: String, reloadedResult: Array<String>): Boolean {
         try {
-            reloadedResult[0] = environmentManager
+            reloadedResult[0] = Anvil.getEnvironmentManager()
                 .getEnvironmentsAsStream(Pattern.compile(regex))
                 .map(reloadEnvironment)
                 .collect(Collectors.joining(", "))
             if (reloadedResult[0].isEmpty()) {
-              Component.text()
-                  .append(pluginInfo.prefix)
-                  .append(Component.text("Regex ").color(NamedTextColor.RED))
-                  .append(Component.text(regex).color(NamedTextColor.GOLD))
-                  .append(Component.text(" did not match any plugins").color(NamedTextColor.RED))
-                  .sendTo(source)
+                Component.text()
+                    .append(pluginInfo.prefix)
+                    .append(Component.text("Regex ").color(NamedTextColor.RED))
+                    .append(Component.text(regex).color(NamedTextColor.GOLD))
+                    .append(Component.text(" did not match any plugins").color(NamedTextColor.RED))
+                    .sendTo(source)
                 return false
             }
         } catch (e: PatternSyntaxException) {
-          Component.text()
-              .append(pluginInfo.prefix)
-              .append(Component.text("Failed to parse ").color(NamedTextColor.RED))
-              .append(Component.text(regex).color(NamedTextColor.GOLD))
-              .sendTo(source)
+            Component.text()
+                .append(pluginInfo.prefix)
+                .append(Component.text("Failed to parse ").color(NamedTextColor.RED))
+                .append(Component.text(regex).color(NamedTextColor.GOLD))
+                .sendTo(source)
             return false
         }
         return true
     }
 
     private fun doDirect(source: TCommandSource, plugin: String): Boolean {
-      val reload = environmentManager.getEnvironment(plugin).apply { reloadEnvironment }
+        val reload = Anvil.getEnvironmentManager().getEnvironment(plugin).apply { reloadEnvironment }
         if (reload == null) {
-          Component.text()
-              .append(pluginInfo.prefix)
-              .append(Component.text("Could not find plugin ").color(NamedTextColor.RED))
-              .append(Component.text(plugin).color(NamedTextColor.GOLD))
-              .sendTo(source)
+            Component.text()
+                .append(pluginInfo.prefix)
+                .append(Component.text("Could not find plugin ").color(NamedTextColor.RED))
+                .append(Component.text(plugin).color(NamedTextColor.GOLD))
+                .sendTo(source)
             return false
         }
         return true
     }
 
     private fun sendSuccess(source: TCommandSource, reloadedResult: Array<String>) {
-      Component.text()
-          .append(pluginInfo.prefix)
-          .append(Component.text("Successfully reloaded ").color(NamedTextColor.GREEN))
-          .append(Component.text(reloadedResult[0]).color(NamedTextColor.GOLD))
-          .sendTo(source)
+        Component.text()
+            .append(pluginInfo.prefix)
+            .append(Component.text("Successfully reloaded ").color(NamedTextColor.GREEN))
+            .append(Component.text(reloadedResult[0]).color(NamedTextColor.GOLD))
+            .sendTo(source)
     }
 }

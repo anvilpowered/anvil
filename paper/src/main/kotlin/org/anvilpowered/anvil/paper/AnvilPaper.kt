@@ -73,14 +73,14 @@ class AnvilPaper : JavaPlugin() {
             val configurationService = environment.injector.getInstance(ConfigurationService::class.java)
             val anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE) ?: false
             if (serverProxyMode && !anvilProxyMode) {
-                logger?.error(
+                getLogger().error(
                     """
           It looks like you are running this server behind a proxy.
           If this is the case, set server.proxyMode=true in the anvil config.
           """.trimIndent()
                 )
             } else if (anvilProxyMode && !serverProxyMode) {
-                logger?.error(
+                getLogger().error(
                     """
           It looks like you are not running this server behind a proxy.
           If this is the case, set server.proxyMode=false in the anvil config

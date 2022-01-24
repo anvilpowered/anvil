@@ -29,6 +29,7 @@ import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.misc.withMongoDB
 import org.anvilpowered.anvil.api.misc.withXodus
 import org.anvilpowered.anvil.api.plugin.PluginInfo
+import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.coremember.CommonCoreMemberManager
 import org.anvilpowered.anvil.common.coremember.CommonMongoCoreMemberRepository
@@ -45,6 +46,15 @@ import java.nio.file.Paths
 abstract class CommonModule<TCommandSource>(private val configDir: String) : ApiCommonModule() {
 
     override fun configure() {
+
+        val configDirFull = Paths.get("$configDir/anvil").toFile()
+        if (!configDirFull.exists()) {
+            check(configDirFull.mkdirs()) { "Unable to create config directory" }
+        }
+        bind(object : TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {}).toInstance(
+            HoconConfigurationLoader.builder().path(Paths.get("$configDirFull/anvil.conf")).build()
+        )
+
         with(binder()) {
             bind<CoreMemberManager>().to<CommonCoreMemberManager>()
             bind<Registry>().to<CommonConfigurationService>()
@@ -64,13 +74,6 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
             withMongoDB()
             withXodus()
         }
-
-        val configDirFull = Paths.get("$configDir/anvil").toFile()
-        if (!configDirFull.exists()) {
-            check(configDirFull.mkdirs()) { "Unable to create config directory" }
-        }
-        bind(object : TypeLiteral<ConfigurationLoader<CommentedConfigurationNode>>() {}).toInstance(
-            HoconConfigurationLoader.builder().path(Paths.get("$configDirFull/anvil.conf")).build()
-        )
+        bind(ConfigurationService::class.java).to(CommonConfigurationService::class.java)
     }
 }

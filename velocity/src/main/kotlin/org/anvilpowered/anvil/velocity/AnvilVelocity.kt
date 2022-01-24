@@ -27,7 +27,6 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
-import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
@@ -57,7 +56,7 @@ class AnvilVelocity @Inject constructor(injector: Injector) :
         EnvironmentBuilderImpl.completeInitialization(ApiVelocityModule(), VelocityFallbackModule())
         proxyServer.eventManager.register(
             this,
-            Anvil.environment?.injector?.getInstance(VelocityPlayerListener::class.java)
+            getEnvironment().injector.getInstance(VelocityPlayerListener::class.java)
         )
     }
 

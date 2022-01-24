@@ -24,16 +24,16 @@ import org.jetbrains.annotations.ApiStatus
 @ApiStatus.NonExtendable
 interface CommandMapping<C> : Named {
 
-  /**
-   * @return The primary alias
-   */
-  override val name: String
+    /**
+     * @return The primary alias
+     */
+    override val name: String
 
-  val otherAliases: List<String>
+    val otherAliases: List<String>
 
-  val command: C
+    val command: C
 
-  val parentCommand: CommandMapping<C>?
+    val parentCommand: CommandMapping<C>?
 
-  val subCommands: List<CommandMapping<C>>
+    val subCommands: List<CommandMapping<C>>
 }

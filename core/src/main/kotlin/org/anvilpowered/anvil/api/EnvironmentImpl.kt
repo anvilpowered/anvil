@@ -30,18 +30,12 @@ class EnvironmentImpl internal constructor(
     override val name: String,
     override val plugin: Any,
     loggerSupplier: Supplier<*>?,
-    withRootCommand: Boolean,
     modules: MutableCollection<Module>,
     earlyServices: Map<Key<*>, Consumer<*>>
 ) : Environment {
-    var loggerSupplier: Supplier<*>
-    private val withRootCommand: Boolean
+    private var loggerSupplier: Supplier<*>
     private val modules: MutableCollection<Module>
     val earlyServices: Map<Key<*>, Consumer<*>>
-
-    fun withRootCommand(): Boolean {
-        return withRootCommand
-    }
 
     fun addModule(module: Module) {
         modules.add(module)
@@ -79,7 +73,6 @@ class EnvironmentImpl internal constructor(
         } else {
             this.loggerSupplier = loggerSupplier
         }
-        this.withRootCommand = withRootCommand
         this.modules = modules
         this.earlyServices = earlyServices
     }

@@ -22,15 +22,13 @@ import dev.morphia.query.Update
 import dev.morphia.query.experimental.filters.Filters
 import dev.morphia.query.experimental.updates.UpdateOperator
 import dev.morphia.query.experimental.updates.UpdateOperators
-import org.anvilpowered.anvil.api.Anvil.Companion.environmentManager
+import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.datastore.MongoRepository
 import org.anvilpowered.anvil.api.model.ObjectWithId
 import org.anvilpowered.anvil.api.util.TimeFormatService
 import org.bson.types.ObjectId
 import java.time.Instant
 import java.util.Arrays
-import java.util.Objects
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Collectors
 
@@ -119,15 +117,18 @@ interface BaseMongoRepository<T : ObjectWithId<ObjectId>> : MongoRepository<T>, 
         return createUpdateOperations().update(UpdateOperators.unset(field))
     }
 
-    fun update(query: Query<T>,
-               updateOperations: List<UpdateOperator>): CompletableFuture<Boolean> {
+    fun update(query: Query<T>, updateOperations: List<UpdateOperator>): CompletableFuture<Boolean> {
         return CompletableFuture.supplyAsync { dataStoreContext.getDataStore().find(query.entityClass).update(updateOperations).execute().modifiedCount > 0 }
+    }
+
+    override fun update(query: Query<T>, update: Update<T>): CompletableFuture<Boolean> {
+        return CompletableFuture.supplyAsync { update.execute().modifiedCount > 0 }
     }
 
     override fun update(query: Query<T>?, vararg update: UpdateOperator): CompletableFuture<Boolean> {
         query.also {
             if (it == null) {
-                 return CompletableFuture.completedFuture(false)
+                return CompletableFuture.completedFuture(false)
             }
             return update(it, Arrays.stream(update).collect(Collectors.toList()))
         }
@@ -159,7 +160,7 @@ interface BaseMongoRepository<T : ObjectWithId<ObjectId>> : MongoRepository<T>, 
     override fun asQueryForIdOrTime(idOrTime: String): Query<T>? {
         parse(idOrTime).also {
             if (it == null) {
-                environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                Anvil.getEnvironmentManager().coreEnvironment.injector.getInstance(TimeFormatService::class.java)
                     .parseInstant(idOrTime).also { time ->
                         if (time == null) {
                             return null

@@ -20,8 +20,8 @@ package org.anvilpowered.anvil.api.util
 import java.util.UUID
 
 interface KickService {
-  fun kick(userUUID: UUID, reason: Any)
-  fun kick(userName: String, reason: Any)
-  fun kick(userUUID: UUID)
-  fun kick(userName: String)
+    fun kick(userUUID: UUID, reason: Any)
+    fun kick(userName: String, reason: Any)
+    fun kick(userUUID: UUID)
+    fun kick(userName: String)
 }

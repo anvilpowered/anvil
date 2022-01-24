@@ -34,54 +34,54 @@ import java.net.URLEncoder
 @Singleton
 class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<ObjectId, Datastore>(registry) {
 
-  override fun closeConnection(morphia: Datastore) {
-    morphia.session?.close()
-  }
-
-  override fun loadDataStore(): Datastore {
-
-    /* === Get values from config === */
-    val connectionString = registry.getExtraSafe(Keys.MONGODB_CONNECTION_STRING)
-    val hostname = registry.getExtraSafe(Keys.MONGODB_HOSTNAME)
-    val port = registry.getExtraSafe(Keys.MONGODB_PORT)
-    val dbName: String = registry.getExtraSafe(Keys.MONGODB_DBNAME)
-    val username = registry.getExtraSafe(Keys.MONGODB_USERNAME)
-    val password = registry.getExtraSafe(Keys.MONGODB_PASSWORD)
-    val authDb = registry.getExtraSafe(Keys.MONGODB_AUTH_DB)
-    val useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH)!!
-    val useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV)!!
-    val useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING)!!
-
-    /* === Determine credentials for MongoDB === */
-    val clientUrl: String?
-    val protocol = if (useSrv) "mongodb+srv://" else "mongodb://"
-    val pt = if (useSrv) "" else ":$port"
-    if (useConnectionString) {
-      clientUrl = connectionString
-    } else if (useAuth) {
-      var encodedPassword = password
-      try {
-        encodedPassword = URLEncoder.encode(password, "UTF-8")
-      } catch (ignored: UnsupportedEncodingException) {
-      }
-      clientUrl = "$protocol$username:$encodedPassword@$hostname$pt/$dbName?authSource=$authDb"
-    } else {
-      clientUrl = "$protocol$hostname$pt/$dbName"
+    override fun closeConnection(morphia: Datastore) {
+        morphia.session?.close()
     }
 
-    /* === Establish MongoDB connection === */
-    /* === Set class loader to prevent morphia from breaking === */
-    val client = MongoClients.create(clientUrl)
-    val morphia = Morphia.createDatastore(client, dbName, MapperOptions.legacy()
-        .dateStorage(DateStorage.UTC)
-        .classLoader(javaClass.classLoader)
-        .build())
-    morphia.ensureIndexes()
+    override fun loadDataStore(): Datastore {
 
-    /* === Save mapped objects and register with morphia === */
-    morphia.mapper.map(*calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE)), Entity::class.java)
+        /* === Get values from config === */
+        val connectionString = registry.getExtraSafe(Keys.MONGODB_CONNECTION_STRING)
+        val hostname = registry.getExtraSafe(Keys.MONGODB_HOSTNAME)
+        val port = registry.getExtraSafe(Keys.MONGODB_PORT)
+        val dbName: String = registry.getExtraSafe(Keys.MONGODB_DBNAME)
+        val username = registry.getExtraSafe(Keys.MONGODB_USERNAME)
+        val password = registry.getExtraSafe(Keys.MONGODB_PASSWORD)
+        val authDb = registry.getExtraSafe(Keys.MONGODB_AUTH_DB)
+        val useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH)!!
+        val useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV)!!
+        val useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING)!!
 
-    tKeyClass = ObjectId::class.java
-    return morphia
-  }
+        /* === Determine credentials for MongoDB === */
+        val clientUrl: String?
+        val protocol = if (useSrv) "mongodb+srv://" else "mongodb://"
+        val pt = if (useSrv) "" else ":$port"
+        if (useConnectionString) {
+            clientUrl = connectionString
+        } else if (useAuth) {
+            var encodedPassword = password
+            try {
+                encodedPassword = URLEncoder.encode(password, "UTF-8")
+            } catch (ignored: UnsupportedEncodingException) {
+            }
+            clientUrl = "$protocol$username:$encodedPassword@$hostname$pt/$dbName?authSource=$authDb"
+        } else {
+            clientUrl = "$protocol$hostname$pt/$dbName"
+        }
+
+        /* === Establish MongoDB connection === */
+        /* === Set class loader to prevent morphia from breaking === */
+        val client = MongoClients.create(clientUrl)
+        val morphia = Morphia.createDatastore(client, dbName, MapperOptions.legacy()
+            .dateStorage(DateStorage.UTC)
+            .classLoader(javaClass.classLoader)
+            .build())
+        morphia.ensureIndexes()
+
+        /* === Save mapped objects and register with morphia === */
+        morphia.mapper.map(*calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE)), Entity::class.java)
+
+        tKeyClass = ObjectId::class.java
+        return morphia
+    }
 }

@@ -15,17 +15,20 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.api
+package org.anvilpowered.anvil.api;
 
-import com.google.inject.Injector
-import com.google.inject.Module
-import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
-import org.slf4j.Logger
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo;
+import org.slf4j.Logger;
 
-open class AnvilImpl(injector: Injector, module: Module) : Anvil(AnvilPluginInfo.id, injector, module) {
-    override fun applyToBuilder(builder: Environment.Builder) {}
+public class AnvilImpl extends Anvil {
 
-    companion object {
-        val logger: Logger? = environment?.injector!!.getInstance(Logger::class.java) ?: null
+    public AnvilImpl(Injector injector, Module module) {
+        super(AnvilPluginInfo.id, injector, module);
+    }
+
+    public static Logger getLogger() {
+        return environment.getInjector().getInstance(Logger.class);
     }
 }

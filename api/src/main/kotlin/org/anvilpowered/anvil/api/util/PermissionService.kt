@@ -18,26 +18,26 @@
 package org.anvilpowered.anvil.api.util
 
 interface PermissionService {
-  /**
-   * Checks whether the provided `subject` has
-   * the provided `permission`. Depending on
-   * the target platform, this can be a
-   * Player, User, Group etc...
-   *
-   *
-   *
-   * If the provided `subject` is the console, returns `true`
-   *
-   *
-   *
-   *
-   * If the provided `subject` is `null`, returns `false`
-   *
-   *
-   * @param subject    The `subject` to test
-   * @param permission The `permission` to check
-   * @return Whether the provided `subject` has
-   * the provided `permission` or is the console.
-   */
-  fun hasPermission(subject: Any?, permission: String): Boolean
+    /**
+     * Checks whether the provided `subject` has
+     * the provided `permission`. Depending on
+     * the target platform, this can be a
+     * Player, User, Group etc...
+     *
+     *
+     *
+     * If the provided `subject` is the console, returns `true`
+     *
+     *
+     *
+     *
+     * If the provided `subject` is `null`, returns `false`
+     *
+     *
+     * @param subject    The `subject` to test
+     * @param permission The `permission` to check
+     * @return Whether the provided `subject` has
+     * the provided `permission` or is the console.
+     */
+    fun hasPermission(subject: Any?, permission: String): Boolean
 }

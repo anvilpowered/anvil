@@ -35,18 +35,22 @@ import org.anvilpowered.anvil.api.datastore.XodusContext
 import org.bson.types.ObjectId
 
 inline fun <reified T> Binder.bind(declaring: Any? = null): AnnotatedBindingBuilder<T> =
-  bind(object : TypeToken<T>(declaring?.javaClass ?: javaClass) {}.toTypeLiteral())
+    bind(object : TypeToken<T>(declaring?.javaClass ?: javaClass) {}.toTypeLiteral())
 
 inline fun <reified T> LinkedBindingBuilder<in T>.to(declaring: Any? = null): ScopedBindingBuilder {
-  return to(object : TypeToken<T>(declaring?.javaClass ?: javaClass) {}.toTypeLiteral())
+    return to(object : TypeToken<T>(declaring?.javaClass ?: javaClass) {}.toTypeLiteral())
+}
+
+fun <T> getTypeLiteral(typeToken: TypeToken<T>): TypeLiteral<T> {
+    return TypeLiteral.get(typeToken.type) as TypeLiteral<T>
 }
 
 inline fun <reified T> LinkedBindingBuilder<in T>.toInternalProvider(declaring: Any? = null): ScopedBindingBuilder {
-  return toProvider(
-    Anvil.environment?.injector?.getProvider(
-      Key.get(object : TypeToken<T>(declaring?.javaClass ?: javaClass) {}.toTypeLiteral())
+    return toProvider(
+        Anvil.getEnvironment().injector.getProvider(
+            Key.get(object : TypeToken<T>(declaring?.javaClass ?: javaClass) {}.toTypeLiteral())
+        )
     )
-  )
 }
 
 // TODO(0.4): Remove

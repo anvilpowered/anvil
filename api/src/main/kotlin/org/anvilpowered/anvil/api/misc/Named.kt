@@ -20,5 +20,5 @@ package org.anvilpowered.anvil.api.misc
 
 interface Named {
 
-  val name: String
+    val name: String
 }

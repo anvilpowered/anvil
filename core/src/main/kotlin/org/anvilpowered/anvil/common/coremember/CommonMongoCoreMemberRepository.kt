@@ -19,7 +19,6 @@ package org.anvilpowered.anvil.common.coremember
 
 import dev.morphia.Datastore
 import dev.morphia.query.Query
-import dev.morphia.query.Update
 import dev.morphia.query.experimental.updates.UpdateOperator
 import dev.morphia.query.experimental.updates.UpdateOperators
 import org.anvilpowered.anvil.api.coremember.MongoCoreMemberRepository
@@ -33,7 +32,7 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 //todo figure out why it is claiming we don't override update
-abstract class CommonMongoCoreMemberRepository : CommonCoreMemberRepository<ObjectId, Datastore>(), BaseMongoRepository<CoreMember<ObjectId>>, MongoCoreMemberRepository {
+class CommonMongoCoreMemberRepository : CommonCoreMemberRepository<ObjectId, Datastore>(), BaseMongoRepository<CoreMember<ObjectId>>, MongoCoreMemberRepository {
 
     override fun getOneOrGenerateForUser(userUUID: UUID, userName: String, ipAddress: String, flags: BooleanArray): CompletableFuture<CoreMember<ObjectId>?> {
         val length = flags.size

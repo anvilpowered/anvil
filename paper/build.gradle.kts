@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 repositories {
@@ -16,5 +17,14 @@ val paperVersion: String by project
 
 dependencies {
     implementation(project(":anvil-core"))
-    implementation("io.papermc.paper:paper-api:$paperVersion")
+    compileOnly("io.papermc.paper:paper-api:$paperVersion")
+}
+
+tasks.shadowJar {
+    val guice: String by project
+    val guava: String by project
+    dependencies {
+        dependency(guice)
+        dependency(guava)
+    }
 }

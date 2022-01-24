@@ -22,20 +22,20 @@ import com.google.inject.Inject
 import org.anvilpowered.anvil.api.sendTo
 
 class CommonRegistryEditCommitCommand<TUser, TPlayer, TCommandSource>
-  : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
+    : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
-  @Inject
-  private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
+    @Inject
+    private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
-  override fun execute(source: TCommandSource, context: Array<String>) {
-    val uuid = userService.getUUIDSafe(source)
-    val stage = registryEditRootCommand.stages[uuid]
-    if (stage == null) {
-      registryEditRootCommand.notInStage.sendTo(source)
-      return
+    override fun execute(source: TCommandSource, context: Array<String>) {
+        val uuid = userService.getUUIDSafe(source)
+        val stage = registryEditRootCommand.stages[uuid]
+        if (stage == null) {
+            registryEditRootCommand.notInStage.sendTo(source)
+            return
+        }
+        if (stage.commit(source)) {
+            registryEditRootCommand.stages.remove(uuid)
+        }
     }
-    if (stage.commit(source)) {
-      registryEditRootCommand.stages.remove(uuid)
-    }
-  }
 }

@@ -17,7 +17,7 @@
  */
 package org.anvilpowered.anvil.common.util
 
-import org.anvilpowered.anvil.api.Anvil.Companion.registry
+import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.util.TimeFormatService
 import org.anvilpowered.anvil.api.util.TimeFormatService.FormatResult
@@ -317,7 +317,7 @@ class CommonTimeFormatService : TimeFormatService {
         }
 
         private val zone: ZoneId
-            private get() = registry.getOrDefault(Keys.TIME_ZONE)
+            get() = Anvil.getRegistry().getOrDefault(Keys.TIME_ZONE)
 
         private fun utcNow(): Instant {
             return OffsetDateTime.now(ZoneOffset.UTC).toInstant()

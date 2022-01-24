@@ -20,9 +20,9 @@ package org.anvilpowered.anvil.api.model
 import java.time.Instant
 
 interface ObjectWithId<TKey> {
-  fun getId(): TKey
-  fun setId(id: TKey)
-  var idAsString: String
-  val createdUtc: Instant
-  var updatedUtc: Instant
+    fun getId(): TKey
+    fun setId(id: TKey)
+    var idAsString: String
+    val createdUtc: Instant
+    var updatedUtc: Instant
 }

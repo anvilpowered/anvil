@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.api.datastore
 
 import java.util.concurrent.CompletableFuture
-import java.lang.IllegalStateException
 
 /**
  *
@@ -87,37 +86,37 @@ import java.lang.IllegalStateException
  * @see TextService
 </C> */
 interface Manager<C : DBComponent<*, *>?> {
-  /**
-   * Provides the current [DBComponent] as defined by [Keys.DATA_STORE_NAME] in the current [Registry].
-   *
-   *
-   * The current [DBComponent] implementation is defined as the implementation provided by Guice that meets the following
-   * criteria:
-   *
-   * <br></br>
-   *
-   *
-   * The value for [Keys.DATA_STORE_NAME] found by the the current [Registry] must match (ignored case) a registered
-   * datastore implementation. This can be one of the following predefined values:
-   *
-   *
-   *  * `"mongodb"`
-   *  * `"xodus"`
-   *
-   *
-   *
-   * or a custom value defined by your guice module.
-   *
-   * <br></br>
-   *
-   *
-   * For example, 'mongodb' (or any capitalization thereof) will match
-   * a [DBComponent] annotated with [Named]`(value = "mongodb")`
-   *
-   *
-   * @return The current [DBComponent] implementation
-   * @throws IllegalStateException If the config has not been loaded yet, or if no implementation was found
-   * @see DBComponent
-   */
-  val primaryComponent: C
+    /**
+     * Provides the current [DBComponent] as defined by [Keys.DATA_STORE_NAME] in the current [Registry].
+     *
+     *
+     * The current [DBComponent] implementation is defined as the implementation provided by Guice that meets the following
+     * criteria:
+     *
+     * <br></br>
+     *
+     *
+     * The value for [Keys.DATA_STORE_NAME] found by the the current [Registry] must match (ignored case) a registered
+     * datastore implementation. This can be one of the following predefined values:
+     *
+     *
+     *  * `"mongodb"`
+     *  * `"xodus"`
+     *
+     *
+     *
+     * or a custom value defined by your guice module.
+     *
+     * <br></br>
+     *
+     *
+     * For example, 'mongodb' (or any capitalization thereof) will match
+     * a [DBComponent] annotated with [Named]`(value = "mongodb")`
+     *
+     *
+     * @return The current [DBComponent] implementation
+     * @throws IllegalStateException If the config has not been loaded yet, or if no implementation was found
+     * @see DBComponent
+     */
+    val primaryComponent: C
 }

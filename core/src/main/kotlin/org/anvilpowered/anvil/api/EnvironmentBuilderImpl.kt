@@ -39,13 +39,12 @@ import java.util.stream.Collectors
 import java.util.stream.Stream
 import java.util.stream.StreamSupport
 
-class EnvironmentBuilderImpl internal constructor() : Environment.Builder {
+class EnvironmentBuilderImpl : Environment.Builder {
 
     private lateinit var name: String
     private lateinit var rootInjector: Injector
     private lateinit var plugin: Any
-    private lateinit var loggerSupplier: Supplier<*>
-    private val withRootCommand = false
+    private var loggerSupplier: Supplier<*>? = null
     private val modules: MutableCollection<Module>
     private val earlyServices: MutableMap<Key<*>, Consumer<*>>
     private val loadedListeners: MutableCollection<Consumer<Environment>>
@@ -122,7 +121,7 @@ class EnvironmentBuilderImpl internal constructor() : Environment.Builder {
         return this
     }
 
-    override fun setLoggerSupplier(logger: Supplier<*>): Environment.Builder {
+    override fun setLoggerSupplier(logger: Supplier<*>?): Environment.Builder {
         loggerSupplier = logger
         return this
     }
@@ -170,7 +169,6 @@ class EnvironmentBuilderImpl internal constructor() : Environment.Builder {
                     name,
                     builder.plugin,
                     builder.loggerSupplier,
-                    builder.withRootCommand,
                     modules,
                     builder.earlyServices
                 )

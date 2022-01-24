@@ -17,14 +17,14 @@
  */
 package org.anvilpowered.anvil.api.server
 
+import org.anvilpowered.anvil.api.misc.Named
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
-import org.anvilpowered.anvil.api.misc.Named
 
 interface BackendServer : Named {
-  val version: CompletableFuture<out Version>
-  fun connect(player: Any): CompletableFuture<Boolean>
-  fun connect(userUUID: UUID): CompletableFuture<Boolean>
-  fun connect(userName: String): CompletableFuture<Boolean>
-  val playerUUIDs: List<UUID>
+    val version: CompletableFuture<out Version>
+    fun connect(player: Any): CompletableFuture<Boolean>
+    fun connect(userUUID: UUID): CompletableFuture<Boolean>
+    fun connect(userName: String): CompletableFuture<Boolean>
+    val playerUUIDs: List<UUID>
 }

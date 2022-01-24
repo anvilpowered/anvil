@@ -26,7 +26,6 @@ import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.registry.RegistryScope
 import org.anvilpowered.anvil.api.registry.RegistryScoped
 import org.slf4j.Logger
-import java.lang.IllegalStateException
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.stream.Collectors
@@ -59,7 +58,8 @@ open class BaseRegistry : Registry {
 
     override fun <T> getDefault(key: Key<T>): T {
         val result = defaultMap[key] as T?
-        return result ?: key.fallbackValue ?: throw IllegalStateException("Could not find a default value for ${key.name}")
+        return result ?: key.fallbackValue
+        ?: throw IllegalStateException("Could not find a default value for ${key.name}")
     }
 
     override fun <T> set(key: Key<T>, value: T) {
@@ -75,24 +75,24 @@ open class BaseRegistry : Registry {
 
     override fun <T> getExtraSafe(key: Key<T>): T {
         if (coreRegistry == null) {
-            coreRegistry = Anvil.registry
+            coreRegistry = Anvil.getRegistry()
         }
         if (this !== coreRegistry
-                && getOrDefault(Keys.USE_SHARED_ENVIRONMENT)!!
+            && getOrDefault(Keys.USE_SHARED_ENVIRONMENT)!!
         ) {
             if (key == Keys.DATA_STORE_NAME
-                    || key == Keys.MONGODB_HOSTNAME
-                    || key == Keys.MONGODB_PORT
-                    || key == Keys.MONGODB_USE_SRV
+                || key == Keys.MONGODB_HOSTNAME
+                || key == Keys.MONGODB_PORT
+                || key == Keys.MONGODB_USE_SRV
             ) {
                 return coreRegistry!!.getOrDefault(key)
             } else if (getOrDefault(Keys.USE_SHARED_CREDENTIALS)!!) {
                 if (key == Keys.MONGODB_USE_CONNECTION_STRING
-                        || key == Keys.MONGODB_CONNECTION_STRING
-                        || key == Keys.MONGODB_USERNAME
-                        || key == Keys.MONGODB_PASSWORD
-                        || key == Keys.MONGODB_AUTH_DB
-                        || key == Keys.MONGODB_USE_AUTH
+                    || key == Keys.MONGODB_CONNECTION_STRING
+                    || key == Keys.MONGODB_USERNAME
+                    || key == Keys.MONGODB_PASSWORD
+                    || key == Keys.MONGODB_AUTH_DB
+                    || key == Keys.MONGODB_USE_AUTH
                 ) {
                     return coreRegistry!!.getOrDefault(key)
                 }
@@ -173,14 +173,14 @@ open class BaseRegistry : Registry {
 
     protected fun loadOrdinal(ordinal: Int) {
         listeners.entries.stream()
-                .sorted(java.util.Map.Entry.comparingByKey<Int, Map<Runnable, RegistryScope>>())
-                .forEach { (_, value): Map.Entry<Int, Map<Runnable, RegistryScope>> ->
-                    value.forEach { (r: Runnable, c: RegistryScope) ->
-                        if (ordinal <= c.ordinal) {
-                            r.run()
-                        }
+            .sorted(java.util.Map.Entry.comparingByKey<Int, Map<Runnable, RegistryScope>>())
+            .forEach { (_, value): Map.Entry<Int, Map<Runnable, RegistryScope>> ->
+                value.forEach { (r: Runnable, c: RegistryScope) ->
+                    if (ordinal <= c.ordinal) {
+                        r.run()
                     }
                 }
+            }
     }
 
     /**
@@ -209,13 +209,13 @@ open class BaseRegistry : Registry {
         return ("""
   ${String.format("%-" + width[0] + "s", "Key")}${
             String.format("%-" + width[1] + "s",
-                    "Value")
+                "Value")
         }${String.format("%-" + width[2] + "s", "Default")}
 
   """.trimIndent()
-                + keys.stream().map { key: Key<*>? ->
+            + keys.stream().map { key: Key<*>? ->
             String.format("%-" + width[0] + "s", key.toString()) + String.format("%-" + width[1] + "s",
-                    valueMap[key]) + String.format("%-" + width[2] + "s", defaultMap[key])
+                valueMap[key]) + String.format("%-" + width[2] + "s", defaultMap[key])
         }.collect(Collectors.joining("\n")).also { stringRepresentation = it })
     }
 }
