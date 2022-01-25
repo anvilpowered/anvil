@@ -42,7 +42,7 @@ open class CommonRedisService @Inject protected constructor(private val registry
         }
 
     private fun loadJedis() {
-        jedisPool = if (registry.getOrDefault(Keys.REDIS_USE_AUTH)!!) {
+        jedisPool = if (registry.getOrDefault(Keys.REDIS_USE_AUTH)) {
             JedisPool(
                 JedisPoolConfig(),
                 registry.getOrDefault(Keys.REDIS_HOSTNAME),

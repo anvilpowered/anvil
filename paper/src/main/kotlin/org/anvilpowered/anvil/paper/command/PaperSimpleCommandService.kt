@@ -18,6 +18,7 @@
 package org.anvilpowered.anvil.paper.command
 
 import com.google.inject.Inject
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
@@ -34,17 +35,17 @@ class PaperSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
   private inner class PlatformExecutor(
     private val delegate: SimpleCommand<CommandSender>,
   ) : TabExecutor {
-    override fun onCommand(source: CommandSender, command: Command, alias: String, context: Array<String>): Boolean {
+    override fun onCommand(source: CommandSender, command: Command, alias: String, arguments: Array<String>): Boolean {
       if (delegate.canExecute(source)) {
-        delegate.execute(source, context)
+        delegate.execute(CommandContext(source, arguments))
       } else {
         source.sendNoPermission()
       }
       return true
     }
 
-    override fun onTabComplete(source: CommandSender, command: Command, alias: String, context: Array<String>): List<String> {
-      return delegate.suggest(source, context)
+    override fun onTabComplete(source: CommandSender, command: Command, alias: String, arguments: Array<String>): List<String> {
+      return delegate.suggest(CommandContext(source, arguments))
     }
   }
 

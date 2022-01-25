@@ -34,8 +34,8 @@ import java.net.URLEncoder
 @Singleton
 class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<ObjectId, Datastore>(registry) {
 
-    override fun closeConnection(morphia: Datastore) {
-        morphia.session?.close()
+    override fun closeConnection(dataStore: Datastore) {
+        dataStore.session?.close()
     }
 
     override fun loadDataStore(): Datastore {

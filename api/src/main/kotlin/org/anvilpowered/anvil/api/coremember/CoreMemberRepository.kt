@@ -58,7 +58,7 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      * @param userName  [String] Name of user.
      * @param ipAddress [String] IP Address of user.
      * @param flags     A boolean array of length 8.
-     * @return An [Optional] containing the inserted [CoreMember] if successful, otherwise [Optional.empty]
+     * @return The inserted [CoreMember] if successful, otherwise null.
      * @throws IllegalArgumentException If `flags` is not of length 8
      */
     fun getOneOrGenerateForUser(
@@ -79,7 +79,7 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      * @param userUUID  [UUID] userUUID of user
      * @param userName  [String] Name of user
      * @param ipAddress [String] IP Address of user
-     * @return An [Optional] containing the inserted [CoreMember] if successful, otherwise [Optional.empty]
+     * @return The inserted [CoreMember] if successful, otherwise null.
      */
     fun getOneOrGenerateForUser(
         userUUID: UUID,
@@ -89,19 +89,19 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
 
     /**
      * @param userUUID [UUID] userUUID of user
-     * @return An [Optional] containing a matching [CoreMember] if successful, otherwise [Optional.empty]
+     * @return The matching [CoreMember] if successful, otherwise null.
      */
     fun getOneForUser(userUUID: UUID): CompletableFuture<CoreMember<TKey>?>
 
     /**
      * @param userName [String] Name of user
-     * @return An [Optional] containing a matching [CoreMember] if successful, otherwise [Optional.empty]
+     * @return The matching [CoreMember] if successful, otherwise null.
      */
     fun getOneForUser(userName: String): CompletableFuture<CoreMember<TKey>?>
 
     /**
      * @param ipAddress [String] IP Address of user
-     * @return A [List] of matching [CoreMember] if successful, otherwise [Optional.empty]
+     * @return A [List] of matching [CoreMember] if successful, otherwise an empty list.
      */
     fun getForIpAddress(ipAddress: String): CompletableFuture<List<CoreMember<TKey>>>
 
@@ -207,13 +207,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only banned if [CoreMember.isBanned] is
-     * true and [CoreMember.getBanEndUtc] is in the future.
+     * true and [CoreMember.banEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isBanned] and
-     * [CoreMember.getBanEndUtc] and sets the member's
+     * [CoreMember.banEndUtc] and sets the member's
      * ban status accordingly.
      *
      *
@@ -229,13 +229,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only banned if [CoreMember.isBanned] is
-     * true and [CoreMember.getBanEndUtc] is in the future.
+     * true and [CoreMember.banEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isBanned] and
-     * [CoreMember.getBanEndUtc] and sets the member's
+     * [CoreMember.banEndUtc] and sets the member's
      * ban status accordingly.
      *
      *
@@ -252,13 +252,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only banned if [CoreMember.isBanned] is
-     * true and [CoreMember.getBanEndUtc] is in the future.
+     * true and [CoreMember.banEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isBanned] and
-     * [CoreMember.getBanEndUtc] and sets the member's
+     * [CoreMember.banEndUtc] and sets the member's
      * ban status accordingly.
      *
      *
@@ -275,13 +275,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only banned if [CoreMember.isBanned] is
-     * true and [CoreMember.getBanEndUtc] is in the future.
+     * true and [CoreMember.banEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isBanned] and
-     * [CoreMember.getBanEndUtc] and sets the member's
+     * [CoreMember.banEndUtc] and sets the member's
      * ban status accordingly.
      *
      *
@@ -393,13 +393,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only muted if [CoreMember.isMuted] is
-     * true and [CoreMember.getMuteEndUtc] is in the future.
+     * true and [CoreMember.muteEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isMuted] and
-     * [CoreMember.getMuteEndUtc] and sets the member's
+     * [CoreMember.muteEndUtc] and sets the member's
      * mute status accordingly.
      *
      *
@@ -415,13 +415,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only muted if [CoreMember.isMuted] is
-     * true and [CoreMember.getMuteEndUtc] is in the future.
+     * true and [CoreMember.muteEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isMuted] and
-     * [CoreMember.getMuteEndUtc] and sets the member's
+     * [CoreMember.muteEndUtc] and sets the member's
      * mute status accordingly.
      *
      *
@@ -438,13 +438,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only muted if [CoreMember.isMuted] is
-     * true and [CoreMember.getMuteEndUtc] is in the future.
+     * true and [CoreMember.muteEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isMuted] and
-     * [CoreMember.getMuteEndUtc] and sets the member's
+     * [CoreMember.muteEndUtc] and sets the member's
      * mute status accordingly.
      *
      *
@@ -461,13 +461,13 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      *
      *
      * A user is only muted if [CoreMember.isMuted] is
-     * true and [CoreMember.getMuteEndUtc] is in the future.
+     * true and [CoreMember.muteEndUtc] is in the future.
      *
      *
      *
      *
      * This method checks both [CoreMember.isMuted] and
-     * [CoreMember.getMuteEndUtc] and sets the member's
+     * [CoreMember.muteEndUtc] and sets the member's
      * mute status accordingly.
      *
      *
@@ -535,7 +535,7 @@ interface CoreMemberRepository<TKey, TDataStore> : Repository<TKey, CoreMember<T
      * property `userName` matches the provided [String]
      *
      * @param userName [String] userName of documents to update
-     * @return [CompletableFuture] wrapped [boolean]
+     * @return [CompletableFuture] wrapped [Boolean]
      * true if successful, otherwise false
      */
     fun deleteNickNameForUser(userName: String): CompletableFuture<Boolean>

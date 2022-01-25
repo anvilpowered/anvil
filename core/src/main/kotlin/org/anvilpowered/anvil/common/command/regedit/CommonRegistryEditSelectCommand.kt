@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.sendTo
 import kotlin.streams.toList
@@ -37,20 +38,20 @@ class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
             .build()
     }
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
-        val uuid = userService.getUUIDSafe(source)
+    override fun execute(context: CommandContext<TCommandSource>) {
+        val uuid = userService.getUUIDSafe(context.source)
         val stage = registryEditRootCommand.stages[uuid]
         when {
             stage == null -> registryEditRootCommand.notInStage
-            context.size == 1 -> stage.setRegistry(context[0])
+            context.arguments.size == 1 -> stage.setRegistry(context.arguments[0])
             else -> usage
-        }.sendTo(source)
+        }.sendTo(context.source)
     }
 
-    override fun suggest(source: TCommandSource, context: Array<String>): List<String> {
-        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)] ?: return listOf()
-        return when (context.size) {
-            1 -> stage.registries.keys.stream().filter { it.startsWith(context[0]) }.toList()
+    override fun suggest(context: CommandContext<TCommandSource>): List<String> {
+        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(context.source)] ?: return listOf()
+        return when (context.arguments.size) {
+            1 -> stage.registries.keys.stream().filter { it.startsWith(context.arguments[0]) }.toList()
             else -> listOf()
         }
     }

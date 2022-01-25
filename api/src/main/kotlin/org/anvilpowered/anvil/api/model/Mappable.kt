@@ -24,7 +24,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.util.Optional
 import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.stream.Collectors
@@ -51,9 +50,9 @@ interface Mappable<T> {
      * this object should not be overwritten.
      *
      *
-     * @param object Object to read data from
+     * @param obj Object to read data from
      */
-    fun readFrom(`object`: T)
+    fun readFrom(obj: T)
 
     companion object {
         @Throws(IOException::class)
@@ -66,11 +65,11 @@ interface Mappable<T> {
             }
         }
 
-        fun serialize(`object`: Any?): Optional<ByteArray>? {
+        fun serialize(obj: Any?): ByteArray? {
             return try {
-                Optional.of(serializeUnsafe(`object`))
+                serializeUnsafe(obj)
             } catch (ignored: IOException) {
-                Optional.empty()
+                null
             }
         }
 
@@ -79,15 +78,15 @@ interface Mappable<T> {
             ObjectInputStream(inputStream).use { objectInputStream -> return objectInputStream.readObject() as T }
         }
 
-        fun <T> deserialize(inputStream: InputStream?): Optional<T>? {
+        fun <T> deserialize(inputStream: InputStream?): T? {
             return try {
-                Optional.of(deserializeUnsafe(inputStream))
+                deserializeUnsafe(inputStream)
             } catch (ignored: IOException) {
-                Optional.empty()
+                null
             } catch (ignored: ClassNotFoundException) {
-                Optional.empty()
+                null
             } catch (ignored: ClassCastException) {
-                Optional.empty()
+                null
             }
         }
 
@@ -108,8 +107,7 @@ interface Mappable<T> {
                 temp.addAll(elements)
                 collection = temp
             }
-            val data: ByteArray
-            data = try {
+            val data: ByteArray = try {
                 serializeUnsafe(collection)
             } catch (ignored: IOException) {
                 return false
@@ -140,8 +138,7 @@ interface Mappable<T> {
             } catch (ignored: UnsupportedOperationException) {
                 collection = collection.stream().filter(filter.negate()).collect(Collectors.toList())
             }
-            val data: ByteArray
-            data = try {
+            val data: ByteArray = try {
                 serializeUnsafe(collection)
             } catch (ignored: IOException) {
                 return false

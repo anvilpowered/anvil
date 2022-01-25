@@ -54,13 +54,13 @@ class CommonRestrictionService : RestrictionService {
         uuidRestrictions[uuid] = criteria
     }
 
-    override fun remove(entity: Any): Optional<RestrictionCriteria> {
+    override fun remove(entity: Any): RestrictionCriteria? {
         val uuid = entityUtils.extractUUID(entity)
-        return uuid?.let { remove(it) } ?: Optional.ofNullable(entityRestrictions.remove(entity))
+        return uuid?.let { remove(it) } ?: entityRestrictions.remove(entity)
     }
 
-    override fun remove(uuid: UUID): Optional<RestrictionCriteria> {
-        return Optional.ofNullable(uuidRestrictions.remove(uuid))
+    override fun remove(uuid: UUID): RestrictionCriteria? {
+        return uuidRestrictions.remove(uuid)
     }
 
     override fun get(entity: Any): RestrictionCriteria {

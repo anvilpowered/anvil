@@ -17,7 +17,6 @@
  */
 package org.anvilpowered.anvil.api.entity
 
-import java.util.Optional
 import java.util.UUID
 
 interface RestrictionService {
@@ -64,10 +63,9 @@ interface RestrictionService {
      *
      *
      * @param entity The entity to stop restrictions for
-     * @return An [Optional] containing the removed [RestrictionCriteria] if it existed,
-     * otherwise [Optional.empty]
+     * @return The removed [RestrictionCriteria] if it existed, otherwise null
      */
-    fun remove(entity: Any): Optional<RestrictionCriteria>
+    fun remove(entity: Any): RestrictionCriteria?
 
     /**
      *
@@ -76,10 +74,9 @@ interface RestrictionService {
      *
      *
      * @param uuid The uuid of the entity to stop restricting
-     * @return An [Optional] containing the removed [RestrictionCriteria] if it existed,
-     * otherwise [Optional.empty]
+     * @return The removed [RestrictionCriteria] if it existed, otherwise null
      */
-    fun remove(uuid: UUID): Optional<RestrictionCriteria>
+    fun remove(uuid: UUID): RestrictionCriteria?
 
     /**
      *

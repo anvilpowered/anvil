@@ -153,8 +153,7 @@ class RestrictionCriteria(
         if (obj !is RestrictionCriteria) {
             return false
         }
-        val other = obj
-        return movement == other.movement && interaction == other.interaction && inventory == other.inventory && commands == other.commands && damage == other.damage
+        return movement == obj.movement && interaction == obj.interaction && inventory == obj.inventory && commands == obj.commands && damage == obj.damage
     }
 
     override fun toString(): String {
@@ -222,7 +221,6 @@ class RestrictionCriteria(
             return ALL
         }
 
-        @kotlin.jvm.JvmStatic
         fun none(): RestrictionCriteria {
             return NONE
         }

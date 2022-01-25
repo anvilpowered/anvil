@@ -47,11 +47,11 @@ class AnvilPluginInfo : PluginInfo {
     companion object {
         const val id = "anvil"
         const val name = "Anvil"
-        const val version = "\$modVersion"
+        const val version = "{modVersion}"
         const val description = "A cross-platform Minecraft plugin framework"
         const val url = "https://github.com/AnvilPowered/Anvil"
         const val organizationName = "AnvilPowered"
         val authors = arrayOf(organizationName)
-        const val buildDate = "\$buildDate"
+        const val buildDate = "{buildDate}"
     }
 }

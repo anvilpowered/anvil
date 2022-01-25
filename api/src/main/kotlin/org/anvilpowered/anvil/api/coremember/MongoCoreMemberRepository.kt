@@ -58,9 +58,9 @@ interface MongoCoreMemberRepository : CoreMemberRepository<ObjectId, Datastore>,
     /**
      * Updates the properties `banEndUtc`, `banReason`
      * and sets `banned` to `true` for documents that
-     * match the provided [Query]
+     * match the provided [ObjectId]
      *
-     * @param query  [Query] to update documents for
+     * @param id  [ObjectId] to update documents for
      * @param endUtc [Instant] end of the ban
      * @param reason [String] reason for the ban
      * @return [CompletableFuture] wrapped [Boolean].
@@ -114,7 +114,7 @@ interface MongoCoreMemberRepository : CoreMemberRepository<ObjectId, Datastore>,
 
     /**
      * Deletes the property `nickName` for
-     * documents that match the provided [boolean]
+     * documents that match the provided [Boolean]
      *
      * @param query [Query] to update documents for
      * @return [CompletableFuture] wrapped [Boolean]

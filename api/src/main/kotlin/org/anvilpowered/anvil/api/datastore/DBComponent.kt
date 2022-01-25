@@ -25,8 +25,6 @@ import java.util.Optional
  * @see Manager
  *
  * @see Repository
- *
- * @see CacheService
  */
 interface DBComponent<TKey, TDataStore> {
     val tKeyClass: Class<TKey>

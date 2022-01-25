@@ -18,11 +18,6 @@ dependencies {
 }
 
 tasks.shadowJar {
-    val configurateVersion: String by project
-    val spongeMathVersion: String by project
-    val kyoriVersion: String by project
-    val guiceVersion: String by project
-
     dependencies {
         exclude(dependency("ninja.leaping:configurate"))
         exclude(dependency("io.github:classgraph"))

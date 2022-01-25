@@ -26,9 +26,9 @@ class TypeTokens private constructor() {
     }
 
     companion object {
-        val BOOLEAN = TypeToken.get(Boolean::class.javaObjectType)
-        val INTEGER = TypeToken.get(Int::class.javaObjectType)
-        val STRING = TypeToken.get(String::class.javaObjectType)
-        val ZONE_ID = TypeToken.get(ZoneId::class.javaObjectType)
+        val BOOLEAN: TypeToken<Boolean> = TypeToken.get(Boolean::class.javaObjectType)
+        val INTEGER: TypeToken<Int> = TypeToken.get(Int::class.javaObjectType)
+        val STRING: TypeToken<String> = TypeToken.get(String::class.javaObjectType)
+        val ZONE_ID: TypeToken<ZoneId> = TypeToken.get(ZoneId::class.javaObjectType)
     }
 }

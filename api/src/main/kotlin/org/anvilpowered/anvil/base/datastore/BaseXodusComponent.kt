@@ -25,15 +25,14 @@ import java.util.Optional
 
 interface BaseXodusComponent : DBComponent<EntityId, PersistentEntityStore> {
 
-    override fun parseUnsafe(`object`: Any): EntityId {
-        if (`object` is EntityId) {
-            return `object`
-        } else if (`object` is Optional<*>) {
-            val optional = `object`
-            if (optional.isPresent) return parseUnsafe(optional.get())
-            throw IllegalArgumentException("Error while parsing $`object`. Optional not present")
+    override fun parseUnsafe(obj: Any): EntityId {
+        if (obj is EntityId) {
+            return obj
+        } else if (obj is Optional<*>) {
+            if (obj.isPresent) return parseUnsafe(obj.get())
+            throw IllegalArgumentException("Error while parsing $obj. Optional not present")
         }
-        val string = `object`.toString()
+        val string = obj.toString()
         val stringParts = string.split("-").toTypedArray()
         require(stringParts.size == 2) { "Not a valid EntityId. Must follow format (int)-(long)" }
         return PersistentEntityId(stringParts[0].toInt(), stringParts[1].toLong())

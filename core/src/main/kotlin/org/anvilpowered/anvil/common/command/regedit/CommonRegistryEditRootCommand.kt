@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.common.command.regedit
 
 import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.sendTo
 import java.util.UUID
@@ -35,7 +36,7 @@ class CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
             .build()
     }
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
-        stages[userService.getUUIDSafe(source)]?.print()?.sendTo(source) ?: notInStage.sendTo(source)
+    override fun execute(context: CommandContext<TCommandSource>) {
+        stages[userService.getUUIDSafe(context.source)]?.print()?.sendTo(context.source) ?: notInStage.sendTo(context.source)
     }
 }

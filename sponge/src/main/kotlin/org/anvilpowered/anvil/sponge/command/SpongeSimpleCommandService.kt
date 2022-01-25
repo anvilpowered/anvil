@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.sponge.command
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.registry.Registry
@@ -36,59 +37,61 @@ import java.util.Optional
 
 @Singleton
 class SpongeSimpleCommandService @Inject constructor(
-  private val plugin: PluginContainer,
-  registry: Registry,
+    private val plugin: PluginContainer,
+    registry: Registry,
 ) : CommonSimpleCommandService<CommandCause>() {
 
-  private var alreadyLoaded = false
+    private var alreadyLoaded = false
 
-  init {
-    registry.whenLoaded {
-      if (alreadyLoaded) {
-        return@whenLoaded
-      }
-      alreadyLoaded = true
-    }.order(Integer.MIN_VALUE).register()
-  }
-
-  private class CommandRegistration(
-    val command: Command.Raw,
-    val primaryAlias: String,
-    vararg val otherAliases: String,
-  )
-
-  private inner class PlatformCommand(
-    private val delegate: SimpleCommand<CommandCause>,
-  ) : Command.Raw {
-    override fun process(cause: CommandCause, arguments: ArgumentReader.Mutable): CommandResult {
-      delegate.execute(cause, arguments.remaining().splitContext())
-      return CommandResult.success()
+    init {
+        registry.whenLoaded {
+            if (alreadyLoaded) {
+                return@whenLoaded
+            }
+            alreadyLoaded = true
+        }.order(Integer.MIN_VALUE).register()
     }
 
-    override fun complete(cause: CommandCause, arguments: ArgumentReader.Mutable): MutableList<CommandCompletion> {
-      return delegate.suggest(cause, arguments.remaining().splitContext()).map { CommandCompletion.of(it) }.toMutableList()
-    }
-
-    override fun canExecute(cause: CommandCause): Boolean = delegate.canExecute(cause)
-    override fun shortDescription(cause: CommandCause): Optional<Component> = Optional.ofNullable(delegate.shortDescription(cause))
-    override fun extendedDescription(cause: CommandCause): Optional<Component> = Optional.ofNullable(delegate.longDescription(cause))
-    override fun usage(cause: CommandCause): Component = delegate.usage(cause) ?: Component.empty()
-  }
-
-  private val registrations: MutableList<CommandRegistration> = mutableListOf()
-
-  override fun register(mapping: CommandMapping<out SimpleCommand<CommandCause>>) {
-    registrations.add(
-      CommandRegistration(
-        PlatformCommand(mapping.command),
-        mapping.name, *mapping.otherAliases.toTypedArray()
-      )
+    private class CommandRegistration(
+        val command: Command.Raw,
+        val primaryAlias: String,
+        vararg val otherAliases: String,
     )
-  }
 
-  fun onRegister(event: RegisterCommandEvent<Command.Raw>) {
-    for (registration in registrations) {
-      event.register(plugin, registration.command, registration.primaryAlias, *registration.otherAliases)
+    private inner class PlatformCommand(
+        private val delegate: SimpleCommand<CommandCause>,
+    ) : Command.Raw {
+        override fun process(cause: CommandCause, arguments: ArgumentReader.Mutable): CommandResult {
+            delegate.execute(CommandContext(cause, arguments.remaining().splitContext()))
+            return CommandResult.success()
+        }
+
+        override fun complete(cause: CommandCause, arguments: ArgumentReader.Mutable): MutableList<CommandCompletion> {
+            return delegate.suggest(CommandContext(cause, arguments.remaining().splitContext()))
+                .map { CommandCompletion.of(it) }
+                .toMutableList()
+        }
+
+        override fun canExecute(cause: CommandCause): Boolean = delegate.canExecute(cause)
+        override fun shortDescription(cause: CommandCause): Optional<Component> = Optional.ofNullable(delegate.shortDescription(cause))
+        override fun extendedDescription(cause: CommandCause): Optional<Component> = Optional.ofNullable(delegate.longDescription(cause))
+        override fun usage(cause: CommandCause): Component = delegate.usage(cause) ?: Component.empty()
     }
-  }
+
+    private val registrations: MutableList<CommandRegistration> = mutableListOf()
+
+    override fun register(mapping: CommandMapping<out SimpleCommand<CommandCause>>) {
+        registrations.add(
+            CommandRegistration(
+                PlatformCommand(mapping.command),
+                mapping.name, *mapping.otherAliases.toTypedArray()
+            )
+        )
+    }
+
+    fun onRegister(event: RegisterCommandEvent<Command.Raw>) {
+        for (registration in registrations) {
+            event.register(plugin, registration.command, registration.primaryAlias, *registration.otherAliases)
+        }
+    }
 }

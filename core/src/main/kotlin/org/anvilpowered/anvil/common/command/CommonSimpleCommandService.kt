@@ -27,6 +27,7 @@ import org.anvilpowered.anvil.api.append
 import org.anvilpowered.anvil.api.appendIf
 import org.anvilpowered.anvil.api.appendJoining
 import org.anvilpowered.anvil.api.aqua
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.command.SimpleCommandService
@@ -116,46 +117,45 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
         private val subCommands: List<CommandMapping<SimpleCommand<TCommandSource>>>,
         private val childCommandFallback: Boolean,
     ) : SimpleCommand<TCommandSource> {
-        override fun execute(source: TCommandSource, context: Array<String>) {
-            val length = context.size
+        override fun execute(context: CommandContext<TCommandSource>) {
+            val length = context.arguments.size
             if (length > 0) {
                 for (mapping in subCommands) {
-                    if (context[0] == mapping.name) {
+                    if (context.arguments[0] == mapping.name) {
+                        context.arguments = context.arguments.copyOfRange(1, length)
                         // remove the first argument (the child selector)
-                        mapping.command.execute(source, context.copyOfRange(1, length))
+                        mapping.command.execute(context)
                         return
                     }
                 }
                 if (!childCommandFallback) {
-                    sendSubCommandError(source, context[0], subCommands)
+                    sendSubCommandError(context.source, context.arguments[0], subCommands)
                     return
                 }
             }
             // reached the end; if no children have matched, run the root command
             if (root == null) {
-                sendSubCommandError(source, null, subCommands)
+                sendSubCommandError(context.source, null, subCommands)
             } else {
-                root.execute(source, context)
+                root.execute(context)
             }
         }
 
-        override fun suggest(
-            source: TCommandSource,
-            context: Array<String>,
-        ): List<String> {
-            return when (val length = context.size) {
+        override fun suggest(context: CommandContext<TCommandSource>): List<String> {
+            return when (val length = context.arguments.size) {
                 0 -> mutableListOf()
                 1 -> subCommands.asSequence().map { it.name }.toMutableList()
                 else -> {
                     for (mapping in subCommands) {
-                        if (mapping.name.contains(context[0])) {
+                        if (mapping.name.contains(context.arguments[0])) {
                             // remove the first argument (the child selector)
-                            return mapping.command.suggest(source, context.copyOfRange(1, length))
+                            context.arguments = context.arguments.copyOfRange(1, length)
+                            return mapping.command.suggest(context)
                         }
                     }
                     if (!childCommandFallback || root == null) {
                         listOf()
-                    } else root.suggest(source, context)
+                    } else root.suggest(context)
                 }
             }
         }
@@ -165,8 +165,8 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
         private val helpUsage: String,
         private val extended: (TCommandSource) -> Boolean,
     ) : SimpleCommand<TCommandSource> {
-        override fun execute(source: TCommandSource, context: Array<String>) {
-            val isExtended = extended(source)
+        override fun execute(context: CommandContext<TCommandSource>) {
+            val isExtended = extended(context.source)
             Component.text()
                 .append(pluginInfo.prefix)
                 .append(Component.text().append(Component.text(pluginInfo.version)).green())
@@ -179,7 +179,7 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
                     .append(Component.text().append(Component.text(" for help")).green())
                     .build())
                 .appendIf(!isExtended, Component.text().append(Component.text("You do not have permission for any sub-commands!")).red().build())
-                .sendTo(source)
+                .sendTo(context.source)
         }
     }
 
@@ -187,8 +187,8 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
         private val helpUsage: String,
         private val extended: (TCommandSource) -> Boolean,
     ) : SimpleCommand<TCommandSource> {
-        override fun execute(source: TCommandSource, context: Array<String>) {
-            val isExtended = extended(source)
+        override fun execute(context: CommandContext<TCommandSource>) {
+            val isExtended = extended(context.source)
             Component.text()
                 .append(pluginInfo.prefix)
                 .append(Component.text().append(Component.text("Running version ")).aqua())
@@ -204,7 +204,7 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
                     .build()
                 )
                 .appendIf(!isExtended, Component.text().append(Component.text("You do not have permission for any sub-commands")).red().build())
-                .sendTo(source)
+                .sendTo(context.source)
         }
 
         override fun shortDescription(source: TCommandSource): Component = VERSION_DESCRIPTION
@@ -213,18 +213,18 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
     private inner class HelpCommand(
         private val subCommandsSupplier: Supplier<List<CommandMapping<SimpleCommand<TCommandSource>>>>,
     ) : SimpleCommand<TCommandSource> {
-        override fun execute(source: TCommandSource, context: Array<String>) {
+        override fun execute(context: CommandContext<TCommandSource>) {
             val helpList = subCommandsSupplier.get().asSequence()
-                .filter { it.command.canExecute(source) }
+                .filter { it.command.canExecute(context.source) }
                 .map { mapping ->
                     val command = mapping.command
                     val fullPath = mapping.getFullPath()
                     val otherAliases = mapping.otherAliases
                     val builder = Component.text().append(Component.text().append(fullPath).gold().build())
-                    command.shortDescription(source)?.let { builder.append(Component.text("- ").append(it)) }
-                    command.longDescription(source)?.let { builder.append(Component.text("\n").append(it)) }
+                    command.shortDescription(context.source)?.let { builder.append(Component.text("- ").append(it)) }
+                    command.longDescription(context.source)?.let { builder.append(Component.text("\n").append(it)) }
                     builder.append(Component.text().append(Component.text("\nUsage: $fullPath")).gray().build())
-                    command.usage(source)?.let { usage ->
+                    command.usage(context.source)?.let { usage ->
                         builder.appendIf(otherAliases.isNotEmpty(), Component.text(", "))
                             .appendJoining(", ", *otherAliases.toTypedArray())
                             //Only append a space before the usage if the aliases are empty
@@ -242,16 +242,8 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
 
             val rendered = pagination.render(helpList, 1)
             for (i in helpList.indices) {
-                rendered[i].sendTo(source)
+                rendered[i].sendTo(context.source)
             }
-
-            //TODO implement pagination
-            /*textService.paginationBuilder()
-              .title(textService.builder().gold().append(pluginInfo.name, " - ", pluginInfo.organizationName).build())
-              .padding(textService.builder().dark_green().append("-").build())
-              .contents(helpList)
-              .build()
-              .sendTo(source)*/
         }
 
         private inner class Renderer: Pagination.Renderer.RowRenderer<Component> {
@@ -270,9 +262,9 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
     }
 
     private inner class ReloadCommand : SimpleCommand<TCommandSource> {
-        override fun execute(source: TCommandSource, context: Array<String>) {
+        override fun execute(context: CommandContext<TCommandSource>) {
             environment.reload()
-            successfullyReloaded.sendTo(source)
+            successfullyReloaded.sendTo(context.source)
         }
     }
 

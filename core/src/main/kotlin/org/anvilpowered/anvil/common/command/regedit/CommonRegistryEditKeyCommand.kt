@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.common.command.regedit
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.gold
 import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.registry.Key
@@ -58,17 +59,17 @@ class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
         return Keys.resolveLocalAndGlobal<Any>(this, envName).orElse(null)
     }
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
-        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)]
+    override fun execute(context: CommandContext<TCommandSource>) {
+        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(context.source)]
         if (stage == null) {
-            registryEditRootCommand.notInStage.sendTo(source)
+            registryEditRootCommand.notInStage.sendTo(context.source)
             return
         }
-        when (context.size) {
+        when (context.arguments.size) {
             0, 1 -> usage
-            2 -> when (val key = context[0].resolveKey(stage.envName)) {
-                null -> unknownKey(context[0])
-                else -> when (context[1]) {
+            2 -> when (val key = context.arguments[0].resolveKey(stage.envName)) {
+                null -> unknownKey(context.arguments[0])
+                else -> when (context.arguments[1]) {
                     "info" -> stage.info(key)
                     "set" -> setUsage
                     "unset" -> stage.addChange(key)
@@ -76,12 +77,12 @@ class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
                     else -> usage
                 }
             }
-            3 -> when (val key = context[0].resolveKey(stage.envName)) {
-                null -> unknownKey(context[0])
-                else -> when (context[1]) {
+            3 -> when (val key = context.arguments[0].resolveKey(stage.envName)) {
+                null -> unknownKey(context.arguments[0])
+                else -> when (context.arguments[1]) {
                     "set" -> {
                         try {
-                            stage.addChange(key, key.parse(context[2]))
+                            stage.addChange(key, key.parse(context.arguments[2]))
                         } catch (e: Exception) {
                             Component.text()
                                 .append(pluginInfo.prefix)
@@ -92,21 +93,22 @@ class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
                     "info", "unset", "unstage" ->
                         Component.text()
                             .append(pluginInfo.prefix)
-                            .append(Component.text("Too many arguments for ${context[1]}! $usage")
+                            .append(Component.text("Too many arguments for ${context.arguments[1]}! $usage")
                                 .color(NamedTextColor.RED))
                             .build()
                     else -> usage
                 }
             }
             else -> usage
-        }.sendTo(source)
+        }.sendTo(context.source)
     }
 
-    override fun suggest(source: TCommandSource, context: Array<String>): List<String> {
-        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(source)] ?: return listOf()
-        return when (context.size) {
-            1 -> Keys.getAll(stage.envName)?.keys?.stream()?.filter { it.startsWith(context[0]) }?.toList() ?: listOf()
-            2 -> keyActions.stream().filter { it.startsWith(context[1]) }.toList()
+    override fun suggest(context: CommandContext<TCommandSource>): List<String> {
+        val stage = registryEditRootCommand.stages[userService.getUUIDSafe(context.source)] ?: return listOf()
+        return when (context.arguments.size) {
+            1 -> Keys.getAll(stage.envName)?.keys?.stream()?.filter { it.startsWith(context.arguments[0]) }?.toList()
+                ?: listOf()
+            2 -> keyActions.stream().filter { it.startsWith(context.arguments[1]) }.toList()
             else -> listOf()
         }
     }

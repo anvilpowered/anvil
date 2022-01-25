@@ -23,6 +23,7 @@ import com.google.inject.name.Named
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.gold
 import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.registry.ConfigurationService
@@ -87,9 +88,9 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
         }
     }
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
-        if (context.isEmpty()) {
-            sendTextService.send(source,
+    override fun execute(context: CommandContext<TCommandSource>) {
+        if (context.arguments.isEmpty()) {
+            sendTextService.send(context.source,
                 Component.text()
                     .append(pluginInfo.prefix)
                     .append(Component.text("Please select an environment. Usage: /$anvilAlias regedit start <env>\n")).red()
@@ -99,18 +100,18 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
             return
         }
         sendTextService.send(
-            source,
-            parseEnv(context[0]) {
-                val newStage = Stage<TCommandSource>(context[0], it.getRegistries().toMutableMap(), it.pluginInfo, sendTextService)
-                registryEditRootCommand.stages[userService.getUUIDSafe(source)] = newStage
+            context.source,
+            parseEnv(context.arguments[0]) {
+                val newStage = Stage<TCommandSource>(context.arguments[0], it.getRegistries().toMutableMap(), it.pluginInfo, sendTextService)
+                registryEditRootCommand.stages[userService.getUUIDSafe(context.source)] = newStage
                 newStage.print()
             }
         )
     }
 
-    override fun suggest(source: TCommandSource, context: Array<String>): MutableList<String> {
-        return when (context.size) {
-            1 -> environments.filter { it.startsWith(context[0]) }.toList() as MutableList
+    override fun suggest(context: CommandContext<TCommandSource>): MutableList<String> {
+        return when (context.arguments.size) {
+            1 -> environments.filter { it.startsWith(context.arguments[0]) }.toList() as MutableList
             else -> mutableListOf()
         }
     }

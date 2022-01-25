@@ -52,7 +52,7 @@ fun ComponentBuilder<*, *>.appendJoining(delimiter: Any, vararg contents: Any): 
     }
 
     val indexOfLast = contents.size - 1
-    val elements = Component.text()
+    val elements = this
 
     for (i in 0..indexOfLast) {
         val o = contents[i]

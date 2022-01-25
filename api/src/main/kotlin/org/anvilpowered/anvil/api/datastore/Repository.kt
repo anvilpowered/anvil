@@ -70,7 +70,7 @@ interface Repository<TKey, T : ObjectWithId<TKey>?, TDataStore> : DBComponent<TK
 
     /**
      * Attempts to find the first [document][T] where [Instant.getEpochSecond] retrieved from
-     * [ObjectWithId.getCreatedUtc] is equal to [Instant.getEpochSecond] of the provided [Instant]
+     * [ObjectWithId.createdUtc] is equal to [Instant.getEpochSecond] of the provided [Instant]
      *
      * @param createdUtc An [Instant] to query the repository with
      * @return An [Optional] containing  if successful, otherwise [Optional.empty]
@@ -111,13 +111,13 @@ interface Repository<TKey, T : ObjectWithId<TKey>?, TDataStore> : DBComponent<TK
      * Attempts to delete a matching [document][T] with the provided [id][TKey]
      *
      * @param id An [id][TKey] to query the repository with
-     * @return Whether or not an item was found and deleted
+     * @return Whether an item was found and deleted
      */
     fun deleteOne(id: TKey): CompletableFuture<Boolean>
 
     /**
      * Attempts to delete the first [document][T] where [Instant.getEpochSecond] retrieved from
-     * [ObjectWithId.getCreatedUtc] is equal to [Instant.getEpochSecond] of the provided [Instant]
+     * [ObjectWithId.createdUtc] is equal to [Instant.getEpochSecond] of the provided [Instant]
      *
      * @param createdUtc An [Instant] to query the repository with
      * @return Whether a [document][T] was found and deleted

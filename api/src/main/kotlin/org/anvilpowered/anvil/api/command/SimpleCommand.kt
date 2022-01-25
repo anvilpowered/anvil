@@ -22,9 +22,9 @@ import net.kyori.adventure.text.Component
 
 interface SimpleCommand<TCommandSource> {
 
-    fun execute(source: TCommandSource, context: Array<String>)
+    fun execute(context: CommandContext<TCommandSource>)
 
-    fun suggest(source: TCommandSource, context: Array<String>): List<String> = listOf()
+    fun suggest(context: CommandContext<TCommandSource>): List<String> = listOf()
 
     fun canExecute(source: TCommandSource): Boolean = true
 

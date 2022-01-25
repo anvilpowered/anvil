@@ -21,6 +21,7 @@ import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.gold
 import org.anvilpowered.anvil.api.green
@@ -45,7 +46,7 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
 
     private val DESCRIPTION: Component = Component.text("Anvil plugins command")
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
+    override fun execute(context: CommandContext<TCommandSource>) {
         val values = Anvil.environmentManager.environments.values
         val mappedValues = values
             .asSequence()
@@ -57,7 +58,7 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
             .append(pluginInfo.prefix)
             .append(Component.text().append(Component.text("Plugins (${names.size}): ")).gold().build())
             .append(Component.text().append(appendJoining(", ", *names)).green().build())
-            .sendTo(source)
+            .sendTo(context.source)
     }
 
     override fun canExecute(source: TCommandSource): Boolean {

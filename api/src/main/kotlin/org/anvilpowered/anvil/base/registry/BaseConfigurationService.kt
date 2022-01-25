@@ -400,69 +400,6 @@ Please note: If this is enabled, the values for above settings in this config fi
                 null
             }
         }
-/*
-        // it ain't pretty but it works
-        return if (key != null && typeToken.isSubtypeOf(MutableList::class.java)) {
-
-            // *** unwrap list *** //
-            try {
-                val getMethod = MutableList::class.java.getMethod("get", Int::class.javaPrimitiveType)
-                val invokable: Invokable<out T, *> = typeToken.method(getMethod)
-                val list = verify(verificationMap[key], node.getList(invokable.getReturnType()::class.java), node, modified) as T
-                set(key, list)
-                list
-            } catch (e: NoSuchMethodException) {
-                e.printStackTrace()
-                null
-            } catch (e: IllegalArgumentException) {
-                e.printStackTrace()
-                null
-            } catch (e: SerializationException) {
-                e.printStackTrace()
-                null
-            }
-        } else if (typeToken.isSubtypeOf(MutableMap::class.java)) {
-
-            // *** unwrap map *** //
-            try {
-                val getMethod = MutableMap::class.java.getMethod("get", Any::class.java)
-                val invokable: Invokable<*, *> = typeToken.method(getMethod)
-                val subType: TypeToken<*> = invokable.getReturnType()
-                val result: MutableMap<Any, Any> = HashMap()
-                for ((_, value) in node.childrenMap().entries) {
-                    // here comes the recursion
-                    result[value.key() as Any] = initConfigValue(null, subType, value, modified)!!
-                }
-                if (key != null) {
-                    val map = verify(verificationMap[key], result, node, modified) as T
-                    set(key, map)
-                }
-                result as T
-            } catch (e: NoSuchMethodException) {
-                e.printStackTrace()
-                null
-            } catch (e: IllegalArgumentException) {
-                e.printStackTrace()
-                null
-            }
-        } else if (key != null) {
-            try {
-                set(key, verify(verificationMap[key], node.get(typeToken.type), node, modified) as T)
-            } catch (e: ClassCastException) {
-                e.printStackTrace()
-                null
-            } catch (e: SerializationException) {
-                e.printStackTrace()
-                null
-            }
-        } else {
-            try {
-                node.get(typeToken.type)
-            } catch (e: SerializationException) {
-                e.printStackTrace()
-                null
-            }
-        }*/
     }
 
     private fun <T> verify(

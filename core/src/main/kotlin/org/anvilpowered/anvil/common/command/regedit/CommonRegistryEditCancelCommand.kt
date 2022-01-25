@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.green
 import org.anvilpowered.anvil.api.red
 import org.anvilpowered.anvil.api.sendTo
@@ -30,14 +31,14 @@ class CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>
     @Inject
     private lateinit var registryEditRootCommand: CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
+    override fun execute(context: CommandContext<TCommandSource>) {
         val builder = Component.text().append(pluginInfo.prefix)
-        val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source as Any))
+        val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(context.source as Any))
         if (removed == null) {
             builder.append(Component.text().append(Component.text("Could not find stage")).red())
         } else {
             builder.append(Component.text().append(Component.text("Successfully cancelled changes. Didn't mean to? ")).green())
                 .append(undo("/$anvilAlias regedit start ${removed.envName}"))
-        }.sendTo(source)
+        }.sendTo(context.source)
     }
 }

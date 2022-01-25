@@ -22,6 +22,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Keys
@@ -55,31 +56,29 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
     private val USAGE: Component = Component.text("[-a|--all|-r|--regex] [<plugin>]")
     private val DESCRIPTION: Component = Component.text("Anvil reload command")
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
-        val length = context.size
+    override fun execute(context: CommandContext<TCommandSource>) {
+        val length = context.arguments.size
         if (length == 0) {
-            checkPresent(source, false)
+            checkPresent(context.source, false)
             return
         }
         val reloadedResult = arrayOf("")
-        if ("-a" == context[0] || "--all" == context[0]) {
+        if ("-a" == context.arguments[0] || "--all" == context.arguments[0]) {
             reloadedResult[0] = doAll()
-        } else if ("-r" == context[0] || "--regex" == context[0]) {
-            if (!checkPresent(source, length > 1) || !doRegex(source, context[1], reloadedResult)) {
+        } else if ("-r" == context.arguments[0] || "--regex" == context.arguments[0]) {
+            if (!checkPresent(context.source, length > 1)
+                || !doRegex(context.source, context.arguments[1], reloadedResult)) {
                 return
             }
         } else {
-            if (!doDirect(source, context[0])) {
+            if (!doDirect(context.source, context.arguments[0])) {
                 return
             }
         }
-        sendSuccess(source, reloadedResult)
+        sendSuccess(context.source, reloadedResult)
     }
 
-    override fun suggest(
-        source: TCommandSource,
-        context: Array<String>,
-    ): List<String> {
+    override fun suggest(context: CommandContext<TCommandSource>): List<String> {
         val suggestions = Anvil.environmentManager
             .environments.values.stream()
             .map { obj: Environment -> obj.name }

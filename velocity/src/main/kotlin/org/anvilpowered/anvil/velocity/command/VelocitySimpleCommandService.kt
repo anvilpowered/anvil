@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.velocity.command
 import com.google.inject.Inject
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.ProxyServer
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
@@ -35,7 +36,7 @@ class VelocitySimpleCommandService : CommonSimpleCommandService<CommandSource>()
   ) : VelocitySimpleCommand {
 
     override fun execute(invocation: VelocitySimpleCommand.Invocation) {
-      delegate.execute(invocation.source(), invocation.arguments())
+      delegate.execute(CommandContext( invocation.source(), invocation.arguments()))
     }
   }
 

@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.common.command
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.sendTo
@@ -49,15 +50,15 @@ class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
         CallbackCommandData<TCommandSource>().callbacks[uuid] = callback::accept
     }
 
-    override fun execute(source: TCommandSource, context: Array<String>) {
-        if (context.isEmpty()) {
-            missingId.sendTo(source)
+    override fun execute(context: CommandContext<TCommandSource>) {
+        if (context.arguments.isEmpty()) {
+            missingId.sendTo(context.source)
             return
         }
         val uuid: UUID = try {
-            UUID.fromString(context[0])
+            UUID.fromString(context.arguments[0])
         } catch (e: IllegalArgumentException) {
-            invalidId.sendTo(source)
+            invalidId.sendTo(context.source)
             return
         }
         val callback = CallbackCommandData<TCommandSource>().callbacks[uuid]
@@ -67,9 +68,9 @@ class CommonCallbackCommand<TCommandSource> : SimpleCommand<TCommandSource> {
                 .append(Component.text("Callback id ").color(NamedTextColor.RED))
                 .append(Component.text(uuid.toString()).color(NamedTextColor.GOLD))
                 .append(Component.text(" does not match any callbacks").color(NamedTextColor.RED))
-                .sendTo(source)
+                .sendTo(context.source)
             return
         }
-        callback(source)
+        callback(context.source)
     }
 }

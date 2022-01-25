@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture
  * other modules should (almost always) be done through the [Manager].
  * There are, however, some cases where direct access to a component is required.
  * One such case is inter-[Repository] access that requires compile time
- * type safety. Because the [DBComponent.getTKeyClass] type is not known
+ * type safety. Because the [DBComponent.tKeyClass] type is not known
  * to the manager, code that interacts with `TKey` must be placed in a
  * [DBComponent].
  *
@@ -50,11 +50,6 @@ import java.util.concurrent.CompletableFuture
  *  * `[CompletableFuture]<[Component]> invite(UUID userUUID, UUID targetUserUUID);`
  *  * `[CompletableFuture]<[Component]> kick(UUID userUUID, UUID targetUserUUID);`
  *  * `[CompletableFuture]<List<[Component]>> list(String query);`
- *
- *
- *
- * [Component] is the base return type for the methods in a [Manager].
- * To build these results use [TextService.Builder] or the static methods in [Component].
  *
  *
  *
@@ -82,8 +77,6 @@ import java.util.concurrent.CompletableFuture
  * @see Repository
  *
  * @see DBComponent
- *
- * @see TextService
 </C> */
 interface Manager<C : DBComponent<*, *>?> {
     /**
@@ -96,7 +89,7 @@ interface Manager<C : DBComponent<*, *>?> {
      * <br></br>
      *
      *
-     * The value for [Keys.DATA_STORE_NAME] found by the the current [Registry] must match (ignored case) a registered
+     * The value for [Keys.DATA_STORE_NAME] found by the current [Registry] must match (ignored case) a registered
      * datastore implementation. This can be one of the following predefined values:
      *
      *
