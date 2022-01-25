@@ -316,8 +316,9 @@ class CommonTimeFormatService : TimeFormatService {
             } else dateTimeFormat[index].withZone(zone).also { dateTimeFormatZoned[index] = it }
         }
 
-        private val zone: ZoneId
-            get() = Anvil.getRegistry().getOrDefault(Keys.TIME_ZONE)
+        private val zone: ZoneId by lazy {
+            Anvil.registry.getOrDefault(Keys.TIME_ZONE)
+        }
 
         private fun utcNow(): Instant {
             return OffsetDateTime.now(ZoneOffset.UTC).toInstant()

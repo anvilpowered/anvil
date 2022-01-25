@@ -96,7 +96,7 @@ abstract class BasePlugin {
         rootInjector: Injector,
         module: Module?,
     ): Environment.Builder {
-        val builder: Environment.Builder = Anvil.getEnvironmentBuilder()
+        val builder: Environment.Builder = Anvil.environmentBuilder
             .setName(name)
             .setRootInjector(rootInjector)
             .whenLoaded { environment: Environment -> whenLoaded(environment) }
@@ -137,7 +137,7 @@ abstract class BasePlugin {
 
     override fun toString(): String {
         return MoreObjects.toStringHelper(this)
-            .add("name", if (environment == null) "null" else environment.name)
+            .add("name", environment.name)
             .toString()
     }
 }

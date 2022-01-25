@@ -75,7 +75,7 @@ open class BaseRegistry : Registry {
 
     override fun <T> getExtraSafe(key: Key<T>): T {
         if (coreRegistry == null) {
-            coreRegistry = Anvil.getRegistry()
+            coreRegistry = Anvil.registry
         }
         if (this !== coreRegistry
             && getOrDefault(Keys.USE_SHARED_ENVIRONMENT)!!

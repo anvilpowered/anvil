@@ -21,8 +21,7 @@ class PaperCommandExecuteService : CommandExecuteService {
         } else if (plugin != null) {
             Bukkit.getScheduler().runTask(plugin, Runnable { executeDirect(command) })
         } else {
-            AnvilImpl.getLogger()
-                .error("You must bind org.bukkit.plugin.Plugin to your plugin instance to be able to run commands async")
+            AnvilImpl.logger?.error("You must bind org.bukkit.plugin.Plugin to your plugin instance to be able to run commands async")
         }
     }
 }

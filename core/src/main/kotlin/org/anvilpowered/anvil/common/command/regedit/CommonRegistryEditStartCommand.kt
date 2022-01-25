@@ -39,20 +39,23 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
 
     private val envRegs: MutableMap<String, Map<String, Registry>> = HashMap()
 
-    private val environments: Stream<String>
-        get() = Anvil.getEnvironmentManager()
+    private val environments: Stream<String> by lazy {
+        Anvil.environmentManager
             .environments.values.stream()
             .map { it.name }
             .sorted()
+    }
 
-    private val environmentsPrinted: String
-        get() = Anvil.getEnvironmentManager()
+    private val environmentsPrinted: String by lazy {
+        Anvil.environmentManager
             .environments.values.stream()
             .map { it.name }
             .sorted().collect(Collectors.joining(", "))
+    }
+
 
     private fun parseEnv(envName: String): Environment? {
-        return Anvil.getEnvironmentManager().getEnvironment(envName)
+        return Anvil.environmentManager.getEnvironment(envName)
     }
 
     private fun parseEnv(envName: String, then: (Environment) -> Component): Component {

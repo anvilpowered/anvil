@@ -47,7 +47,7 @@ abstract class BaseRepository<TKey, T : ObjectWithId<TKey>, TDataStore> : BaseCo
     override fun parseAndGetOne(idOrTime: Any): CompletableFuture<T?> {
         parse(idOrTime).also {
             if (it == null) {
-                Anvil.getEnvironmentManager().coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
                     .parseInstant(idOrTime.toString()).also { time ->
                         if (time == null) {
                             return CompletableFuture.completedFuture(null)
@@ -62,7 +62,7 @@ abstract class BaseRepository<TKey, T : ObjectWithId<TKey>, TDataStore> : BaseCo
     override fun parseAndDeleteOne(idOrTime: Any): CompletableFuture<Boolean> {
         parse(idOrTime).also {
             if (it == null) {
-                Anvil.getEnvironmentManager().coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
                     .parseInstant(idOrTime.toString()).also { time ->
                         if (time == null) {
                             return CompletableFuture.completedFuture(false)

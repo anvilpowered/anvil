@@ -36,7 +36,7 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
 
     companion object {
         val ALIAS: String by lazy {
-            when (Anvil.getPlatform().name) {
+            when (Anvil.platform.name) {
                 "bungee" -> "anvilb"
                 "velocity" -> "anvilv"
                 else -> "anvil"
@@ -84,7 +84,7 @@ class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor
         )
         commandService.register(anvilMapping)
         // we'll use sponge's callback command on sponge
-        if (Anvil.getPlatform().name != "sponge") {
+        if (Anvil.platform.name != "sponge") {
             callbackMapping = commandService.mapTerminal(CALLBACK_ALIAS, callbackCommand)
             commandService.register(callbackMapping)
         }

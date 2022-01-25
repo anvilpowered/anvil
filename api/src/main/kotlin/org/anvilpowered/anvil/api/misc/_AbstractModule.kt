@@ -47,7 +47,7 @@ fun <T> getTypeLiteral(typeToken: TypeToken<T>): TypeLiteral<T> {
 
 inline fun <reified T> LinkedBindingBuilder<in T>.toInternalProvider(declaring: Any? = null): ScopedBindingBuilder {
     return toProvider(
-        Anvil.getEnvironment().injector.getProvider(
+        Anvil.environment?.injector?.getProvider(
             Key.get(object : TypeToken<T>(declaring?.javaClass ?: javaClass) {}.toTypeLiteral())
         )
     )

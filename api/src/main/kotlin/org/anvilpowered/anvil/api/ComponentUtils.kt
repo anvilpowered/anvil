@@ -25,11 +25,11 @@ import org.anvilpowered.anvil.api.util.SendTextService
 
 
 fun <T> ComponentBuilder<*, *>.sendTo(source: T) {
-    Anvil.getEnvironment()?.injector?.getInstance(SendTextService::class.java)?.send(source, build())
+    Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.send(source, build())
 }
 
 fun <T> Component.sendTo(source: T) {
-    Anvil.getEnvironment()?.injector?.getInstance(SendTextService::class.java)?.send(source, this)
+    Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.send(source, this)
 }
 
 fun ComponentBuilder<*, *>.append(value: String): ComponentBuilder<*, *> {

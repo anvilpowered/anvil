@@ -46,7 +46,7 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
     private val DESCRIPTION: Component = Component.text("Anvil plugins command")
 
     override fun execute(source: TCommandSource, context: Array<String>) {
-        val values = Anvil.getEnvironmentManager().environments.values
+        val values = Anvil.environmentManager.environments.values
         val mappedValues = values
             .asSequence()
             .map { it.pluginInfo.name }

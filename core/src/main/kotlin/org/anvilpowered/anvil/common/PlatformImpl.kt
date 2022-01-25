@@ -31,7 +31,7 @@ class PlatformImpl(
     private val loggerBinder: ((Environment, Binder) -> Unit)? = null,
 ) : Platform {
 
-    private val versionStringKt: String by lazy { versionFetcher(Anvil.getEnvironment().injector) }
+    private val versionStringKt: String by lazy { versionFetcher(Anvil.environment!!.injector) }
 
     fun bindLoggerOptionally(environment: Environment, binder: Binder) = loggerBinder?.let { it(environment, binder) }
 

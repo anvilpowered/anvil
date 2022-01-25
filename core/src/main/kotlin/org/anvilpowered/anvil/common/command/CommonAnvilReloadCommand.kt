@@ -80,7 +80,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
         source: TCommandSource,
         context: Array<String>,
     ): List<String> {
-        val suggestions = Anvil.getEnvironmentManager()
+        val suggestions = Anvil.environmentManager
             .environments.values.stream()
             .map { obj: Environment -> obj.name }
             .sorted().collect(Collectors.toList())
@@ -97,7 +97,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
     override fun shortDescription(source: TCommandSource): Component = DESCRIPTION
 
     private fun doAll(): String {
-        return Anvil.getEnvironmentManager()
+        return Anvil.environmentManager
             .environments.values.asSequence()
             .map(reloadEnvironment)
             .joinToString(", ")
@@ -117,7 +117,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
 
     private fun doRegex(source: TCommandSource, regex: String, reloadedResult: Array<String>): Boolean {
         try {
-            reloadedResult[0] = Anvil.getEnvironmentManager()
+            reloadedResult[0] = Anvil.environmentManager
                 .getEnvironmentsAsStream(Pattern.compile(regex))
                 .map(reloadEnvironment)
                 .collect(Collectors.joining(", "))
@@ -142,7 +142,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
     }
 
     private fun doDirect(source: TCommandSource, plugin: String): Boolean {
-        val reload = Anvil.getEnvironmentManager().getEnvironment(plugin).apply { reloadEnvironment }
+        val reload = Anvil.environmentManager.getEnvironment(plugin).apply { reloadEnvironment }
         if (reload == null) {
             Component.text()
                 .append(pluginInfo.prefix)

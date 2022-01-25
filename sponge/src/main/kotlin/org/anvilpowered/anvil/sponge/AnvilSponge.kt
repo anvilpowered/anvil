@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.sponge
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
+import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
@@ -56,9 +57,9 @@ class AnvilSponge @Inject constructor(
         EnvironmentBuilderImpl.completeInitialization(ApiSpongeModule(), SpongeFallbackModule())
         Sponge.eventManager().registerListeners(
             plugin,
-            Anvil.getEnvironment().injector?.getInstance(SpongePlayerListener::class.java)
+            environment?.injector?.getInstance(SpongePlayerListener::class.java)
         )
-        Anvil.getEnvironment().injector?.getInstance(SpongeSimpleCommandService::class.java)?.onRegister(registrationEvent)
+        environment?.injector?.getInstance(SpongeSimpleCommandService::class.java)?.onRegister(registrationEvent)
     }
 
     override fun applyToBuilder(builder: Environment.Builder) {

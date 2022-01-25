@@ -154,13 +154,13 @@ interface BaseMongoRepository<T : ObjectWithId<ObjectId>> : MongoRepository<T>, 
         return dataStoreContext.getDataStore().find(tClass).filter(
             Filters.gt("_id", ObjectId(time + "0000000000000000")),
             Filters.lt("_id", ObjectId(time + "ffffffffffffffff"))
-        );
+        )
     }
 
     override fun asQueryForIdOrTime(idOrTime: String): Query<T>? {
         parse(idOrTime).also {
             if (it == null) {
-                Anvil.getEnvironmentManager().coreEnvironment.injector.getInstance(TimeFormatService::class.java)
+                Anvil.environmentManager.coreEnvironment.injector.getInstance(TimeFormatService::class.java)
                     .parseInstant(idOrTime).also { time ->
                         if (time == null) {
                             return null

@@ -56,7 +56,7 @@ class AnvilVelocity @Inject constructor(injector: Injector) :
         EnvironmentBuilderImpl.completeInitialization(ApiVelocityModule(), VelocityFallbackModule())
         proxyServer.eventManager.register(
             this,
-            getEnvironment().injector.getInstance(VelocityPlayerListener::class.java)
+            environment?.injector?.getInstance(VelocityPlayerListener::class.java)
         )
     }
 
