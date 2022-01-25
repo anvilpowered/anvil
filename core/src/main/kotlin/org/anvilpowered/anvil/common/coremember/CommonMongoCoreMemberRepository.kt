@@ -31,7 +31,6 @@ import java.time.ZoneOffset
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
-//todo figure out why it is claiming we don't override update
 class CommonMongoCoreMemberRepository : CommonCoreMemberRepository<ObjectId, Datastore>(), BaseMongoRepository<CoreMember<ObjectId>>, MongoCoreMemberRepository {
 
     override fun getOneOrGenerateForUser(userUUID: UUID, userName: String, ipAddress: String, flags: BooleanArray): CompletableFuture<CoreMember<ObjectId>?> {

@@ -69,7 +69,7 @@ abstract class BaseManager<C : DBComponent<*, *>> protected constructor(protecte
         logger.error(message, IllegalStateException(message))
     }
 
-    @get:RegistryScoped
+    @RegistryScoped
     override val primaryComponent: C
         get() = try {
             if (currentComponent == null) {
@@ -77,8 +77,8 @@ abstract class BaseManager<C : DBComponent<*, *>> protected constructor(protecte
             }
             currentComponent!!
         } catch (e: RuntimeException) {
-            val message = "Anvil: DataStoreName has not been loaded yet!" +
-                "Make sure your Registry and ConfigurationService implementations" +
+            val message = "Anvil: DataStoreName has not been loaded yet! " +
+                "Make sure your Registry and ConfigurationService implementations " +
                 "are annotated with @Singleton!"
             logger.error(message)
             throw IllegalStateException(message, e)

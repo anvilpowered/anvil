@@ -34,9 +34,9 @@ class CommonRegistryEditCancelCommand<TUser, TPlayer, TCommandSource>
         val builder = Component.text().append(pluginInfo.prefix)
         val removed = registryEditRootCommand.stages.remove(userService.getUUIDSafe(source as Any))
         if (removed == null) {
-            builder.append(Component.text("Could not find stage").red())
+            builder.append(Component.text().append(Component.text("Could not find stage")).red())
         } else {
-            builder.append(Component.text("Successfully cancelled changes. Didn't mean to? ").green())
+            builder.append(Component.text().append(Component.text("Successfully cancelled changes. Didn't mean to? ")).green())
                 .append(undo("/$anvilAlias regedit start ${removed.envName}"))
         }.sendTo(source)
     }

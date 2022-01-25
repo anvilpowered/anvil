@@ -33,7 +33,7 @@ class CommonRegistryEditSelectCommand<TUser, TPlayer, TCommandSource>
     private val usage by lazy {
         Component.text()
             .append(pluginInfo.prefix)
-            .append(Component.text("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>").red())
+            .append(Component.text("Please provide exactly one argument!\nUsage: /$anvilAlias regedit select <reg>")).red()
             .build()
     }
 

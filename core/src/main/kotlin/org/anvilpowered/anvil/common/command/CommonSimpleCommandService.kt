@@ -18,7 +18,9 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.feature.pagination.Pagination
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Environment
 import org.anvilpowered.anvil.api.append
@@ -69,7 +71,7 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
     ) {
         val fAlias = alias ?: "null"
         Component.text()
-            .append(Component.text("Input command $fAlias was not a valid subcommand!\n").red())
+            .append(Component.text().append(Component.text("Input command $fAlias was not a valid subcommand!\n")).red().build())
             .append(Component.text("\nAvailable: "))
             .append(Component.text(subCommands.asSequence().map { it.name }.joinToString { ", " }))
             .sendTo(source)
@@ -167,16 +169,16 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
             val isExtended = extended(source)
             Component.text()
                 .append(pluginInfo.prefix)
-                .append(Component.text(pluginInfo.version).green())
-                .append(Component.text(" by ").aqua())
+                .append(Component.text().append(Component.text(pluginInfo.version)).green())
+                .append(Component.text().append(Component.text(" by ")).aqua())
                 .appendJoining(", ", *pluginInfo.authors)
                 .append("\n")
                 .appendIf(isExtended, Component.text()
-                    .append(Component.text("Use ").green())
-                    .append(Component.text(helpUsage).gold())
-                    .append(Component.text(" for help").green())
+                    .append(Component.text().append(Component.text("Use ")).green())
+                    .append(Component.text().append(Component.text(helpUsage)).gold())
+                    .append(Component.text().append(Component.text(" for help")).green())
                     .build())
-                .appendIf(!isExtended, Component.text("You do not have permission for any sub-commands!").red())
+                .appendIf(!isExtended, Component.text().append(Component.text("You do not have permission for any sub-commands!")).red().build())
                 .sendTo(source)
         }
     }
@@ -189,19 +191,19 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
             val isExtended = extended(source)
             Component.text()
                 .append(pluginInfo.prefix)
-                .append(Component.text("Running version ").aqua())
-                .append(Component.text(pluginInfo.version).green())
-                .append(Component.text(" by ").aqua())
+                .append(Component.text().append(Component.text("Running version ")).aqua())
+                .append(Component.text().append(Component.text(pluginInfo.version)).green())
+                .append(Component.text().append(Component.text(" by ")).aqua())
                 .appendJoining(", ", *pluginInfo.authors)
-                .append(Component.text("\nBuild date: ").gray())
-                .append(Component.text("${pluginInfo.buildDate}\n").aqua())
+                .append(Component.text().append(Component.text("\nBuild date: ")).gray())
+                .append(Component.text().append(Component.text("${pluginInfo.buildDate}\n")).aqua())
                 .appendIf(isExtended, Component.text()
-                    .append(Component.text("Use ").green())
-                    .append(Component.text(helpUsage).gold())
-                    .append(Component.text(" for help").green())
+                    .append(Component.text().append(Component.text("Use ")).green())
+                    .append(Component.text().append(Component.text(helpUsage)).gold())
+                    .append(Component.text().append(Component.text(" for help")).green())
                     .build()
                 )
-                .appendIf(!isExtended, Component.text("You do not have permission for any sub-commands").red())
+                .appendIf(!isExtended, Component.text().append(Component.text("You do not have permission for any sub-commands")).red().build())
                 .sendTo(source)
         }
 
@@ -218,10 +220,10 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
                     val command = mapping.command
                     val fullPath = mapping.getFullPath()
                     val otherAliases = mapping.otherAliases
-                    val builder = Component.text().append(Component.text(fullPath).gold())
-                    command.shortDescription(source)?.let { builder.append(Component.text("- $it")) }
-                    command.longDescription(source)?.let { builder.append(Component.text("\n$it")) }
-                    builder.append(Component.text("\nUsage: $fullPath").gray())
+                    val builder = Component.text().append(Component.text().append(fullPath).gold().build())
+                    command.shortDescription(source)?.let { builder.append(Component.text("- ").append(it)) }
+                    command.longDescription(source)?.let { builder.append(Component.text("\n").append(it)) }
+                    builder.append(Component.text().append(Component.text("\nUsage: $fullPath")).gray().build())
                     command.usage(source)?.let { usage ->
                         builder.appendIf(otherAliases.isNotEmpty(), Component.text(", "))
                             .appendJoining(", ", *otherAliases.toTypedArray())
@@ -231,6 +233,18 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
                     }
                     builder.build()
                 }.toList()
+            val pagination = Pagination.builder()
+                .resultsPerPage(helpList.size)
+                .build(
+                    Component.text().append(Component.text(pluginInfo.name + " - " + pluginInfo.organizationName)).gold().build(),
+                    Renderer()
+                ) { page -> "/page $page" }
+
+            val rendered = pagination.render(helpList, 1)
+            for (i in helpList.indices) {
+                rendered[i].sendTo(source)
+            }
+
             //TODO implement pagination
             /*textService.paginationBuilder()
               .title(textService.builder().gold().append(pluginInfo.name, " - ", pluginInfo.organizationName).build())
@@ -238,6 +252,18 @@ abstract class CommonSimpleCommandService<TCommandSource> : SimpleCommandService
               .contents(helpList)
               .build()
               .sendTo(source)*/
+        }
+
+        private inner class Renderer: Pagination.Renderer.RowRenderer<Component> {
+            val rows = mutableListOf<Component>()
+            override fun renderRow(value: Component?, index: Int): MutableCollection<Component> {
+                if (rows.contains(value)) {
+                    return mutableSetOf()
+                }
+                rows.add(index, value ?: Component.text(""))
+                return mutableSetOf(value ?: Component.text(""))
+            }
+
         }
 
         override fun shortDescription(source: TCommandSource): Component = HELP_DESCRIPTION

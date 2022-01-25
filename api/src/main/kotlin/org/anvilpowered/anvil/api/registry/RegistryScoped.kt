@@ -64,5 +64,5 @@ package org.anvilpowered.anvil.api.registry
  * be invoked again to maintain these side effects.
  *
  */
-@Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.PROPERTY)
 annotation class RegistryScoped(val value: RegistryScope = RegistryScope.DEFAULT)

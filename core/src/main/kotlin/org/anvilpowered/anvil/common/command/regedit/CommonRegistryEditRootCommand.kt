@@ -26,13 +26,12 @@ import java.util.UUID
 class CommonRegistryEditRootCommand<TUser, TPlayer, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {
 
-    val stages: MutableMap<UUID, Stage<TCommandSource>> = HashMap()
+    val stages: MutableMap<UUID, Stage<TCommandSource>> = mutableMapOf()
 
-    val notInStage by lazy {
+    val notInStage: Component by lazy {
         Component.text()
             .append(pluginInfo.prefix)
-            .append(Component.text("You are not currently in a regedit session. Use /$anvilAlias regedit help")
-                .red())
+            .append(Component.text("You are not currently in a regedit session. Use /$anvilAlias regedit help")).red()
             .build()
     }
 

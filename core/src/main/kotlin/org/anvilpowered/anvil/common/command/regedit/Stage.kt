@@ -47,15 +47,60 @@ class Stage<TCommandSource>(
     lateinit var registry: Pair<String, Registry>
 
     private val changes: MutableList<Change<*, TCommandSource>> = ArrayList()
-    private val availableRegistries: Component
+    private val availableRegistries: Component by lazy {
+        val builder = Component.text()
+        // reference equality, we want to check specifically for the same instance
+        // if these are the same, don't show [ Internal ] and [ Config ] separately
+        if (registries["main"] !== registries["config"]) {
+            builder.append(Component.text()
+                .append(Component.text("[ Internal ]").color(NamedTextColor.AQUA))
+                .hoverEvent(HoverEvent.showText(Component.text()
+                    .append(Component.text("The main registry\n").color(NamedTextColor.AQUA))
+                    .append(Component.text("/$anvilAlias regedit select internal").color(NamedTextColor.GRAY))
+                    .build()
+                ))
+                .clickEvent(ClickEvent.runCommand("/$anvilAlias regedit select internal"))
+                .append(Component.text(" "))
+                .build()
+            )
+        }
+        builder.append(Component.text()
+            .append(Component.text("[ Config ]").color(NamedTextColor.AQUA))
+            .hoverEvent(HoverEvent.showText(Component.text()
+                .append(Component.text("The configuration\n").color(NamedTextColor.AQUA))
+                .append(Component.text("/$anvilAlias regedit select config").color(NamedTextColor.GRAY))
+            ))
+            .clickEvent(ClickEvent.runCommand("/$anvilAlias regedit select config"))
+            .build()
+        )
+        for ((name, _) in registries) {
+            if (name == "main" || name == "config") {
+                continue
+            }
+            val cmd = "/$anvilAlias regedit select $name"
+            builder.append(Component.text()
+                .append(Component.text(" "))
+                .append(Component.text()
+                    .append(Component.text("[ $name ]"))
+                    .hoverEvent(HoverEvent.showText(Component.text()
+                        .append(Component.text(name).color(NamedTextColor.AQUA))
+                        .append(Component.text(cmd).color(NamedTextColor.GRAY))
+                        .build()
+                    ))
+                    .clickEvent(ClickEvent.runCommand(cmd))
+                ).build()
+            )
+        }
+        builder.build()
+    }
 
 
     private val border = Component.text()
-        .append(Component.text().appendCount(15, Component.text("=").dark_gray()).build())
-        .append(Component.text(" [ ").dark_gray())
-        .append(Component.text("Anvil RegEdit").gold())
-        .append(Component.text(" ] ").dark_gray())
-        .append(Component.text().appendCount(15, Component.text("=").dark_gray()))
+        .append(Component.text().appendCount(15, Component.text("=")).dark_gray().build())
+        .append(Component.text(" [ ")).dark_gray()
+        .append(Component.text("Anvil RegEdit")).gold()
+        .append(Component.text(" ] ")).dark_gray()
+        .append(Component.text().appendCount(15, Component.text("=")).dark_gray())
         .build()
 
     private val view = Component.text()
@@ -130,53 +175,6 @@ class Stage<TCommandSource>(
             registry = Pair(newReg.first, newReg.second!!)
             print()
         }
-    }
-
-    init {
-        val builder = Component.text()
-        // reference equality, we want to check specifically for the same instance
-        // if these are the same, don't show [ Internal ] and [ Config ] separately
-        if (registries["main"] !== registries["config"]) {
-            builder.append(Component.text()
-                .append(Component.text("[ Internal ]").color(NamedTextColor.AQUA))
-                .hoverEvent(HoverEvent.showText(Component.text()
-                    .append(Component.text("The main registry\n").color(NamedTextColor.AQUA))
-                    .append(Component.text("/$anvilAlias regedit select internal").color(NamedTextColor.GRAY))
-                    .build()
-                ))
-                .clickEvent(ClickEvent.runCommand("/$anvilAlias regedit select internal"))
-                .append(Component.text(" "))
-                .build()
-            )
-        }
-        builder.append(Component.text()
-            .append(Component.text("[ Config ]").color(NamedTextColor.AQUA))
-            .hoverEvent(HoverEvent.showText(Component.text()
-                .append(Component.text("The configuration\n").color(NamedTextColor.AQUA))
-                .append(Component.text("/$anvilAlias regedit select config").color(NamedTextColor.GRAY))
-            ))
-            .clickEvent(ClickEvent.runCommand("/$anvilAlias regedit select config"))
-            .build()
-        )
-        for ((name, _) in registries) {
-            if (name == "main" || name == "config") {
-                continue
-            }
-            val cmd = "/$anvilAlias regedit select $name"
-            builder.append(Component.text()
-                .append(Component.text(" "))
-                .append(Component.text()
-                    .append(Component.text("[ $name ]"))
-                    .hoverEvent(HoverEvent.showText(Component.text()
-                        .append(Component.text(name).color(NamedTextColor.AQUA))
-                        .append(Component.text(cmd).color(NamedTextColor.GRAY))
-                        .build()
-                    ))
-                    .clickEvent(ClickEvent.runCommand(cmd))
-                ).build()
-            )
-        }
-        availableRegistries = builder.build()
     }
 
     fun info(key: Key<*>): Component {
@@ -271,7 +269,7 @@ class Stage<TCommandSource>(
         val removed = changes.removeAt(index) as Change<T, TCommandSource>
         return print(
             Component.text()
-                .append(Component.text("Successfully unstaged change for ").green())
+                .append(Component.text("Successfully unstaged change for ")).green()
                 .append(Component.text("$key ${undo("/$anvilAlias regedit key $key set ${key.toString(removed.newValue!!)}")}"))
                 .build())
     }
@@ -279,21 +277,22 @@ class Stage<TCommandSource>(
     fun print(message: Component? = null): Component {
         if (!::registry.isInitialized) {
             return Component.text()
-                .append("$border \n\n")
-                .append(Component.text("Started a regedit session for ").green())
-                .append(Component.text("${pluginInfo.name}\n\n").gold())
-                .append(Component.text("Please select one of the following registries:\n\n$availableRegistries").gray())
-                .append(Component.text("\nor $cancel \n\n $border").gray())
+                .append(border.append(Component.text("\n\n")))
+                .append(Component.text("Started a regedit session for ")).green()
+                .append(Component.text("${pluginInfo.name}\n\n")).gold()
+                .append(Component.text("Please select one of the following registries:\n\n")
+                    .append(availableRegistries)).gray()
+                .append(Component.text(" or ").append(cancel).append(Component.text("\n\n").append(border))).gray()
                 .build()
         }
         val builder = Component.text()
-            .append("$border \n\n")
+            .append(border.append(Component.text("\n\n")))
             .appendIf(message != null, message!!.append(Component.text("\n\n")))
-            .append(Component.text("[ ${registry.first} ]").aqua())
-            .append(Component.text(" Queued changes:").gray())
+            .append(Component.text("[ ${registry.first} ]")).aqua()
+            .append(Component.text(" Queued changes:")).gray()
 
         if (changes.isEmpty()) {
-            builder.append(Component.text(" (none)").red())
+            builder.append(Component.text(" (none)")).red()
         } else {
             builder.append("\n")
             for (change in changes) {
@@ -301,7 +300,10 @@ class Stage<TCommandSource>(
             }
         }
         return builder.append(Component.text("\n\nPlease select an action:\n\n"))
-            .append(Component.text("$view $commit $cancel\n\n$border"))
+            .append(view).append(" ")
+            .append(commit).append(" ")
+            .append(cancel).append("\n\n")
+            .append(border)
             .build()
     }
 }

@@ -37,21 +37,21 @@ class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
 
     private val usage =
         Component.text()
-            .append(Component.text("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]").red())
+            .append(Component.text("Usage: /$anvilAlias regedit key <key> [info|set|unset|unstage] [<value>]")).red()
             .build()
 
     private val setUsage by lazy {
         Component.text()
             .append(pluginInfo.prefix)
-            .append(Component.text("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>").red())
+            .append(Component.text("Value required for set subcommand. Usage: /$anvilAlias regedit key <key> set <value>")).red()
             .build()
     }
 
     private fun unknownKey(keyName: String) =
         Component.text()
             .append(pluginInfo.prefix)
-            .append(Component.text("Unknown key: ").red())
-            .append(Component.text(keyName).gold())
+            .append(Component.text("Unknown key: ")).red()
+            .append(Component.text(keyName)).gold()
             .build()
 
     private fun String.resolveKey(envName: String): Key<Any>? {

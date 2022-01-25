@@ -59,8 +59,8 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
         return parseEnv(envName)?.let { then(it) }
             ?: Component.text()
                 .append(pluginInfo.prefix)
-                .append(Component.text("Could not find environment ").red())
-                .append(Component.text(envName).gold())
+                .append(Component.text("Could not find environment ")).red()
+                .append(Component.text(envName)).gold()
                 .build()
     }
 
@@ -89,8 +89,8 @@ class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>
             sendTextService.send(source,
                 Component.text()
                     .append(pluginInfo.prefix)
-                    .append(Component.text("Please select an environment. Usage: /$anvilAlias regedit select <env>\n").red())
-                    .append(Component.text("Available environments: $environmentsPrinted").gold())
+                    .append(Component.text("Please select an environment. Usage: /$anvilAlias regedit start <env>\n")).red()
+                    .append(Component.text("Available environments: $environmentsPrinted")).gold()
                     .build()
             )
             return

@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture
 
 abstract class CommonCoreMemberRepository<TKey, TDataStore> : BaseRepository<TKey, CoreMember<TKey>, TDataStore>(), CoreMemberRepository<TKey, TDataStore> {
 
-    override val tClass: Class<CoreMember<TKey>> = dataStoreContext.getEntityClassUnsafe("coremember") as Class<CoreMember<TKey>>
+    override val tClass: Class<CoreMember<TKey>> by lazy { dataStoreContext.getEntityClassUnsafe("coremember") as Class<CoreMember<TKey>> }
 
     override fun getOneOrGenerateForUser(userUUID: UUID, userName: String, ipAddress: String): CompletableFuture<CoreMember<TKey>?> {
         return getOneOrGenerateForUser(userUUID, userName, ipAddress, booleanArrayOf(false, false, false, false, false, false, false, false))

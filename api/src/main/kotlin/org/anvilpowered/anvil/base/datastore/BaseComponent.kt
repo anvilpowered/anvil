@@ -26,8 +26,9 @@ abstract class BaseComponent<TKey, TDataStore> : DBComponent<TKey, TDataStore> {
     @Inject
     override lateinit var dataStoreContext: DataStoreContext<TKey, TDataStore>
 
-    override val tKeyClass: Class<TKey>
-        get() = dataStoreContext.tKeyClass!!
+    override val tKeyClass: Class<TKey> by lazy {
+        dataStoreContext.tKeyClass
+    }
 
     override fun parse(obj: Any): TKey? {
         return try {

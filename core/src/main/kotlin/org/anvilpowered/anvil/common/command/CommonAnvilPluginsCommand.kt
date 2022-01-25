@@ -19,11 +19,15 @@ package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.command.SimpleCommand
+import org.anvilpowered.anvil.api.gold
+import org.anvilpowered.anvil.api.green
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.sendTo
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.common.command.regedit.appendJoining
 import java.util.Arrays
@@ -51,10 +55,9 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
         Arrays.sort(names)
         Component.text()
             .append(pluginInfo.prefix)
-            .append(Component.text("Plugins ( $names.size ): "))
-            .append(appendJoining(", ", *names))
-            .build()
-        TODO("Create function to handle building and sendTo(target: TCommandSource)")
+            .append(Component.text().append(Component.text("Plugins (${names.size}): ")).gold().build())
+            .append(Component.text().append(appendJoining(", ", *names)).green().build())
+            .sendTo(source)
     }
 
     override fun canExecute(source: TCommandSource): Boolean {
