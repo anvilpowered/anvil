@@ -22,7 +22,15 @@ import net.kyori.adventure.text.Component
 
 interface SendTextService {
 
-    fun <T> send(source: T, component: Component)
+    /**
+     * Sends the provided [Component] to the provided source.
+     *
+     * @param recipient The subject to send the [Component] to.
+     */
+    fun <T> send(recipient: T, component: Component)
 
+    /**
+     * Sends the provided [Component] to the console.
+     */
     fun sendToConsole(component: Component)
 }

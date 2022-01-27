@@ -23,21 +23,83 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 interface LocationService {
+    /**
+     * Attempts to get the current [BackendServer] that the provided [userUUID] is connected to.
+     *
+     * Note: Only available on the proxy side.
+     *
+     * @return The [BackendServer] if present, otherwise null.
+     */
     fun getServer(userUUID: UUID): BackendServer?
 
+    /**
+     * Attempts to get the current [BackendServer] that the provided [userName] is connected to.
+     *
+     * Note: Only available on the proxy side.
+     *
+     * @return The [BackendServer] if present, otherwise null.
+     */
     fun getServer(userName: String): BackendServer?
 
+    /**
+     * Attempts to get a [BackendServer] with a matching [serverName]
+     *
+     * Note: Only available on the proxy side.
+     *
+     * @return The [BackendServer] if present, otherwise null.
+     */
     fun getServerForName(serverName: String): BackendServer?
 
+    /**
+     * Note: Only available on the proxy side.
+     *
+     * @return A list of all [BackendServer]'s
+     */
     fun getServers(): List<BackendServer>
 
+    /**
+     * Attempts to get the current world name for the provided [userUUID]
+     *
+     * Note: Only available on the server side.
+     *
+     * @return The current world name that the provided [userUUID] is present on, otherwise null.
+     */
     fun getWorldName(userUUID: UUID): String?
 
+    /**
+     * Attempts to get the current world name for the provided [userName]
+     *
+     * Note: Only available on the server side.
+     *
+     * @return The current world name that the provided [userName] is present on, otherwise null.
+     */
     fun getWorldName(userName: String): String?
 
+    /**
+     * Attempts to get the current position of the provided [userUUID] represented by [Vector3d]
+     *
+     * Note: Only available on the server side.
+     *
+     * @return The position represented as [Vector3d] if present, otherwise null.
+     */
     fun getPosition(userUUID: UUID): Vector3d?
 
+    /**
+     * Attempts to get the current position of the provided [userName] represented by [Vector3d]
+     *
+     * Note: Only available on the server side.
+     *
+     * @return The position represented as [Vector3d] if present, otherwise null.
+     */
     fun getPosition(userName: String): Vector3d?
 
-    fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean>
+    /**
+     * Attempts to teleport the [sourceUserUUID] to the [targetUserUUID]
+     *
+     * Note: Only available on the server side.
+     *
+     * @return [CompletableFuture] wrapped [Boolean].
+     * true if successful, otherwise false
+     */
+    fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean>
 }

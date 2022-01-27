@@ -20,8 +20,45 @@ package org.anvilpowered.anvil.api.util
 import java.util.UUID
 
 interface KickService {
+
+    /**
+     * Kicks a player based off of their [userUUID] with the given [reason]
+     *
+     * @param userUUID The [UUID] to kick
+     * @param reason The reason for kicking.
+     *
+     * @sample kick(userUUID, Component.text("You have been kicked!"))
+     * @sample kick(userUUID, "&4You have been kicked!")
+     */
     fun kick(userUUID: UUID, reason: Any)
+
+    /**
+     * Kicks a player based off of their [userName] with the given [reason]
+     *
+     * @param userName The [userName] to kick
+     * @param reason The reason for kicking.
+     *
+     * @sample kick(userName, Component.text("You have been kicked!"))
+     * @sample kick(userName, "&4You have been kicked!")
+     */
     fun kick(userName: String, reason: Any)
+
+
+    /**
+     * Kicks a player based off of their [userUUID]
+     *
+     * @param userUUID The [UUID] to kick
+     *
+     * @sample kick(userUUID)
+     */
     fun kick(userUUID: UUID)
+
+    /**
+     * Kicks a player based off of their [userName]
+     *
+     * @param userName The [userName] to kick
+     *
+     * @sample kick(userName)
+     */
     fun kick(userName: String)
 }

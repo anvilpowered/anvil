@@ -21,6 +21,9 @@ import org.anvilpowered.anvil.api.misc.Named
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
+/**
+ * Represents a BackendServer in a proxy environment.
+ */
 interface BackendServer : Named {
     val version: CompletableFuture<out Version>
     fun connect(player: Any): CompletableFuture<Boolean>

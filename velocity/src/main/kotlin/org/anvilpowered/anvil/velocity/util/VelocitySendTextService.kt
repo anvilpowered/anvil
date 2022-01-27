@@ -23,16 +23,15 @@ import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.ComponentBuilder
 import org.anvilpowered.anvil.api.util.SendTextService
 
 class VelocitySendTextService @Inject constructor(
     val proxyServer: ProxyServer,
 ) : SendTextService {
 
-    override fun <T> send(source: T, component: Component) {
-        if (source is CommandSource || source is Player) {
-            (source as CommandSource).sendMessage(component)
+    override fun <T> send(recipient: T, component: Component) {
+        if (recipient is CommandSource || recipient is Player) {
+            (recipient as CommandSource).sendMessage(component)
         }
     }
 

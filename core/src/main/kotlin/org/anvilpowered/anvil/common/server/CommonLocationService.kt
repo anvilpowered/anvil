@@ -35,7 +35,7 @@ abstract class CommonLocationService : LocationService {
     override fun getPosition(userUUID: UUID): Vector3d? = null
     override fun getPosition(userName: String): Vector3d? = null
 
-    override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
+    override fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
         return CompletableFuture.completedFuture(false)
     }
 }

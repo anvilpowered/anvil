@@ -30,8 +30,8 @@ class PaperLocationService : CommonLocationService() {
     @Inject
     private lateinit var userService: UserService<Player, Player>
 
-    override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
-        val teleporter = userService[teleportingUserUUID]
+    override fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
+        val teleporter = userService[sourceUserUUID]
         val target = userService[targetUserUUID]
         return CompletableFuture.completedFuture(
             if (teleporter != null && target != null) {

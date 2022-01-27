@@ -19,6 +19,9 @@ package org.anvilpowered.anvil.api.server
 
 import org.anvilpowered.anvil.api.misc.Named
 
+/**
+ * Represents the version of the current platform Anvil is running on.
+ */
 interface Version : Named {
     val protocol: Int
 }

@@ -27,12 +27,12 @@ import org.spongepowered.api.command.CommandCause
 
 class SpongeSendTextService : SendTextService {
 
-    override fun <T> send(source: T, component: Component) {
-        if (source is CommandCause) {
-            source.sendMessage(Identity.nil(), component)
+    override fun <T> send(recipient: T, component: Component) {
+        if (recipient is CommandCause) {
+            recipient.sendMessage(Identity.nil(), component)
         }
-        if (source is SystemSubject) {
-            source.sendMessage(component)
+        if (recipient is SystemSubject) {
+            recipient.sendMessage(component)
         }
     }
 
