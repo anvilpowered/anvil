@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.api
+package org.anvilpowered.anvil.api.environment
 
 import com.google.inject.Injector
 import com.google.inject.Key
@@ -59,8 +59,8 @@ class EnvironmentImpl internal constructor(
         return name.compareTo(other.name)
     }
 
-    override fun equals(obj: Any?): Boolean {
-        return obj is Environment && name == obj.name
+    override fun equals(other: Any?): Boolean {
+        return other is Environment && name == other.name
     }
 
     override fun toString(): String {

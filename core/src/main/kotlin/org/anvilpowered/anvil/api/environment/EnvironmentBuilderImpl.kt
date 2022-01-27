@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.api
+package org.anvilpowered.anvil.api.environment
 
 import com.google.common.base.Preconditions
 import com.google.common.reflect.TypeToken
@@ -27,6 +27,8 @@ import com.google.inject.Module
 import com.google.inject.TypeLiteral
 import com.google.inject.name.Names
 import com.google.inject.util.Modules
+import org.anvilpowered.anvil.api.Anvil
+import org.anvilpowered.anvil.api.ServiceManagerImpl
 import org.anvilpowered.anvil.api.misc.toTypeLiteralNoInline
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.registry.RegistryScope

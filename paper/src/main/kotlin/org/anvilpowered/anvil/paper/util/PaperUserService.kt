@@ -21,7 +21,9 @@ import org.anvilpowered.anvil.common.util.CommonUserService
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
-import java.util.*
+import java.util.Locale
+import java.util.Objects
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Collectors
 import java.util.stream.Stream
@@ -32,7 +34,7 @@ class PaperUserService : CommonUserService<Player, Player>(Player::class.java) {
     override fun get(userUUID: UUID): Player? = Bukkit.getPlayer(userUUID)
     override fun getPlayer(userName: String): Player? = get(userName)
     override fun getPlayer(userUUID: UUID): Player? = get(userUUID)
-    override  val onlinePlayers: Collection<Player> = Bukkit.getOnlinePlayers()
+    override val onlinePlayers: Collection<Player> = Bukkit.getOnlinePlayers()
     override fun getUUID(user: Player): UUID = user.uniqueId
     override fun getUserName(user: Player): String = user.name
 

@@ -21,5 +21,4 @@ package org.anvilpowered.anvil.paper.module
 import org.anvilpowered.anvil.common.module.FallbackModule
 import org.bukkit.command.CommandSender
 
-class PaperFallbackModule : FallbackModule<CommandSender>() {
-}
+class PaperFallbackModule : FallbackModule<CommandSender>()

@@ -29,29 +29,29 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class PaperSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
 
-  @Inject(optional = true)
-  private lateinit var plugin: JavaPlugin
+    @Inject(optional = true)
+    private lateinit var plugin: JavaPlugin
 
-  private inner class PlatformExecutor(
-    private val delegate: SimpleCommand<CommandSender>,
-  ) : TabExecutor {
-    override fun onCommand(source: CommandSender, command: Command, alias: String, arguments: Array<String>): Boolean {
-      if (delegate.canExecute(source)) {
-        delegate.execute(CommandContext(source, arguments))
-      } else {
-        source.sendNoPermission()
-      }
-      return true
+    private inner class PlatformExecutor(
+        private val delegate: SimpleCommand<CommandSender>,
+    ) : TabExecutor {
+        override fun onCommand(source: CommandSender, command: Command, alias: String, arguments: Array<String>): Boolean {
+            if (delegate.canExecute(source)) {
+                delegate.execute(CommandContext(source, arguments))
+            } else {
+                source.sendNoPermission()
+            }
+            return true
+        }
+
+        override fun onTabComplete(source: CommandSender, command: Command, alias: String, arguments: Array<String>): List<String> {
+            return delegate.suggest(CommandContext(source, arguments))
+        }
     }
 
-    override fun onTabComplete(source: CommandSender, command: Command, alias: String, arguments: Array<String>): List<String> {
-      return delegate.suggest(CommandContext(source, arguments))
+    override fun register(mapping: CommandMapping<out SimpleCommand<CommandSender>>) {
+        check(this::plugin.isInitialized) { "org.bukkit.plugin.java.JavaPlugin not bound" }
+        val pluginCommand = checkNotNull(plugin.getCommand(mapping.name)) { "Alias ${mapping.name} not defined in plugin.yml" }
+        pluginCommand.setExecutor(PlatformExecutor(mapping.command))
     }
-  }
-
-  override fun register(mapping: CommandMapping<out SimpleCommand<CommandSender>>) {
-    check(this::plugin.isInitialized) { "org.bukkit.plugin.java.JavaPlugin not bound" }
-    val pluginCommand = checkNotNull(plugin.getCommand(mapping.name)) { "Alias ${mapping.name} not defined in plugin.yml" }
-    pluginCommand.setExecutor(PlatformExecutor(mapping.command))
-  }
 }

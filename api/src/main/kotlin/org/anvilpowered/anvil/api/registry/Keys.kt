@@ -27,8 +27,7 @@ class Keys private constructor() {
     class KeyRegistrationEnd internal constructor(private val nameSpace: String) {
         private fun checkName(nameSpace: String, name: String) {
             require(!keys.contains(nameSpace, name)) {
-                ("The provided key " + name + " conflicts with a"
-                    + " key of the same name in the " + nameSpace + " namespace.")
+                ("The provided key $name conflicts with a key of the same name in the $nameSpace namespace")
             }
         }
 

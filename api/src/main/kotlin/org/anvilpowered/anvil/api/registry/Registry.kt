@@ -35,11 +35,11 @@ interface Registry {
 
     /**
      * Gets this registry's value for the provided [Key]
-     * or [Optional.empty] if it is not present.
+     * or null if it is not present.
      *
      * @param <T> The value type of the provided [Key]
      * @param key The [Key] to get the value for
-     * @return This registry's value for the provided [Key] or [Optional.empty]
+     * @return This registry's value for the provided [Key] or null
     </T> */
     @RegistryScoped
     operator fun <T> get(key: Key<T>): T?

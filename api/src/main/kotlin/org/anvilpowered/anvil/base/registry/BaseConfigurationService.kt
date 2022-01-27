@@ -83,7 +83,6 @@ open class BaseConfigurationService @Inject constructor(configLoader: Configurat
         setName(Keys.DATA_DIRECTORY, "datastore.dataDirectory")
         setName(Keys.DATA_STORE_NAME, "datastore.dataStoreName")
         setDescription(Keys.DATA_DIRECTORY, """
-
    Directory for extra data
    Please note that it is not recommended to change this value from the original
    """.trimIndent())
@@ -365,7 +364,6 @@ Please note: If this is enabled, the values for above settings in this config fi
             try {
                 val method = MutableMap::class.java.getMethod("get", Object::class.java)
                 val subType = TypeToken.get(method.returnType)
-
                 val result: MutableMap<Any, Any> = hashMapOf()
 
                 for (entry: Map.Entry<*, CommentedConfigurationNode?> in node.childrenMap().entries) {

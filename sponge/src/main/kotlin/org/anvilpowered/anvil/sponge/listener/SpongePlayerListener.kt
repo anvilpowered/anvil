@@ -48,7 +48,7 @@ class SpongePlayerListener {
 
   @Listener
   fun onPlayerJoin(event: ServerSideConnectionEvent.Join) {
-    if (registry.getOrDefault(Keys.PROXY_MODE) == true) {
+    if (registry.getOrDefault(Keys.PROXY_MODE)) {
       return
     }
     coreMemberManager.primaryComponent.getOneOrGenerateForUser(

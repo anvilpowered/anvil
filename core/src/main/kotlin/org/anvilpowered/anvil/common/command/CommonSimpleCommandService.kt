@@ -18,11 +18,10 @@
 package org.anvilpowered.anvil.common.command
 
 import com.google.inject.Inject
-import com.google.inject.Singleton
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.feature.pagination.Pagination
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.append
 import org.anvilpowered.anvil.api.appendIf
 import org.anvilpowered.anvil.api.appendJoining

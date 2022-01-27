@@ -21,6 +21,8 @@ import com.google.inject.Binding
 import com.google.inject.Injector
 import com.google.inject.Module
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
+import org.anvilpowered.anvil.api.environment.Environment
+import org.anvilpowered.anvil.api.environment.EnvironmentManager
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.base.plugin.BasePlugin
 

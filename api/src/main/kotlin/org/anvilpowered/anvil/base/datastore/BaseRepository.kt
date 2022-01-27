@@ -37,7 +37,7 @@ abstract class BaseRepository<TKey, T : ObjectWithId<TKey>, TDataStore> : BaseCo
             tClass.getConstructor().newInstance()
         } catch (e: Exception) {
             val message =
-                "There was an error creating an instance of " + tClass.name + "! Make sure it has an accessible no-args constructor!"
+                "There was an error creating an instance of ${tClass.name}! Make sure it has an accessible no-args constructor!"
             logger.error(message)
             throw IllegalStateException(message, e)
         }

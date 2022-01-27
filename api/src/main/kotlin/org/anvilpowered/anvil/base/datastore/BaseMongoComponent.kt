@@ -27,11 +27,15 @@ interface BaseMongoComponent : DBComponent<ObjectId, Datastore> {
         if (obj is ObjectId) {
             return obj
         } else if (obj is Optional<*>) {
-            if (obj.isPresent) return parseUnsafe(obj.get())
+            if (obj.isPresent) {
+                return parseUnsafe(obj.get())
+            }
             throw IllegalArgumentException("Error while parsing $obj. Optional not present")
         }
         val string = obj.toString()
-        if (ObjectId.isValid(string)) return ObjectId(string)
+        if (ObjectId.isValid(string)) {
+            return ObjectId(string)
+        }
         throw IllegalArgumentException("Error while parsing $obj. Not a valid ObjectId")
     }
 }

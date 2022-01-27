@@ -22,8 +22,8 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
 import org.anvilpowered.anvil.api.AnvilImpl
-import org.anvilpowered.anvil.api.Environment
-import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
+import org.anvilpowered.anvil.api.environment.Environment
+import org.anvilpowered.anvil.api.environment.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
@@ -71,7 +71,7 @@ class AnvilPaper : JavaPlugin() {
                 serverProxyMode = Bukkit.spigot().config.getBoolean("settings.bungeecord", false)
             }
             val configurationService = environment.injector.getInstance(ConfigurationService::class.java)
-            val anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE) ?: false
+            val anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE)
             if (serverProxyMode && !anvilProxyMode) {
                 logger?.error(
                     """

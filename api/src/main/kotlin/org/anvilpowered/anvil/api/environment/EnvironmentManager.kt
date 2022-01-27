@@ -15,8 +15,7 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.api
-
+package org.anvilpowered.anvil.api.environment
 
 import java.util.regex.Pattern
 import java.util.stream.Stream

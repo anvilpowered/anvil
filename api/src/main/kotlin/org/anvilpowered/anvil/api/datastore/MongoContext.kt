@@ -48,9 +48,9 @@ class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<Ob
         val username = registry.getExtraSafe(Keys.MONGODB_USERNAME)
         val password = registry.getExtraSafe(Keys.MONGODB_PASSWORD)
         val authDb = registry.getExtraSafe(Keys.MONGODB_AUTH_DB)
-        val useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH)!!
-        val useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV)!!
-        val useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING)!!
+        val useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH)
+        val useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV)
+        val useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING)
 
         /* === Determine credentials for MongoDB === */
         val clientUrl: String?

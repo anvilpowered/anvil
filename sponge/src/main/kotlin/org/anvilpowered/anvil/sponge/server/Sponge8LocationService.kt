@@ -18,14 +18,14 @@
 package org.anvilpowered.anvil.sponge.server
 
 import com.google.inject.Inject
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.common.server.CommonLocationService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import org.spongepowered.math.vector.Vector3d
-import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
@@ -34,22 +34,25 @@ class Sponge8LocationService : CommonLocationService() {
   @Inject
   private lateinit var userService: UserService<User, ServerPlayer>
 
-  override fun teleport(teleportingUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
-    val teleporter = userService[teleportingUserUUID]
+  override fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
+    val source = userService[sourceUserUUID]
     val target = userService[targetUserUUID]
     return CompletableFuture.completedFuture(
-      teleporter != null && target != null && teleporter.setLocation(target.worldKey(), target.position())
+      source != null && target != null && source.setLocation(target.worldKey(), target.position())
     )
   }
 
-  private fun Optional<User>.getWorldName(): Optional<String> =
-    flatMap { Sponge.server().worldManager().world(it.worldKey()) }
-      .flatMap { it.properties().displayName() }
-      .map { PlainComponentSerializer.plain().serialize(it) }
+  private fun User.getWorldName(): String?  {
+    val world = Sponge.server().worldManager().world(this.worldKey())
+    return if (world.isPresent) {
+      PlainTextComponentSerializer.plainText().serialize(world.get().properties().displayName().orElse(Component.text("ERROR")))
+    } else {
+      null
+    }
+  }
 
-  private fun Optional<User>.getPosition(): Optional<Vector3d> = map { it.position() }
-  override fun getWorldName(userUUID: UUID): String? = userService[userUUID]?.worldKey()?.examinableName()
-  override fun getWorldName(userName: String): String? = userService[userName]?.worldKey()?.examinableName()
+  override fun getWorldName(userUUID: UUID): String? = userService[userUUID]?.getWorldName()
+  override fun getWorldName(userName: String): String? = userService[userName]?.getWorldName()
   override fun getPosition(userUUID: UUID): Vector3d? = userService[userUUID]?.position()
   override fun getPosition(userName: String): Vector3d? = userService[userName]?.position()
 }

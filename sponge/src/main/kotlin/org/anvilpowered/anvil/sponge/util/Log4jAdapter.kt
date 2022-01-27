@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.sponge.util
 
 import com.google.inject.Binder
 import com.google.inject.Inject
-import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.environment.Environment
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.Logger
 import org.slf4j.Marker

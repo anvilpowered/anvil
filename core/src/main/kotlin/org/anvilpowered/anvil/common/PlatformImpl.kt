@@ -21,7 +21,7 @@ import com.google.common.base.MoreObjects
 import com.google.inject.Binder
 import com.google.inject.Injector
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.Platform
 
 class PlatformImpl(

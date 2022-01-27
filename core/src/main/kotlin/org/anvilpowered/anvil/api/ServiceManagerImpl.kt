@@ -19,6 +19,10 @@ package org.anvilpowered.anvil.api
 
 import com.google.common.reflect.TypeToken
 import com.google.inject.Injector
+import org.anvilpowered.anvil.api.environment.Environment
+import org.anvilpowered.anvil.api.environment.EnvironmentBuilderImpl
+import org.anvilpowered.anvil.api.environment.EnvironmentManager
+import org.anvilpowered.anvil.api.environment.EnvironmentManagerImpl
 import java.util.function.Function
 import java.util.function.Supplier
 

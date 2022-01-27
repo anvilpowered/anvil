@@ -17,8 +17,6 @@
  */
 package org.anvilpowered.anvil.api.datastore
 
-import java.util.Optional
-
 /**
  * Part of a module
  *
@@ -46,7 +44,7 @@ interface DBComponent<TKey, TDataStore> {
      * Tries to convert the given object to [TKey]
      *
      * @param obj To try to parse
-     * @return [Optional] containing (if parsing successful) the [TKey] representing this `object`
+     * @return If parsing successful, the [TKey] representing this `object`. If unsuccessful, null
      */
     fun parse(obj: Any): TKey? {
         return null

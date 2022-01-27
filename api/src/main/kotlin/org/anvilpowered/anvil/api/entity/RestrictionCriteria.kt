@@ -47,6 +47,7 @@ class RestrictionCriteria(
         private var inventory = false
         private var commands = false
         private var damage = false
+
         fun movement(movement: Boolean): Builder {
             this.movement = movement
             return this
@@ -84,32 +85,22 @@ class RestrictionCriteria(
     }
 
     fun union(criteria: RestrictionCriteria): RestrictionCriteria {
-        val movement = movement || criteria.movement
-        val interaction = interaction || criteria.interaction
-        val inventory = inventory || criteria.inventory
-        val commands = commands || criteria.commands
-        val damage = damage || criteria.damage
         return RestrictionCriteria(
-            movement,
-            interaction,
-            inventory,
-            commands,
-            damage
+            movement || criteria.movement,
+            interaction || criteria.interaction,
+            inventory || criteria.inventory,
+            commands || criteria.commands,
+            damage || criteria.damage
         )
     }
 
     fun intersect(criteria: RestrictionCriteria): RestrictionCriteria {
-        val movement = movement && criteria.movement
-        val interaction = interaction && criteria.interaction
-        val inventory = inventory && criteria.inventory
-        val commands = commands && criteria.commands
-        val damage = damage && criteria.damage
         return RestrictionCriteria(
-            movement,
-            interaction,
-            inventory,
-            commands,
-            damage
+            movement && criteria.movement,
+            interaction && criteria.interaction,
+            inventory && criteria.inventory,
+            commands && criteria.commands,
+            damage && criteria.damage
         )
     }
 

@@ -26,7 +26,7 @@ import com.google.inject.TypeLiteral
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.util.SendTextService
 

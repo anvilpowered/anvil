@@ -58,7 +58,7 @@ class XodusContext @Inject constructor(registry: Registry) : DataStoreContext<En
                         e)
                 }
             } else check(!entityClass.isAnnotationPresent(XodusEntity::class.java)) {
-                "Xodus entity class " + entityClass.name + " must extend org.anvilpowered.anvil.model.data.dbo.Mappable"
+                "Xodus entity class " + entityClass.name + " must extend org.anvilpowered.anvil.api.model.Mappable"
             }
         }
         tKeyClass = EntityId::class.java

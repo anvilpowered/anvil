@@ -20,10 +20,9 @@ package org.anvilpowered.anvil.sponge
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
-import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.AnvilImpl
-import org.anvilpowered.anvil.api.Environment
-import org.anvilpowered.anvil.api.EnvironmentBuilderImpl
+import org.anvilpowered.anvil.api.environment.Environment
+import org.anvilpowered.anvil.api.environment.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.common.module.CommonModule
 import org.anvilpowered.anvil.sponge.command.SpongeSimpleCommandService

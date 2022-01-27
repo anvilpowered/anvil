@@ -21,7 +21,7 @@ import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo

@@ -50,7 +50,7 @@ class PaperPlayerListener : Listener {
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
-        if (registry.getOrDefault(Keys.PROXY_MODE) == true) {
+        if (registry.getOrDefault(Keys.PROXY_MODE)) {
             return
         }
         val player = event.player

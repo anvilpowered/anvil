@@ -37,10 +37,10 @@ interface Mappable<T> {
      * in the target object should not be overwritten.
      *
      *
-     * @param object Object to write data to
+     * @param obj Object to write data to
      * @return object with data written to. Same instance as provided object
      */
-    fun writeTo(`object`: T): T
+    fun writeTo(obj: T): T
 
     /**
      * Reads all data from the provided `object` to this object

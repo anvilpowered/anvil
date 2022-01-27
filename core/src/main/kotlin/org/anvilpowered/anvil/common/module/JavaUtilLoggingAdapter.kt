@@ -19,7 +19,7 @@ package org.anvilpowered.anvil.common.module
 
 import com.google.inject.Binder
 import com.google.inject.Inject
-import org.anvilpowered.anvil.api.Environment
+import org.anvilpowered.anvil.api.environment.Environment
 import org.slf4j.Marker
 import org.slf4j.helpers.MarkerIgnoringBase
 import org.slf4j.helpers.MessageFormatter

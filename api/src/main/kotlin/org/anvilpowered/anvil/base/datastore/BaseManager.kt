@@ -64,8 +64,7 @@ abstract class BaseManager<C : DBComponent<*, *>> protected constructor(protecte
                 return
             }
         }
-        val message = ("Anvil: Could not find requested data store: \"" + dataStoreName
-            + "\". Did you bind it correctly?")
+        val message = "Anvil: Could not find requested data store: \"$dataStoreName\". Did you bind it correctly?"
         logger.error(message, IllegalStateException(message))
     }
 

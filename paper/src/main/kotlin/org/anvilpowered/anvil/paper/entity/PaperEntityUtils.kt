@@ -22,5 +22,5 @@ import org.bukkit.entity.Entity
 import java.util.UUID
 
 class PaperEntityUtils : EntityUtils {
-  override fun extractUUID(entity: Any?): UUID? = (entity as? Entity)?.uniqueId
+    override fun extractUUID(entity: Any?): UUID? = (entity as? Entity)?.uniqueId
 }

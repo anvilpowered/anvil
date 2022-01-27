@@ -78,7 +78,7 @@ open class BaseRegistry : Registry {
             coreRegistry = Anvil.registry
         }
         if (this !== coreRegistry
-            && getOrDefault(Keys.USE_SHARED_ENVIRONMENT)!!
+            && getOrDefault(Keys.USE_SHARED_ENVIRONMENT)
         ) {
             if (key == Keys.DATA_STORE_NAME
                 || key == Keys.MONGODB_HOSTNAME
@@ -86,7 +86,7 @@ open class BaseRegistry : Registry {
                 || key == Keys.MONGODB_USE_SRV
             ) {
                 return coreRegistry!!.getOrDefault(key)
-            } else if (getOrDefault(Keys.USE_SHARED_CREDENTIALS)!!) {
+            } else if (getOrDefault(Keys.USE_SHARED_CREDENTIALS)) {
                 if (key == Keys.MONGODB_USE_CONNECTION_STRING
                     || key == Keys.MONGODB_CONNECTION_STRING
                     || key == Keys.MONGODB_USERNAME

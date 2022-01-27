@@ -19,6 +19,7 @@ package org.anvilpowered.anvil.api
 
 import com.google.inject.Injector
 import com.google.inject.Module
+import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
 import org.slf4j.Logger
 

@@ -20,31 +20,25 @@ package org.anvilpowered.anvil.sponge.util
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.UserService
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
-import java.util.Optional
 import java.util.UUID
+import kotlin.UnsupportedOperationException
 
 class SpongeKickService : KickService {
 
     @Inject
     private lateinit var userService: UserService<User, ServerPlayer>
 
-    private fun Optional<ServerPlayer>.kick(reason: Any? = null) {
-        orElse(null)?.apply {
-            reason?.let { kick((reason as? Component) ?: Component.text(reason.toString())) }
-                ?: kick(Component.text("You have been kicked"))
-        }
-    }
-
     override fun kick(userUUID: UUID, reason: Any) {
-        userService.getPlayer(userUUID)?.kick(reason as Component)
+        kick(userService.getPlayer(userUUID)!!, reason)
     }
 
     override fun kick(userName: String, reason: Any) {
-        userService.getPlayer(userName)?.kick(reason as Component)
+        kick(userService.getPlayer(userName)!!, reason)
     }
 
     override fun kick(userUUID: UUID) {
@@ -53,5 +47,19 @@ class SpongeKickService : KickService {
 
     override fun kick(userName: String) {
         userService.getPlayer(userName)?.kick()
+    }
+
+    private fun kick(player: ServerPlayer, reason: Any) {
+        when(reason) {
+            is Component -> {
+                player.kick(reason)
+            }
+            is String -> {
+                player.kick(PlainTextComponentSerializer.plainText().deserialize(reason))
+            }
+            else -> {
+                throw UnsupportedOperationException("${reason.javaClass} is not a supported message type!")
+            }
+        }
     }
 }
