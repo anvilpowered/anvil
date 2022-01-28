@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.sponge.entity
 
-import org.anvilpowered.anvil.common.entity.EntityUtils
+import org.anvilpowered.anvil.core.entity.EntityUtils
 import org.spongepowered.api.util.Identifiable
 import java.util.UUID
 

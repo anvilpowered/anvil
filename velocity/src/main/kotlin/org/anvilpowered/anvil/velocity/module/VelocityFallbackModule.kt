@@ -19,7 +19,7 @@
 package org.anvilpowered.anvil.velocity.module
 
 import com.velocitypowered.api.command.CommandSource
-import org.anvilpowered.anvil.common.module.FallbackModule
+import org.anvilpowered.anvil.core.module.FallbackModule
 
 class VelocityFallbackModule : FallbackModule<CommandSource>() {
 }

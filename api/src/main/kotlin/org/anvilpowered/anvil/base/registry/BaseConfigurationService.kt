@@ -24,7 +24,7 @@ import io.leangen.geantyref.TypeToken
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.RegistryScope
+import org.anvilpowered.anvil.api.registry.RegistryReloadScope
 import org.anvilpowered.anvil.api.registry.RegistryScoped
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.ConfigurationOptions
@@ -246,9 +246,9 @@ Please note: If this is enabled, the values for above settings in this config fi
         configValuesEdited = true
     }
 
-    override fun load(registryScope: RegistryScope) {
-        val ordinal: Int = registryScope.ordinal
-        if (ordinal <= RegistryScope.DEFAULT.ordinal) {
+    override fun load(registryReloadScope: RegistryReloadScope) {
+        val ordinal: Int = registryReloadScope.ordinal
+        if (ordinal <= RegistryReloadScope.DEFAULT.ordinal) {
             loadDefaultScope()
         }
         loadConfig()

@@ -17,7 +17,7 @@
  */
 package org.anvilpowered.anvil.paper.entity
 
-import org.anvilpowered.anvil.common.entity.EntityUtils
+import org.anvilpowered.anvil.core.entity.EntityUtils
 import org.bukkit.entity.Entity
 import java.util.UUID
 

@@ -21,11 +21,13 @@ import com.google.inject.Inject
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
-import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
+import org.anvilpowered.anvil.core.command.CommonSimpleCommandService
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.UUID
 
 class PaperSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
 
@@ -36,8 +38,14 @@ class PaperSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
         private val delegate: SimpleCommand<CommandSender>,
     ) : TabExecutor {
         override fun onCommand(source: CommandSender, command: Command, alias: String, arguments: Array<String>): Boolean {
+            val userUUID = if (source is Player) {
+                source.uniqueId
+            } else {
+                UUID.randomUUID()
+            }
+
             if (delegate.canExecute(source)) {
-                delegate.execute(CommandContext(source, arguments))
+                delegate.execute(CommandContext(source, arguments, userUUID))
             } else {
                 source.sendNoPermission()
             }
@@ -45,7 +53,12 @@ class PaperSimpleCommandService : CommonSimpleCommandService<CommandSender>() {
         }
 
         override fun onTabComplete(source: CommandSender, command: Command, alias: String, arguments: Array<String>): List<String> {
-            return delegate.suggest(CommandContext(source, arguments))
+            val userUUID = if (source is Player) {
+                source.uniqueId
+            } else {
+                UUID.randomUUID()
+            }
+            return delegate.suggest(CommandContext(source, arguments, userUUID))
         }
     }
 

@@ -23,7 +23,7 @@ import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.registry.Key
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.api.registry.RegistryScope
+import org.anvilpowered.anvil.api.registry.RegistryReloadScope
 import org.anvilpowered.anvil.api.registry.RegistryScoped
 import org.slf4j.Logger
 import java.util.function.Consumer
@@ -38,7 +38,7 @@ open class BaseRegistry : Registry {
 
     val defaultMap: MutableMap<Key<*>, Any>
     private val valueMap: MutableMap<Key<*>?, Any>
-    private val listeners: MutableMap<Int, MutableMap<Runnable, RegistryScope>>
+    private val listeners: MutableMap<Int, MutableMap<Runnable, RegistryReloadScope>>
     private var coreRegistry: Registry? = null
     private var stringRepresentation: String? = null
 
@@ -142,10 +142,10 @@ open class BaseRegistry : Registry {
 
     private inner class ListenerRegistrationEndImpl(private val listener: Runnable) : Registry.ListenerRegistrationEnd {
         private var order = 0
-        private var registryScope: RegistryScope
+        private var registryReloadScope: RegistryReloadScope
 
         init {
-            registryScope = RegistryScope.DEFAULT
+            registryReloadScope = RegistryReloadScope.DEFAULT
         }
 
         override fun order(order: Int): Registry.ListenerRegistrationEnd {
@@ -153,19 +153,19 @@ open class BaseRegistry : Registry {
             return this
         }
 
-        override fun scope(registryScope: RegistryScope): Registry.ListenerRegistrationEnd {
-            this.registryScope = registryScope
+        override fun scope(registryReloadScope: RegistryReloadScope): Registry.ListenerRegistrationEnd {
+            this.registryReloadScope = registryReloadScope
             return this
         }
 
         override fun register() {
-            listeners.computeIfAbsent(order) { HashMap() }[listener] = registryScope
+            listeners.computeIfAbsent(order) { HashMap() }[listener] = registryReloadScope
         }
     }
 
-    override fun load(registryScope: RegistryScope) {
-        val ordinal: Int = registryScope.ordinal
-        if (ordinal <= RegistryScope.DEFAULT.ordinal) {
+    override fun load(registryReloadScope: RegistryReloadScope) {
+        val ordinal: Int = registryReloadScope.ordinal
+        if (ordinal <= RegistryReloadScope.DEFAULT.ordinal) {
             loadDefaultScope()
         }
         loadOrdinal(ordinal)
@@ -173,9 +173,9 @@ open class BaseRegistry : Registry {
 
     protected fun loadOrdinal(ordinal: Int) {
         listeners.entries.stream()
-            .sorted(java.util.Map.Entry.comparingByKey<Int, Map<Runnable, RegistryScope>>())
-            .forEach { (_, value): Map.Entry<Int, Map<Runnable, RegistryScope>> ->
-                value.forEach { (r: Runnable, c: RegistryScope) ->
+            .sorted(java.util.Map.Entry.comparingByKey<Int, Map<Runnable, RegistryReloadScope>>())
+            .forEach { (_, value): Map.Entry<Int, Map<Runnable, RegistryReloadScope>> ->
+                value.forEach { (r: Runnable, c: RegistryReloadScope) ->
                     if (ordinal <= c.ordinal) {
                         r.run()
                     }

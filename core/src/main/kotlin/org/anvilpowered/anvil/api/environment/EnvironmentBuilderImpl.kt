@@ -28,12 +28,12 @@ import com.google.inject.TypeLiteral
 import com.google.inject.name.Names
 import com.google.inject.util.Modules
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.ServiceManagerImpl
+import org.anvilpowered.anvil.core.ServiceManagerImpl
 import org.anvilpowered.anvil.api.misc.toTypeLiteralNoInline
 import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.api.registry.RegistryScope
-import org.anvilpowered.anvil.common.PlatformImpl
-import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.api.registry.RegistryReloadScope
+import org.anvilpowered.anvil.core.PlatformImpl
+import org.anvilpowered.anvil.core.module.PlatformModule
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Supplier
@@ -224,7 +224,7 @@ class EnvironmentBuilderImpl : Environment.Builder {
                 for (listener in loadedListeners[environment.name]!!) {
                     registry.whenLoaded { listener.accept(environment) }.register()
                 }
-                registry.load(RegistryScope.DEEP)
+                registry.load(RegistryReloadScope.DEEP)
                 for (listener in reloadedListeners[environment.name]!!) {
                     registry.whenLoaded { listener.accept(environment) }.register()
                 }

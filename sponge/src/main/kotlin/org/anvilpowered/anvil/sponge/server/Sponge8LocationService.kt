@@ -21,7 +21,7 @@ import com.google.inject.Inject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.server.CommonLocationService
+import org.anvilpowered.anvil.core.server.CommonLocationService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer

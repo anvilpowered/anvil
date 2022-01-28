@@ -17,7 +17,7 @@
  */
 package org.anvilpowered.anvil.paper.util
 
-import org.anvilpowered.anvil.common.util.CommonUserService
+import org.anvilpowered.anvil.core.util.CommonUserService
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player

@@ -21,13 +21,13 @@ import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
-import org.anvilpowered.anvil.api.AnvilImpl
+import org.anvilpowered.anvil.core.AnvilImpl
 import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.environment.EnvironmentBuilderImpl
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
-import org.anvilpowered.anvil.common.module.CommonModule
+import org.anvilpowered.anvil.core.command.CommonAnvilCommandNode
+import org.anvilpowered.anvil.core.module.CommonModule
 import org.anvilpowered.anvil.paper.listener.PaperPlayerListener
 import org.anvilpowered.anvil.paper.module.ApiPaperModule
 import org.anvilpowered.anvil.paper.module.PaperFallbackModule

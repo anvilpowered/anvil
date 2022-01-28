@@ -27,12 +27,12 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
-import org.anvilpowered.anvil.api.AnvilImpl
+import org.anvilpowered.anvil.core.AnvilImpl
+import org.anvilpowered.anvil.core.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.environment.EnvironmentBuilderImpl
-import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
-import org.anvilpowered.anvil.common.module.CommonModule
-import org.anvilpowered.anvil.common.plugin.AnvilPluginInfo
+import org.anvilpowered.anvil.core.module.CommonModule
+import org.anvilpowered.anvil.core.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.velocity.listener.VelocityPlayerListener
 import org.anvilpowered.anvil.velocity.module.ApiVelocityModule
 import org.anvilpowered.anvil.velocity.module.VelocityFallbackModule

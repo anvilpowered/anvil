@@ -21,13 +21,8 @@ import com.google.inject.Inject
 import org.anvilpowered.anvil.api.util.KickService
 import com.velocitypowered.api.proxy.ProxyServer
 import java.util.UUID
-import org.anvilpowered.anvil.common.util.CommonUserService
-import java.util.stream.Collectors
-import java.util.concurrent.CompletableFuture
-import com.velocitypowered.api.permission.PermissionSubject
 import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.api.command.CommandExecuteService
 
 class VelocityKickService : KickService {
   @Inject

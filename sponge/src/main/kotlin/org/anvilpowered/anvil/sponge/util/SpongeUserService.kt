@@ -17,11 +17,10 @@
  */
 package org.anvilpowered.anvil.sponge.util
 
-import org.anvilpowered.anvil.common.util.CommonUserService
+import org.anvilpowered.anvil.core.util.CommonUserService
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
-import java.util.Optional
 import java.util.UUID
 import kotlin.streams.asSequence
 

@@ -24,11 +24,10 @@ import com.velocitypowered.api.event.connection.LoginEvent
 import com.velocitypowered.api.event.player.PlayerChatEvent
 import net.kyori.adventure.identity.Identity
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
-import org.anvilpowered.anvil.api.model.coremember.CoreMember
 import org.anvilpowered.anvil.api.registry.Keys
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.util.AudienceService
-import org.anvilpowered.anvil.common.plugin.AnvilPluginMessages
+import org.anvilpowered.anvil.core.plugin.AnvilPluginMessages
 
 class VelocityPlayerListener @Inject constructor(
     private val audienceService: AudienceService<CommandSource>,

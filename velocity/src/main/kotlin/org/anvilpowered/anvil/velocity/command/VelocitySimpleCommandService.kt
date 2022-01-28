@@ -19,11 +19,13 @@ package org.anvilpowered.anvil.velocity.command
 
 import com.google.inject.Inject
 import com.velocitypowered.api.command.CommandSource
+import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
-import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
+import org.anvilpowered.anvil.core.command.CommonSimpleCommandService
+import java.util.UUID
 import com.velocitypowered.api.command.SimpleCommand as VelocitySimpleCommand
 
 class VelocitySimpleCommandService : CommonSimpleCommandService<CommandSource>() {
@@ -36,7 +38,12 @@ class VelocitySimpleCommandService : CommonSimpleCommandService<CommandSource>()
   ) : VelocitySimpleCommand {
 
     override fun execute(invocation: VelocitySimpleCommand.Invocation) {
-      delegate.execute(CommandContext( invocation.source(), invocation.arguments()))
+      val userUUID = if (invocation.source() is Player) {
+        (invocation.source() as Player).uniqueId
+      } else {
+        UUID.randomUUID()
+      }
+      delegate.execute(CommandContext( invocation.source(), invocation.arguments(), userUUID))
     }
   }
 

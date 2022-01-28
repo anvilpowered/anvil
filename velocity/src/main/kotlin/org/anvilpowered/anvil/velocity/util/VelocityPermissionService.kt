@@ -17,14 +17,7 @@
  */
 package org.anvilpowered.anvil.velocity.util
 
-import org.anvilpowered.anvil.api.util.KickService
-import com.velocitypowered.api.proxy.ProxyServer
-import java.util.UUID
-import org.anvilpowered.anvil.common.util.CommonUserService
-import java.util.stream.Collectors
-import java.util.concurrent.CompletableFuture
 import com.velocitypowered.api.permission.PermissionSubject
-import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.util.PermissionService
 
 class VelocityPermissionService : PermissionService {

@@ -179,23 +179,23 @@ interface Registry {
      * Runs all [listeners][Runnable] that were
      * added before this call in the provided registryScope.
      *
-     * @param registryScope The [RegistryScope] to load
+     * @param registryReloadScope The [RegistryReloadScope] to load
      * @see Environment.reload
      * @see .whenLoaded
      */
     @RegistryScoped
-    fun load(registryScope: RegistryScope)
+    fun load(registryReloadScope: RegistryReloadScope)
 
     /**
      * Runs all [listeners][Runnable] that were
-     * added before this call in the [default scope][RegistryScope.DEFAULT].
+     * added before this call in the [default scope][RegistryReloadScope.DEFAULT].
      *
      * @see Environment.reload
      * @see .whenLoaded
      */
     @RegistryScoped
     fun load() {
-        load(RegistryScope.DEFAULT)
+        load(RegistryReloadScope.DEFAULT)
     }
 
     /**
@@ -230,15 +230,15 @@ interface Registry {
 
         /**
          * Sets the scope for the listener.
-         * The default scope is [RegistryScope.DEFAULT].
+         * The default scope is [RegistryReloadScope.DEFAULT].
          *
          * @param scope The scope to run this listener in.
          * @return `this`
-         * @see RegistryScope
+         * @see RegistryReloadScope
          *
          * @see RegistryScoped
          */
-        fun scope(scope: RegistryScope): ListenerRegistrationEnd
+        fun scope(scope: RegistryReloadScope): ListenerRegistrationEnd
 
         /**
          * Completes the listener registration.

@@ -25,6 +25,7 @@ import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.environment.EnvironmentManager
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.base.plugin.BasePlugin
+import kotlin.experimental.ExperimentalTypeInference
 
 open class Anvil constructor(name: String, rootInjector: Injector, module: Module) :
     BasePlugin(name, rootInjector, module) {
@@ -37,7 +38,7 @@ open class Anvil constructor(name: String, rootInjector: Injector, module: Modul
                 return field
                     ?: try {
                         (Class.forName(
-                            "org.anvilpowered.anvil.api.ServiceManagerImpl"
+                            "org.anvilpowered.anvil.core.ServiceManagerImpl"
                         ).getConstructor().newInstance() as ServiceManager).also {
                             serviceManager = it
                         }
@@ -55,8 +56,10 @@ open class Anvil constructor(name: String, rootInjector: Injector, module: Modul
 
         private const val NOT_LOADED = "Anvil has not been loaded yet!"
 
-        val environmentBuilder: Environment.Builder by lazy {
-            serviceManager!!.provide(Environment.Builder::class.java)
+        @OptIn(ExperimentalTypeInference::class)
+        inline fun environmentBuilder(@BuilderInference block: Environment.Builder.() -> Unit): Environment.Builder {
+            return serviceManager!!.provide(Environment.Builder::class.java).apply(block)
+
         }
 
         val environmentManager: EnvironmentManager by lazy {

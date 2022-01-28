@@ -130,140 +130,140 @@ class Keys private constructor() {
             return result
         }
 
-        val SERVER_NAME: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("SERVER_NAME")
-            .fallback("server")
-            .build()
-        val TIME_ZONE: Key<ZoneId> = Key.builder(TypeTokens.ZONE_ID)
-            .name("TIME_ZONE")
-            .fallback(ZoneId.systemDefault())
-            .parser { input: String? -> ZoneIdSerializer.parse(input) }
-            .toStringer { zoneId: ZoneId? -> ZoneIdSerializer.toString(zoneId) }
-            .build()
-        val PROXY_MODE: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("PROXY_MODE")
-            .fallback(false)
-            .build()
-        val REGEDIT_ALLOW_SENSITIVE: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("REGEDIT_ALLOW_SENSITIVE")
-            .fallback(false)
-            .userImmutable()
-            .build()
-        val BASE_SCAN_PACKAGE: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("BASE_SCAN_PACKAGE")
-            .fallback("org.anvilpowered.anvil.common.model")
-            .userImmutable()
-            .build()
-        val CACHE_INVALIDATION_INTERVAL_SECONDS: Key<Int> = Key.builder(TypeTokens.INTEGER)
-            .name("CACHE_INVALIDATION_INTERVAL_SECONDS")
-            .fallback(30)
-            .build()
-        val CACHE_INVALIDATION_TIMOUT_SECONDS: Key<Int> = Key.builder(TypeTokens.INTEGER)
-            .name("CACHE_INVALIDATION_TIMOUT_SECONDS")
-            .fallback(300)
-            .build()
-        val USE_SHARED_ENVIRONMENT: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("USE_SHARED_ENVIRONMENT")
-            .fallback(false)
-            .sensitive()
-            .build()
-        val USE_SHARED_CREDENTIALS: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("USE_SHARED_CREDENTIALS")
-            .fallback(false)
-            .sensitive()
-            .build()
-        val DATA_DIRECTORY: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("DATA_DIRECTORY")
-            .fallback("anvil")
-            .sensitive()
-            .build()
-        val DATA_STORE_NAME: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("DATA_STORE_NAME")
-            .fallback("xodus")
-            .sensitive()
-            .build()
-        val MONGODB_CONNECTION_STRING: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("MONGODB_CONNECTION_STRING")
-            .fallback("mongodb://admin:password@localhost:27017/anvil?authSource=admin")
-            .sensitive()
-            .build()
-        val MONGODB_HOSTNAME: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("MONGODB_HOSTNAME")
-            .fallback("localhost")
-            .sensitive()
-            .build()
-        val MONGODB_PORT: Key<Int> = Key.builder(TypeTokens.INTEGER)
-            .name("MONGODB_PORT")
-            .fallback(27017)
-            .sensitive()
-            .build()
-        val MONGODB_DBNAME: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("MONGODB_DBNAME")
-            .fallback("anvil")
-            .sensitive()
-            .build()
-        val MONGODB_USERNAME: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("MONGODB_USERNAME")
-            .fallback("admin")
-            .sensitive()
-            .build()
-        val MONGODB_PASSWORD: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("MONGODB_PASSWORD")
-            .fallback("password")
-            .sensitive()
-            .build()
-        val MONGODB_AUTH_DB: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("MONGODB_AUTH_DB")
-            .fallback("admin")
-            .sensitive()
-            .build()
-        val MONGODB_USE_AUTH: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("MONGODB_USE_AUTH")
-            .fallback(false)
-            .sensitive()
-            .build()
-        val MONGODB_USE_SRV: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("MONGODB_USE_SRV")
-            .fallback(false)
-            .sensitive()
-            .build()
-        val MONGODB_USE_CONNECTION_STRING: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("MONGODB_USE_CONNECTION_STRING")
-            .fallback(false)
-            .sensitive()
-            .build()
-        val REDIS_HOSTNAME: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("REDIS_HOSTNAME")
-            .fallback("localhost")
-            .sensitive()
-            .build()
-        val REDIS_PORT: Key<Int> = Key.builder(TypeTokens.INTEGER)
-            .name("REDIS_PORT")
-            .fallback(6379)
-            .sensitive()
-            .build()
-        val REDIS_PASSWORD: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("REDIS_PASSWORD")
-            .fallback("password")
-            .sensitive()
-            .build()
-        val REDIS_USE_AUTH: Key<Boolean> = Key.builder(TypeTokens.BOOLEAN)
-            .name("REDIS_USE_AUTH")
-            .fallback(false)
-            .sensitive()
-            .build()
-        val PLUGINS_PERMISSION: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("PLUGINS_PERMISSION")
-            .fallback("anvil.admin.plugins")
-            .build()
-        val REGEDIT_PERMISSION: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("REGEDIT_PERMISSION")
-            .fallback("anvil.admin.regedit")
-            .build()
-        val RELOAD_PERMISSION: Key<String> = Key.builder(TypeTokens.STRING)
-            .name("RELOAD_PERMISSION")
-            .fallback("anvil.admin.reload")
-            .build()
+        val SERVER_NAME = Key.build {
+            name("SERVER_NAME")
+            fallback("server")
+        }
+        val TIME_ZONE = Key.build {
+            name("TIME_ZONE")
+            fallback(ZoneId.systemDefault())
+            parser { input: String? -> ZoneIdSerializer.parse(input) }
+            toStringer { zoneId: ZoneId? -> ZoneIdSerializer.toString(zoneId) }
+        }
+        val PROXY_MODE = Key.build {
+            name("PROXY_MODE")
+            fallback(false)
+        }
+        val REGEDIT_ALLOW_SENSITIVE = Key.build {
+            name("REGEDIT_ALLOW_SENSITIVE")
+            fallback(false)
+            userImmutable()
+        }
+        val BASE_SCAN_PACKAGE = Key.build {
+            name("BASE_SCAN_PACKAGE")
+            fallback("org.anvilpowered.anvil.common.model")
+            userImmutable()
+        }
+        val CACHE_INVALIDATION_INTERVAL_SECONDS = Key.build {
+            name("CACHE_INVALIDATION_INTERVAL_SECONDS")
+            fallback(30)
+        }
+        val CACHE_INVALIDATION_TIMOUT_SECONDS = Key.build {
+            name("CACHE_INVALIDATION_TIMOUT_SECONDS")
+            fallback(300)
+        }
+        val USE_SHARED_ENVIRONMENT = Key.build {
+            name("USE_SHARED_ENVIRONMENT")
+            fallback(false)
+            sensitive()
+        }
+        val USE_SHARED_CREDENTIALS = Key.build {
+            name("USE_SHARED_CREDENTIALS")
+            fallback(false)
+                .sensitive()
+        }
+        val DATA_DIRECTORY: Key<String> = Key.build {
+            name("DATA_DIRECTORY")
+            fallback("anvil")
+            sensitive()
+        }
+        val DATA_STORE_NAME: Key<String> = Key.build {
+            name("DATA_STORE_NAME")
+            fallback("xodus")
+            sensitive()
+        }
+        val MONGODB_CONNECTION_STRING: Key<String> = Key.build {
+            name("MONGODB_CONNECTION_STRING")
+            fallback("mongodb://admin:password@localhost:27017/anvil?authSource=admin")
+            sensitive()
+        }
+        val MONGODB_HOSTNAME = Key.build {
+            name("MONGODB_HOSTNAME")
+            fallback("localhost")
+            sensitive()
+        }
+        val MONGODB_PORT: Key<Int> = Key.build {
+            name("MONGODB_PORT")
+            fallback(27017)
+            sensitive()
+        }
+        val MONGODB_DBNAME: Key<String> = Key.build {
+            name("MONGODB_DBNAME")
+            fallback("anvil")
+            sensitive()
+        }
+        val MONGODB_USERNAME: Key<String> = Key.build {
+            name("MONGODB_USERNAME")
+            fallback("admin")
+            sensitive()
+        }
+        val MONGODB_PASSWORD: Key<String> = Key.build {
+            name("MONGODB_PASSWORD")
+            fallback("password")
+            sensitive()
+        }
+        val MONGODB_AUTH_DB: Key<String> = Key.build {
+            name("MONGODB_AUTH_DB")
+            fallback("admin")
+            sensitive()
+        }
+        val MONGODB_USE_AUTH: Key<Boolean> = Key.build {
+            name("MONGODB_USE_AUTH")
+            fallback(false)
+            sensitive()
+        }
+        val MONGODB_USE_SRV: Key<Boolean> = Key.build {
+            name("MONGODB_USE_SRV")
+            fallback(false)
+            sensitive()
+        }
+        val MONGODB_USE_CONNECTION_STRING: Key<Boolean> = Key.build {
+            name("MONGODB_USE_CONNECTION_STRING")
+            fallback(false)
+            sensitive()
+        }
+        val REDIS_HOSTNAME: Key<String> = Key.build {
+            name("REDIS_HOSTNAME")
+            fallback("localhost")
+            sensitive()
+        }
+        val REDIS_PORT: Key<Int> = Key.build {
+            name("REDIS_PORT")
+            fallback(6379)
+            sensitive()
+        }
+        val REDIS_PASSWORD: Key<String> = Key.build {
+            name("REDIS_PASSWORD")
+            fallback("password")
+            sensitive()
+        }
+        val REDIS_USE_AUTH: Key<Boolean> = Key.build {
+            name("REDIS_USE_AUTH")
+            fallback(false)
+            sensitive()
+        }
+        val PLUGINS_PERMISSION: Key<String> = Key.build {
+            name("PLUGINS_PERMISSION")
+            fallback("anvil.admin.plugins")
+        }
+        val REGEDIT_PERMISSION: Key<String> = Key.build {
+            name("REGEDIT_PERMISSION")
+            fallback("anvil.admin.regedit")
+        }
+        val RELOAD_PERMISSION: Key<String> = Key.build {
+            name("RELOAD_PERMISSION")
+            fallback("anvil.admin.reload")
+        }
 
         init {
             startRegistration(GLOBAL_NAMESPACE)

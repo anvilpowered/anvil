@@ -1,7 +1,7 @@
 package org.anvilpowered.anvil.paper.command
 
 import com.google.inject.Inject
-import org.anvilpowered.anvil.api.AnvilImpl
+import org.anvilpowered.anvil.core.AnvilImpl
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin

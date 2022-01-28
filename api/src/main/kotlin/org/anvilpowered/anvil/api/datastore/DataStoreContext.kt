@@ -63,8 +63,7 @@ abstract class DataStoreContext<TKey, TDataStore> protected constructor(registry
         baseScanPackage: String, vararg entityAnnotations: Class<out Annotation>
     ): Array<Class<*>> {
         if (entityAnnotations.isEmpty()) return emptyArray()
-        val reflections = Reflections(
-            baseScanPackage, TypeAnnotationsScanner(), SubTypesScanner(), classLoader)
+        val reflections = Reflections(baseScanPackage, TypeAnnotationsScanner(), SubTypesScanner(), classLoader)
         val types: MutableSet<Class<*>> = reflections.getTypesAnnotatedWith(entityAnnotations[0])
         for (i in 1 until entityAnnotations.size) {
             types.addAll(reflections.getTypesAnnotatedWith(entityAnnotations[i]))

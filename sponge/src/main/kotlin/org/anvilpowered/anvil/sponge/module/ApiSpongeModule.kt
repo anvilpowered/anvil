@@ -27,11 +27,11 @@ import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.PlatformImpl
-import org.anvilpowered.anvil.common.entity.CommonRestrictionService
+import org.anvilpowered.anvil.core.PlatformImpl
+import org.anvilpowered.anvil.core.entity.CommonRestrictionService
 import org.anvilpowered.anvil.api.util.SendTextService
-import org.anvilpowered.anvil.common.entity.EntityUtils
-import org.anvilpowered.anvil.common.module.PlatformModule
+import org.anvilpowered.anvil.core.entity.EntityUtils
+import org.anvilpowered.anvil.core.module.PlatformModule
 import org.anvilpowered.anvil.sponge.command.SpongeCommandExecuteService
 import org.anvilpowered.anvil.sponge.command.SpongeSimpleCommandService
 import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils
@@ -65,7 +65,6 @@ class ApiSpongeModule : PlatformModule(
     override fun configure() {
         super.configure()
         with(binder()) {
-            bind<RestrictionService>().to<CommonRestrictionService>()
             bind<UserService<User, ServerPlayer>>().to<SpongeUserService>()
             bind<SendTextService>().to<SpongeSendTextService>()
             bind<AudienceService<CommandCause>>().to<SpongeAudienceService>()

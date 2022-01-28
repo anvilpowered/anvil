@@ -20,12 +20,10 @@ package org.anvilpowered.anvil.velocity.util
 import com.google.inject.Inject
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
-import org.anvilpowered.anvil.common.util.CommonUserService
+import org.anvilpowered.anvil.core.util.CommonUserService
 import java.util.Locale
-import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
-import java.util.function.Function
 import java.util.stream.Collectors
 
 class VelocityUserService @Inject constructor() : CommonUserService<Player, Player>(Player::class.java) {

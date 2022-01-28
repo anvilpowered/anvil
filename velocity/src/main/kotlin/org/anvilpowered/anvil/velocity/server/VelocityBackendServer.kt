@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.velocity.server
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.server.RegisteredServer
 import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.server.CommonBackendServer
+import org.anvilpowered.anvil.core.server.CommonBackendServer
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import kotlin.streams.toList

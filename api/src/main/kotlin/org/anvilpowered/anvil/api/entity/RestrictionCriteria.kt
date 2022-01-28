@@ -236,8 +236,8 @@ class RestrictionCriteria(
             return DAMAGE_ONLY
         }
 
-        fun builder(): Builder {
-            return Builder()
+        inline fun build(block: Builder.() -> Unit): RestrictionCriteria {
+            return Builder().apply(block).build()
         }
     }
 }

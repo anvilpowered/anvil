@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.api.registry
 import io.leangen.geantyref.TypeToken
 import org.anvilpowered.anvil.api.misc.Named
 import java.util.function.Function
+import kotlin.experimental.ExperimentalTypeInference
 
 abstract class Key<T> internal constructor(
     val typeToken: TypeToken<T>,
@@ -151,7 +152,7 @@ abstract class Key<T> internal constructor(
     }
 
     fun toString(value: T): String {
-        return toStringer?.apply(value) ?: "No toStringer set for $name!"
+        return toStringer?.apply(value) ?: value.toString()
     }
 
     override fun compareTo(o: Key<T>): Int {
@@ -177,6 +178,11 @@ abstract class Key<T> internal constructor(
     companion object {
         fun <T> builder(type: TypeToken<T>): Builder<T> {
             return KeyBuilder(type)
+        }
+
+        @OptIn(ExperimentalTypeInference::class)
+        inline fun <reified T> build(@BuilderInference block: Builder<T>.() -> Unit): Key<T> {
+            return builder(object : TypeToken<T>() {}).apply(block).build()
         }
     }
 }

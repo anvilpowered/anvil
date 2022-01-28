@@ -22,7 +22,7 @@ import com.google.inject.Inject
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.api.util.UserService
-import org.anvilpowered.anvil.common.server.CommonLocationService
+import org.anvilpowered.anvil.core.server.CommonLocationService
 import java.util.UUID
 import kotlin.streams.toList
 

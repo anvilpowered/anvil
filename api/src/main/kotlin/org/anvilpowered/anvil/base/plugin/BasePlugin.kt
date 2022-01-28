@@ -96,13 +96,14 @@ abstract class BasePlugin {
         rootInjector: Injector,
         module: Module?,
     ): Environment.Builder {
-        val builder: Environment.Builder = Anvil.environmentBuilder
-            .setName(name)
-            .setRootInjector(rootInjector)
-            .whenLoaded { environment: Environment -> whenLoaded(environment) }
-            .whenReady { e -> environment = e }
-            .whenReady { environment: Environment -> whenReady(environment) }
-            .whenReloaded { environment: Environment -> whenReloaded(environment) }
+        val builder: Environment.Builder = Anvil.environmentBuilder {
+            setName(name)
+            setRootInjector(rootInjector)
+            whenLoaded { environment: Environment -> whenLoaded(environment) }
+            whenReady { e -> environment = e }
+            whenReady { environment: Environment -> whenReady(environment) }
+            whenReloaded { environment: Environment -> whenReloaded(environment) }
+        }
         if (module != null) {
             builder.addModules(module)
         }

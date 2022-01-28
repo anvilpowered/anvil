@@ -21,7 +21,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.anvilpowered.anvil.api.registry.ConfigurationService
 import org.anvilpowered.anvil.api.registry.Key
-import org.anvilpowered.anvil.api.registry.RegistryScope
+import org.anvilpowered.anvil.api.registry.RegistryReloadScope
 
 /**
  * A registry that is backed by the configuration service
@@ -42,9 +42,9 @@ open class BaseExtendedRegistry : BaseRegistry() {
         return result ?: configurationService.getDefault(key)
     }
 
-    override fun load(registryScope: RegistryScope) {
-        configurationService.load(registryScope)
-        super.load(registryScope)
+    override fun load(registryReloadScope: RegistryReloadScope) {
+        configurationService.load(registryReloadScope)
+        super.load(registryReloadScope)
     }
 
     override fun toString(): String {

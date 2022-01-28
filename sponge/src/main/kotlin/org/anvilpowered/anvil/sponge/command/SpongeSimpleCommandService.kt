@@ -24,16 +24,19 @@ import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.api.splitContext
-import org.anvilpowered.anvil.common.command.CommonSimpleCommandService
+import org.anvilpowered.anvil.api.misc.splitContext
+import org.anvilpowered.anvil.core.command.CommonSimpleCommandService
 import org.spongepowered.api.command.Command
 import org.spongepowered.api.command.CommandCause
 import org.spongepowered.api.command.CommandCompletion
 import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.parameter.ArgumentReader
+import org.spongepowered.api.entity.living.player.Player
+import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent
 import org.spongepowered.plugin.PluginContainer
 import java.util.Optional
+import java.util.UUID
 
 @Singleton
 class SpongeSimpleCommandService @Inject constructor(
@@ -62,12 +65,22 @@ class SpongeSimpleCommandService @Inject constructor(
         private val delegate: SimpleCommand<CommandCause>,
     ) : Command.Raw {
         override fun process(cause: CommandCause, arguments: ArgumentReader.Mutable): CommandResult {
-            delegate.execute(CommandContext(cause, arguments.remaining().splitContext()))
+            val userUUID = if (cause.subject() is ServerPlayer) {
+                (cause.subject() as ServerPlayer).uniqueId()
+            } else {
+                UUID.randomUUID()
+            }
+            delegate.execute(CommandContext(cause, arguments.remaining().splitContext(), userUUID))
             return CommandResult.success()
         }
 
         override fun complete(cause: CommandCause, arguments: ArgumentReader.Mutable): MutableList<CommandCompletion> {
-            return delegate.suggest(CommandContext(cause, arguments.remaining().splitContext()))
+            val userUUID = if (cause.subject() is ServerPlayer) {
+                (cause.subject() as ServerPlayer).uniqueId()
+            } else {
+                UUID.randomUUID()
+            }
+            return delegate.suggest(CommandContext(cause, arguments.remaining().splitContext(), userUUID))
                 .map { CommandCompletion.of(it) }
                 .toMutableList()
         }

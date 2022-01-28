@@ -65,4 +65,4 @@ package org.anvilpowered.anvil.api.registry
  *
  */
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.PROPERTY)
-annotation class RegistryScoped(val value: RegistryScope = RegistryScope.DEFAULT)
+annotation class RegistryScoped(val value: RegistryReloadScope = RegistryReloadScope.DEFAULT)

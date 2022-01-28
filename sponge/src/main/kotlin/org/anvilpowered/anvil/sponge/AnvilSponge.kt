@@ -20,11 +20,11 @@ package org.anvilpowered.anvil.sponge
 import com.google.inject.Inject
 import com.google.inject.Injector
 import com.google.inject.TypeLiteral
-import org.anvilpowered.anvil.api.AnvilImpl
+import org.anvilpowered.anvil.core.AnvilImpl
 import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.environment.EnvironmentBuilderImpl
-import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode
-import org.anvilpowered.anvil.common.module.CommonModule
+import org.anvilpowered.anvil.core.command.CommonAnvilCommandNode
+import org.anvilpowered.anvil.core.module.CommonModule
 import org.anvilpowered.anvil.sponge.command.SpongeSimpleCommandService
 import org.anvilpowered.anvil.sponge.listener.SpongePlayerListener
 import org.anvilpowered.anvil.sponge.module.ApiSpongeModule
