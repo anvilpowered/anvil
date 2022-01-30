@@ -234,6 +234,7 @@ class Stage<TCommandSource>(
         return true
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> addChange(key: Key<T>, newValue: T? = null): Component {
         if (!::registry.isInitialized) {
             return selectRegistry
@@ -262,6 +263,7 @@ class Stage<TCommandSource>(
                 .build())
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> unstageChange(key: Key<T>): Component {
         if (!::registry.isInitialized) {
             return selectRegistry

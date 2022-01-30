@@ -16,6 +16,8 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("UnstableApiUsage", "UNCHECKED_CAST")
+
 package org.anvilpowered.anvil.api.misc
 
 import com.google.common.reflect.TypeToken

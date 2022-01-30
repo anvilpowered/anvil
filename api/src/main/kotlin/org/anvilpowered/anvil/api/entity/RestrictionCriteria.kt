@@ -140,11 +140,11 @@ class RestrictionCriteria(
         return damage
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj !is RestrictionCriteria) {
+    override fun equals(other: Any?): Boolean {
+        if (other !is RestrictionCriteria) {
             return false
         }
-        return movement == obj.movement && interaction == obj.interaction && inventory == obj.inventory && commands == obj.commands && damage == obj.damage
+        return movement == other.movement && interaction == other.interaction && inventory == other.inventory && commands == other.commands && damage == other.damage
     }
 
     override fun toString(): String {

@@ -52,6 +52,7 @@ abstract class BaseManager<C : DBComponent<*, *>> protected constructor(protecte
         currentComponent = null
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun loadComponent() {
         val dataStoreName: String = registry.getExtraSafe(Keys.DATA_STORE_NAME).lowercase(Locale.ENGLISH)
         val type = componentType.rawType.canonicalName

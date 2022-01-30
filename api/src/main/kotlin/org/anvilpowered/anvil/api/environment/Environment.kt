@@ -32,6 +32,7 @@ import org.anvilpowered.anvil.api.registry.Registry
 import java.util.function.Consumer
 import java.util.function.Supplier
 
+@Suppress("UNCHECKED_CAST")
 interface Environment : Named, Comparable<Environment> {
 
     fun <T> getBinding(name: String): Binding<T> = getBinding(name, injector)

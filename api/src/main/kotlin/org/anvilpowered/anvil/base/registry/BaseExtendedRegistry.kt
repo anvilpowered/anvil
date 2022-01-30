@@ -37,6 +37,7 @@ open class BaseExtendedRegistry : BaseRegistry() {
         return result ?: configurationService[key]
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> getDefault(key: Key<T>): T {
         val result = defaultMap[key] as T?
         return result ?: configurationService.getDefault(key)

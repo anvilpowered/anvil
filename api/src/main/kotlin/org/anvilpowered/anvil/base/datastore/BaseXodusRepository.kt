@@ -37,6 +37,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import java.util.function.Function
 
+@Suppress("UNCHECKED_CAST")
 interface BaseXodusRepository<T : ObjectWithId<EntityId>> : XodusRepository<T>, BaseXodusComponent {
 
     override fun insertOne(item: T): CompletableFuture<T?> {

@@ -30,6 +30,7 @@ import java.util.function.Consumer
 import java.util.function.Function
 import java.util.stream.Collectors
 
+@Suppress("UNCHECKED_CAST")
 @Singleton
 open class BaseRegistry : Registry {
 

@@ -39,6 +39,7 @@ import java.util.function.Predicate
  *
  * @author Cableguy20
  */
+@Suppress("UNCHECKED_CAST")
 @Singleton
 open class BaseConfigurationService @Inject constructor(configLoader: ConfigurationLoader<CommentedConfigurationNode>) :
     BaseRegistry(), ConfigurationService {

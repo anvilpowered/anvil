@@ -117,6 +117,7 @@ abstract class Key<T> internal constructor(
         fun build(): Key<T>
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun extractParser(value: T?): Function<String, T> {
         when (value) {
             is String -> {
@@ -155,12 +156,12 @@ abstract class Key<T> internal constructor(
         return toStringer?.apply(value) ?: value.toString()
     }
 
-    override fun compareTo(o: Key<T>): Int {
-        return name.compareTo(o.name, ignoreCase = true)
+    override fun compareTo(other: Key<T>): Int {
+        return name.compareTo(other.name, ignoreCase = true)
     }
 
-    override fun equals(o: Any?): Boolean {
-        return o is Key<*> && name.equals(o.name, ignoreCase = true)
+    override fun equals(other: Any?): Boolean {
+        return other is Key<*> && name.equals(other.name, ignoreCase = true)
     }
 
     override fun hashCode(): Int {

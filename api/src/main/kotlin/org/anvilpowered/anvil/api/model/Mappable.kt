@@ -73,6 +73,7 @@ interface Mappable<T> {
             }
         }
 
+        @Suppress("UNCHECKED_CAST")
         @Throws(IOException::class, ClassNotFoundException::class)
         fun <T> deserializeUnsafe(inputStream: InputStream?): T {
             ObjectInputStream(inputStream).use { objectInputStream -> return objectInputStream.readObject() as T }

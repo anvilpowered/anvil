@@ -57,30 +57,30 @@ abstract class XodusDbo protected constructor() : ObjectWithId<EntityId>, Mappab
         updatedUtcNanos = now.nano
     }
 
-    override fun writeTo(entity: Entity): Entity {
+    override fun writeTo(obj: Entity): Entity {
         // id cannot be written to object
-        entity.setProperty("createdUtcSeconds", createdUtcSeconds)
-        entity.setProperty("createdUtcNanos", createdUtcNanos)
-        entity.setProperty("updatedUtcSeconds", updatedUtcSeconds)
-        entity.setProperty("updatedUtcNanos", updatedUtcNanos)
-        return entity
+        obj.setProperty("createdUtcSeconds", createdUtcSeconds)
+        obj.setProperty("createdUtcNanos", createdUtcNanos)
+        obj.setProperty("updatedUtcSeconds", updatedUtcSeconds)
+        obj.setProperty("updatedUtcNanos", updatedUtcNanos)
+        return obj
     }
 
-    override fun readFrom(entity: Entity) {
-        id = entity.id
-        val createdUtcSeconds = entity.getProperty("createdUtcSeconds")
+    override fun readFrom(obj: Entity) {
+        id = obj.id
+        val createdUtcSeconds = obj.getProperty("createdUtcSeconds")
         if (createdUtcSeconds is Long) {
             this.createdUtcSeconds = createdUtcSeconds
         }
-        val createdUtcNanos = entity.getProperty("createdUtcNanos")
+        val createdUtcNanos = obj.getProperty("createdUtcNanos")
         if (createdUtcNanos is Int) {
             this.createdUtcNanos = createdUtcNanos
         }
-        val updatedUtcSeconds = entity.getProperty("updatedUtcSeconds")
+        val updatedUtcSeconds = obj.getProperty("updatedUtcSeconds")
         if (updatedUtcSeconds is Long) {
             this.updatedUtcSeconds = updatedUtcSeconds
         }
-        val updatedUtcNanos = entity.getProperty("updatedUtcNanos")
+        val updatedUtcNanos = obj.getProperty("updatedUtcNanos")
         if (updatedUtcNanos is Int) {
             this.updatedUtcNanos = updatedUtcNanos
         }

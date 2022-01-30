@@ -23,6 +23,7 @@ import com.google.common.collect.Table
 import java.time.ZoneId
 import java.util.Optional
 
+@Suppress("UNCHECKED_CAST")
 class Keys private constructor() {
     class KeyRegistrationEnd internal constructor(private val nameSpace: String) {
         private fun checkName(nameSpace: String, name: String) {
