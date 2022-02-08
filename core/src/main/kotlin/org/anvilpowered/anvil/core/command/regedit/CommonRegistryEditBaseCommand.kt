@@ -21,12 +21,11 @@ package org.anvilpowered.anvil.core.command.regedit
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.SendTextService
-import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.core.plugin.AnvilPluginMessages
+import org.anvilpowered.registry.api.Registry
 
 abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> : SimpleCommand<TCommandSource> {
 
@@ -46,6 +45,6 @@ abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> : S
     protected lateinit var sendTextService: SendTextService
 
     override fun canExecute(source: TCommandSource): Boolean {
-        return permissionService.hasPermission(source, registry.getOrDefault(Keys.REGEDIT_PERMISSION))
+        return permissionService.hasPermission(source, registry.getOrDefault(AnvilKeys.REGEDIT_PERMISSION))
     }
 }

@@ -24,9 +24,9 @@ import com.google.inject.name.Named
 import com.google.inject.name.Names
 import org.anvilpowered.anvil.api.datastore.DBComponent
 import org.anvilpowered.anvil.api.datastore.Manager
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.api.registry.RegistryScoped
+import org.anvilpowered.anvil.api.registry.AnvilKeys
+import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.api.scope.RegistryScoped
 import org.slf4j.Logger
 import java.util.Locale
 
@@ -54,7 +54,7 @@ abstract class BaseManager<C : DBComponent<*, *>> protected constructor(protecte
 
     @Suppress("UNCHECKED_CAST")
     private fun loadComponent() {
-        val dataStoreName: String = registry.getExtraSafe(Keys.DATA_STORE_NAME).lowercase(Locale.ENGLISH)
+        val dataStoreName: String = registry.getOrDefault(AnvilKeys.DATA_STORE_NAME).lowercase(Locale.ENGLISH)
         val type = componentType.rawType.canonicalName
         val named: Named = Names.named(dataStoreName)
         for ((k, value) in injector.bindings) {

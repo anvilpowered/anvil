@@ -26,10 +26,9 @@ import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.misc.gold
 import org.anvilpowered.anvil.api.misc.red
-import org.anvilpowered.anvil.api.registry.ConfigurationService
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.registry.api.ConfigurationService
+import org.anvilpowered.registry.api.Registry
 import java.util.stream.Collectors
-import java.util.stream.Stream
 import kotlin.streams.toList
 
 class CommonRegistryEditStartCommand<TUser, TPlayer, TCommandSource>

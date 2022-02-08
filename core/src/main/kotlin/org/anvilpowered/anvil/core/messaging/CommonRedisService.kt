@@ -20,9 +20,9 @@ package org.anvilpowered.anvil.core.messaging
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.anvilpowered.anvil.api.messaging.RedisService
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.api.registry.RegistryScoped
+import org.anvilpowered.anvil.api.registry.AnvilKeys
+import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.api.scope.RegistryScoped
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 import redis.clients.jedis.JedisPubSub
@@ -42,19 +42,19 @@ open class CommonRedisService @Inject protected constructor(private val registry
         }
 
     private fun loadJedis() {
-        jedisPool = if (registry.getOrDefault(Keys.REDIS_USE_AUTH)) {
+        jedisPool = if (registry.getOrDefault(AnvilKeys.REDIS_USE_AUTH)) {
             JedisPool(
                 JedisPoolConfig(),
-                registry.getOrDefault(Keys.REDIS_HOSTNAME),
-                registry.getOrDefault(Keys.REDIS_PORT),
+                registry.getOrDefault(AnvilKeys.REDIS_HOSTNAME),
+                registry.getOrDefault(AnvilKeys.REDIS_PORT),
                 30,
-                registry.getOrDefault(Keys.REDIS_PASSWORD)
+                registry.getOrDefault(AnvilKeys.REDIS_PASSWORD)
             )
         } else {
             JedisPool(
                 JedisPoolConfig(),
-                registry.getOrDefault(Keys.REDIS_HOSTNAME),
-                registry.getOrDefault(Keys.REDIS_PORT),
+                registry.getOrDefault(AnvilKeys.REDIS_HOSTNAME),
+                registry.getOrDefault(AnvilKeys.REDIS_PORT),
                 30
             )
         }
@@ -63,7 +63,7 @@ open class CommonRedisService @Inject protected constructor(private val registry
     override fun registerSubscriber(subscriber: JedisPubSub?) {
         CompletableFuture.runAsync {
             jedisPool?.resource
-                ?.subscribe(subscriber, registry.getOrDefault(Keys.SERVER_NAME))
+                ?.subscribe(subscriber, registry.getOrDefault(AnvilKeys.SERVER_NAME))
         }
     }
 }

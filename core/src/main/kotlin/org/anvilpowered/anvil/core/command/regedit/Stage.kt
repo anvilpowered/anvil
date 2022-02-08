@@ -31,11 +31,12 @@ import org.anvilpowered.anvil.api.misc.gray
 import org.anvilpowered.anvil.api.misc.green
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.misc.red
-import org.anvilpowered.anvil.api.registry.ConfigurationService
-import org.anvilpowered.anvil.api.registry.Key
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.misc.sendTo
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.SendTextService
+import org.anvilpowered.registry.api.ConfigurationService
+import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.api.key.Key
 
 class Stage<TCommandSource>(
     val envName: String,
@@ -184,7 +185,7 @@ class Stage<TCommandSource>(
     fun info(key: Key<*>): Component {
         return when {
             !::registry.isInitialized -> selectRegistry
-            else -> when (key.isSensitive(registry.second)) {
+            else -> when (key.isSensitive(registry.second, AnvilKeys.REGEDIT_ALLOW_SENSITIVE)) {
                 true -> sensitive
                 false -> info(key, registry.second)
             }
@@ -239,10 +240,10 @@ class Stage<TCommandSource>(
         if (!::registry.isInitialized) {
             return selectRegistry
         }
-        if (key.isUserImmutable) {
+        if (key.isSensitive()) {
             return userImmutable
         }
-        if (key.isSensitive(registry.second)) {
+        if (key.isSensitive(registry.second, AnvilKeys.REGEDIT_ALLOW_SENSITIVE)) {
             return sensitive
         }
         val existing = changes.stream()

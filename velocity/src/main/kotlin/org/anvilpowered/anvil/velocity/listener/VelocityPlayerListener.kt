@@ -24,10 +24,10 @@ import com.velocitypowered.api.event.connection.LoginEvent
 import com.velocitypowered.api.event.player.PlayerChatEvent
 import net.kyori.adventure.identity.Identity
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.AudienceService
 import org.anvilpowered.anvil.core.plugin.AnvilPluginMessages
+import org.anvilpowered.registry.api.Registry
 
 class VelocityPlayerListener @Inject constructor(
     private val audienceService: AudienceService<CommandSource>,
@@ -38,7 +38,7 @@ class VelocityPlayerListener @Inject constructor(
 
   @Subscribe
   fun onPlayerJoin(event: LoginEvent) {
-    if (registry.getOrDefault(Keys.PROXY_MODE) == true) {
+    if (registry.getOrDefault(AnvilKeys.PROXY_MODE)) {
       return
     }
     val player = event.player
@@ -62,7 +62,7 @@ class VelocityPlayerListener @Inject constructor(
 
   @Subscribe
   fun onPlayerChat(event: PlayerChatEvent) {
-    if (registry.getOrDefault(Keys.PROXY_MODE) == true) {
+    if (registry.getOrDefault(AnvilKeys.PROXY_MODE)) {
       return
     }
     val player = event.player

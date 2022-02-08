@@ -23,9 +23,9 @@ import net.kyori.adventure.text.ComponentBuilder
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.api.registry.Key
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.core.command.CommonAnvilCommandNode
+import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.api.key.Key
 
 
 val anvilAlias by lazy { CommonAnvilCommandNode.ALIAS }

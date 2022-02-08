@@ -20,9 +20,9 @@ package org.anvilpowered.anvil.paper.listener
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.entity.RestrictionService
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.AudienceService
+import org.anvilpowered.registry.api.Registry
 import org.bukkit.command.CommandSender
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -50,7 +50,7 @@ class PaperPlayerListener : Listener {
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
-        if (registry.getOrDefault(Keys.PROXY_MODE)) {
+        if (registry.getOrDefault(AnvilKeys.PROXY_MODE)) {
             return
         }
         val player = event.player

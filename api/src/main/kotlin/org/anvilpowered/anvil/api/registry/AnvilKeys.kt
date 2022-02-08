@@ -17,119 +17,18 @@
  */
 package org.anvilpowered.anvil.api.registry
 
-import com.google.common.collect.HashBasedTable
-import com.google.common.collect.ImmutableMap
-import com.google.common.collect.Table
+import org.anvilpowered.registry.api.key.Key
+import org.anvilpowered.registry.api.key.Keys
 import java.time.ZoneId
-import java.util.Optional
 
 @Suppress("UNCHECKED_CAST")
-class Keys private constructor() {
-    class KeyRegistrationEnd internal constructor(private val nameSpace: String) {
-        private fun checkName(nameSpace: String, name: String) {
-            require(!keys.contains(nameSpace, name)) {
-                ("The provided key $name conflicts with a key of the same name in the $nameSpace namespace")
-            }
-        }
-
-        /**
-         * Registers the provided key.
-         *
-         * @param key The [Key] to register
-         * @return `this`
-         */
-        fun register(key: Key<*>): KeyRegistrationEnd {
-            val name: String = key.name
-            checkName(nameSpace, name)
-            keys.put(nameSpace, key.name, key)
-            return this
-        }
-    }
-
+class AnvilKeys private constructor() {
     init {
         throw AssertionError("**boss music** No instance for you!")
     }
 
     companion object {
         private const val GLOBAL_NAMESPACE = "global"
-        private val keys: Table<String, String, Key<*>> = HashBasedTable.create()
-        private val localAndGlobalCache: MutableMap<String, Map<String, Key<*>>?> = HashMap()
-
-        /**
-         *
-         *
-         * Used to start the registration of keys in a namespace.
-         *
-         * <br></br>
-         *
-         *
-         * Example usage:
-         *
-         * <pre>`
-         * static {
-         * Keys.startRegistration("ontime")
-         * .register(RANKS)
-         * .register(CHECK_PERMISSION)
-         * .register(CHECK_EXTENDED_PERMISSION)
-         * .register(EDIT_PERMISSION)
-         * .register(IMPORT_PERMISSION);
-         * }
-        `</pre> *
-         *
-         * @param nameSpace The namespace to register the keys in. Usually the name of the plugin.
-         * @return A [KeyRegistrationEnd] instance for registering keys
-         */
-        fun startRegistration(nameSpace: String): KeyRegistrationEnd {
-            return KeyRegistrationEnd(nameSpace)
-        }
-
-        fun <T> resolveUnsafe(name: String, nameSpace: String): Key<T> {
-            return keys[nameSpace, name] as Key<T>
-        }
-
-        fun <T> resolve(name: String, nameSpace: String): Optional<Key<T>> {
-            return Optional.ofNullable(keys[nameSpace, name] as Key<T>)
-        }
-
-        fun <T> resolveUnsafe(name: String): Key<T> {
-            return resolve<Any>(name).orElseThrow {
-                IllegalArgumentException(
-                    "Could not resolve key $name")
-            } as Key<T>
-        }
-
-        private fun <T> resolve(name: String): Optional<Key<T>> {
-            val candidate = keys[GLOBAL_NAMESPACE, name] as Key<T>?
-            if (candidate != null) {
-                return Optional.of(candidate)
-            }
-            val it: Iterator<Key<*>> = keys.column(name).values.iterator()
-            return if (it.hasNext()) {
-                Optional.of(it.next() as Key<T>)
-            } else {
-                Optional.empty()
-            }
-        }
-
-        fun <T> resolveLocalAndGlobal(name: String, nameSpace: String): Optional<Key<T>> {
-            val candidate = keys[nameSpace, name] as Key<T>?
-            return if (candidate != null) {
-                Optional.of(candidate)
-            } else Optional.ofNullable(keys[GLOBAL_NAMESPACE, name] as Key<T>)
-        }
-
-        fun getAll(nameSpace: String): Map<String, Key<*>>? {
-            var result = localAndGlobalCache[nameSpace]
-            if (result != null) {
-                return result
-            }
-            result = ImmutableMap.builder<String, Key<*>>()
-                .putAll(keys.row(nameSpace))
-                .putAll(keys.row(GLOBAL_NAMESPACE))
-                .build()
-            localAndGlobalCache[nameSpace] = result
-            return result
-        }
 
         val SERVER_NAME = Key.build {
             name("SERVER_NAME")
@@ -267,7 +166,7 @@ class Keys private constructor() {
         }
 
         init {
-            startRegistration(GLOBAL_NAMESPACE)
+            Keys.startRegistration(GLOBAL_NAMESPACE)
                 .register(SERVER_NAME)
                 .register(TIME_ZONE)
                 .register(PROXY_MODE)
@@ -291,7 +190,7 @@ class Keys private constructor() {
                 .register(REDIS_PORT)
                 .register(REDIS_PASSWORD)
                 .register(REDIS_USE_AUTH)
-            startRegistration("anvil")
+            Keys.startRegistration("anvil")
                 .register(PLUGINS_PERMISSION)
                 .register(REGEDIT_PERMISSION)
                 .register(RELOAD_PERMISSION)

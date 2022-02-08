@@ -22,8 +22,6 @@ import com.google.inject.AbstractModule
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.base.registry.BaseRegistry
 import org.anvilpowered.anvil.core.plugin.FallbackPluginInfo
 
 @Suppress("UnstableApiUsage")
@@ -31,7 +29,6 @@ abstract class FallbackModule<TCommandSource> : AbstractModule() {
     override fun configure() {
         with(binder()) {
             bind<PluginInfo>().to<FallbackPluginInfo>(declaring = this@FallbackModule)
-            bind<Registry>().to<BaseRegistry>()
         }
     }
 }

@@ -20,8 +20,7 @@ package org.anvilpowered.anvil.sponge.listener
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.entity.RestrictionService
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.spongepowered.api.entity.Entity
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.event.Cancellable
@@ -37,62 +36,62 @@ import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent
 import org.spongepowered.api.event.network.ServerSideConnectionEvent
 
 class SpongePlayerListener {
-  @Inject
-  private lateinit var coreMemberManager: CoreMemberManager
+    @Inject
+    private lateinit var coreMemberManager: CoreMemberManager
 
-  @Inject
-  private lateinit var registry: Registry
+    @Inject
+    private lateinit var registry: org.anvilpowered.registry.api.Registry
 
-  @Inject
-  private lateinit var restrictionService: RestrictionService
+    @Inject
+    private lateinit var restrictionService: RestrictionService
 
-  @Listener
-  fun onPlayerJoin(event: ServerSideConnectionEvent.Join) {
-    if (registry.getOrDefault(Keys.PROXY_MODE)) {
-      return
+    @Listener
+    fun onPlayerJoin(event: ServerSideConnectionEvent.Join) {
+        if (registry.getOrDefault(AnvilKeys.PROXY_MODE)) {
+            return
+        }
+        coreMemberManager.primaryComponent.getOneOrGenerateForUser(
+            event.player().uniqueId(),
+            event.player().name(),
+            event.connection().address().hostString
+        )
     }
-    coreMemberManager.primaryComponent.getOneOrGenerateForUser(
-      event.player().uniqueId(),
-      event.player().name(),
-      event.connection().address().hostString
-    )
-  }
 
-  @Listener
-  fun onMovement(event: MoveEntityEvent) {
-    if (restrictionService[event.entity()].movement()) {
-      event.isCancelled = true
+    @Listener
+    fun onMovement(event: MoveEntityEvent) {
+        if (restrictionService[event.entity()].movement()) {
+            event.isCancelled = true
+        }
     }
-  }
 
-  @Listener
-  fun onInteraction(event: InteractEvent, @Root entity: Entity) {
-    if (event is Cancellable && restrictionService[entity].interaction()) {
-      (event as Cancellable).isCancelled = true
+    @Listener
+    fun onInteraction(event: InteractEvent, @Root entity: Entity) {
+        if (event is Cancellable && restrictionService[entity].interaction()) {
+            (event as Cancellable).isCancelled = true
+        }
     }
-  }
 
-  @Listener
-  fun onInventory(event: ChangeInventoryEvent, @Root player: Player) {
-    if (restrictionService[player.uniqueId()].inventory()
-    ) {
-      (event as Cancellable).isCancelled = true
+    @Listener
+    fun onInventory(event: ChangeInventoryEvent, @Root player: Player) {
+        if (restrictionService[player.uniqueId()].inventory()
+        ) {
+            (event as Cancellable).isCancelled = true
+        }
     }
-  }
 
-  @Listener
-  fun onCommands(event: ExecuteCommandEvent.Pre, @Root player: Player) {
-    if (restrictionService[player.uniqueId()].commands()) {
-      event.isCancelled = true
+    @Listener
+    fun onCommands(event: ExecuteCommandEvent.Pre, @Root player: Player) {
+        if (restrictionService[player.uniqueId()].commands()) {
+            event.isCancelled = true
+        }
     }
-  }
 
-  @Listener
-  fun onDamage(event: DamageEntityEvent, @Root source: DamageSource?) {
-    if (restrictionService[event.entity()].damage() || (source is EntityDamageSource
-        && restrictionService[source.source()].damage())
-    ) {
-      event.isCancelled = true
+    @Listener
+    fun onDamage(event: DamageEntityEvent, @Root source: DamageSource?) {
+        if (restrictionService[event.entity()].damage() || (source is EntityDamageSource
+                && restrictionService[source.source()].damage())
+        ) {
+            event.isCancelled = true
+        }
     }
-  }
 }

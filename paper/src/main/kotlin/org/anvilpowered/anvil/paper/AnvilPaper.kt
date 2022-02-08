@@ -24,13 +24,13 @@ import com.google.inject.TypeLiteral
 import org.anvilpowered.anvil.core.AnvilImpl
 import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.environment.EnvironmentBuilderImpl
-import org.anvilpowered.anvil.api.registry.ConfigurationService
-import org.anvilpowered.anvil.api.registry.Keys
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.core.command.CommonAnvilCommandNode
 import org.anvilpowered.anvil.core.module.CommonModule
 import org.anvilpowered.anvil.paper.listener.PaperPlayerListener
 import org.anvilpowered.anvil.paper.module.ApiPaperModule
 import org.anvilpowered.anvil.paper.module.PaperFallbackModule
+import org.anvilpowered.registry.api.ConfigurationService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -72,7 +72,7 @@ class AnvilPaper : JavaPlugin() {
                 serverProxyMode = Bukkit.spigot().config.getBoolean("settings.bungeecord", false)
             }
             val configurationService = environment.injector.getInstance(ConfigurationService::class.java)
-            val anvilProxyMode = configurationService.getOrDefault(Keys.PROXY_MODE)
+            val anvilProxyMode = configurationService.getOrDefault(AnvilKeys.PROXY_MODE)
             if (serverProxyMode && !anvilProxyMode) {
                 logger?.error(
                     """

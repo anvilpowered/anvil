@@ -10,9 +10,11 @@ repositories {
 }
 
 val velocityVersion: String by project
+val spongeMathVersion: String by project
 
 dependencies {
     implementation(project(":anvil-core"))
+    implementation("org.spongepowered:math:$spongeMathVersion")
     compileOnly("com.velocitypowered:velocity-api:$velocityVersion")
     kapt("com.velocitypowered:velocity-api:$velocityVersion")
 }

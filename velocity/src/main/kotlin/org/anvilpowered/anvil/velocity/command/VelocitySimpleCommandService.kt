@@ -30,24 +30,24 @@ import com.velocitypowered.api.command.SimpleCommand as VelocitySimpleCommand
 
 class VelocitySimpleCommandService : CommonSimpleCommandService<CommandSource>() {
 
-  @Inject
-  private lateinit var proxyServer: ProxyServer
+    @Inject
+    private lateinit var proxyServer: ProxyServer
 
-  private inner class PlatformCommand(
-    private val delegate: SimpleCommand<CommandSource>,
-  ) : VelocitySimpleCommand {
+    private inner class PlatformCommand(
+        private val delegate: SimpleCommand<CommandSource>,
+    ) : VelocitySimpleCommand {
 
-    override fun execute(invocation: VelocitySimpleCommand.Invocation) {
-      val userUUID = if (invocation.source() is Player) {
-        (invocation.source() as Player).uniqueId
-      } else {
-        UUID.randomUUID()
-      }
-      delegate.execute(CommandContext( invocation.source(), invocation.arguments(), userUUID))
+        override fun execute(invocation: VelocitySimpleCommand.Invocation) {
+            val userUUID = if (invocation.source() is Player) {
+                (invocation.source() as Player).uniqueId
+            } else {
+                UUID.randomUUID()
+            }
+            delegate.execute(CommandContext(invocation.source(), invocation.arguments(), userUUID))
+        }
     }
-  }
 
-  override fun register(mapping: CommandMapping<out SimpleCommand<CommandSource>>) {
-    proxyServer.commandManager.register(mapping.name, PlatformCommand(mapping.command), *mapping.otherAliases.toTypedArray())
-  }
+    override fun register(mapping: CommandMapping<out SimpleCommand<CommandSource>>) {
+        proxyServer.commandManager.register(mapping.name, PlatformCommand(mapping.command), *mapping.otherAliases.toTypedArray())
+    }
 }

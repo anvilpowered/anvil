@@ -18,7 +18,7 @@
 package org.anvilpowered.anvil.core.util
 
 import org.anvilpowered.anvil.api.Anvil
-import org.anvilpowered.anvil.api.registry.Keys
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.TimeFormatService
 import org.anvilpowered.anvil.api.util.TimeFormatService.FormatResult
 import java.time.DateTimeException
@@ -317,7 +317,7 @@ class CommonTimeFormatService : TimeFormatService {
         }
 
         private val zone: ZoneId by lazy {
-            Anvil.registry.getOrDefault(Keys.TIME_ZONE)
+            Anvil.registry.getOrDefault(AnvilKeys.TIME_ZONE)
         }
 
         private fun utcNow(): Instant {

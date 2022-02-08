@@ -17,7 +17,7 @@
  */
 package org.anvilpowered.anvil.api.messaging
 
-import org.anvilpowered.anvil.api.registry.RegistryScoped
+import org.anvilpowered.registry.api.scope.RegistryScoped
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPubSub
 

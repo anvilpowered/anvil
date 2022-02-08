@@ -25,8 +25,8 @@ import dev.morphia.Morphia
 import dev.morphia.annotations.Entity
 import dev.morphia.mapping.DateStorage
 import dev.morphia.mapping.MapperOptions
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
+import org.anvilpowered.registry.api.Registry
 import org.bson.types.ObjectId
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
@@ -41,16 +41,16 @@ class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<Ob
     override fun loadDataStore(): Datastore {
 
         /* === Get values from config === */
-        val connectionString = registry.getExtraSafe(Keys.MONGODB_CONNECTION_STRING)
-        val hostname = registry.getExtraSafe(Keys.MONGODB_HOSTNAME)
-        val port = registry.getExtraSafe(Keys.MONGODB_PORT)
-        val dbName: String = registry.getExtraSafe(Keys.MONGODB_DBNAME)
-        val username = registry.getExtraSafe(Keys.MONGODB_USERNAME)
-        val password = registry.getExtraSafe(Keys.MONGODB_PASSWORD)
-        val authDb = registry.getExtraSafe(Keys.MONGODB_AUTH_DB)
-        val useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH)
-        val useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV)
-        val useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING)
+        val connectionString = registry.getOrDefault(AnvilKeys.MONGODB_CONNECTION_STRING)
+        val hostname = registry.getOrDefault(AnvilKeys.MONGODB_HOSTNAME)
+        val port = registry.getOrDefault(AnvilKeys.MONGODB_PORT)
+        val dbName: String = registry.getOrDefault(AnvilKeys.MONGODB_DBNAME)
+        val username = registry.getOrDefault(AnvilKeys.MONGODB_USERNAME)
+        val password = registry.getOrDefault(AnvilKeys.MONGODB_PASSWORD)
+        val authDb = registry.getOrDefault(AnvilKeys.MONGODB_AUTH_DB)
+        val useAuth = registry.getOrDefault(AnvilKeys.MONGODB_USE_AUTH)
+        val useSrv = registry.getOrDefault(AnvilKeys.MONGODB_USE_SRV)
+        val useConnectionString = registry.getOrDefault(AnvilKeys.MONGODB_USE_CONNECTION_STRING)
 
         /* === Determine credentials for MongoDB === */
         val clientUrl: String?
@@ -79,7 +79,7 @@ class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<Ob
         morphia.ensureIndexes()
 
         /* === Save mapped objects and register with morphia === */
-        morphia.mapper.map(*calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE)), Entity::class.java)
+        morphia.mapper.map(*calculateEntityClasses(registry.getOrDefault(AnvilKeys.BASE_SCAN_PACKAGE)), Entity::class.java)
 
         tKeyClass = ObjectId::class.java
         return morphia

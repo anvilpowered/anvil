@@ -25,10 +25,10 @@ import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.misc.sendTo
 import org.anvilpowered.anvil.api.util.PermissionService
+import org.anvilpowered.registry.api.Registry
 import org.jetbrains.annotations.Contract
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
@@ -89,7 +89,7 @@ class CommonAnvilReloadCommand<TCommandSource> : SimpleCommand<TCommandSource> {
     }
 
     override fun canExecute(source: TCommandSource): Boolean {
-        return permissionService.hasPermission(source, registry.getOrDefault(Keys.RELOAD_PERMISSION))
+        return permissionService.hasPermission(source, registry.getOrDefault(AnvilKeys.RELOAD_PERMISSION))
     }
 
     override fun usage(source: TCommandSource): Component = USAGE

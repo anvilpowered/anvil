@@ -23,15 +23,14 @@ import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.api.misc.splitContext
 import org.anvilpowered.anvil.core.command.CommonSimpleCommandService
+import org.anvilpowered.registry.api.Registry
 import org.spongepowered.api.command.Command
 import org.spongepowered.api.command.CommandCause
 import org.spongepowered.api.command.CommandCompletion
 import org.spongepowered.api.command.CommandResult
 import org.spongepowered.api.command.parameter.ArgumentReader
-import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent
 import org.spongepowered.plugin.PluginContainer

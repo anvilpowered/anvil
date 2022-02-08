@@ -21,7 +21,7 @@ import com.google.inject.Injector
 import com.google.inject.Key
 import com.google.inject.Module
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.registry.api.Registry
 import java.util.function.Consumer
 import java.util.function.Supplier
 

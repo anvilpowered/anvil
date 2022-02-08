@@ -24,8 +24,8 @@ import jetbrains.exodus.entitystore.EntityId
 import jetbrains.exodus.entitystore.PersistentEntityStore
 import jetbrains.exodus.entitystore.PersistentEntityStores
 import org.anvilpowered.anvil.api.model.Mappable
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
+import org.anvilpowered.registry.api.Registry
 import java.nio.file.Paths
 
 @Singleton
@@ -37,13 +37,13 @@ class XodusContext @Inject constructor(registry: Registry) : DataStoreContext<En
     override fun loadDataStore(): PersistentEntityStore {
 
         /* === Initialize storage location === */
-        val dbFilesLocation = Paths.get(registry.getOrDefault(Keys.DATA_DIRECTORY) + "/data/xodus").toFile()
+        val dbFilesLocation = Paths.get(registry.getOrDefault(AnvilKeys.DATA_DIRECTORY) + "/data/xodus").toFile()
         if (!dbFilesLocation.exists()) {
             check(dbFilesLocation.mkdirs()) { "Unable to create xodus directory" }
         }
 
         /* === Find objects to map === */
-        val entityClasses = calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE),
+        val entityClasses = calculateEntityClasses(registry.getOrDefault(AnvilKeys.BASE_SCAN_PACKAGE),
             XodusEntity::class.java,
             XodusEmbedded::class.java)
 

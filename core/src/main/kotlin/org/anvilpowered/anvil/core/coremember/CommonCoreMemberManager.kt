@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.core.coremember
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.coremember.CoreMemberRepository
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.base.datastore.BaseManager
+import org.anvilpowered.registry.api.Registry
 
 class CommonCoreMemberManager @Inject constructor(registry: Registry?) : BaseManager<CoreMemberRepository<*, *>>(registry!!), CoreMemberManager

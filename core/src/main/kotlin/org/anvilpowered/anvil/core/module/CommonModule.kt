@@ -29,13 +29,13 @@ import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.misc.withMongoDB
 import org.anvilpowered.anvil.api.misc.withXodus
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.registry.ConfigurationService
-import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.core.coremember.CommonCoreMemberManager
 import org.anvilpowered.anvil.core.coremember.CommonMongoCoreMemberRepository
 import org.anvilpowered.anvil.core.coremember.CommonXodusCoreMemberRepository
 import org.anvilpowered.anvil.core.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.core.registry.CommonConfigurationService
+import org.anvilpowered.registry.api.ConfigurationService
+import org.anvilpowered.registry.api.Registry
 import org.bson.types.ObjectId
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader
@@ -57,7 +57,6 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
 
         with(binder()) {
             bind<CoreMemberManager>().to<CommonCoreMemberManager>()
-            bind<Registry>().to<CommonConfigurationService>()
             bind<PluginInfo>().to<AnvilPluginInfo>()
             bind<CoreMemberRepository<*, *>>()
                 .annotatedWith(Names.named("mongodb"))
@@ -74,6 +73,7 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
             withMongoDB()
             withXodus()
         }
+        bind(Registry::class.java).to(ConfigurationService::class.java)
         bind(ConfigurationService::class.java).to(CommonConfigurationService::class.java)
     }
 }

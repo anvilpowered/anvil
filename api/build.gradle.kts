@@ -27,4 +27,5 @@ dependencies {
     api("org.jetbrains.xodus:xodus-entity-store:$xodusVersion")
     compileOnlyApi("org.reflections:reflections:$reflectionsVersion")
     api("org.jetbrains:annotations:$jetbrainsAnnotationsVersion")
+    api("org.anvilpowered:registry:0.1.0-SNAPSHOT")
 }

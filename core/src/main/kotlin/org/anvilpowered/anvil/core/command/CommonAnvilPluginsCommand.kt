@@ -25,11 +25,11 @@ import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.misc.gold
 import org.anvilpowered.anvil.api.misc.green
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.misc.sendTo
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.core.command.regedit.appendJoining
+import org.anvilpowered.registry.api.Registry
 import java.util.Arrays
 
 class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> {
@@ -61,7 +61,7 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
     }
 
     override fun canExecute(source: TCommandSource): Boolean {
-        return permissionService.hasPermission(source, registry.getOrDefault(Keys.PLUGINS_PERMISSION))
+        return permissionService.hasPermission(source, registry.getOrDefault(AnvilKeys.PLUGINS_PERMISSION))
     }
 
     override fun shortDescription(source: TCommandSource): Component = DESCRIPTION
