@@ -17,9 +17,12 @@
  */
 package org.anvilpowered.anvil.api.registry
 
+import org.spongepowered.configurate.ConfigurationNode
+import org.spongepowered.configurate.serialize.TypeSerializer
+import java.lang.reflect.Type
 import java.time.ZoneId
 
-open class ZoneIdSerializer {
+open class ZoneIdSerializer : TypeSerializer<ZoneId> {
     companion object {
         private const val AUTO = "auto"
         fun parse(input: String?): ZoneId {
@@ -33,5 +36,10 @@ open class ZoneIdSerializer {
         fun toString(zoneId: ZoneId?): String {
             return if (zoneId == null || zoneId == ZoneId.systemDefault()) AUTO else zoneId.id
         }
+    }
+
+    override fun deserialize(type: Type?, node: ConfigurationNode): ZoneId = parse(node.string)
+    override fun serialize(type: Type?, zoneId: ZoneId?, node: ConfigurationNode?) {
+        node?.set(toString(zoneId))
     }
 }

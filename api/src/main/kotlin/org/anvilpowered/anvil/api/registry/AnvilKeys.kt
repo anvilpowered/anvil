@@ -70,7 +70,7 @@ class AnvilKeys private constructor() {
         val USE_SHARED_CREDENTIALS = Key.build {
             name("USE_SHARED_CREDENTIALS")
             fallback(false)
-                .sensitive()
+            sensitive()
         }
         val DATA_DIRECTORY: Key<String> = Key.build {
             name("DATA_DIRECTORY")

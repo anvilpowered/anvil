@@ -19,6 +19,7 @@ package org.anvilpowered.anvil.core.command
 
 import com.google.inject.Inject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.command.SimpleCommand
@@ -56,7 +57,7 @@ class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> 
         Component.text()
             .append(pluginInfo.prefix)
             .append(Component.text().append(Component.text("Plugins (${names.size}): ")).gold().build())
-            .append(Component.text().append(appendJoining(", ", *names)).green().build())
+            .append(appendJoining(", ", *names).color(NamedTextColor.GREEN))
             .sendTo(context.source)
     }
 

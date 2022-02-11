@@ -15,19 +15,19 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.core.registry
+package org.anvilpowered.anvil.api.registry
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.registry.ConfigurationService
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.loader.ConfigurationLoader
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
+import java.time.ZoneId
 
 @Singleton
-class CommonConfigurationService  @Inject constructor(
+open class AnvilConfigurationService  @Inject constructor(
     configLoader: ConfigurationLoader<CommentedConfigurationNode>
 ) : ConfigurationService(configLoader) {
 
@@ -46,7 +46,7 @@ please see https://nodatime.org/TimeZones (note that your system's available tim
 This option is useful if your server machine and community are based in different timezones.
 """)
         val serializers = TypeSerializerCollection.defaults().childBuilder()
-            .register(AnvilKeys.TIME_ZONE.typeToken, CommonZoneIdSerializer())
+            .register(AnvilKeys.TIME_ZONE.typeToken, ZoneIdSerializer())
             .build()
         this.options = ConfigurationOptions.defaults().serializers(serializers)
     }

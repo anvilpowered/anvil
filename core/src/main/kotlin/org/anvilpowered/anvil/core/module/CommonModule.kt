@@ -24,7 +24,7 @@ import org.anvilpowered.anvil.api.misc.withMongoDB
 import org.anvilpowered.anvil.api.misc.withXodus
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.core.plugin.AnvilPluginInfo
-import org.anvilpowered.anvil.core.registry.CommonConfigurationService
+import org.anvilpowered.anvil.api.registry.AnvilConfigurationService
 import org.anvilpowered.registry.ConfigurationService
 import org.anvilpowered.registry.Registry
 import org.spongepowered.configurate.CommentedConfigurationNode
@@ -51,6 +51,6 @@ abstract class CommonModule<TCommandSource>(private val configDir: String) : Api
             withXodus()
         }
         bind(Registry::class.java).to(ConfigurationService::class.java)
-        bind(ConfigurationService::class.java).to(CommonConfigurationService::class.java)
+        bind(ConfigurationService::class.java).to(AnvilConfigurationService::class.java)
     }
 }
