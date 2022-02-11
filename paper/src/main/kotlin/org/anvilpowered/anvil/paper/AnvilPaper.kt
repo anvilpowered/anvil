@@ -30,7 +30,7 @@ import org.anvilpowered.anvil.core.module.CommonModule
 import org.anvilpowered.anvil.paper.listener.PaperPlayerListener
 import org.anvilpowered.anvil.paper.module.ApiPaperModule
 import org.anvilpowered.anvil.paper.module.PaperFallbackModule
-import org.anvilpowered.registry.api.ConfigurationService
+import org.anvilpowered.registry.ConfigurationService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

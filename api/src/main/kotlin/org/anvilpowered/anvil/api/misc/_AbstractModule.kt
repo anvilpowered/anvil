@@ -56,7 +56,7 @@ inline fun <reified T> LinkedBindingBuilder<in T>.toInternalProvider(declaring: 
 }
 
 // TODO(0.4): Remove
-fun <T> TypeToken<T>.toTypeLiteralNoInline(): TypeLiteral<T> = TypeLiteral.get(getType()) as TypeLiteral<T>
-inline fun <reified T> TypeToken<T>.toTypeLiteral(): TypeLiteral<T> = TypeLiteral.get(getType()) as TypeLiteral<T>
+fun <T> TypeToken<T>.toTypeLiteralNoInline(): TypeLiteral<T> = TypeLiteral.get(type) as TypeLiteral<T>
+inline fun <reified T> TypeToken<T>.toTypeLiteral(): TypeLiteral<T> = TypeLiteral.get(type) as TypeLiteral<T>
 fun Binder.withMongoDB() = bind<DataStoreContext<ObjectId, Datastore>>().to<MongoContext>()
 fun Binder.withXodus() = bind<DataStoreContext<EntityId, PersistentEntityStore>>().to<XodusContext>()

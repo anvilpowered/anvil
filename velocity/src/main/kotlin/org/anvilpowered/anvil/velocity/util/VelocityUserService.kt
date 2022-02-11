@@ -48,16 +48,10 @@ class VelocityUserService @Inject constructor() : CommonUserService<Player, Play
     }
 
     override fun getUUID(userName: String): CompletableFuture<UUID?> {
-        val userUUID = getPlayer(userName)?.uniqueId
-        return if (userUUID != null) {
-            CompletableFuture.completedFuture(userUUID)
-        } else super.getUUID(userName)
+        return CompletableFuture.completedFuture(getPlayer(userName)?.uniqueId)
     }
 
     override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
-        val userName = getPlayer(userUUID)?.username
-        return if (userName != null) {
-            CompletableFuture.completedFuture(userName)
-        } else super.getUserName(userUUID)
+        return CompletableFuture.completedFuture(getPlayer(userUUID)?.username)
     }
 }

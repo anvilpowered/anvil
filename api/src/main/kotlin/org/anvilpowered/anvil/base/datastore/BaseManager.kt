@@ -25,8 +25,8 @@ import com.google.inject.name.Names
 import org.anvilpowered.anvil.api.datastore.DBComponent
 import org.anvilpowered.anvil.api.datastore.Manager
 import org.anvilpowered.anvil.api.registry.AnvilKeys
-import org.anvilpowered.registry.api.Registry
-import org.anvilpowered.registry.api.scope.RegistryScoped
+import org.anvilpowered.registry.Registry
+import org.anvilpowered.registry.scope.RegistryScoped
 import org.slf4j.Logger
 import java.util.Locale
 

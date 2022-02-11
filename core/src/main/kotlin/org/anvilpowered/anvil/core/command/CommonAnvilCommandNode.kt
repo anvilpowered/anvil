@@ -23,7 +23,7 @@ import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.command.SimpleCommandService
 import org.anvilpowered.anvil.core.command.regedit.CommonRegistryEditCommandNode
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 
 class CommonAnvilCommandNode<TUser, TPlayer, TCommandSource> @Inject constructor(
     private val commandService: SimpleCommandService<TCommandSource>,

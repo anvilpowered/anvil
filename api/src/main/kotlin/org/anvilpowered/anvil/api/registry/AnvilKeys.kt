@@ -17,8 +17,8 @@
  */
 package org.anvilpowered.anvil.api.registry
 
-import org.anvilpowered.registry.api.key.Key
-import org.anvilpowered.registry.api.key.Keys
+import org.anvilpowered.registry.key.Key
+import org.anvilpowered.registry.key.Keys
 import java.time.ZoneId
 
 @Suppress("UNCHECKED_CAST")

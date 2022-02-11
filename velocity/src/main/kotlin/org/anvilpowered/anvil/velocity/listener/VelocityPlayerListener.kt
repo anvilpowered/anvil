@@ -21,65 +21,20 @@ import com.google.inject.Inject
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
-import com.velocitypowered.api.event.player.PlayerChatEvent
-import net.kyori.adventure.identity.Identity
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.AudienceService
-import org.anvilpowered.anvil.core.plugin.AnvilPluginMessages
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 
 class VelocityPlayerListener @Inject constructor(
     private val audienceService: AudienceService<CommandSource>,
-    private val coreMemberManager: CoreMemberManager,
-    private val pluginMessages: AnvilPluginMessages,
     private val registry: Registry
 ) {
 
-  @Subscribe
-  fun onPlayerJoin(event: LoginEvent) {
-    if (registry.getOrDefault(AnvilKeys.PROXY_MODE)) {
-      return
+    @Subscribe
+    fun onPlayerJoin(event: LoginEvent) {
+        if (registry.getOrDefault(AnvilKeys.PROXY_MODE)) {
+            return
+        }
+        audienceService.addToPossible(event.player)
     }
-    val player = event.player
-    coreMemberManager.primaryComponent
-      .getOneOrGenerateForUser(
-        player.uniqueId,
-        player.username,
-        player.remoteAddress.hostString
-      ).thenAcceptAsync { member ->
-        if (member == null) {
-          return@thenAcceptAsync
-        }
-        if (coreMemberManager.primaryComponent.checkBanned(member)) {
-          player.disconnect(
-            pluginMessages.getBanMessage(member.banReason, member.banEndUtc)
-          )
-        }
-        audienceService.addToPossible(player)
-      }.join()
-  }
-
-  @Subscribe
-  fun onPlayerChat(event: PlayerChatEvent) {
-    if (registry.getOrDefault(AnvilKeys.PROXY_MODE)) {
-      return
-    }
-    val player = event.player
-    coreMemberManager.primaryComponent
-      .getOneForUser(
-        player.uniqueId
-      ).thenAcceptAsync { member ->
-        if (member == null) {
-          return@thenAcceptAsync
-        }
-        if (coreMemberManager.primaryComponent.checkMuted(member)) {
-          event.result = PlayerChatEvent.ChatResult.denied()
-          player.sendMessage(
-            Identity.nil(),
-            pluginMessages.getMuteMessage(member.muteReason, member.muteEndUtc)
-          )
-        }
-      }.join()
-  }
 }

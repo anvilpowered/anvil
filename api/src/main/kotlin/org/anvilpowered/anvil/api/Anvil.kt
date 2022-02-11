@@ -20,11 +20,10 @@ package org.anvilpowered.anvil.api
 import com.google.inject.Binding
 import com.google.inject.Injector
 import com.google.inject.Module
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.environment.EnvironmentManager
 import org.anvilpowered.anvil.base.plugin.BasePlugin
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 import kotlin.experimental.ExperimentalTypeInference
 
 open class Anvil constructor(name: String, rootInjector: Injector, module: Module) :
@@ -72,14 +71,6 @@ open class Anvil constructor(name: String, rootInjector: Injector, module: Modul
 
         val registry: Registry by lazy {
             environment!!.injector.getInstance(Registry::class.java)
-        }
-
-        val coreMemberManager: CoreMemberManager by lazy {
-            environment!!.injector.getInstance(CoreMemberManager::class.java)
-        }
-
-        val coreMemberRepository by lazy {
-            coreMemberManager.primaryComponent
         }
     }
 }

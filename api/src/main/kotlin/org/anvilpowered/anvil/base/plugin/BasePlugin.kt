@@ -130,7 +130,7 @@ abstract class BasePlugin {
     protected open fun whenLoaded(environment: Environment) {}
 
     @Suppress("UNUSED_PARAMETER")
-    private fun whenReady(environment: Environment) {
+    protected open fun whenReady(environment: Environment) {
         sendLoaded("Loaded")
     }
 

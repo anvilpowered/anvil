@@ -24,8 +24,7 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.SendTextService
-import org.anvilpowered.anvil.core.plugin.AnvilPluginMessages
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 
 abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> : SimpleCommand<TCommandSource> {
 
@@ -37,9 +36,6 @@ abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> : S
 
     @Inject
     protected lateinit var pluginInfo: PluginInfo
-
-    @Inject
-    protected lateinit var pluginMessages: AnvilPluginMessages
 
     @Inject
     protected lateinit var sendTextService: SendTextService

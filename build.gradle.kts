@@ -22,7 +22,7 @@ subprojects {
         ?.also { version = version.toString().replace("SNAPSHOT", "RC$it") }
     tasks {
         withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = "11"
+            kotlinOptions.jvmTarget = "17"
             kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
         }
     }

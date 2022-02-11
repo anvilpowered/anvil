@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.core.registry
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.anvilpowered.anvil.api.registry.AnvilKeys
-import org.anvilpowered.registry.api.ConfigurationService
+import org.anvilpowered.registry.ConfigurationService
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.loader.ConfigurationLoader

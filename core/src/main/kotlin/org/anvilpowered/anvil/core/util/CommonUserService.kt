@@ -33,14 +33,6 @@ abstract class CommonUserService<TUser, TPlayer> protected constructor(
         } else ImmutableList.of()
     }
 
-    override fun getUUID(userName: String): CompletableFuture<UUID?> {
-        return Anvil.coreMemberRepository.getOneForUser(userName).thenApplyAsync { it?.userUUID }
-    }
-
-    override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
-        return Anvil.coreMemberRepository.getOneForUser(userUUID).thenApplyAsync { it?.userName }
-    }
-
     override fun <T> getUUIDSafe(obj: T): UUID {
         return if (userClass.isInstance(obj)) {
             getUUID(obj as TUser)!!

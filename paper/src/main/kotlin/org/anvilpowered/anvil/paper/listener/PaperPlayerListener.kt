@@ -18,11 +18,10 @@
 package org.anvilpowered.anvil.paper.listener
 
 import com.google.inject.Inject
-import org.anvilpowered.anvil.api.coremember.CoreMemberManager
 import org.anvilpowered.anvil.api.entity.RestrictionService
 import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.AudienceService
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 import org.bukkit.command.CommandSender
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -40,9 +39,6 @@ class PaperPlayerListener : Listener {
     private lateinit var audienceService: AudienceService<CommandSender>
 
     @Inject
-    private lateinit var coreMemberManager: CoreMemberManager
-
-    @Inject
     private lateinit var registry: Registry
 
     @Inject
@@ -54,12 +50,6 @@ class PaperPlayerListener : Listener {
             return
         }
         val player = event.player
-        coreMemberManager.primaryComponent
-            .getOneOrGenerateForUser(
-                player.uniqueId,
-                player.name,
-                player.address?.hostString ?: "invalid"
-            )
         audienceService.addToPossible(player)
     }
 

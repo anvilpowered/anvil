@@ -25,7 +25,7 @@ import org.anvilpowered.anvil.api.command.CommandMapping
 import org.anvilpowered.anvil.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.misc.splitContext
 import org.anvilpowered.anvil.core.command.CommonSimpleCommandService
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 import org.spongepowered.api.command.Command
 import org.spongepowered.api.command.CommandCause
 import org.spongepowered.api.command.CommandCompletion

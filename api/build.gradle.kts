@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     kotlin("jvm")
+    `maven-publish`
 }
 
 val configurateVersion: String by project
@@ -28,4 +29,12 @@ dependencies {
     compileOnlyApi("org.reflections:reflections:$reflectionsVersion")
     api("org.jetbrains:annotations:$jetbrainsAnnotationsVersion")
     api("org.anvilpowered:registry:0.1.0-SNAPSHOT")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }

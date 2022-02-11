@@ -29,7 +29,7 @@ import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.misc.sendTo
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.core.command.regedit.appendJoining
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 import java.util.Arrays
 
 class CommonAnvilPluginsCommand<TCommandSource> : SimpleCommand<TCommandSource> {

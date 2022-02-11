@@ -26,8 +26,8 @@ import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.misc.gold
 import org.anvilpowered.anvil.api.misc.red
-import org.anvilpowered.registry.api.ConfigurationService
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.ConfigurationService
+import org.anvilpowered.registry.Registry
 import java.util.stream.Collectors
 import kotlin.streams.toList
 

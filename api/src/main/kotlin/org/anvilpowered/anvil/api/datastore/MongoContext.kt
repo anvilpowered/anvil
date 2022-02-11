@@ -26,7 +26,7 @@ import dev.morphia.annotations.Entity
 import dev.morphia.mapping.DateStorage
 import dev.morphia.mapping.MapperOptions
 import org.anvilpowered.anvil.api.registry.AnvilKeys
-import org.anvilpowered.registry.api.Registry
+import org.anvilpowered.registry.Registry
 import org.bson.types.ObjectId
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder

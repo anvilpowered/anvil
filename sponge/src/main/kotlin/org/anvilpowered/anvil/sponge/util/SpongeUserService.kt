@@ -22,6 +22,7 @@ import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 import kotlin.streams.asSequence
 
 class SpongeUserService : CommonUserService<User, ServerPlayer>(User::class.java) {
@@ -36,5 +37,13 @@ class SpongeUserService : CommonUserService<User, ServerPlayer>(User::class.java
     override fun matchPlayerNames(startsWith: String): List<String> {
         return Sponge.server().userManager().streamOfMatches(startsWith).asSequence()
             .map { it.name().orElse(null) }.filter { it != null }.toList()
+    }
+
+    override fun getUUID(userName: String): CompletableFuture<UUID?> {
+        return CompletableFuture.completedFuture(getPlayer(userName)?.user()?.uniqueId())
+    }
+
+    override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
+        return CompletableFuture.completedFuture(getPlayer(userUUID)?.user()?.name())
     }
 }
