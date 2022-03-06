@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered
- *   Copyright (C) 2020
+ *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.velocity.command;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.common.command.CommonAnvilCommandNode;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public class VelocityAnvilCommandNode
-    extends CommonAnvilCommandNode<Command, CommandSource> {
+    extends CommonAnvilCommandNode<SimpleCommand, CommandSource> {
 
     @Inject
     private VelocityAnvilPluginsCommand anvilPluginsCommand;
@@ -61,7 +62,7 @@ public class VelocityAnvilCommandNode
 
     @Override
     protected void loadCommands() {
-        Map<List<String>, Command> subCommands = new HashMap<>();
+        Map<List<String>, SimpleCommand> subCommands = new HashMap<>();
 
         subCommands.put(PLUGINS_ALIAS, anvilPluginsCommand);
         subCommands.put(RELOAD_ALIAS, anvilReloadCommand);

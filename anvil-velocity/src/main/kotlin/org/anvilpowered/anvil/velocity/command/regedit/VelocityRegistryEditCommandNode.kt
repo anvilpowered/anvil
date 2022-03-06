@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered
- *   Copyright (C) 2020
+ *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.velocitypowered.api.command.Command
 import com.velocitypowered.api.command.CommandSource
+import com.velocitypowered.api.command.SimpleCommand
 import org.anvilpowered.anvil.api.registry.Registry
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCommandNode
 import java.util.HashMap
@@ -28,7 +29,7 @@ import java.util.HashMap
 @Singleton
 class VelocityRegistryEditCommandNode @Inject constructor(
     registry: Registry,
-) : CommonRegistryEditCommandNode<Command, CommandSource>(registry) {
+) : CommonRegistryEditCommandNode<SimpleCommand, CommandSource>(registry) {
 
     @Inject
     private lateinit var registryEditCancelCommand: VelocityRegistryEditCancelCommand
@@ -45,7 +46,7 @@ class VelocityRegistryEditCommandNode @Inject constructor(
     @Inject
     private lateinit var registryEditStartCommand: VelocityRegistryEditStartCommand
 
-    val subCommands: MutableMap<List<String>, Command> = HashMap()
+    val subCommands: MutableMap<List<String>, SimpleCommand> = HashMap()
 
     override fun loadCommands() {
         subCommands[CANCEL_ALIAS] = registryEditCancelCommand

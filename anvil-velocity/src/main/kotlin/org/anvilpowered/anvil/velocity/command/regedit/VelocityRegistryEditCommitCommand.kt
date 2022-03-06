@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered
- *   Copyright (C) 2020
+ *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -17,15 +17,15 @@
  */
 package org.anvilpowered.anvil.velocity.command.regedit
 
-import com.velocitypowered.api.command.Command
 import com.velocitypowered.api.command.CommandSource
+import com.velocitypowered.api.command.SimpleCommand
 import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.text.TextComponent
 import org.anvilpowered.anvil.common.command.regedit.CommonRegistryEditCommitCommand
 
 class VelocityRegistryEditCommitCommand
-    : CommonRegistryEditCommitCommand<Player, Player, TextComponent, CommandSource>(), Command {
-    override fun execute(source: CommandSource, args: Array<String>) {
-        super<CommonRegistryEditCommitCommand>.execute(source, args)
-    }
+  : CommonRegistryEditCommitCommand<Player, Player, TextComponent, CommandSource>(), SimpleCommand {
+  override fun execute(invocation: SimpleCommand.Invocation) {
+    super.execute(invocation.source(), invocation.arguments())
+  }
 }

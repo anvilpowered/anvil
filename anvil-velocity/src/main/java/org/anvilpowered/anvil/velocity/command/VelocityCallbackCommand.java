@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered
- *   Copyright (C) 2020
+ *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Lesser General Public License as published by
@@ -21,11 +21,24 @@ package org.anvilpowered.anvil.velocity.command;
 import com.google.inject.Singleton;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 import net.kyori.adventure.text.TextComponent;
 import org.anvilpowered.anvil.common.command.CommonCallbackCommand;
+
+import java.util.List;
 
 @Singleton
 public class VelocityCallbackCommand
     extends CommonCallbackCommand<TextComponent, CommandSource>
-    implements Command {
+    implements SimpleCommand {
+
+    @Override
+    public void execute(Invocation invocation) {
+        super.execute(invocation.source(), invocation.arguments());
+    }
+
+    @Override
+    public List<String> suggest(Invocation invocation) {
+        return null;
+    }
 }

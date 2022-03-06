@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'io.codearte.nexus-staging' version '0.21.2'
     id("org.jetbrains.kotlin.jvm") version "${kotlin_version}"
 }
@@ -43,7 +43,7 @@ subprojects {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://repo.spongepowered.org/maven' }
-        maven { url 'https://jetbrains.bintray.com/xodus' }
+        maven { url 'https://packages.jetbrains.team/maven/p/xodus/xodus-daily' }
         maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
     }
     if (project.hasProperty("buildNumber") && version.contains("-SNAPSHOT")) {
