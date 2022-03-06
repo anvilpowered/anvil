@@ -1,9 +1,30 @@
 plugins {
     id 'java'
-    id 'org.spongepowered.plugin' version '0.9.0'
+    id 'org.spongepowered.gradle.plugin' version '2.0.1'
 }
 
 jar.enabled = false // we only want shadowJar
+
+sponge {
+    apiVersion("7.0.0")
+    loader {
+        version("1.0")
+    }
+    license("LGPL-3.0")
+    plugin("anvil") {
+        displayName("Anvil")
+        version(project.version)
+        entrypoint("org.anvilpowered.anvil.sponge.AnvilSponge")
+        links {
+            source("https://github.com/AnvilPowered/Anvil")
+            issues("https://github.com/AnvilPowered/Anvil/issues")
+        }
+        dependency("spongeapi") {
+            loadOrder(PluginDependency.LoadOrder.AFTER)
+            optional(false)
+        }
+    }
+}
 
 dependencies {
     if (rootProject.getName().equals("Anvil")) {
