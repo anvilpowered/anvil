@@ -21,12 +21,14 @@ import jetbrains.exodus.entitystore.Entity
 import jetbrains.exodus.entitystore.EntityId
 import org.anvilpowered.anvil.api.model.Mappable
 import org.anvilpowered.anvil.api.model.ObjectWithId
+import java.lang.IllegalStateException
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 abstract class XodusDbo protected constructor() : ObjectWithId<EntityId>, Mappable<Entity> {
-    private lateinit var id: EntityId
+
+    private var id: EntityId? = null
     private var createdUtcSeconds: Long
     private var createdUtcNanos: Int
     private var updatedUtcSeconds: Long = 0
@@ -40,7 +42,7 @@ abstract class XodusDbo protected constructor() : ObjectWithId<EntityId>, Mappab
     }
 
     override fun getId(): EntityId {
-        return id
+        return id ?: throw IllegalStateException("EntityId may not be null!")
     }
 
     override fun setId(id: EntityId) {

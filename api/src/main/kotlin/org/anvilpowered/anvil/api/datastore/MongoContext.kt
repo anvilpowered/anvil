@@ -53,7 +53,7 @@ class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<Ob
         val useConnectionString = registry.getOrDefault(AnvilKeys.MONGODB_USE_CONNECTION_STRING)
 
         /* === Determine credentials for MongoDB === */
-        val clientUrl: String?
+        var clientUrl: String?
         val protocol = if (useSrv) "mongodb+srv://" else "mongodb://"
         val pt = if (useSrv) "" else ":$port"
         if (useConnectionString) {
@@ -68,18 +68,23 @@ class MongoContext @Inject constructor(registry: Registry) : DataStoreContext<Ob
         } else {
             clientUrl = "$protocol$hostname$pt/$dbName"
         }
+        // Due to a bug in bson, you must set the UUID Representation via the connection string
+        // Setting the representation via the MapperOptions effectively does nothing.
+        clientUrl += "?uuidRepresentation=javaLegacy"
 
         /* === Establish MongoDB connection === */
         /* === Set class loader to prevent morphia from breaking === */
         val client = MongoClients.create(clientUrl)
-        val morphia = Morphia.createDatastore(client, dbName, MapperOptions.legacy()
-            .dateStorage(DateStorage.UTC)
+        val mapperOptions = MapperOptions.builder(MapperOptions.DEFAULT)
             .classLoader(javaClass.classLoader)
-            .build())
+            .dateStorage(DateStorage.UTC)
+            .build()
+        val morphia = Morphia.createDatastore(client, dbName, mapperOptions)
+        /* === Save mapped objects and register with morphia === */
+        val entityClasses = calculateEntityClasses(registry.getOrDefault(AnvilKeys.BASE_SCAN_PACKAGE), Entity::class.java)
+        morphia.mapper.map(*entityClasses)
         morphia.ensureIndexes()
 
-        /* === Save mapped objects and register with morphia === */
-        morphia.mapper.map(*calculateEntityClasses(registry.getOrDefault(AnvilKeys.BASE_SCAN_PACKAGE)), Entity::class.java)
 
         tKeyClass = ObjectId::class.java
         return morphia
