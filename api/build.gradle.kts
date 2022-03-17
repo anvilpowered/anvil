@@ -33,6 +33,11 @@ dependencies {
     api("org.anvilpowered:registry:0.1.0-SNAPSHOT")
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
