@@ -24,7 +24,7 @@ import org.anvilpowered.anvil.api.misc.withMongoDB
 import org.anvilpowered.anvil.api.misc.withXodus
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.core.plugin.AnvilPluginInfo
-import org.anvilpowered.anvil.api.registry.AnvilConfigurationService
+import org.anvilpowered.anvil.core.registry.AnvilConfigurationService
 import org.anvilpowered.registry.ConfigurationService
 import org.anvilpowered.registry.Registry
 import org.spongepowered.configurate.CommentedConfigurationNode
