@@ -4,6 +4,8 @@ plugins {
     `maven-publish`
 }
 
+version = "0.4-SNAPSHOT"
+
 val configurateVersion: String by project
 val guiceVersion: String by project
 val jedisVersion: String by project
