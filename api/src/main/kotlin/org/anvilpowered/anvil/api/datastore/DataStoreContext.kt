@@ -68,7 +68,7 @@ abstract class DataStoreContext<TKey, TDataStore> protected constructor(registry
         for (i in 1 until entityAnnotations.size) {
             types.addAll(reflections.getTypesAnnotatedWith(entityAnnotations[i]))
         }
-        types.stream().map { entityClasses = entityClasses.plus(it) }
+        entityClasses = types.toTypedArray()
         return entityClasses
     }
 

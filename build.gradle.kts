@@ -25,5 +25,9 @@ subprojects {
             kotlinOptions.jvmTarget = "17"
             kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
         }
+        withType<JavaCompile> {
+            targetCompatibility = "17"
+            sourceCompatibility = "17"
+        }
     }
 }
