@@ -1,7 +1,6 @@
 plugins {
     `java-library`
     kotlin("jvm")
-    `maven-publish`
 }
 
 version = "0.4-SNAPSHOT"
@@ -16,6 +15,8 @@ val morphiaVersion: String by project
 val reflectionsVersion: String by project
 val spongeMathVersion: String by project
 val xodusVersion: String by project
+
+apply<AnvilPublishPlugin>()
 
 dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
@@ -35,12 +36,4 @@ dependencies {
 java {
     withSourcesJar()
     withJavadocJar()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-        }
-    }
 }
