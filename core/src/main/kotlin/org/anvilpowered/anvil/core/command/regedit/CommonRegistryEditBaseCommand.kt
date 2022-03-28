@@ -24,7 +24,7 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.SendTextService
-import org.anvilpowered.registry.Registry
+import org.anvilpowered.anvil.api.registry.Registry
 
 abstract class CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource> : SimpleCommand<TCommandSource> {
 

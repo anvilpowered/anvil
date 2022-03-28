@@ -28,7 +28,7 @@ import com.google.inject.TypeLiteral
 import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.misc.Named
 import org.anvilpowered.anvil.api.plugin.PluginInfo
-import org.anvilpowered.registry.Registry
+import org.anvilpowered.anvil.api.registry.Registry
 import java.util.function.Consumer
 import java.util.function.Supplier
 

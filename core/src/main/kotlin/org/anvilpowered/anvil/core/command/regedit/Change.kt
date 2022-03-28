@@ -21,8 +21,8 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.registry.Registry
-import org.anvilpowered.registry.key.Key
+import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.key.Key
 
 class Change<T, TCommandSource>(
     private val registry: Registry,

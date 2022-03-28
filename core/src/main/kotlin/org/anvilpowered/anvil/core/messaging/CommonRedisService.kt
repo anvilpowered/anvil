@@ -21,8 +21,8 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.anvilpowered.anvil.api.messaging.RedisService
 import org.anvilpowered.anvil.api.registry.AnvilKeys
-import org.anvilpowered.registry.Registry
-import org.anvilpowered.registry.scope.RegistryScoped
+import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.scope.RegistryScoped
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 import redis.clients.jedis.JedisPubSub

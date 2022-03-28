@@ -18,7 +18,7 @@
 package org.anvilpowered.anvil.api.datastore
 
 import com.google.inject.Inject
-import org.anvilpowered.registry.Registry
+import org.anvilpowered.anvil.api.registry.Registry
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.reflections.scanners.TypeAnnotationsScanner

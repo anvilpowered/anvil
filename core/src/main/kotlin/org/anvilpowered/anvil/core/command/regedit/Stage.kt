@@ -34,9 +34,9 @@ import org.anvilpowered.anvil.api.misc.red
 import org.anvilpowered.anvil.api.misc.sendTo
 import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.util.SendTextService
-import org.anvilpowered.registry.ConfigurationService
-import org.anvilpowered.registry.Registry
-import org.anvilpowered.registry.key.Key
+import org.anvilpowered.anvil.api.registry.ConfigurationService
+import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.key.Key
 
 class Stage<TCommandSource>(
     val envName: String,

@@ -1,8 +1,5 @@
 package org.anvilpowered.anvil.api.registry
 
-import com.google.inject.Inject
-import com.google.inject.Singleton
-import org.anvilpowered.registry.ConfigurationService
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.loader.ConfigurationLoader
 

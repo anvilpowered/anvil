@@ -1,5 +1,5 @@
 /*
- *   Anvil - AnvilPowered
+ *   Anvil - Registry
  *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -15,17 +15,9 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.api.messaging
+package org.anvilpowered.anvil.api.registry
 
-import org.anvilpowered.anvil.api.registry.scope.RegistryScoped
-import redis.clients.jedis.JedisPool
-import redis.clients.jedis.JedisPubSub
+interface Named {
 
-interface RedisService {
-
-    @get:RegistryScoped
-    var jedisPool: JedisPool?
-
-    @RegistryScoped
-    fun registerSubscriber(subscriber: JedisPubSub?)
+    val name: String
 }

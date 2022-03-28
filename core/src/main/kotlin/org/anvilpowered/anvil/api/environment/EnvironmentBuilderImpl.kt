@@ -32,8 +32,8 @@ import org.anvilpowered.anvil.core.ServiceManagerImpl
 import org.anvilpowered.anvil.api.misc.toTypeLiteralNoInline
 import org.anvilpowered.anvil.core.PlatformImpl
 import org.anvilpowered.anvil.core.module.PlatformModule
-import org.anvilpowered.registry.Registry
-import org.anvilpowered.registry.scope.RegistryReloadScope
+import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.scope.RegistryReloadScope
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Supplier

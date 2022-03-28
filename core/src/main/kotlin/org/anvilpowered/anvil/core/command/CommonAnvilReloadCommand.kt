@@ -28,7 +28,7 @@ import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.misc.sendTo
 import org.anvilpowered.anvil.api.util.PermissionService
-import org.anvilpowered.registry.Registry
+import org.anvilpowered.anvil.api.registry.Registry
 import org.jetbrains.annotations.Contract
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException

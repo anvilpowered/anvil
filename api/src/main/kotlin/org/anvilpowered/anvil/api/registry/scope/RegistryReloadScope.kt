@@ -1,5 +1,5 @@
 /*
- *   Anvil - AnvilPowered
+ *   Anvil - Registry
  *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -15,17 +15,26 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.anvilpowered.anvil.api.messaging
+package org.anvilpowered.anvil.api.registry.scope
 
-import org.anvilpowered.anvil.api.registry.scope.RegistryScoped
-import redis.clients.jedis.JedisPool
-import redis.clients.jedis.JedisPubSub
+enum class RegistryReloadScope {
+    /**
+     * The annotated value persists only between deep reloads.
+     *
+     *
+     * Use this scope for values that should be reloadable but not necessarily
+     * during normal operation of the plugin.
+     *
+     */
+    DEEP,
 
-interface RedisService {
-
-    @get:RegistryScoped
-    var jedisPool: JedisPool?
-
-    @RegistryScoped
-    fun registerSubscriber(subscriber: JedisPubSub?)
+    /**
+     * The annotated value persists only between normal reloads.
+     * This value is the default value for the [RegistryScoped] annotation.
+     *
+     *
+     * Use this scope for
+     *
+     */
+    DEFAULT,
 }

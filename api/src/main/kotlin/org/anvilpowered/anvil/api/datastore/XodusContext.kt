@@ -25,7 +25,7 @@ import jetbrains.exodus.entitystore.PersistentEntityStore
 import jetbrains.exodus.entitystore.PersistentEntityStores
 import org.anvilpowered.anvil.api.model.Mappable
 import org.anvilpowered.anvil.api.registry.AnvilKeys
-import org.anvilpowered.registry.Registry
+import org.anvilpowered.anvil.api.registry.Registry
 import java.nio.file.Paths
 
 @Singleton

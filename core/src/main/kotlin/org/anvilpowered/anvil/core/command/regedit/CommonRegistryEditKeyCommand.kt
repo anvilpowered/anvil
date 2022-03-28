@@ -23,11 +23,9 @@ import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.api.command.CommandContext
 import org.anvilpowered.anvil.api.misc.gold
 import org.anvilpowered.anvil.api.misc.red
-import org.anvilpowered.anvil.api.registry.AnvilKeys
 import org.anvilpowered.anvil.api.misc.sendTo
-import org.anvilpowered.registry.key.Key
-import org.anvilpowered.registry.key.Keys
-import kotlin.streams.toList
+import org.anvilpowered.anvil.api.registry.key.Key
+import org.anvilpowered.anvil.api.registry.key.Keys
 
 class CommonRegistryEditKeyCommand<TUser, TPlayer, TCommandSource>
     : CommonRegistryEditBaseCommand<TUser, TPlayer, TCommandSource>() {

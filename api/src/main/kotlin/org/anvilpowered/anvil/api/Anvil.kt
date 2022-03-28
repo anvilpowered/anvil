@@ -23,7 +23,7 @@ import com.google.inject.Module
 import org.anvilpowered.anvil.api.environment.Environment
 import org.anvilpowered.anvil.api.environment.EnvironmentManager
 import org.anvilpowered.anvil.base.plugin.BasePlugin
-import org.anvilpowered.registry.Registry
+import org.anvilpowered.anvil.api.registry.Registry
 import kotlin.experimental.ExperimentalTypeInference
 
 open class Anvil constructor(name: String, rootInjector: Injector, module: Module) :

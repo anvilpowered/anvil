@@ -25,8 +25,8 @@ import org.anvilpowered.anvil.api.misc.withXodus
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.core.plugin.AnvilPluginInfo
 import org.anvilpowered.anvil.core.registry.AnvilConfigurationService
-import org.anvilpowered.registry.ConfigurationService
-import org.anvilpowered.registry.Registry
+import org.anvilpowered.anvil.api.registry.ConfigurationService
+import org.anvilpowered.anvil.api.registry.Registry
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader
 import org.spongepowered.configurate.loader.ConfigurationLoader
