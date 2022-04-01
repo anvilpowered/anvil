@@ -33,6 +33,14 @@ fun <T> Component.sendTo(source: T) {
     Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.send(source, this)
 }
 
+fun <T> Component.sendToConsole() {
+    Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.sendToConsole(this)
+}
+
+fun <T> ComponentBuilder<*, *>.sendToConsole() {
+    Anvil.environment?.injector?.getInstance(SendTextService::class.java)?.sendToConsole(build())
+}
+
 fun ComponentBuilder<*, *>.append(value: String): ComponentBuilder<*, *> {
     this.append(Component.text(value))
     return this
