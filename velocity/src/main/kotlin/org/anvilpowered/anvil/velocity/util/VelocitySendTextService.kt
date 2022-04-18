@@ -30,8 +30,8 @@ class VelocitySendTextService @Inject constructor(
 ) : SendTextService {
 
     override fun <T> send(recipient: T, component: Component) {
-        if (recipient is CommandSource || recipient is Player) {
-            (recipient as CommandSource).sendMessage(component)
+        if (recipient is CommandSource) {
+            recipient.sendMessage(component)
         }
     }
 

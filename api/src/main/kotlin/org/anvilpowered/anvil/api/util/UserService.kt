@@ -44,7 +44,7 @@ interface UserService<TUser, TPlayer> {
      * @return A list of matching player names
      */
     fun matchPlayerNames(context: Array<String>, index: Int, length: Int): List<String>
-    val onlinePlayers: Collection<TPlayer>
+    fun onlinePlayers(): Collection<TPlayer>
     fun getUUID(userName: String): CompletableFuture<UUID?>
     fun getUserName(userUUID: UUID): CompletableFuture<String?>
     fun getUUID(user: TUser): UUID?

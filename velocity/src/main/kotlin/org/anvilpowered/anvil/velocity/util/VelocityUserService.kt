@@ -31,7 +31,9 @@ class VelocityUserService @Inject constructor() : CommonUserService<Player, Play
     @Inject
     private lateinit var proxyServer: ProxyServer
 
-    override val onlinePlayers: Collection<Player> by lazy { proxyServer.allPlayers }
+    override fun onlinePlayers(): Collection<Player> {
+        return proxyServer.allPlayers
+    }
     override fun getPlayer(userName: String): Player? = get(userName)
     override fun get(userUUID: UUID): Player? = proxyServer.getPlayer(userUUID).orElse(null)
     override fun get(userName: String): Player? = proxyServer.getPlayer(userName).orElse(null)
@@ -41,7 +43,7 @@ class VelocityUserService @Inject constructor() : CommonUserService<Player, Play
 
     override fun matchPlayerNames(startsWith: String): List<String> {
         val startsWithLowerCase = startsWith.lowercase(Locale.getDefault())
-        return onlinePlayers.stream()
+        return onlinePlayers().stream()
             .map { obj: Player -> obj.username }
             .filter { name: String -> name.lowercase(Locale.getDefault()).startsWith(startsWithLowerCase) }
             .collect(Collectors.toList())
