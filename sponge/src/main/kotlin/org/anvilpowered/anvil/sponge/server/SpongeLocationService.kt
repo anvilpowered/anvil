@@ -27,32 +27,29 @@ import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import org.spongepowered.math.vector.Vector3d
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 
-class Sponge8LocationService : CommonLocationService() {
+class SpongeLocationService : CommonLocationService() {
 
-  @Inject
-  private lateinit var userService: UserService<User, ServerPlayer>
+    @Inject
+    private lateinit var userService: UserService<User, ServerPlayer>
 
-  override fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
-    val source = userService[sourceUserUUID]
-    val target = userService[targetUserUUID]
-    return CompletableFuture.completedFuture(
-      source != null && target != null && source.setLocation(target.worldKey(), target.position())
-    )
-  }
-
-  private fun User.getWorldName(): String?  {
-    val world = Sponge.server().worldManager().world(this.worldKey())
-    return if (world.isPresent) {
-      PlainTextComponentSerializer.plainText().serialize(world.get().properties().displayName().orElse(Component.text("ERROR")))
-    } else {
-      null
+    override suspend fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): Boolean {
+        val source = userService[sourceUserUUID]
+        val target = userService[targetUserUUID]
+        return source != null && target != null && source.setLocation(target.worldKey(), target.position())
     }
-  }
 
-  override fun getWorldName(userUUID: UUID): String? = userService[userUUID]?.getWorldName()
-  override fun getWorldName(userName: String): String? = userService[userName]?.getWorldName()
-  override fun getPosition(userUUID: UUID): Vector3d? = userService[userUUID]?.position()
-  override fun getPosition(userName: String): Vector3d? = userService[userName]?.position()
+    private fun User.getWorldName(): String? {
+        val world = Sponge.server().worldManager().world(this.worldKey())
+        return if (world.isPresent) {
+            PlainTextComponentSerializer.plainText().serialize(world.get().properties().displayName().orElse(Component.text("ERROR")))
+        } else {
+            null
+        }
+    }
+
+    override fun getWorldName(userUUID: UUID): String? = userService[userUUID]?.getWorldName()
+    override fun getWorldName(userName: String): String? = userService[userName]?.getWorldName()
+    override fun getPosition(userUUID: UUID): Vector3d? = userService[userUUID]?.position()
+    override fun getPosition(userName: String): Vector3d? = userService[userName]?.position()
 }

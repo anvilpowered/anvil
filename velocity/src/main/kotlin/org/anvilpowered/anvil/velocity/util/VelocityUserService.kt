@@ -23,7 +23,6 @@ import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.util.CommonUserService
 import java.util.Locale
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 import java.util.stream.Collectors
 
 class VelocityUserService @Inject constructor() : CommonUserService<Player, Player>(Player::class.java) {
@@ -34,6 +33,7 @@ class VelocityUserService @Inject constructor() : CommonUserService<Player, Play
     override fun onlinePlayers(): Collection<Player> {
         return proxyServer.allPlayers
     }
+
     override fun getPlayer(userName: String): Player? = get(userName)
     override fun get(userUUID: UUID): Player? = proxyServer.getPlayer(userUUID).orElse(null)
     override fun get(userName: String): Player? = proxyServer.getPlayer(userName).orElse(null)
@@ -49,11 +49,11 @@ class VelocityUserService @Inject constructor() : CommonUserService<Player, Play
             .collect(Collectors.toList())
     }
 
-    override fun getUUID(userName: String): CompletableFuture<UUID?> {
-        return CompletableFuture.completedFuture(getPlayer(userName)?.uniqueId)
+    override suspend fun getUUID(userName: String): UUID? {
+        return getPlayer(userName)?.uniqueId
     }
 
-    override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
-        return CompletableFuture.completedFuture(getPlayer(userUUID)?.username)
+    override suspend fun getUserName(userUUID: UUID): String? {
+        return getPlayer(userUUID)?.username
     }
 }

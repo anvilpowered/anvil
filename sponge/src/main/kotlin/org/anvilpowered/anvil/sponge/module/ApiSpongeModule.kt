@@ -19,7 +19,6 @@ package org.anvilpowered.anvil.sponge.module
 
 import org.anvilpowered.anvil.api.command.CommandExecuteService
 import org.anvilpowered.anvil.api.command.SimpleCommandService
-import org.anvilpowered.anvil.api.entity.RestrictionService
 import org.anvilpowered.anvil.api.misc.bind
 import org.anvilpowered.anvil.api.misc.to
 import org.anvilpowered.anvil.api.server.LocationService
@@ -28,14 +27,13 @@ import org.anvilpowered.anvil.api.util.KickService
 import org.anvilpowered.anvil.api.util.PermissionService
 import org.anvilpowered.anvil.api.util.UserService
 import org.anvilpowered.anvil.core.PlatformImpl
-import org.anvilpowered.anvil.core.entity.CommonRestrictionService
 import org.anvilpowered.anvil.api.util.SendTextService
 import org.anvilpowered.anvil.core.entity.EntityUtils
 import org.anvilpowered.anvil.core.module.PlatformModule
 import org.anvilpowered.anvil.sponge.command.SpongeCommandExecuteService
 import org.anvilpowered.anvil.sponge.command.SpongeSimpleCommandService
 import org.anvilpowered.anvil.sponge.entity.SpongeEntityUtils
-import org.anvilpowered.anvil.sponge.server.Sponge8LocationService
+import org.anvilpowered.anvil.sponge.server.SpongeLocationService
 import org.anvilpowered.anvil.sponge.util.Log4jAdapter
 import org.anvilpowered.anvil.sponge.util.SpongeAudienceService
 import org.anvilpowered.anvil.sponge.util.SpongeKickService
@@ -70,7 +68,7 @@ class ApiSpongeModule : PlatformModule(
             bind<AudienceService<CommandCause>>().to<SpongeAudienceService>()
             bind<CommandExecuteService>().to<SpongeCommandExecuteService>()
             bind<KickService>().to<SpongeKickService>()
-            bind<LocationService>().to<Sponge8LocationService>()
+            bind<LocationService>().to<SpongeLocationService>()
             bind<SimpleCommandService<CommandCause>>().to<SpongeSimpleCommandService>()
             bind(EntityUtils::class.java).to(SpongeEntityUtils::class.java)
             bind(PermissionService::class.java).to(SpongePermissionService::class.java)

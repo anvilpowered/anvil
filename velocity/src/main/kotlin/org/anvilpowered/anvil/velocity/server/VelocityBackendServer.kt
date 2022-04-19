@@ -35,9 +35,11 @@ class VelocityBackendServer(
     override val playerUUIDs: List<UUID> = server.playersConnected.stream().map { it.uniqueId }.toList()
     override val version: CompletableFuture<VelocityVersion> = server.ping().thenApply { VelocityVersion(it.version) }
 
-    override fun connect(player: Any): CompletableFuture<Boolean> = (player as? Player)?.commenceConnection()
-        ?: CompletableFuture.completedFuture(false)
+    override suspend fun connect(player: Any): Boolean {
+        return (player as? Player)?.commenceConnection() ?: false
+    }
 
-    override fun Player.commenceConnection(): CompletableFuture<Boolean> =
-        createConnectionRequest(server).connect().thenApply { it.isSuccessful }
+    override suspend fun Player.commenceConnection(): Boolean {
+        return createConnectionRequest(server).connect().thenApply { it.isSuccessful }.join() ?: false
+    }
 }

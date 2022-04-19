@@ -22,7 +22,6 @@ import org.anvilpowered.anvil.api.server.BackendServer
 import org.anvilpowered.anvil.api.server.LocationService
 import org.spongepowered.math.vector.Vector3d
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 
 abstract class CommonLocationService : LocationService {
 
@@ -35,7 +34,7 @@ abstract class CommonLocationService : LocationService {
     override fun getPosition(userUUID: UUID): Vector3d? = null
     override fun getPosition(userName: String): Vector3d? = null
 
-    override fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
-        return CompletableFuture.completedFuture(false)
+    override suspend fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): Boolean {
+        return false
     }
 }

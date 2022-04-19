@@ -23,21 +23,18 @@ import org.anvilpowered.anvil.core.server.CommonLocationService
 import org.bukkit.entity.Player
 import org.spongepowered.math.vector.Vector3d
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 
 class PaperLocationService : CommonLocationService() {
 
     @Inject
     private lateinit var userService: UserService<Player, Player>
 
-    override fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean> {
+    override suspend fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): Boolean {
         val teleporter = userService[sourceUserUUID]
         val target = userService[targetUserUUID]
-        return CompletableFuture.completedFuture(
-            if (teleporter != null && target != null) {
-                teleporter.teleport(target.location)
-            } else false
-        )
+        return if (teleporter != null && target != null) {
+            teleporter.teleport(target.location)
+        } else false
     }
 
     override fun getWorldName(userUUID: UUID): String? {

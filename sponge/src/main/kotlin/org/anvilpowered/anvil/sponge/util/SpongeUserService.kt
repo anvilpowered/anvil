@@ -22,11 +22,10 @@ import org.spongepowered.api.Sponge
 import org.spongepowered.api.entity.living.player.User
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 import kotlin.streams.asSequence
 
 class SpongeUserService : CommonUserService<User, ServerPlayer>(User::class.java) {
-    override val onlinePlayers: Collection<ServerPlayer> = Sponge.server().onlinePlayers()
+    override fun onlinePlayers(): Collection<ServerPlayer> = Sponge.server().onlinePlayers()
     override fun get(userName: String): User? = Sponge.server().userManager().load(userName).join().orElse(null)
     override fun get(userUUID: UUID): User? = Sponge.server().userManager().load(userUUID).join().orElse(null)
     override fun getPlayer(userName: String): ServerPlayer? = Sponge.server().player(userName).orElse(null)
@@ -39,11 +38,11 @@ class SpongeUserService : CommonUserService<User, ServerPlayer>(User::class.java
             .map { it.name().orElse(null) }.filter { it != null }.toList()
     }
 
-    override fun getUUID(userName: String): CompletableFuture<UUID?> {
-        return CompletableFuture.completedFuture(getPlayer(userName)?.user()?.uniqueId())
+    override suspend fun getUUID(userName: String): UUID? {
+        return getPlayer(userName)?.user()?.uniqueId()
     }
 
-    override fun getUserName(userUUID: UUID): CompletableFuture<String?> {
-        return CompletableFuture.completedFuture(getPlayer(userUUID)?.user()?.name())
+    override suspend fun getUserName(userUUID: UUID): String? {
+        return getPlayer(userUUID)?.user()?.name()
     }
 }

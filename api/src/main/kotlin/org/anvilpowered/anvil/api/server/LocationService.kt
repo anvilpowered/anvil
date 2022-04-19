@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.api.server
 
 import org.spongepowered.math.vector.Vector3d
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 
 interface LocationService {
     /**
@@ -98,8 +97,8 @@ interface LocationService {
      *
      * Note: Only available on the server side.
      *
-     * @return [CompletableFuture] wrapped [Boolean].
+     * @return [Boolean]
      * true if successful, otherwise false
      */
-    fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): CompletableFuture<Boolean>
+    suspend fun teleport(sourceUserUUID: UUID, targetUserUUID: UUID): Boolean
 }

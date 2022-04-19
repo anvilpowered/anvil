@@ -21,16 +21,18 @@ package org.anvilpowered.anvil.core.server
 import org.anvilpowered.anvil.api.server.BackendServer
 import org.anvilpowered.anvil.api.util.UserService
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 
 abstract class CommonBackendServer<TUser : Any, TPlayer : Any>(
     val userService: UserService<TUser, TPlayer>,
 ) : BackendServer {
-    abstract fun TPlayer.commenceConnection(): CompletableFuture<Boolean>
 
-    override fun connect(userUUID: UUID): CompletableFuture<Boolean> = userService.getPlayer(userUUID)?.commenceConnection()
-        ?: CompletableFuture.completedFuture(false)
+    abstract suspend fun TPlayer.commenceConnection(): Boolean
 
-    override fun connect(userName: String): CompletableFuture<Boolean> = userService.getPlayer(userName)?.commenceConnection()
-        ?: CompletableFuture.completedFuture(false)
+    override suspend fun connect(userUUID: UUID): Boolean {
+        return userService.getPlayer(userUUID)?.commenceConnection() ?: false
+    }
+
+    override suspend fun connect(userName: String): Boolean {
+        return userService.getPlayer(userName)?.commenceConnection() ?: false
+    }
 }

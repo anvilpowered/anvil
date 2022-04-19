@@ -18,7 +18,6 @@
 package org.anvilpowered.anvil.api.util
 
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 
 /**
  * Service for translating UUIDs to UserNames or UserNames to UUIDs
@@ -45,8 +44,8 @@ interface UserService<TUser, TPlayer> {
      */
     fun matchPlayerNames(context: Array<String>, index: Int, length: Int): List<String>
     fun onlinePlayers(): Collection<TPlayer>
-    fun getUUID(userName: String): CompletableFuture<UUID?>
-    fun getUserName(userUUID: UUID): CompletableFuture<String?>
+    suspend fun getUUID(userName: String): UUID?
+    suspend fun getUserName(userUUID: UUID): String?
     fun getUUID(user: TUser): UUID?
 
     /**

@@ -18,10 +18,8 @@
 package org.anvilpowered.anvil.core.util
 
 import com.google.common.collect.ImmutableList
-import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.util.UserService
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 
 abstract class CommonUserService<TUser, TPlayer> protected constructor(
     private val userClass: Class<TUser>

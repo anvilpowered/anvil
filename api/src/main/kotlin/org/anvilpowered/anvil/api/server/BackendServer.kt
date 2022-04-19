@@ -26,8 +26,8 @@ import java.util.concurrent.CompletableFuture
  */
 interface BackendServer : Named {
     val version: CompletableFuture<out Version>
-    fun connect(player: Any): CompletableFuture<Boolean>
-    fun connect(userUUID: UUID): CompletableFuture<Boolean>
-    fun connect(userName: String): CompletableFuture<Boolean>
+    suspend fun connect(player: Any): Boolean
+    suspend fun connect(userUUID: UUID): Boolean
+    suspend fun connect(userName: String): Boolean
     val playerUUIDs: List<UUID>
 }
