@@ -23,6 +23,7 @@ allprojects {
         withType<KotlinCompile> {
             kotlinOptions.jvmTarget = "17"
             kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+            kotlinOptions.freeCompilerArgs += "-Xcontext-receivers"
         }
         withType<JavaCompile> {
             targetCompatibility = "17"

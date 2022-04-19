@@ -1,5 +1,5 @@
 /*
- *   Anvil - AnvilPowered
+ *   Anvil - Registry
  *   Copyright (C) 2020-2021
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -15,22 +15,9 @@
  *     You should have received a copy of the GNU Lesser General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.api.registry
 
-package org.anvilpowered.anvil.api.registry;
+interface Named {
 
-import com.google.common.reflect.TypeToken;
-
-import java.time.ZoneId;
-
-@SuppressWarnings("UnstableApiUsage")
-public final class TypeTokens {
-
-    private TypeTokens() {
-        throw new AssertionError("**boss music** No instance for you!");
-    }
-
-    public static final TypeToken<Boolean> BOOLEAN = TypeToken.of(Boolean.class);
-    public static final TypeToken<Integer> INTEGER = TypeToken.of(Integer.class);
-    public static final TypeToken<String> STRING = TypeToken.of(String.class);
-    public static final TypeToken<ZoneId> ZONE_ID = TypeToken.of(ZoneId.class);
+    val name: String
 }

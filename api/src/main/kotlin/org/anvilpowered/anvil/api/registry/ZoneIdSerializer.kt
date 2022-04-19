@@ -1,0 +1,45 @@
+/*
+ *   Anvil - AnvilPowered
+ *   Copyright (C) 2020-2021
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package org.anvilpowered.anvil.api.registry
+
+import org.spongepowered.configurate.ConfigurationNode
+import org.spongepowered.configurate.serialize.TypeSerializer
+import java.lang.reflect.Type
+import java.time.ZoneId
+
+open class ZoneIdSerializer : TypeSerializer<ZoneId> {
+    companion object {
+        private const val AUTO = "auto"
+        fun parse(input: String?): ZoneId {
+            return if (input == null || AUTO == input) {
+                ZoneId.systemDefault()
+            } else {
+                ZoneId.of(input)
+            }
+        }
+
+        fun toString(zoneId: ZoneId?): String {
+            return if (zoneId == null || zoneId == ZoneId.systemDefault()) AUTO else zoneId.id
+        }
+    }
+
+    override fun deserialize(type: Type?, node: ConfigurationNode): ZoneId = parse(node.string)
+    override fun serialize(type: Type?, zoneId: ZoneId?, node: ConfigurationNode?) {
+        node?.set(toString(zoneId))
+    }
+}

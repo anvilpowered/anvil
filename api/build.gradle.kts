@@ -13,12 +13,14 @@ val guice_version: String by project
 val hikari: String by project
 val jedis: String by project
 val jetbrains_annotations: String by project
+val kotlinCoroutinesVersion: String by project
 val mongodb_driver_sync: String by project
 val morphia: String by project
 val reflections: String by project
 val xodus_entity_store: String by project
 
 dependencies {
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     api(bson)
     api(configurate_core)
     api(flow_math)
