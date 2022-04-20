@@ -15,7 +15,6 @@ dependencies {
     api(kotlin("reflect"))
     api(configurate_hocon)
     implementation(reflections)
-
 }
 
 blossom {
