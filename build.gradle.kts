@@ -51,7 +51,3 @@ subprojects {
         }
     }
 }
-
-subprojects.forEach { project ->
-    println("$project: ${project.sourceSets.main.get().java.sourceDirectories.joinToString(", ")}")
-}
