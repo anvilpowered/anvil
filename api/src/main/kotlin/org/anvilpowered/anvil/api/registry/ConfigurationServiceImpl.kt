@@ -33,55 +33,17 @@ class ConfigurationServiceImpl(
 
     private lateinit var rootConfigurationNode: CommentedConfigurationNode
 
-    private val verificationMap = mutableMapOf<Key<*>, Verifier<*>>()
-    private val nodeNameMap = mutableMapOf<Key<*>, String>()
-    private val nodeDescriptionMap = mutableMapOf<Key<*>, String>()
-    var options: ConfigurationOptions? = null
+    private var options: ConfigurationOptions? = null
 
-    override suspend fun save() {
-        for ((key, value) in nodeNameMap) {
-            val node = fromString(value)
-            try {
-                setNodeValue(node, key)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        try {
-            loader.save(rootConfigurationNode)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    private fun <T : Any> Registry.setNodeDefault(node: CommentedConfigurationNode, key: Key<T>) {
+        node.set(key.typeToken, getDefault(key))
     }
 
-    fun setName(key: Key<*>, name: String) {
-        nodeNameMap[key] = name
-    }
-
-    fun setDescription(key: Key<*>, description: String) {
-        nodeDescriptionMap[key] = description
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Any> setVerification(key: Key<T>, verification: Verifier<T>) {
-        verificationMap[key] = verification as Verifier<*>
-    }
-
-    private fun fromString(name: String): CommentedConfigurationNode {
-        return rootConfigurationNode.node(name.split("."))
-    }
-
-    private suspend fun <T : Any> setNodeDefault(node: CommentedConfigurationNode, key: Key<T>) {
-        val def = getDefault(key)
-        node.set(key.typeToken, def)
-        set(key, def)
-    }
-
-    private fun <T : Any> setNodeValue(node: CommentedConfigurationNode, key: Key<T>) {
+    private fun <T : Any> Registry.setNodeValue(node: CommentedConfigurationNode, key: Key<T>) {
         node.set(key.typeToken.type, getOrDefault(key))
     }
 
-    override suspend fun load() {
+    override suspend fun load(registry: MutableRegistry, schema: ConfigSchema) {
         try {
             rootConfigurationNode = if (options == null) {
                 loader.load()
@@ -92,24 +54,24 @@ class ConfigurationServiceImpl(
             e.printStackTrace()
         }
         var updatedCount = 0
-        for ((key, value) in nodeNameMap) {
-            val node: CommentedConfigurationNode = fromString(value)
+        for (key in registry.keys) {
+            val node: CommentedConfigurationNode = rootConfigurationNode.node(schema[key].fqName)
             if (node.virtual()) {
                 try {
-                    setNodeDefault(node, key)
+                    registry.setNodeDefault(node, key)
                     updatedCount++
                 } catch (e: SerializationException) {
                     e.printStackTrace()
                 }
             } else {
                 val modified = booleanArrayOf(false)
-                initConfigValue(key, node, modified)
+                registry.initConfigValue(key, node, modified)
                 if (modified[0]) {
                     updatedCount++
                 }
             }
             if (node.virtual() || node.comment().isNullOrBlank()) {
-                node.comment(nodeDescriptionMap[key])
+                node.comment(schema[key].description) // TODO: Fix double map access
                 updatedCount++
             }
         }
@@ -122,7 +84,11 @@ class ConfigurationServiceImpl(
         }
     }
 
-    private suspend fun <T : Any> initConfigValue(key: Key<T>, node: CommentedConfigurationNode, modified: BooleanArray): T? {
+    private suspend fun <T : Any> MutableRegistry.initConfigValue(
+        key: Key<T>,
+        node: CommentedConfigurationNode,
+        modified: BooleanArray,
+    ): T? {
         return initConfigValue(key, key.typeToken, node, modified)
     }
 
@@ -130,60 +96,53 @@ class ConfigurationServiceImpl(
      * @param typeToken [TypeToken] of node to parse. Pass a [Key] to save that value to the registry
      * @param node      [CommentedConfigurationNode] to get value from
      */
-    private suspend fun <T : Any> initConfigValue(
+    private suspend fun <T : Any> MutableRegistry.initConfigValue(
         key: Key<T>?,
         typeToken: TypeToken<T>,
         node: CommentedConfigurationNode,
         modified: BooleanArray,
     ): T? {
-        if (key != null && GenericTypeReflector.isSuperType(key.typeToken.type, MutableList::class.java)) {
-            return try {
-                val method = MutableList::class.java.getMethod("get", Int::class.javaPrimitiveType)
-                val list = node.getList(method.returnType) ?: return null
-                val listVerified = verify(verificationMap[key] as Verifier<T>, list as T, node, modified)
-
-                set(key, listVerified)
-                listVerified
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        } else if (GenericTypeReflector.isSuperType(MutableMap::class.java, typeToken.type)) {
-            try {
-                val method = MutableMap::class.java.getMethod("get", Object::class.java)
-                val subType = TypeToken.get(method.returnType)
-                val result: MutableMap<Any, Any> = hashMapOf()
-
-                for (entry: Map.Entry<*, CommentedConfigurationNode?> in node.childrenMap().entries) {
-                    // here comes the recursion
-                    val entryKey = entry.value?.key() ?: return null
-                    result[entryKey] = initConfigValue(null, subType, entry.value!!, modified)!!
+        return when {
+            key != null && GenericTypeReflector.isSuperType(java.util.List::class.java, typeToken.type) -> {
+                return try {
+                    val method = MutableList::class.java.getMethod("get", Int::class.javaPrimitiveType)
+                    val list = node.getList(method.returnType) as T?
+                    set(key, list)
+                    list
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
                 }
+            }
+            // Clean up recursion by using helper-method specifically for map case instead of using key == null
+            GenericTypeReflector.isSuperType(java.util.Map::class.java, typeToken.type) -> {
+                try {
+                    val method = MutableMap::class.java.getMethod("get", Object::class.java)
+                    val subType = TypeToken.get(method.returnType)
+                    val map: MutableMap<Any, Any> = hashMapOf()
 
-                if (key != null) {
-                    val map: T = verify(verificationMap[key] as Verifier<T>, result as T, node, modified)
-                    set(key, map)
+                    for (entry: Map.Entry<*, CommentedConfigurationNode?> in node.childrenMap().entries) {
+                        // here comes the recursion
+                        val entryKey = entry.value?.key() ?: return null
+                        map[entryKey] = initConfigValue(null, subType, entry.value!!, modified)!!
+                    }
+
+                    if (key != null) {
+                        set(key, map as T?)
+                    }
+                    map as T?
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return null
                 }
-                return result as T
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return null
             }
-        } else if (key != null) {
-            return try {
-                val value = node.get(typeToken) ?: return null
-                set(key, verify(verificationMap[key] as Verifier<T>, value, node, modified) as T)
-                value
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        } else {
-            return try {
-                node.get(typeToken)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
+            else -> {
+                return try {
+                    node.get(typeToken)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
+                }
             }
         }
     }
@@ -206,6 +165,22 @@ class ConfigurationServiceImpl(
             node.set(result)
         }
         return result
+    }
+
+    override suspend fun save(registry: Registry, schema: ConfigSchema) {
+        for (key in registry.keys) {
+            val node = rootConfigurationNode.node(schema[key].fqName)
+            try {
+                registry.setNodeValue(node, key)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        try {
+            loader.save(rootConfigurationNode)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }
 

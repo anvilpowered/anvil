@@ -43,6 +43,8 @@ interface Registry : EventSource {
     // TODO: Reconsider if this is the best way to store defaults
     fun <T : Any> getDefault(key: Key<T>): T?
 
+    val keys: List<Key<*>>
+
     override val flow: SharedFlow<RegistryEvent>
 }
 
@@ -54,4 +56,4 @@ interface Registry : EventSource {
  * @param key The [Key] to get the value or (if not present) the default value for
  * @return This registry's value for the provided [Key] or the default value
  */
-fun <T : Any> Registry.getOrDefault(key: Key<T>): T? = get(key) ?: getDefault(key)
+fun <T : Any> Registry.getOrDefault(key: Key<T>): T = get(key) ?: getDefault(key) ?: key.fallbackValue

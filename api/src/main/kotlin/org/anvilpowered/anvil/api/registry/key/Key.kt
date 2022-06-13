@@ -20,20 +20,21 @@ package org.anvilpowered.anvil.api.registry.key
 import io.leangen.geantyref.TypeToken
 import org.anvilpowered.anvil.api.registry.Named
 import org.anvilpowered.anvil.api.registry.Registry
+import org.anvilpowered.anvil.api.registry.getOrDefault
 import java.util.function.Function
 import kotlin.experimental.ExperimentalTypeInference
 
 abstract class Key<T : Any> internal constructor(
     val typeToken: TypeToken<T>,
     override val name: String,
-    fallbackValue: T?,
+    fallbackValue: T,
     userImmutable: Boolean,
     sensitive: Boolean,
     description: String?,
     parser: Function<String, T>?,
-    toStringer: Function<T, String>?
+    toStringer: Function<T, String>
 ) : Named, Comparable<Key<T>> {
-    val fallbackValue: T?
+    val fallbackValue: T
     private val isUserImmutable: Boolean
     private val isSensitive: Boolean
     private val description: String?
@@ -53,7 +54,7 @@ abstract class Key<T : Any> internal constructor(
         this.toStringer = toStringer
     }
 
-    interface Builder<T> {
+    interface Builder<T : Any> {
         /**
          * Sets the name of the generated [Key]
          *
@@ -108,7 +109,7 @@ abstract class Key<T : Any> internal constructor(
          * @param toStringer The toStringer to set or `null` to remove it
          * @return `this`
          */
-        fun toStringer(toStringer: Function<T, String>?): Builder<T>
+        fun toStringer(toStringer: ((T) -> String)?): Builder<T>
 
         /**
          * Generates a [Key] based on this builder.
@@ -181,12 +182,12 @@ abstract class Key<T : Any> internal constructor(
     }
 
     companion object {
-        fun <T> builder(type: TypeToken<T>): Builder<T> {
+        fun <T : Any> builder(type: TypeToken<T>): Builder<T> {
             return KeyBuilderImpl(type)
         }
 
         @OptIn(ExperimentalTypeInference::class)
-        inline fun <reified T> build(@BuilderInference block: Builder<T>.() -> Unit): Key<T> {
+        inline fun <reified T : Any> build(@BuilderInference block: Builder<T>.() -> Unit): Key<T> {
             return builder(object : TypeToken<T>() {}).apply(block).build()
         }
     }

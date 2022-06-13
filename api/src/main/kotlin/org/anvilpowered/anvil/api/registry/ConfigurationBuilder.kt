@@ -2,23 +2,53 @@ package org.anvilpowered.anvil.api.registry
 
 import org.anvilpowered.anvil.api.registry.key.Key
 
-sealed interface TreeElement
+sealed interface ConfigElement
 
-data class TreeObject(
-    val backingValues: Map<String, TreeElement>,
+data class ConfigSchema(
+    val backingValues: Map<String, ConfigElement>,
     val backingDescriptions: Map<String, String>,
-) : TreeElement
+    val keys: Map<Key<*>, KeySchemaEntry<*>>,
+) : ConfigElement
 
-data class TreePrimitive(val key: Key<*>) : TreeElement
+data class ConfigPrimitive(val key: Key<*>) : ConfigElement
+
+data class KeySchemaEntry<T : Any>(
+    val key: Key<T>,
+    val fqName: List<String>,
+    val description: String?,
+)
+
+@Suppress("UNCHECKED_CAST")
+operator fun <T : Any> ConfigSchema.get(key: Key<T>): KeySchemaEntry<T> = keys[key] as KeySchemaEntry<T>
 
 class TreeObjectBuilder {
-    internal val backingValues = mutableMapOf<String, TreeElement>()
+    internal val backingValues = mutableMapOf<String, ConfigElement>()
     internal val backingDescriptions = mutableMapOf<String, String>()
     internal val self get() = this
-    internal fun build() = TreeObject(backingValues.toMap(), backingDescriptions.toMap())
+
+    /**
+     * Performs a depth-first search of [backingValues] and [backingDescriptions] and adds all discovered entries to [flatKeys]
+     */
+    private fun traverse(path: List<String>, flatKeys: MutableMap<Key<*>, KeySchemaEntry<*>>) {
+        for ((name, element) in backingValues) {
+            when (element) {
+                is ConfigSchema -> traverse(path + name, flatKeys)
+                is ConfigPrimitive -> flatKeys.compute(element.key) { _, v ->
+                    check(v == null) { "Duplicate definition in schema for key ${element.key}" }
+                    KeySchemaEntry(element.key, path + name, backingDescriptions[name])
+                }
+            }
+        }
+    }
+
+    internal fun build(): ConfigSchema {
+        val flatKeys = mutableMapOf<Key<*>, KeySchemaEntry<*>>()
+        traverse(emptyList(), flatKeys)
+        return ConfigSchema(backingValues.toMap(), backingDescriptions.toMap(), flatKeys.toMap())
+    }
 }
 
-fun config(build: TreeObjectBuilder.() -> Unit) = TreeObjectBuilder().also(build).build()
+fun config(build: TreeObjectBuilder.() -> Unit): ConfigSchema = TreeObjectBuilder().also(build).build()
 
 class ByHandle internal constructor(
     private val treeObjectBuilder: TreeObjectBuilder,
@@ -31,7 +61,7 @@ class ByHandle internal constructor(
 
 context(TreeObjectBuilder)
 infix fun String.by(key: Key<*>): ByHandle {
-    backingValues[this] = TreePrimitive(key)
+    backingValues[this] = ConfigPrimitive(key)
     return ByHandle(self, this)
 }
 

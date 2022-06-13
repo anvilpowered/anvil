@@ -18,10 +18,9 @@
 package org.anvilpowered.anvil.api.registry.key
 
 import io.leangen.geantyref.TypeToken
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull
 import java.util.function.Function
 
-internal class KeyBuilderImpl<T>(type: TypeToken<T>) : Key.Builder<T> {
+internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : Key.Builder<T> {
     private val type: TypeToken<T>
     private var name: String = ""
     private var fallbackValue: T? = null
@@ -29,7 +28,7 @@ internal class KeyBuilderImpl<T>(type: TypeToken<T>) : Key.Builder<T> {
     private var sensitive: Boolean
     private var description: String? = null
     private var parser: Function<String, T>? = null
-    private var toStringer: Function<T, String>? = null
+    private var toStringer: ((T) -> String)? = null
 
     init {
         this.type = type
@@ -66,12 +65,21 @@ internal class KeyBuilderImpl<T>(type: TypeToken<T>) : Key.Builder<T> {
         return this
     }
 
-    override fun toStringer(toStringer: Function<T, String>?): KeyBuilderImpl<T> {
+    override fun toStringer(toStringer: ((T) -> String)?): KeyBuilderImpl<T> {
         this.toStringer = toStringer
         return this
     }
 
     override fun build(): Key<T> {
-        return object : Key<T>(type, name, fallbackValue, userImmutable, sensitive, description, parser, toStringer) {}
+        return object : Key<T>(
+            type,
+            name,
+            requireNotNull(fallbackValue) { "fallbackValue not set" },
+            userImmutable,
+            sensitive,
+            description,
+            parser,
+            toStringer ?: Any::toString
+        ) {}
     }
 }
