@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 allprojects {
@@ -25,6 +25,7 @@ allprojects {
             kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
         }
         withType<JavaCompile> {
+            options.encoding = "UTF-8"
             targetCompatibility = "17"
             sourceCompatibility = "17"
         }

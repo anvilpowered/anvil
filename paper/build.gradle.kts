@@ -1,6 +1,7 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("jvm")
-    id("com.github.johnrengelman.shadow")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.shadow)
 }
 
 repositories {
@@ -14,15 +15,14 @@ java {
 }
 
 dependencies {
-    implementation(project(":anvil-md5"))
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly(libs.paper)
 }
 
-tasks.shadowJar {
-    val guice: String by project
-    val guava: String by project
-    dependencies {
-        dependency(guice)
-        dependency(guava)
+/*tasks {
+    shadowJar {
+        dependencies {
+            dependency(libs.guice)
+            dependency(libs.guava)
+        }
     }
-}
+}*/

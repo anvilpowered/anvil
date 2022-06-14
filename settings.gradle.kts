@@ -1,4 +1,4 @@
-pluginManagement {
+/*pluginManagement {
     plugins {
         val blossomVersion: String by settings
         val kotlinVersion: String by settings
@@ -7,11 +7,9 @@ pluginManagement {
         kotlin("jvm") version kotlinVersion
         id("com.github.johnrengelman.shadow") version shadowVersion
     }
-}
+}*/
 
 rootProject.name = "Anvil"
-
-include("anvil-md5")
 
 sequenceOf(
     "api",

@@ -1,0 +1,44 @@
+[versions]
+configurate = "4.1.2"
+kotlin = "1.7.0"
+xodus = "1.3.435"
+blossom = "1.3.0"
+mongo = "3.12.5"
+
+[libraries]
+aopalliance = "aopalliance:aopalliance:1.0"
+apache-commons = "org.apache.commons:commons-pool2:2.6.2"
+bson = "org.mongodb:bson:3.12.0"
+bungee = "net.md-5:bungeecord-api:1.15-SNAPSHOT"
+configurate-core = { module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate" }
+configurate-hocon = { module = "org.spongepowered:configurate-hocon", version.ref = "configurate" }
+coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
+flow-math = "com.flowpowered:flow-math:1.0.3"
+guava = "com.google.guava:guava:28.1-jre"
+guice = "com.google.inject:guice:4.1.0"
+javasisst = "org.javassist:javassist:3.26.0-GA"
+javax = "javax.inject:javax.inject:1"
+jetbrains_annotations = "org.jetbrains:annotations:23.0.0"
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-stdlib8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+mongo-java-driver = { module = "org.mongodb:mongodb-java-driver", version.ref = "mongo" }
+mongo-driver-sync = { module = "org.mongodb:mongodb-driver-sync", version.ref = "mongo" }
+morphia = "dev.morphia.morphia:core:1.6.0"
+microutils_logging = "io.github.microutils:kotlin-logging:1.5.4"
+paper = "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
+reflections = "org.reflections:reflections:0.9.10"
+serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"
+sponge = "org.spongepowered:spongeapi:7.4.0"
+typesafe_config = "com.typesafe:config:1.4.0"
+velocity = "com.velocitypowered:velocity-api:3.1.1"
+xodus = { module = "org.jetbrains.xodus:xodus-openAPI", version.ref = "xodus" }
+xodus-entity-store = { module = "org.jetbrains.xodus:xodus-entity-store", version.ref = "xodus" }
+xodus-environment = { module = "org.jetbrains.xodus:xodus-environment", version.ref = "xodus" }
+xodus-utils = { module = "org.jetbrains.xodus:xodus-utils", version.ref = "xodus" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
