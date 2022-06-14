@@ -277,30 +277,6 @@ public final class Keys {
             .fallback(false)
             .sensitive()
             .build();
-    public static final Key<String> REDIS_HOSTNAME =
-        Key.builder(TypeTokens.STRING)
-            .name("REDIS_HOSTNAME")
-            .fallback("localhost")
-            .sensitive()
-            .build();
-    public static final Key<Integer> REDIS_PORT =
-        Key.builder(TypeTokens.INTEGER)
-            .name("REDIS_PORT")
-            .fallback(6379)
-            .sensitive()
-            .build();
-    public static final Key<String> REDIS_PASSWORD =
-        Key.builder(TypeTokens.STRING)
-            .name("REDIS_PASSWORD")
-            .fallback("password")
-            .sensitive()
-            .build();
-    public static final Key<Boolean> REDIS_USE_AUTH =
-        Key.builder(TypeTokens.BOOLEAN)
-            .name("REDIS_USE_AUTH")
-            .fallback(false)
-            .sensitive()
-            .build();
 
     public static final Key<String> PLUGINS_PERMISSION =
         Key.builder(TypeTokens.STRING)
@@ -338,11 +314,7 @@ public final class Keys {
             .register(MONGODB_PASSWORD)
             .register(MONGODB_AUTH_DB)
             .register(MONGODB_USE_AUTH)
-            .register(MONGODB_USE_SRV)
-            .register(REDIS_HOSTNAME)
-            .register(REDIS_PORT)
-            .register(REDIS_PASSWORD)
-            .register(REDIS_USE_AUTH);
+            .register(MONGODB_USE_SRV);
 
         startRegistration("anvil")
             .register(PLUGINS_PERMISSION)

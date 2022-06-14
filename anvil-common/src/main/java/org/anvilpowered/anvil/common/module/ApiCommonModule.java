@@ -20,11 +20,9 @@ package org.anvilpowered.anvil.common.module;
 
 import com.google.inject.AbstractModule;
 import org.anvilpowered.anvil.api.entity.RestrictionService;
-import org.anvilpowered.anvil.api.messaging.RedisService;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.util.TimeFormatService;
 import org.anvilpowered.anvil.common.entity.CommonRestrictionService;
-import org.anvilpowered.anvil.common.messaging.CommonRedisService;
 import org.anvilpowered.anvil.common.util.CommonTimeFormatService;
 
 public class ApiCommonModule extends AbstractModule {
@@ -32,7 +30,6 @@ public class ApiCommonModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(TimeFormatService.class).to(CommonTimeFormatService.class);
-        bind(RedisService.class).to(CommonRedisService.class);
         bind(RestrictionService.class).toProvider(
             BindingExtensions.asInternalProvider(CommonRestrictionService.class));
     }
