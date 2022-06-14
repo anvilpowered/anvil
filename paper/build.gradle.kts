@@ -15,6 +15,7 @@ java {
 }
 
 dependencies {
+    implementation(project(":anvil-core"))
     compileOnly(libs.paper)
 }
 
