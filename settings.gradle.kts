@@ -11,6 +11,8 @@
 
 rootProject.name = "Anvil"
 
+include("anvil-md5")
+
 sequenceOf(
     "api",
     "core",

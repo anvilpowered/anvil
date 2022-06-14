@@ -15,7 +15,7 @@ java {
 }
 
 dependencies {
-    implementation(project(":anvil-core"))
+    implementation(project(":anvil-md5"))
     compileOnly(libs.paper)
 }
 
