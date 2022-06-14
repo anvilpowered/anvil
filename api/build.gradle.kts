@@ -10,7 +10,6 @@ val configurate_core: String by project
 val flow_math: String by project
 val guice: String by project
 val guice_version: String by project
-val hikari: String by project
 val jetbrains_annotations: String by project
 val mongodb_driver_sync: String by project
 val morphia: String by project
@@ -22,7 +21,6 @@ dependencies {
     api(configurate_core)
     api(flow_math)
     api(guice + ":" + guice_version)
-    api(hikari)
     api(jetbrains_annotations)
     api(mongodb_driver_sync)
     api(morphia)
