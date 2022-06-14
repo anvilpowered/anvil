@@ -31,15 +31,15 @@ abstract class Key<T : Any> internal constructor(
     userImmutable: Boolean,
     sensitive: Boolean,
     description: String?,
-    parser: Function<String, T>?,
-    toStringer: Function<T, String>
+    parser: ((String) -> T)?,
+    toStringer: ((T) -> String)
 ) : Named, Comparable<Key<T>> {
     val fallbackValue: T
     private val isUserImmutable: Boolean
     private val isSensitive: Boolean
     private val description: String?
-    private var parser: Function<String, T>?
-    private var toStringer: Function<T, String>?
+    private var parser: ((String) -> T)?
+    private var toStringer: ((T) -> String)?
 
     init {
         this.fallbackValue = fallbackValue
@@ -101,7 +101,7 @@ abstract class Key<T : Any> internal constructor(
          * @param parser The parser to set or `null` to remove it
          * @return `this`
          */
-        fun parser(parser: Function<String, T>?): Builder<T>
+        fun parser(parser: ((String) -> T)?): Builder<T>
 
         /**
          * Sets the toStringer of the generated [Key].
@@ -119,42 +119,26 @@ abstract class Key<T : Any> internal constructor(
         fun build(): Key<T>
     }
 
-    private fun extractParser(value: T?): Function<String, T>? {
-        when (value) {
-            is String -> {
-                return Function { s: String -> s as T }
-            }
-            is Boolean -> {
-                return Function { s: String? -> java.lang.Boolean.valueOf(s) as T }
-            }
-            is Double -> {
-                return Function { s: String? -> java.lang.Double.valueOf(s) as T }
-            }
-            is Float -> {
-                return Function { s: String? -> java.lang.Float.valueOf(s) as T }
-            }
-            is Long -> {
-                return Function { s: String? -> java.lang.Long.valueOf(s) as T }
-            }
-            is Int -> {
-                return Function { s: String? -> Integer.valueOf(s) as T }
-            }
-            is Short -> {
-                return Function { s: String -> s.toShort() as T }
-            }
-            is Byte -> {
-                return Function { s: String? -> java.lang.Byte.valueOf(s) as T }
-            }
-            else -> return null
+    private fun extractParser(value: T?): ((String) -> T)? {
+        return when (value) {
+            is String -> { s: String -> s as T }
+            is Boolean -> { s: String? -> java.lang.Boolean.valueOf(s) as T }
+            is Double -> { s: String? -> java.lang.Double.valueOf(s) as T }
+            is Float -> { s: String? -> java.lang.Float.valueOf(s) as T }
+            is Long -> { s: String? -> java.lang.Long.valueOf(s) as T }
+            is Int -> { s: String? -> Integer.valueOf(s) as T }
+            is Short -> { s: String -> s.toShort() as T }
+            is Byte -> { s: String? -> java.lang.Byte.valueOf(s) as T }
+            else -> null
         }
     }
 
     fun parse(value: String): T? {
-        return parser?.apply(value)
+        return parser?.invoke(value)
     }
 
     fun toString(value: T): String {
-        return toStringer?.apply(value) ?: "No toStringer set for $name!"
+        return toStringer?.invoke(value) ?: "No toStringer set for $name!"
     }
 
     override fun compareTo(o: Key<T>): Int {

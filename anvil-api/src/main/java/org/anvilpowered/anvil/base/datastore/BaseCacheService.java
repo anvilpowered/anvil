@@ -20,7 +20,8 @@ package org.anvilpowered.anvil.base.datastore;
 
 import org.anvilpowered.anvil.api.datastore.CacheService;
 import org.anvilpowered.anvil.api.model.ObjectWithId;
-import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.AnvilKeys;
+import org.anvilpowered.anvil.api.registry.key.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 
 import java.util.ArrayList;
@@ -50,14 +51,14 @@ public abstract class BaseCacheService<
 
     protected BaseCacheService(Registry registry) {
         this.registry = registry;
-        registry.whenLoaded(this::registryLoaded).register();
+//        registry.whenLoaded(this::registryLoaded).register();
         cache = new ConcurrentHashMap<>();
     }
 
     private void registryLoaded() {
         stopCacheInvalidationTask();
-        Integer intervalSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_INTERVAL_SECONDS);
-        timeoutSeconds = registry.getOrDefault(Keys.CACHE_INVALIDATION_TIMOUT_SECONDS);
+        Integer intervalSeconds = registry.get(AnvilKeys.INSTANCE.getCACHE_INVALIDATION_INTERVAL_SECONDS());
+        timeoutSeconds = registry.get(AnvilKeys.INSTANCE.getCACHE_INVALIDATION_TIMOUT_SECONDS());
         startCacheInvalidationTask(intervalSeconds);
     }
 

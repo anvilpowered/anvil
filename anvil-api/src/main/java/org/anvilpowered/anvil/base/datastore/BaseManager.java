@@ -28,9 +28,9 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.Manager;
-import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.AnvilKeys;
+import org.anvilpowered.anvil.api.registry.key.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.registry.RegistryScoped;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 
@@ -46,7 +46,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
 
     protected BaseManager(Registry registry) {
         this.registry = registry;
-        registry.whenLoaded(this::registryLoaded).register();
+//        registry.whenLoaded(this::registryLoaded).register();
         componentType = new TypeToken<C>(getClass()) {
         };
     }
@@ -58,7 +58,6 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     private Logger logger;
 
     @Nullable
-    @RegistryScoped
     private C currentComponent;
 
     private void registryLoaded() {
@@ -66,7 +65,7 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     }
 
     private void loadComponent() {
-        String dataStoreName = registry.getExtraSafe(Keys.DATA_STORE_NAME)
+        String dataStoreName = registry.get(AnvilKeys.INSTANCE.getDATA_STORE_NAME())
             .toLowerCase(Locale.ENGLISH);
         String type = componentType.getRawType().getCanonicalName();
         Named named = Names.named(dataStoreName);
@@ -84,7 +83,6 @@ public abstract class BaseManager<C extends Component<?, ?>> implements Manager<
     }
 
     @Override
-    @RegistryScoped
     public C getPrimaryComponent() {
         try {
             if (currentComponent == null) {

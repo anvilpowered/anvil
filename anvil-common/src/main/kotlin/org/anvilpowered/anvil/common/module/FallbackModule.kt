@@ -24,7 +24,6 @@ import org.anvilpowered.anvil.api.Anvil
 import org.anvilpowered.anvil.api.plugin.BasicPluginInfo
 import org.anvilpowered.anvil.api.plugin.PluginInfo
 import org.anvilpowered.anvil.api.registry.Registry
-import org.anvilpowered.anvil.base.registry.BaseRegistry
 import org.anvilpowered.anvil.common.plugin.FallbackPluginInfo
 
 @Suppress("UnstableApiUsage")

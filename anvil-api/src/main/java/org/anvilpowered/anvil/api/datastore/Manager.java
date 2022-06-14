@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.api.datastore;
 
 import com.google.inject.name.Named;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
-import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.key.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.anvilpowered.anvil.api.util.TextService;
 

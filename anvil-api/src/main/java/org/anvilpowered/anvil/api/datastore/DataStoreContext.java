@@ -55,7 +55,7 @@ public abstract class DataStoreContext<TKey, TDataStore> {
         connectionClosedListeners = new ArrayList<>();
 
         this.registry = registry;
-        registry.whenLoaded(this::registryLoaded).register();
+        //registry.whenLoaded(this::registryLoaded).register();
     }
 
     protected void registryLoaded() {

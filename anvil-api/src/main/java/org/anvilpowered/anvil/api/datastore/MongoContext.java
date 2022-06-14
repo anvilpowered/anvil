@@ -27,7 +27,7 @@ import dev.morphia.Morphia;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MapperOptions;
-import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.AnvilKeys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.bson.types.ObjectId;
 
@@ -51,16 +51,16 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
     protected Datastore loadDataStore() {
 
         /* === Get values from config === */
-        String connectionString = registry.getExtraSafe(Keys.MONGODB_CONNECTION_STRING);
-        String hostname = registry.getExtraSafe(Keys.MONGODB_HOSTNAME);
-        int port = registry.getExtraSafe(Keys.MONGODB_PORT);
-        String dbName = registry.getExtraSafe(Keys.MONGODB_DBNAME);
-        String username = registry.getExtraSafe(Keys.MONGODB_USERNAME);
-        String password = registry.getExtraSafe(Keys.MONGODB_PASSWORD);
-        String authDb = registry.getExtraSafe(Keys.MONGODB_AUTH_DB);
-        boolean useAuth = registry.getExtraSafe(Keys.MONGODB_USE_AUTH);
-        boolean useSrv = registry.getExtraSafe(Keys.MONGODB_USE_SRV);
-        boolean useConnectionString = registry.getExtraSafe(Keys.MONGODB_USE_CONNECTION_STRING);
+        String connectionString = registry.get(AnvilKeys.INSTANCE.getMONGODB_CONNECTION_STRING());
+        String hostname = registry.get(AnvilKeys.INSTANCE.getMONGODB_HOSTNAME());
+        int port = registry.get(AnvilKeys.INSTANCE.getMONGODB_PORT());
+        String dbName = registry.get(AnvilKeys.INSTANCE.getMONGODB_DBNAME());
+        String username = registry.get(AnvilKeys.INSTANCE.getMONGODB_USERNAME());
+        String password = registry.get(AnvilKeys.INSTANCE.getMONGODB_PASSWORD());
+        String authDb = registry.get(AnvilKeys.INSTANCE.getMONGODB_AUTH_DB());
+        boolean useAuth = registry.get(AnvilKeys.INSTANCE.getMONGODB_USE_AUTH());
+        boolean useSrv = registry.get(AnvilKeys.INSTANCE.getMONGODB_USE_SRV());
+        boolean useConnectionString = registry.get(AnvilKeys.INSTANCE.getMONGODB_USE_CONNECTION_STRING());
 
         /* === Determine credentials for MongoDB === */
         String clientUrl;
@@ -87,7 +87,7 @@ public final class MongoContext extends DataStoreContext<ObjectId, Datastore> {
         dataStore.ensureIndexes();
 
         /* === Save mapped objects and register with morphia === */
-        morphia.map(calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE), Entity.class, Embedded.class));
+        morphia.map(calculateEntityClasses(registry.get(AnvilKeys.INSTANCE.getBASE_SCAN_PACKAGE()), Entity.class, Embedded.class));
 
         /* === Set class loader to prevent morphia from breaking === */
         morphia.getMapper().setOptions(MapperOptions.legacy()

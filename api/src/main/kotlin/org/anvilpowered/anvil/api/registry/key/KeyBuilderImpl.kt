@@ -27,7 +27,7 @@ internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : Key.Builder<T> {
     private var userImmutable = false
     private var sensitive: Boolean
     private var description: String? = null
-    private var parser: Function<String, T>? = null
+    private var parser: ((String) -> T)? = null
     private var toStringer: ((T) -> String)? = null
 
     init {
@@ -60,7 +60,7 @@ internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : Key.Builder<T> {
         return this
     }
 
-    override fun parser(parser: Function<String, T>?): KeyBuilderImpl<T> {
+    override fun parser(parser: ((String) -> T)?): KeyBuilderImpl<T> {
         this.parser = parser
         return this
     }

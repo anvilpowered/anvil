@@ -82,21 +82,21 @@ class Keys private constructor() {
             return KeyRegistrationEnd(nameSpace)
         }
 
-        fun <T> resolveUnsafe(name: String, nameSpace: String): Key<T> {
+        fun <T: Any> resolveUnsafe(name: String, nameSpace: String): Key<T> {
             return keys[nameSpace, name] as Key<T>
         }
 
-        fun <T> resolve(name: String, nameSpace: String): Optional<Key<T>> {
+        fun <T: Any> resolve(name: String, nameSpace: String): Optional<Key<T>> {
             return Optional.ofNullable(keys[nameSpace, name] as Key<T>)
         }
 
-        fun <T> resolveUnsafe(name: String): Key<T> {
+        fun <T: Any> resolveUnsafe(name: String): Key<T> {
             return resolve<Any>(name).orElseThrow {
                 IllegalArgumentException("Could not resolve key $name")
             } as Key<T>
         }
 
-        private fun <T> resolve(name: String): Optional<Key<T>> {
+        private fun <T: Any> resolve(name: String): Optional<Key<T>> {
             val candidate = keys[GLOBAL_NAMESPACE, name] as Key<T>?
             if (candidate != null) {
                 return Optional.of(candidate)
@@ -109,7 +109,7 @@ class Keys private constructor() {
             }
         }
 
-        fun <T> resolveLocalAndGlobal(name: String, nameSpace: String): Optional<Key<T>> {
+        fun <T: Any> resolveLocalAndGlobal(name: String, nameSpace: String): Optional<Key<T>> {
             val candidate = keys[nameSpace, name] as Key<T>?
             return if (candidate != null) {
                 Optional.of(candidate)

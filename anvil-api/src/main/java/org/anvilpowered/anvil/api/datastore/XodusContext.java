@@ -25,7 +25,7 @@ import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
 import org.anvilpowered.anvil.api.model.Mappable;
-import org.anvilpowered.anvil.api.registry.Keys;
+import org.anvilpowered.anvil.api.registry.key.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 
 import java.io.File;

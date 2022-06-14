@@ -23,8 +23,7 @@ import ninja.leaping.configurate.ConfigurationOptions
 import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.loader.ConfigurationLoader
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection
-import org.anvilpowered.anvil.api.registry.Keys
-import org.anvilpowered.anvil.base.registry.BaseConfigurationService
+import org.anvilpowered.anvil.api.registry.key.Keys
 
 @Singleton
 open class CommonConfigurationService @Inject constructor(

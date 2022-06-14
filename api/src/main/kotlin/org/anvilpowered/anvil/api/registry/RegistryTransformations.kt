@@ -10,7 +10,7 @@ import org.anvilpowered.anvil.api.registry.key.Key
  * @param key         The [Key] to transform the value for
  * @param transformer The transformation to apply
  */
-fun <T : Any> MutableRegistry.transform(key: Key<T>, transformer: (Key<T>, T?) -> T?): Boolean =
+suspend fun <T : Any> MutableRegistry.transform(key: Key<T>, transformer: (Key<T>, T?) -> T?): T? =
     set(key, transformer(key, get(key)))
 
 /**
@@ -21,5 +21,5 @@ fun <T : Any> MutableRegistry.transform(key: Key<T>, transformer: (Key<T>, T?) -
  * @param key         The [Key] to transform the value for
  * @param transformer The transformation to apply
  */
-fun <T : Any> MutableRegistry.transform(key: Key<T>, transformer: (T?) -> T?): Boolean =
+suspend fun <T : Any> MutableRegistry.transform(key: Key<T>, transformer: (T?) -> T?): T? =
     set(key, transformer(get(key)))

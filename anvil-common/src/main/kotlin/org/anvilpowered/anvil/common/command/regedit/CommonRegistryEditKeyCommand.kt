@@ -19,7 +19,7 @@ package org.anvilpowered.anvil.common.command.regedit
 
 import com.google.inject.Inject
 import org.anvilpowered.anvil.api.registry.Key
-import org.anvilpowered.anvil.api.registry.Keys
+import org.anvilpowered.anvil.api.registry.key.Keys
 import kotlin.streams.toList
 
 open class CommonRegistryEditKeyCommand<TUser, TPlayer, TString, TCommandSource>

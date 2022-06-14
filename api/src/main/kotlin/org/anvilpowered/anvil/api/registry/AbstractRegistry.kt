@@ -3,7 +3,7 @@ package org.anvilpowered.anvil.api.registry
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.anvilpowered.anvil.api.registry.key.Key
 
-class AbstractRegistry(private val delegate: Registry? = null) : MutableRegistry {
+abstract class AbstractRegistry(private val delegate: Registry? = null) : MutableRegistry {
 
     override val flow = MutableSharedFlow<RegistryEvent>()
     private val backing = mutableMapOf<Key<*>, Any>()
