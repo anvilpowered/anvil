@@ -29,6 +29,7 @@ import com.google.inject.name.Names;
 import org.anvilpowered.anvil.api.datastore.Component;
 import org.anvilpowered.anvil.api.datastore.Manager;
 import org.anvilpowered.anvil.api.registry.AnvilKeys;
+import org.anvilpowered.anvil.api.registry.RegistryEvent;
 import org.anvilpowered.anvil.api.registry.key.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -35,7 +35,7 @@ abstract class Key<T : Any> internal constructor(
     toStringer: ((T) -> String)
 ) : Named, Comparable<Key<T>> {
     val fallbackValue: T
-    private val isUserImmutable: Boolean
+    val isUserImmutable: Boolean
     private val isSensitive: Boolean
     private val description: String?
     private var parser: ((String) -> T)?

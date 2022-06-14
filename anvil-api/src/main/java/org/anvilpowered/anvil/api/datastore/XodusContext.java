@@ -25,6 +25,7 @@ import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
 import org.anvilpowered.anvil.api.model.Mappable;
+import org.anvilpowered.anvil.api.registry.AnvilKeys;
 import org.anvilpowered.anvil.api.registry.key.Keys;
 import org.anvilpowered.anvil.api.registry.Registry;
 
@@ -48,7 +49,7 @@ public final class XodusContext extends DataStoreContext<EntityId, PersistentEnt
     protected PersistentEntityStore loadDataStore() {
 
         /* === Initialize storage location === */
-        File dbFilesLocation = Paths.get(registry.getOrDefault(Keys.DATA_DIRECTORY) + "/data/xodus").toFile();
+        File dbFilesLocation = Paths.get(registry.get(AnvilKeys.INSTANCE.getDATA_DIRECTORY()) + "/data/xodus").toFile();
         if (!dbFilesLocation.exists()) {
             if (!dbFilesLocation.mkdirs()) {
                 throw new IllegalStateException("Unable to create xodus directory");
@@ -56,7 +57,7 @@ public final class XodusContext extends DataStoreContext<EntityId, PersistentEnt
         }
 
         /* === Find objects to map === */
-        Class<?>[] entityClasses = calculateEntityClasses(registry.getOrDefault(Keys.BASE_SCAN_PACKAGE), XodusEntity.class, XodusEmbedded.class);
+        Class<?>[] entityClasses = calculateEntityClasses(registry.get(AnvilKeys.INSTANCE.getBASE_SCAN_PACKAGE()), XodusEntity.class, XodusEmbedded.class);
 
         /* === Create collections if not present === */
         for (Class<?> entityClass : entityClasses) {

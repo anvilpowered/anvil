@@ -98,11 +98,7 @@ public abstract class BasePlugin {
     ) {
         Environment.Builder builder = Anvil.getEnvironmentBuilder()
             .setName(name)
-            .setRootInjector(rootInjector)
-            .whenLoaded(this::whenLoaded)
-            .whenReady(e -> environment = e)
-            .whenReady(this::whenReady)
-            .whenReloaded(this::whenReloaded);
+            .setRootInjector(rootInjector);
         if (module != null) {
             builder.addModules(module);
         }
