@@ -31,7 +31,6 @@ import com.google.inject.util.Modules;
 import org.anvilpowered.anvil.api.command.CommandNode;
 import org.anvilpowered.anvil.api.misc.BindingExtensions;
 import org.anvilpowered.anvil.api.registry.Registry;
-import org.anvilpowered.anvil.api.registry.RegistryScope;
 import org.anvilpowered.anvil.common.module.PlatformModule;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -59,9 +58,6 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
     private boolean withRootCommand = false;
     private final Collection<Module> modules;
     private final Map<Key<?>, Consumer<?>> earlyServices;
-    private final Collection<Consumer<Environment>> loadedListeners;
-    private final Collection<Consumer<Environment>> readyListeners;
-    private final Collection<Consumer<Environment>> reloadedListeners;
     private static final Collection<EnvironmentBuilderImpl> builders = new ArrayList<>();
     private static boolean alreadyCompleted = false;
 
@@ -70,14 +66,8 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
             throw new IllegalStateException("This method should only be called exactly once (in Anvil Common)");
         }
         alreadyCompleted = true;
-        Map<String, Collection<Consumer<Environment>>> loadedListeners = new HashMap<>();
-        Map<String, Collection<Consumer<Environment>>> readyListeners = new HashMap<>();
-        Map<String, Collection<Consumer<Environment>>> reloadedListeners = new HashMap<>();
         List<EnvironmentImpl> environments = builders.stream().map(builder -> {
             final String name = builder.name;
-            loadedListeners.put(name, builder.loadedListeners);
-            readyListeners.put(name, builder.readyListeners);
-            reloadedListeners.put(name, builder.reloadedListeners);
             List<Module> modules = new ArrayList<>();
             modules.add(Modules.override(fallbackModule).with(builder.modules));
             return new EnvironmentImpl(
@@ -140,29 +130,12 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
             if (environment.withRootCommand()) {
                 environment.getInstance(CommandNode.class.getCanonicalName());
             }
-            Registry registry = injector.getInstance(Registry.class);
-            for (Consumer<Environment> listener
-                : loadedListeners.get(environment.getName())) {
-                registry.whenLoaded(() -> listener.accept(environment)).register();
-            }
-            registry.load(RegistryScope.DEEP);
-            for (Consumer<Environment> listener
-                : reloadedListeners.get(environment.getName())) {
-                registry.whenLoaded(() -> listener.accept(environment)).register();
-            }
-            for (Consumer<Environment> listener
-                : readyListeners.get(environment.getName())) {
-                listener.accept(environment);
-            }
         }
     }
 
     EnvironmentBuilderImpl() {
         modules = new ArrayList<>();
         earlyServices = new HashMap<>();
-        loadedListeners = new ArrayList<>();
-        readyListeners = new ArrayList<>();
-        reloadedListeners = new ArrayList<>();
     }
 
     @Override
@@ -260,24 +233,6 @@ public class EnvironmentBuilderImpl implements Environment.Builder {
     @Override
     public Environment.Builder withRootCommand() {
         withRootCommand = true;
-        return this;
-    }
-
-    @Override
-    public Environment.Builder whenLoaded(Consumer<Environment> listener) {
-        loadedListeners.add(listener);
-        return this;
-    }
-
-    @Override
-    public Environment.Builder whenReady(Consumer<Environment> listener) {
-        readyListeners.add(listener);
-        return this;
-    }
-
-    @Override
-    public Environment.Builder whenReloaded(Consumer<Environment> listener) {
-        reloadedListeners.add(listener);
         return this;
     }
 
