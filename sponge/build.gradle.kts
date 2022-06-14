@@ -1,9 +1,10 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("jvm")
-    id("com.github.johnrengelman.shadow")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.shadow)
 }
 
 dependencies {
     implementation(project(":anvil-core"))
-    compileOnly("org.spongepowered:spongeapi:7.4.0")
+    compileOnly(libs.sponge)
 }
