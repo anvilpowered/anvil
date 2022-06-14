@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `java-library`
     alias(libs.plugins.kotlin.jvm)
