@@ -4,7 +4,6 @@ import java.util.Date
 
 plugins {
     kotlin("jvm")
-    id("net.kyori.blossom")
 }
 
 val configurate_hocon: String by project
@@ -15,12 +14,4 @@ dependencies {
     api(kotlin("reflect"))
     api(configurate_hocon)
     implementation(reflections)
-}
-
-blossom {
-    replaceToken("{modVersion}", version)
-    val format = SimpleDateFormat("yyyy-MM-dd-HH:mm:ss z")
-    format.timeZone = TimeZone.getTimeZone("UTC")
-    val buildDate = format.format(Date())
-    replaceToken("{buildDate}", buildDate)
 }
