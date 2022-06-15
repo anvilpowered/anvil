@@ -1,11 +1,13 @@
-/*pluginManagement {
-    plugins {
-        val kotlinVersion: String by settings
-        val shadowVersion: String by settings
-        kotlin("jvm") version kotlinVersion
-        id("com.github.johnrengelman.shadow") version shadowVersion
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven("https://repo.spongepowered.org/repository/maven-public/")
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://libraries.minecraft.net/")
     }
-}*/
+}
+
 
 rootProject.name = "Anvil"
 

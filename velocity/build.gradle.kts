@@ -5,11 +5,6 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-repositories {
-    maven("https://libraries.minecraft.net/")
-    maven("https://repo.papermc.io/repository/maven-public/")
-}
-
 val velocityVersion: String by project
 
 dependencies {
