@@ -2,9 +2,7 @@ plugins {
     java
 }
 
-val bungee: String by project
-
 dependencies {
     api(project(":anvil-core"))
-    implementation(bungee)
+    implementation("net.md-5:bungeecord-api:1.16-R0.4")
 }
