@@ -4,7 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
 }
 
-version = "0.4-SNAPSHOT"
+val apiVersion: String by rootProject
+version = apiVersion
 
 dependencies {
     api(libs.coroutines)

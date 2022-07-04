@@ -6,9 +6,12 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
 }
 
+val projectVersion = file("version").readLines().first()
+project.extra["apiVersion"] = projectVersion.replace(".[0-9]+(?=($|-SNAPSHOT))".toRegex(), "")
+
 allprojects {
     group = "org.anvilpowered"
-    version = "0.4.0-SNAPSHOT"
+    version = projectVersion
     project.findProperty("buildNumber")
         ?.takeIf { version.toString().contains("SNAPSHOT") }
         ?.also { version = version.toString().replace("SNAPSHOT", "RC$it") }
