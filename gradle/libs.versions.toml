@@ -7,7 +7,7 @@ mongo = "3.12.5"
 [libraries]
 aopalliance = "aopalliance:aopalliance:1.0"
 apache-commons = "org.apache.commons:commons-pool2:2.6.2"
-bson = "org.mongodb:bson:3.12.0"
+bson = { module = "org.mongodb:bson", version.ref = "mongo" }
 bungee = "net.md-5:bungeecord-api:1.15-SNAPSHOT"
 configurate-core = { module = "org.spongepowered:configurate-core", version.ref = "configurate" }
 configurate-hocon = { module = "org.spongepowered:configurate-hocon", version.ref = "configurate" }
