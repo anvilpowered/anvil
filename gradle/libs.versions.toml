@@ -6,7 +6,7 @@ mongo = "3.12.11"
 
 [libraries]
 aopalliance = "aopalliance:aopalliance:1.0"
-apache-commons = "org.apache.commons:commons-pool2:2.6.2"
+apache-commons = "org.apache.commons:commons-pool2:2.11.1"
 bson = { module = "org.mongodb:bson", version.ref = "mongo" }
 bungee = "net.md-5:bungeecord-api:1.15-SNAPSHOT"
 configurate-core = { module = "org.spongepowered:configurate-core", version.ref = "configurate" }
