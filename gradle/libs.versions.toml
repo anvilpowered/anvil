@@ -23,7 +23,7 @@ kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "
 kotlin-stdlib8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 mongo-java-driver = { module = "org.mongodb:mongodb-java-driver", version.ref = "mongo" }
 mongo-driver-sync = { module = "org.mongodb:mongodb-driver-sync", version.ref = "mongo" }
-morphia = "dev.morphia.morphia:core:1.6.0"
+morphia = "dev.morphia.morphia:core:1.6.1"
 microutils_logging = "io.github.microutils:kotlin-logging:1.5.4"
 paper = "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
 reflections = "org.reflections:reflections:0.9.10"
