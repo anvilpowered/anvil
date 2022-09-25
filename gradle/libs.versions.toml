@@ -15,7 +15,7 @@ coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
 flow-math = "com.flowpowered:flow-math:1.0.3"
 guava = "com.google.guava:guava:28.1-jre"
 guice = "com.google.inject:guice:4.1.0"
-javasisst = "org.javassist:javassist:3.26.0-GA"
+javasisst = "org.javassist:javassist:3.29.2-GA"
 javax = "javax.inject:javax.inject:1"
 jetbrains_annotations = "org.jetbrains:annotations:23.0.0"
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
