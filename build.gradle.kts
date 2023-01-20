@@ -7,7 +7,6 @@ plugins {
 }
 
 val projectVersion = file("version").readLines().first()
-project.extra["apiVersion"] = projectVersion.replace(".[0-9]+(?=($|-SNAPSHOT))".toRegex(), "")
 
 allprojects {
     group = "org.anvilpowered"
@@ -24,27 +23,6 @@ allprojects {
             options.encoding = "UTF-8"
             targetCompatibility = "17"
             sourceCompatibility = "17"
-        }
-    }
-}
-
-// include legacy java code during migration to kotlin
-subprojects {
-    apply(plugin = "java")
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    val legacyName = when (this@subprojects.name) {
-        "anvil-core" -> "anvil-common"
-        "anvil-paper" -> "anvil-spigot"
-        else -> this@subprojects.name
-    }
-    java {
-        sourceSets.main.configure {
-            java.srcDir("../$legacyName/src/main/java")
-        }
-    }
-    kotlin {
-        sourceSets.main.configure {
-            kotlin.srcDir("../$legacyName/src/main/kotlin")
         }
     }
 }

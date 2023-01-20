@@ -10,14 +10,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "anvil"
 
-include("anvil-md5")
-
 sequenceOf(
-    "api",
-    "core",
-    "paper",
-    "sponge",
-    "velocity"
+    "domain",
 ).forEach {
     val project = ":anvil-$it"
     include(project)
