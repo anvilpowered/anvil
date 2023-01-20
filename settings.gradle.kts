@@ -8,7 +8,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Anvil"
+rootProject.name = "anvil"
 
 include("anvil-md5")
 
