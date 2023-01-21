@@ -1,9 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenCentral()
+//        maven("https://repo.spongepowered.org/repository/maven-public/")
     }
 }
 
