@@ -4,7 +4,8 @@ import csstype.BoxSizing
 import csstype.minus
 import csstype.pct
 import csstype.px
-import mui.icons.material.ViewSidebar
+import mui.icons.material.Dashboard as DashboardIcon
+import mui.icons.material.Storage as StorageIcon
 import mui.material.AppBar
 import mui.material.Drawer
 import mui.material.DrawerAnchor
@@ -20,9 +21,8 @@ import mui.system.sx
 import org.anvilpowered.anvil.ui.component.SectionTypography
 import react.FC
 import react.Props
-import react.router.dom.NavLink
+import react.ReactNode
 import react.router.useNavigate
-import web.navigator.navigator
 
 val drawerWidth = 240;
 
@@ -54,19 +54,18 @@ val Menu = FC<Props> {
         anchor = DrawerAnchor.left
         Toolbar()
         SectionTypography {
-            text = "Foobar"
+            text = "Home"
         }
         MenuList {
-            sequenceOf("dashboard", "servers").forEach { name ->
-                MenuItem {
-                    onClick = { nav("/$name") }
-                    ListItemIcon {
-                        ViewSidebar()
-                    }
-                    ListItemText {
-                        +name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-                    }
-                }
+            MenuItem {
+                onClick = { nav("/dashboard") }
+                ListItemIcon { DashboardIcon() }
+                ListItemText { primary = ReactNode("Dashboard") }
+            }
+            MenuItem {
+                onClick = { nav("/servers") }
+                ListItemIcon { StorageIcon() }
+                ListItemText { primary = ReactNode("Servers") }
             }
         }
     }

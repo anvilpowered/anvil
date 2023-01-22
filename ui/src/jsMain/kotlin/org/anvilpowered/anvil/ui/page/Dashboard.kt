@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.ui
+package org.anvilpowered.anvil.ui.page
 
 import mui.material.Typography
 import react.FC
