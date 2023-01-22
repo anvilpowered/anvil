@@ -1,17 +1,11 @@
 package org.anvilpowered.anvil.ui
 
 import csstype.BoxSizing
-import csstype.Display
-import csstype.em
 import csstype.minus
 import csstype.pct
 import csstype.px
 import mui.icons.material.ViewSidebar
 import mui.material.AppBar
-import mui.material.AppBarPosition
-import mui.material.Box
-import mui.material.CssBaseline
-import mui.material.Divider
 import mui.material.Drawer
 import mui.material.DrawerAnchor
 import mui.material.DrawerVariant
@@ -26,52 +20,51 @@ import mui.system.sx
 import org.anvilpowered.anvil.ui.component.SectionTypography
 import react.FC
 import react.Props
-import mui.icons.material.Inbox as InboxIcon
+import react.router.dom.NavLink
+import react.router.useNavigate
+import web.navigator.navigator
 
 val drawerWidth = 240;
 
 val Menu = FC<Props> {
-    Box {
-        sx { display = Display.flex }
-        CssBaseline()
-        AppBar {
-            position = AppBarPosition.fixed
-            sx {
-                width = 100.pct - drawerWidth.px
-                marginLeft = drawerWidth.px
-            }
-            Toolbar {
-                Typography {
-                    variant = TypographyVariant.h6
-                    noWrap = true
-                    component = Divider
-                    +"Anvil Dashboard"
-                }
+
+    val nav = useNavigate()
+
+    AppBar {
+        sx {
+            width = 100.pct - drawerWidth.px
+            marginLeft = drawerWidth.px
+        }
+        Toolbar {
+            Typography {
+                variant = TypographyVariant.h6
+                +"Anvil Dashboard"
             }
         }
-        Drawer {
-            sx {
+    }
+    Drawer {
+        sx {
+            width = drawerWidth.px
+            "& .MuiDrawer-paper" {
                 width = drawerWidth.px
-                "& .MuiDrawer-paper" {
-                    width = drawerWidth.px
-                    boxSizing = BoxSizing.borderBox
-                }
+                boxSizing = BoxSizing.borderBox
             }
-            variant = DrawerVariant.permanent
-            anchor = DrawerAnchor.left
-            Toolbar()
-            SectionTypography {
-                text = "Foobar"
-            }
-            MenuList {
-                sequenceOf("Foobar", "Baz", "Qux").forEach {
-                    MenuItem {
-                        ListItemIcon {
-                            ViewSidebar()
-                        }
-                        ListItemText {
-                            +"Hello $it"
-                        }
+        }
+        variant = DrawerVariant.permanent
+        anchor = DrawerAnchor.left
+        Toolbar()
+        SectionTypography {
+            text = "Foobar"
+        }
+        MenuList {
+            sequenceOf("dashboard", "servers").forEach { name ->
+                MenuItem {
+                    onClick = { nav("/$name") }
+                    ListItemIcon {
+                        ViewSidebar()
+                    }
+                    ListItemText {
+                        +name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
                     }
                 }
             }

@@ -1,14 +1,21 @@
 package org.anvilpowered.anvil.ui
 
+import csstype.em
+import csstype.number
+import csstype.px
 import js.core.jso
+import mui.material.Box
 import mui.material.CssBaseline
 import mui.material.PaletteMode
+import mui.material.Toolbar
 import mui.material.styles.ThemeProvider
 import mui.material.styles.createTheme
+import mui.system.sx
 import react.FC
 import react.Props
 import react.create
 import react.dom.client.createRoot
+import react.router.dom.HashRouter
 import web.dom.document
 import web.html.HTML.div
 
@@ -29,10 +36,21 @@ private val darkTheme = createTheme(
 )
 
 private val App = FC<Props> {
-    ThemeProvider {
-        theme = darkTheme
-        CssBaseline ()
-        Menu()
-        Dashboard()
+    // TODO: Convert to BrowserRouter and figure out how to fix webpack for SPA
+    HashRouter {
+        ThemeProvider {
+            theme = darkTheme
+            CssBaseline()
+            Menu()
+            Box {
+                sx {
+                    flexGrow = number(1.0)
+                    padding = 2.em
+                    marginLeft = drawerWidth.px
+                }
+                Toolbar()
+                Routing()
+            }
+        }
     }
 }
