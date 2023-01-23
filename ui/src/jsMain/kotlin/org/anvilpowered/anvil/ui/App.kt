@@ -45,7 +45,6 @@ private val App = FC<Props> {
             Box {
                 sx {
                     flexGrow = number(1.0)
-                    padding = 2.em
                     marginLeft = drawerWidth.px
                 }
                 Toolbar()

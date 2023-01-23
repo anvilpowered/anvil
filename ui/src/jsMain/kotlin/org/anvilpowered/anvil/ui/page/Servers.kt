@@ -1,7 +1,12 @@
 package org.anvilpowered.anvil.ui.page
 
-import mui.material.Grid
-import mui.material.Typography
+import mui.material.Paper
+import mui.material.Table
+import mui.material.TableBody
+import mui.material.TableCell
+import mui.material.TableContainer
+import mui.material.TableHead
+import mui.material.TableRow
 import org.anvilpowered.anvil.user.Server
 import react.FC
 import react.Props
@@ -21,5 +26,25 @@ val demoData = listOf<Server>(
 )
 
 val Servers = FC<Props> {
-    Grid
+    TableContainer {
+        component = Paper
+        Table {
+            TableHead {
+                TableRow {
+                    TableCell { +"Server Name" }
+                    TableCell { +"Players Online" }
+                    TableCell { +"Player Capacity" }
+                }
+            }
+            TableBody {
+                demoData.forEach { server ->
+                    TableRow {
+                        TableCell { +server.id }
+                        TableCell { +server.playerCount.toString() }
+                        TableCell { +server.maxPlayerCount.toString() }
+                    }
+                }
+            }
+        }
+    }
 }
