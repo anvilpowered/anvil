@@ -4,8 +4,6 @@ import csstype.BoxSizing
 import csstype.minus
 import csstype.pct
 import csstype.px
-import mui.icons.material.Dashboard as DashboardIcon
-import mui.icons.material.Storage as StorageIcon
 import mui.material.AppBar
 import mui.material.Drawer
 import mui.material.DrawerAnchor
@@ -14,7 +12,6 @@ import mui.material.ListItemIcon
 import mui.material.ListItemText
 import mui.material.MenuItem
 import mui.material.MenuList
-import mui.material.MuiDrawer
 import mui.material.Toolbar
 import mui.material.Typography
 import mui.material.styles.TypographyVariant
@@ -24,6 +21,8 @@ import react.FC
 import react.Props
 import react.ReactNode
 import react.router.useNavigate
+import mui.icons.material.Dashboard as DashboardIcon
+import mui.icons.material.Storage as StorageIcon
 
 val drawerWidth = 240;
 
