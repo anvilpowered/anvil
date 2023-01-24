@@ -44,6 +44,10 @@ val demoData = listOf<Server>(
 
 val Servers = FC<Props> {
     Toolbar {
+        sx {
+            display = Display.flex
+            gap = 16.px
+        }
         Typography {
             sx {
                 flexGrow = number(1.0)
@@ -53,7 +57,6 @@ val Servers = FC<Props> {
         }
         SearchBox()
         IconButton {
-            sx { marginLeft = 10.px }
             AddIcon()
         }
     }
