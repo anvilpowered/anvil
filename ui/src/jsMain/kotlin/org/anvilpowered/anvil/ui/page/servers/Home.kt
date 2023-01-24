@@ -1,15 +1,10 @@
-package org.anvilpowered.anvil.ui.page
+package org.anvilpowered.anvil.ui.page.servers
 
 import csstype.Display
-import csstype.JustifyContent
 import csstype.number
-import csstype.pct
 import csstype.px
-import mui.material.Button
-import mui.material.ButtonVariant
 import mui.material.IconButton
 import mui.material.Paper
-import mui.material.Size
 import mui.material.Table
 import mui.material.TableBody
 import mui.material.TableCell
@@ -25,13 +20,13 @@ import org.anvilpowered.anvil.ui.component.SearchBox
 import org.anvilpowered.anvil.user.Server
 import react.FC
 import react.Props
-import react.create
+import react.router.useNavigate
 import mui.icons.material.Add as AddIcon
 
 private data class ServerImpl(
     override val id: String,
     override val playerCount: Int,
-    override val maxPlayerCount: Int
+    override val maxPlayerCount: Int,
 ) : Server
 
 val demoData = listOf<Server>(
@@ -42,7 +37,10 @@ val demoData = listOf<Server>(
     ServerImpl("Wild 4", 24, 100),
 )
 
-val Servers = FC<Props> {
+val ServersHome = FC<Props> {
+
+    val nav = useNavigate()
+
     Toolbar {
         sx {
             display = Display.flex
@@ -57,6 +55,7 @@ val Servers = FC<Props> {
         }
         SearchBox()
         IconButton {
+            onClick = { nav("/servers/create") }
             AddIcon()
         }
     }

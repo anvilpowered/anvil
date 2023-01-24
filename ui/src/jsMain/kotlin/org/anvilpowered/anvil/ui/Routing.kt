@@ -1,8 +1,9 @@
 package org.anvilpowered.anvil.ui
 
 import mui.material.Typography
-import org.anvilpowered.anvil.ui.page.Dashboard
-import org.anvilpowered.anvil.ui.page.Servers
+import org.anvilpowered.anvil.ui.page.dashboard.DashboardHome
+import org.anvilpowered.anvil.ui.page.servers.ServersCreate
+import org.anvilpowered.anvil.ui.page.servers.ServersHome
 import react.FC
 import react.Props
 import react.create
@@ -14,11 +15,15 @@ val Routing = FC<Props> {
     Routes {
         Route {
             path = "/dashboard"
-            element = Dashboard.create()
+            element = DashboardHome.create()
         }
         Route {
             path = "/servers"
-            element = Servers.create()
+            element = ServersHome.create()
+        }
+        Route {
+            path = "/servers/create"
+            element = ServersCreate.create()
         }
         Route {
             path = "/"

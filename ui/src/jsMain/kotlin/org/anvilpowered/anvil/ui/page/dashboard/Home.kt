@@ -1,10 +1,10 @@
-package org.anvilpowered.anvil.ui.page
+package org.anvilpowered.anvil.ui.page.dashboard
 
 import mui.material.Typography
 import react.FC
 import react.Props
 
-val Dashboard = FC<Props> {
+val DashboardHome = FC<Props> {
     Typography {
         paragraph = true
         +"""

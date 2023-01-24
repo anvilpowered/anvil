@@ -1,13 +1,26 @@
 [versions]
+kmongo = "4.8.0"
 kotlin = "1.8.0"
+ktor = "2.2.2"
 
 [libraries]
 coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
-jetbrains_annotations = "org.jetbrains:annotations:24.0.0"
-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
-kotlin-stdlib8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+annotations = "org.jetbrains:annotations:24.0.0"
+kmongo-core = { module = "org.litote.kmongo:kmongo", version.ref = "kmongo" }
+kmongo-async = { module = "org.litote.kmongo:kmongo-async", version.ref = "kmongo" }
+kmongo-coroutine = { module = "org.litote.kmongo:kmongo-coroutine-serialization", version.ref = "kmongo" }
+kotest = "io.kotest:kotest-runner-junit5-jvm:5.5.4"
+kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
+ktor-server-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
+ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 
 [plugins]
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
