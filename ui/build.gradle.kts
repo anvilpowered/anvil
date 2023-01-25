@@ -7,6 +7,7 @@ fun kotlinw(target: String): String =
 
 dependencies {
     commonMainImplementation(project(":anvil-domain"))
+    commonMainImplementation(libs.redux)
     jsMainImplementation(enforcedPlatform(kotlinw("wrappers-bom:1.0.0-pre.480")))
 
     jsMainImplementation(kotlinw("react"))
