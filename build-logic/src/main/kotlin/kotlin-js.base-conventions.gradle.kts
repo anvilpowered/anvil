@@ -4,5 +4,6 @@ extensions.getByName<KotlinMultiplatformExtension>("kotlin").apply {
     js(IR) {
         browser()
         binaries.executable()
+        useCommonJs()
     }
 }

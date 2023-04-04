@@ -4,6 +4,8 @@ dependencyResolutionManagement {
 //    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenCentral()
+        maven("https://libraries.minecraft.net")
+        maven("https://repo.papermc.io/repository/maven-public/")
 //        maven("https://repo.spongepowered.org/repository/maven-public/")
     }
 }
@@ -20,12 +22,19 @@ rootProject.name = "anvil"
 
 sequenceOf(
     "agent",
-    "agent-sponge",
-    "agent-velocity",
-    "domain",
-    "server",
-    "server-impl",
-    "ui",
+    "agent-application",
+    "agent-infrastructure",
+    "agent-mc-sponge",
+    "agent-mc-velocity",
+    "cockpit",
+    "cockpit-application",
+    "cockpit-backend",
+    "cockpit-domain",
+    "cockpit-ui",
+    "core",
+    "core-db",
+    "core-domain",
+    "core-web",
 ).forEach {
     val project = ":anvil-$it"
     include(project)
