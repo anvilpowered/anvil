@@ -1,6 +1,5 @@
 package org.anvilpowered.anvil.entity
 
-import kotlinx.datetime.toJavaInstant
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.statements.InsertStatement
 
@@ -10,18 +9,13 @@ object GameTypes : AnvilTable("game_types") {
 }
 
 context(GameTypes)
-fun InsertStatement<*>.setValuesFrom(gameType: GameType) {
+fun InsertStatement<*>.setValuesFrom(gameType: GameType.CreateDto) {
     this[name] = gameType.name
     this[website] = gameType.website
-    this[id] = gameType.id
-    this[createdUtc] = gameType.createdUtc.toJavaInstant()
-    this[updatedUtc] = gameType.updatedUtc.toJavaInstant()
 }
 
-fun ResultRow.toGameType(): GameType {
-    return GameType(
-        name = this[GameTypes.name],
-        website = this[GameTypes.website],
-        id = this[GameTypes.id].value,
-    )
-}
+fun ResultRow.toGameType() = GameType(
+    name = this[GameTypes.name],
+    website = this[GameTypes.website],
+    id = this[GameTypes.id].value,
+)

@@ -1,21 +1,21 @@
 package org.anvilpowered.anvil.entity
 
-import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.UUIDTable
-import java.util.UUID
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.statements.InsertStatement
 
-object ServerNodes : UUIDTable("server_nodes") {
+object ServerNodes : AnvilTable("server_nodes") {
     val name = varchar("name", 255).uniqueIndex()
     val gameTypeId = reference("game_type_id", GameTypes)
 }
 
-class ServerNode(id: EntityID<UUID>) : UUIDEntity(id) {
-    var name by ServerNodes.name
-    var gameTypeId by ServerNodes.gameTypeId
-    var gameType by GameTypeEntity referencedOn ServerNodes.gameTypeId
-
-    companion object : UUIDEntityClass<ServerNode>(ServerNodes, ServerNode::class.java, ::ServerNode)
+context(ServerNodes)
+fun InsertStatement<*>.setValuesFrom(serverNode: ServerNode.CreateDto) {
+    this[name] = serverNode.name
+    this[gameTypeId] = serverNode.gameTypeId
 }
 
+fun ResultRow.toServerNode() = ServerNode(
+    name = this[ServerNodes.name],
+    gameType = toGameType(),
+    id = this[ServerNodes.id].value,
+)

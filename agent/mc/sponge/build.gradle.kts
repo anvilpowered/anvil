@@ -1,6 +1,5 @@
 import org.spongepowered.gradle.plugin.config.PluginLoaders
 
-@Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
     id("kotlin-jvm.base-conventions")
     alias(libs.plugins.sponge)
