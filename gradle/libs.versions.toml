@@ -4,17 +4,17 @@ kotlin = "1.8.20"
 ktor = "2.2.4"
 log4j = "2.20.0"
 
-
 [libraries]
 adventure-bom = "net.kyori:adventure-bom:4.12.0"
 annotations = "org.jetbrains:annotations:24.0.0"
-brigadier = "com.mojang:brigadier:1.0.18"
 coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta"
 exposed-bom = "org.jetbrains.exposed:exposed-bom:0.41.1"
 exposed-core = { module = "org.jetbrains.exposed:exposed-core" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc" }
 exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time" }
+kbrig-brigadier = "org.anvilpowered:kbrig-brigadier:0.1.0-SNAPSHOT"
+kbrig-core = "org.anvilpowered:kbrig-core:0.1.0-SNAPSHOT"
 kontour = "org.sourcegrade:kontour-domain:0.1.0-SNAPSHOT"
 kotest = "io.kotest:kotest-runner-junit5-jvm:5.5.4"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
@@ -31,8 +31,8 @@ ktor-server-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = 
 ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 logging-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 logging-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
-redux = "org.reduxkotlin:redux-kotlin-threadsafe:0.5.5"
-velocity = "com.velocitypowered:velocity-api:3.1.1"
+redux = "org.reduxkotlin:redux-kotlin-threadsafe:0.6.1"
+velocity = "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
 
 [bundles]
 exposed = ["exposed-core", "exposed-dao", "exposed-jdbc", "exposed-java-time"]

@@ -4,14 +4,7 @@ extensions.getByName<KotlinMultiplatformExtension>("kotlin").apply {
     jvm {
         withJava()
         compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-                freeCompilerArgs = listOf("-Xcontext-receivers")
-            }
+            jvmToolchain(17)
         }
     }
-}
-
-dependencies {
-    "jvmMainImplementation"(kotlin("reflect"))
 }

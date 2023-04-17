@@ -1,12 +1,14 @@
 plugins {
     id("kotlin-jvm.base-conventions")
     id("anvil-publish")
+    alias(libs.plugins.shadow)
+    `java-library`
 }
 
 dependencies {
+    compileOnlyApi(platform(libs.adventure.bom))
     commonMainApi(project(":anvil-core-domain"))
-    jvmMainApi(libs.brigadier)
-    jvmMainApi(platform(libs.adventure.bom))
-    jvmMainApi("net.kyori:adventure-api")
-    jvmMainApi(libs.logging.api)
+    commonMainApi("net.kyori:adventure-api") // TODO: -> compileOnly ASAP
+//    compileOnlyApi(libs.logging.api)
+    commonMainApi(libs.kbrig.core)
 }

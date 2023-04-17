@@ -3,7 +3,6 @@ package org.anvilpowered.anvil.entity
 import org.sourcegrade.kontour.Creates
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.UUID
-import org.sourcegrade.kontour.action.FindActions
 
 data class User(
     val username: String,
@@ -19,4 +18,3 @@ data class User(
 
     companion object Repository : DomainEntity.Repository<User>
 }
-
