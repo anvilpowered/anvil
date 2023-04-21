@@ -4,7 +4,7 @@ import org.sourcegrade.kontour.Creates
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.UUID
 
-data class User(
+data class AnvilUser(
     val username: String,
     val email: String,
     val minecraftUsers: List<MinecraftUser>,
@@ -14,7 +14,7 @@ data class User(
     data class CreateDto(
         val username: String,
         val email: String,
-    ) : Creates<User>
+    ) : Creates<AnvilUser>
 
-    companion object Repository : DomainEntity.Repository<User>
+    companion object Repository : DomainEntity.Repository<AnvilUser>
 }

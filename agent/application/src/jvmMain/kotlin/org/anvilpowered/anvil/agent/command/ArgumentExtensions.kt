@@ -22,5 +22,5 @@ import org.anvilpowered.anvil.user.CommandSource
 import org.anvilpowered.anvil.user.hasPermissionSet
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 
-internal fun <T : ArgumentBuilder<CommandSource, T>> T.requiresPermission(permission: String): T =
+fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
     requires { it.hasPermissionSet(permission) }

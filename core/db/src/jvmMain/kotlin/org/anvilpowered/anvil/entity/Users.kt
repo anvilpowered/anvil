@@ -10,12 +10,12 @@ object Users : UUIDTable("users") {
 }
 
 context(Users)
-fun InsertStatement<*>.setValuesFrom(user: User.CreateDto) {
+fun InsertStatement<*>.setValuesFrom(user: AnvilUser.CreateDto) {
     this[username] = user.username
     this[email] = user.email
 }
 
-fun ResultRow.toUser() = User(
+fun ResultRow.toUser() = AnvilUser(
     username = this[Users.username],
     email = this[Users.email],
     id = this[Users.id].value,
