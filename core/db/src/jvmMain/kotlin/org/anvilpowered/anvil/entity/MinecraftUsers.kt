@@ -9,13 +9,13 @@ object MinecraftUsers : AnvilTable("minecraft_users") {
 }
 
 context(MinecraftUsers)
-fun InsertStatement<*>.setValuesFrom(minecraftUser: MinecraftUser.CreateDto) {
+fun InsertStatement<*>.setValuesFrom(minecraftUser: MinecraftUserData.CreateDto) {
     this[username] = minecraftUser.username
     this[userId] = minecraftUser.userId
     this[id] = minecraftUser.id
 }
 
-fun ResultRow.toMinecraftUser() = MinecraftUser(
+fun ResultRow.toMinecraftUser() = MinecraftUserData(
     username = this[MinecraftUsers.username],
     userId = this[MinecraftUsers.userId].value,
     id = this[MinecraftUsers.id].value,

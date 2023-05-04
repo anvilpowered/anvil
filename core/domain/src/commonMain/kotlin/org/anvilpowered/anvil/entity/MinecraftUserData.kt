@@ -4,7 +4,7 @@ import org.sourcegrade.kontour.Creates
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.UUID
 
-data class MinecraftUser(
+data class MinecraftUserData(
     val username: String,
     val userId: UUID,
     override val id: UUID,
@@ -14,7 +14,7 @@ data class MinecraftUser(
         val username: String,
         val userId: UUID,
         val id: UUID,
-    ) : Creates<MinecraftUser>
+    ) : Creates<MinecraftUserData>
 
-    companion object Repository : DomainEntity.Repository<MinecraftUser>
+    companion object Repository : DomainEntity.Repository<MinecraftUserData>
 }

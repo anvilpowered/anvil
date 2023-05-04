@@ -7,7 +7,7 @@ import org.sourcegrade.kontour.UUID
 data class AnvilUser(
     val username: String,
     val email: String,
-    val minecraftUsers: List<MinecraftUser>,
+    val minecraftUsers: List<MinecraftUserData>,
     override val id: UUID,
 ) : DomainEntity {
 

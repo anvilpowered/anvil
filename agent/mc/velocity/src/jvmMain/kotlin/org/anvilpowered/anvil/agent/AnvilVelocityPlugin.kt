@@ -19,18 +19,16 @@
 package org.anvilpowered.anvil.agent
 
 import com.google.inject.Inject
-import com.velocitypowered.api.command.BrigadierCommand
-import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.permission.Tristate
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.agent.command.createPingCommand
-import org.anvilpowered.kbrig.brigadier.toBrigadier
-import org.anvilpowered.kbrig.tree.mapSource
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.audience.ForwardingAudience
+import org.anvilpowered.anvil.user.CommandSource
 import org.slf4j.Logger
+import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
 
 @Plugin(
     id = "anvil-agent",
@@ -46,58 +44,17 @@ class AnvilVelocityPlugin @Inject constructor(
     @Subscribe
     fun onProxyInit(event: ProxyInitializeEvent) {
         logger.info("Anvil Agent is running!")
-//        val pluginManager = object : PluginManager {
-//            override val plugins: List<AgentPlugin>
-//                get() = proxyServer.pluginManager.plugins.map {
-//                    object : AgentPlugin {
-//                        override val name: String
-//                            get() = it.description.id!!
-//                    }
-//                }
-//        }
-//        val scope = object : PluginManager.Scope {
-//            override val pluginManager: PluginManager
-//                get() = pluginManager
-//        }
-//        registerCommands(scope)
-//        logger.info("Registered commands")
 
-        class BridgeSource(private val velocityCommandSource: CommandSource) : MyCommandSource {
-            override fun sendMessage(message: Component) = velocityCommandSource.sendMessage(message)
-        }
-
-        val commandNode = createPingCommand()
-            .mapSource<_, CommandSource> { BridgeSource(it) }
-            .toBrigadier()
-
-        proxyServer.commandManager.register(BrigadierCommand(commandNode))
-
-
-
-    }
-
-//    private fun registerCommands(pluginManagerScope: PluginManager.Scope) {
-//        with(pluginManagerScope) {
-//            proxyServer.commandManager.register(
-//                BrigadierCommand(
-//                    AnvilCommand.createPlugins()
-//                        .mapSource<_, VelocityCommandSource> { BridgeSource(it) }
-//                        .toBrigadier(),
-//                ),
-//            )
-//        }
-//    }
-}
-
-//class BridgeSource(private val original: VelocityCommandSource) : ForwardingAudience.Single, MyCommandSource {
-//    override fun audience(): Audience = original
-//    override fun hasPermission(permission: String): Boolean? = original.getPermissionValue(permission).toBoolean()
-//}
-
-fun Tristate.toBoolean(): Boolean? {
-    return when (this) {
-        Tristate.TRUE -> true
-        Tristate.FALSE -> false
-        Tristate.UNDEFINED -> null
+//        val commandNode = AnvilCommand.createPlugins()
+//            .mapSource<_, VelocityCommandSource> { BridgeSource(it) }
+//            .toBrigadier()
+//
+//        proxyServer.commandManager.register(BrigadierCommand(commandNode))
     }
 }
+
+class BridgeSource(private val original: VelocityCommandSource) : ForwardingAudience.Single, CommandSource {
+    override fun audience(): Audience = original
+    override fun hasPermission(permission: String): Boolean? = original.getPermissionValue(permission).toBoolean()
+}
+
