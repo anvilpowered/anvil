@@ -22,20 +22,24 @@ pluginManagement {
 rootProject.name = "anvil"
 
 sequenceOf(
-    "agent",
-    "agent-application",
-    "agent-infrastructure",
-    "agent-mc-sponge",
-    "agent-mc-velocity",
-    "cockpit",
-    "cockpit-application",
-    "cockpit-backend",
-    "cockpit-domain",
-    "cockpit-ui",
-    "core",
-    "core-db",
-    "core-domain",
-    "core-web",
+    "api",
+    "api-game",
+    "api-web",
+    "app-plugin",
+    "app-plugin-sponge",
+    "app-plugin-velocity",
+    "app-cockpit",
+    "app-cockpit-application",
+    "app-cockpit-backend",
+    "app-cockpit-domain",
+    "app-cockpit-ui",
+    "app-cli",
+    "domain",
+    "infrastructure",
+    "infrastructure-db",
+    "infrastructure-game",
+    "infrastructure-game-sponge",
+    "infrastructure-game-velocity",
 ).forEach {
     val project = ":anvil-$it"
     include(project)
