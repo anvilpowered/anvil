@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.command
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.domain.command.GameUserCommandScope
 import org.anvilpowered.anvil.domain.command.CommandSource
+import org.anvilpowered.anvil.domain.datastore.GameUserScope
 import org.anvilpowered.anvil.domain.user.Component
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.kbrig.argument.StringArgumentType
@@ -30,7 +31,7 @@ import org.anvilpowered.kbrig.builder.executesSuspending
 import org.anvilpowered.kbrig.context.CommandContext
 import org.anvilpowered.kbrig.context.get
 
-context(org.anvilpowered.anvil.domain.datastore.GameUserScope)
+context(GameUserScope)
 class CommonGameUserCommandScope : GameUserCommandScope {
     override fun ArgumentBuilder.Companion.gameUser(
         name: String,

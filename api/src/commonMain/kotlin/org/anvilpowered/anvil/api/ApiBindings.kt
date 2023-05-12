@@ -22,4 +22,6 @@ import org.anvilpowered.anvil.domain.platform.Platform
 
 interface ApiBindings :
     LoggingScope,
-    Platform
+    Platform {
+    companion object
+}

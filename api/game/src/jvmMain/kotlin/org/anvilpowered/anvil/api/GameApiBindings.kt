@@ -18,8 +18,10 @@
 
 package org.anvilpowered.anvil.api
 
+import org.anvilpowered.anvil.domain.command.GameUserCommandScope
 import org.anvilpowered.anvil.domain.platform.GamePlatform
 
 interface GameApiBindings :
     ApiBindings,
-    GamePlatform
+    GamePlatform,
+    GameUserCommandScope

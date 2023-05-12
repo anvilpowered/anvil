@@ -19,14 +19,25 @@
 package org.anvilpowered.anvil
 
 import com.velocitypowered.api.proxy.ProxyServer
+import org.anvilpowered.anvil.api.ApiBindings
 import org.anvilpowered.anvil.api.GameApiBindings
 import org.anvilpowered.anvil.api.LoggingScope
+import org.anvilpowered.anvil.command.CommonGameUserCommandScope
+import org.anvilpowered.anvil.domain.command.GameUserCommandScope
 import org.anvilpowered.anvil.domain.platform.GamePlatform
 import org.anvilpowered.anvil.domain.platform.PluginManager
+import org.anvilpowered.anvil.infrastructure.datastore.CommonGameUserScope
 import org.anvilpowered.anvil.platform.VelocityGamePlatform
 import org.anvilpowered.anvil.platform.VelocityPluginManager
 
-class VelocityApiBindings(val proxyServer: ProxyServer) : GameApiBindings,
-    GamePlatform by VelocityGamePlatform(proxyServer),
-    LoggingScope by LoggingScope.create("anvil-velocity"),
-    PluginManager.Scope by VelocityPluginManager.createScope(proxyServer.pluginManager)
+fun ApiBindings.Companion.createVelocity(proxyServer: ProxyServer): GameApiBindings {
+    val gameUserScope = CommonGameUserScope()
+
+    class VelocityApiBindings(val proxyServer: ProxyServer) : GameApiBindings,
+        GamePlatform by VelocityGamePlatform(proxyServer),
+        LoggingScope by LoggingScope.create("anvil-velocity"),
+        PluginManager.Scope by VelocityPluginManager.createScope(proxyServer.pluginManager),
+        GameUserCommandScope by (with(gameUserScope) { CommonGameUserCommandScope() })
+
+    return VelocityApiBindings(proxyServer)
+}
