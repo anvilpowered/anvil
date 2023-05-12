@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(":anvil-domain"))
+    commonMainApi(project(":anvil-infrastructure"))
     jvmMainApi(platform(libs.exposed.bom))
     jvmMainApi(libs.bundles.exposed)
 }
