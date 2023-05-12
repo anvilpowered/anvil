@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.command
 
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.domain.command.GameUserCommandScope
-import org.anvilpowered.anvil.domain.user.CommandSource
+import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.user.Component
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.kbrig.argument.StringArgumentType
@@ -34,7 +34,7 @@ context(org.anvilpowered.anvil.domain.datastore.GameUserScope)
 class CommonGameUserCommandScope : GameUserCommandScope {
     override fun ArgumentBuilder.Companion.gameUser(
         name: String,
-        command: (context: CommandContext<CommandSource>, gameUser: GameUser) -> Int,
+        command: suspend (context: CommandContext<CommandSource>, gameUser: GameUser) -> Int,
     ): RequiredArgumentBuilder<CommandSource, String> =
         required<CommandSource, String>(name, StringArgumentType.SingleWord)
             .suggests { _, builder ->
@@ -46,7 +46,7 @@ class CommonGameUserCommandScope : GameUserCommandScope {
                 GameUser.findByUsername(gameUserName)?.let { gameUser ->
                     command(context, gameUser)
                 } ?: run {
-                    context.source.sendMessage(
+                    context.source.audience.sendMessage(
                         Component.text()
                             .append(Component.text("GameUser with name ", NamedTextColor.RED))
                             .append(Component.text(gameUserName, NamedTextColor.GOLD))

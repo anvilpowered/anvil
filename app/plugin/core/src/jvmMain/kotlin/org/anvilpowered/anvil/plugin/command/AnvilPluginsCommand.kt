@@ -1,8 +1,9 @@
 package org.anvilpowered.anvil.plugin.command
 
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.api.user.requiresPermission
 import org.anvilpowered.anvil.domain.platform.PluginManager
-import org.anvilpowered.anvil.domain.user.CommandSource
+import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.user.Component
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.executesSingleSuccess

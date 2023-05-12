@@ -18,7 +18,6 @@
 
 package org.anvilpowered.anvil.domain.command
 
-import org.anvilpowered.anvil.domain.user.CommandSource
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.RequiredArgumentBuilder
@@ -27,6 +26,6 @@ import org.anvilpowered.kbrig.context.CommandContext
 interface GameUserCommandScope {
     fun ArgumentBuilder.Companion.gameUser(
         name: String = "gameUser",
-        command: (context: CommandContext<CommandSource>, gameUser: GameUser) -> Int,
+        command: suspend (context: CommandContext<CommandSource>, gameUser: GameUser) -> Int,
     ): RequiredArgumentBuilder<CommandSource, String>
 }

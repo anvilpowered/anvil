@@ -4,7 +4,6 @@ import org.anvilpowered.anvil.domain.user.Audience
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.PermissionSubject
 import org.anvilpowered.anvil.domain.user.Player
-import kotlin.math.pow
 import com.velocitypowered.api.permission.PermissionSubject as VelocityPermissionSubject
 import com.velocitypowered.api.proxy.Player as VelocityPlayer
 
@@ -18,11 +17,4 @@ private class AnvilVelocityPlayer(
 
     override val user: GameUser
         get() = TODO("Not yet implemented")
-}
-
-
-fun foo(op1: Float, op2: Float) {
-
-    '1'.code - '0'.code
-
 }

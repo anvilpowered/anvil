@@ -16,11 +16,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin.command
+package org.anvilpowered.anvil.api.user
 
-import org.anvilpowered.anvil.domain.user.CommandSource
+import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.user.hasPermissionSet
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 
 fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.hasPermissionSet(permission) }
+    requires { it.permissionSubject.hasPermissionSet(permission) }

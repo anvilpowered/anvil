@@ -6,6 +6,11 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
+dependencies {
+    commonMainImplementation(project(":anvil-app-plugin-core"))
+    commonMainImplementation(project(":anvil-infrastructure-game-sponge"))
+}
+
 sponge {
     apiVersion("8.1.0-SNAPSHOT")
     license("AGPL-3.0")

@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.ProxyServerScope
 import org.anvilpowered.anvil.domain.command.PlayerCommandScope
-import org.anvilpowered.anvil.domain.user.CommandSource
+import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.user.Player
 import org.anvilpowered.anvil.user.toAnvil
 import org.anvilpowered.kbrig.argument.StringArgumentType
@@ -31,7 +31,7 @@ class VelocityCustomCommand : PlayerCommandScope {
                 proxyServer.getPlayer(playerName).getOrNull()?.let { velocityPlayer ->
                     command(context, velocityPlayer.toAnvil())
                 } ?: run {
-                    context.source.sendMessage(
+                    context.source.audience.sendMessage(
                         Component.text()
                             .append(Component.text("Player with name ", NamedTextColor.RED))
                             .append(Component.text(playerName, NamedTextColor.GOLD))

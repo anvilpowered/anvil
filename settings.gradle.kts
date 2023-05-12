@@ -26,6 +26,7 @@ sequenceOf(
     "api-game",
     "api-web",
     "app-plugin",
+    "app-plugin-core",
     "app-plugin-sponge",
     "app-plugin-velocity",
     "app-cockpit",

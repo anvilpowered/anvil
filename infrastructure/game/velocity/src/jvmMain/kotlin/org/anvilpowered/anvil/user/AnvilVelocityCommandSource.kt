@@ -18,13 +18,26 @@
 
 package org.anvilpowered.anvil.user
 
-import org.anvilpowered.anvil.domain.user.CommandSource
+import org.anvilpowered.anvil.domain.command.CommandSource
+import org.anvilpowered.anvil.domain.user.Audience
+import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.PermissionSubject
+import org.anvilpowered.anvil.domain.user.Player
+import org.anvilpowered.anvil.domain.user.User
 import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
+import com.velocitypowered.api.permission.PermissionSubject as VelocityPermissionSubject
+import com.velocitypowered.api.proxy.Player as VelocityPlayer
 
 fun VelocityCommandSource.toAnvil(): CommandSource = AnvilVelocityCommandSource(this)
 
 private class AnvilVelocityCommandSource(
     private val velocityCommandSource: VelocityCommandSource,
-) : CommandSource,
-    PermissionSubject by velocityCommandSource.toAnvil()
+) : CommandSource {
+    override val audience: Audience = velocityCommandSource
+    override val permissionSubject: PermissionSubject = (velocityCommandSource as VelocityPermissionSubject).toAnvil()
+    override val player: Player? = (velocityCommandSource as? VelocityPlayer)?.toAnvil()
+    override val user: User?
+        get() = TODO("Not yet implemented")
+    override val gameUser: GameUser?
+        get() = TODO("Not yet implemented")
+}

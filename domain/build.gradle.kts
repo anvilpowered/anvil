@@ -14,5 +14,6 @@ dependencies {
     commonMainApi(libs.coroutines)
     jvmMainApi(platform(libs.adventure.bom))
     jvmMainApi("net.kyori:adventure-api")
+    jvmMainApi("net.kyori:adventure-text-minimessage")
     jsMainImplementation(npm("uuid", "9.0.0"))
 }

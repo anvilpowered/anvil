@@ -1,5 +1,5 @@
 package org.anvilpowered.anvil.domain.user
 
-interface Player : CommandSource {
+interface Player : Audience, PermissionSubject {
     val user: GameUser
 }

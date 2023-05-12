@@ -1,6 +1,5 @@
 package org.anvilpowered.anvil.domain.command
 
-import org.anvilpowered.anvil.domain.user.CommandSource
 import org.anvilpowered.anvil.domain.user.Player
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.RequiredArgumentBuilder
