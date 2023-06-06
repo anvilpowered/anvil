@@ -14,7 +14,6 @@ import org.sourcegrade.kontour.scope.CrudScope
 data class User(override val id: UUID) : DomainEntity {
 
     data class CreateDto(
-        val id: UUID,
         val username: String,
         val email: String,
     ) : Creates<User>

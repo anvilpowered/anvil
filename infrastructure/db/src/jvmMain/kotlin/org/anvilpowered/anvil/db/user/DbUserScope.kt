@@ -24,37 +24,50 @@ import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.User
 import org.anvilpowered.anvil.user.GameUserFactory
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.sourcegrade.kontour.Crypto
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.Dto
 import org.sourcegrade.kontour.UUID
 import org.sourcegrade.kontour.UnknownDtoException
-import org.sourcegrade.kontour.scope.findDtoById
 import kotlin.reflect.KClass
 
 context(GameUserFactory.Scope)
 internal class DbUserScope : User.DbScope {
+
+    context(User)
+    private fun DbUser.Companion.findByContextId(): DbUser? = DbUser.findById(id)
+
     override suspend fun User.getUsername(): String {
-        TODO("Not yet implemented")
+        return newSuspendedTransaction {
+            DbUser.findByContextId()?.username ?: throw NoSuchElementException()
+        }
     }
 
     override suspend fun User.getEmail(): String = newSuspendedTransaction {
-        DbUser.findById(this@getEmail.id)?.email ?: throw NoSuchElementException()
+        DbUser.findByContextId()?.email ?: throw NoSuchElementException()
     }
 
     override suspend fun User.getGameUsers(gameType: GameType?): List<GameUser> = newSuspendedTransaction {
-        (DbUser.findById(this@getGameUsers.id) ?: throw NoSuchElementException())
+        (DbUser.findByContextId() ?: throw NoSuchElementException())
             .gameUsers.map { gameUserFactory.createGameUser(it.id.value) }
     }
 
-    override suspend fun DomainEntity.Repository<User>.findByUsername(username: String): User? {
-        DbUser.findById()
+    override suspend fun DomainEntity.Repository<User>.findByUsername(username: String): User? = newSuspendedTransaction {
+        DbUser.find { Users.username eq username }.firstOrNull()?.let { User(it.id.value) }
     }
 
-    override suspend fun DomainEntity.Repository<User>.create(item: User.CreateDto): User {
-        TODO("Not yet implemented")
+    override suspend fun DomainEntity.Repository<User>.create(item: User.CreateDto): User = newSuspendedTransaction {
+        DbUser.new(Crypto.randomUUID()) {
+            username = item.username
+            email = item.email
+        }.id.value.let(::User)
     }
 
-    override suspend fun <D : Dto<User>> DomainEntity.Repository<User>.findById(
+    override suspend fun User.exists(): Boolean = newSuspendedTransaction {
+        DbUser.findByContextId() != null
+    }
+
+    override suspend fun <D : Dto<User>> DomainEntity.Repository<User>.findDtoById(
         id: UUID, dtoType: KClass<D>,
     ): D? = newSuspendedTransaction {
         DbUser.findById(id)?.let {
@@ -67,11 +80,7 @@ internal class DbUserScope : User.DbScope {
         }
     }
 
-    override suspend fun DomainEntity.Repository<User>.findById(id: UUID): User? {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun DomainEntity.Repository<User>.deleteById(id: UUID): Boolean {
-        val result: UserDto.Full? = findDtoById(id)
+    override suspend fun DomainEntity.Repository<User>.deleteById(id: UUID): Boolean = newSuspendedTransaction {
+        DbUser.findById(id)?.delete() != null
     }
 }

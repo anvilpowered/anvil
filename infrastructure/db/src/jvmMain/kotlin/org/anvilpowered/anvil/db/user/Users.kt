@@ -18,8 +18,6 @@
 
 package org.anvilpowered.anvil.db.user
 
-import org.anvilpowered.anvil.db.system.DbGameType
-import org.anvilpowered.anvil.db.system.GameTypes
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -30,13 +28,11 @@ import org.sourcegrade.kontour.UUID
 object Users : UUIDTable("users") {
     val username = varchar("username", 255).uniqueIndex()
     val email = varchar("email", 255).uniqueIndex()
-    val gameTypeId = reference("game_type_id", GameTypes)
 }
 
 class DbUser(id: EntityID<UUID>) : UUIDEntity(id) {
     var username: String by Users.username
     var email: String by Users.email
-    var gameType: DbGameType by DbGameType referencedOn Users.gameTypeId
     val gameUsers: SizedIterable<DbGameUser> by DbGameUser referrersOn GameUsers.userId
 
     companion object : UUIDEntityClass<DbUser>(Users)
