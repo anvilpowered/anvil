@@ -18,23 +18,23 @@
 
 package org.anvilpowered.anvil.user
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.User
-import org.anvilpowered.anvil.domain.user.Audience
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.Player
-import org.anvilpowered.anvil.domain.user.Subject
-import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
-import com.velocitypowered.api.proxy.Player as VelocityPlayer
+import org.sourcegrade.kontour.UUID
 
-fun VelocityCommandSource.toAnvil(): CommandSource = AnvilVelocityCommandSource(this)
+/**
+ * Velocity does not have an offline player concept, so we must handle it ourselves.
+ */
+internal class AnvilVelocityGameUser(
+    override val id: UUID,
+) : GameUser {
+    override val username: String
+        get() = TODO("Not yet implemented")
+    override val player: Player?
+        get() = TODO("Not yet implemented")
 
-private class AnvilVelocityCommandSource(
-    velocityCommandSource: VelocityCommandSource,
-) : CommandSource {
-    override val audience: Audience = velocityCommandSource
-    override val subject: Subject = velocityCommandSource.toAnvilSubject()
-    override val player: Player? = (velocityCommandSource as? VelocityPlayer)?.toAnvilPlayer()
-    override val user: User? = player?.user
-    override val gameUser: GameUser? = player?.gameUser
+    override fun hasPermission(permission: String): Boolean? {
+        TODO("Not yet implemented")
+    }
+
 }

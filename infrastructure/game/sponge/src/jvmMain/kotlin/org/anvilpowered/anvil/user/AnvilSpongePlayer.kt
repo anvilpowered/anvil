@@ -18,23 +18,16 @@
 
 package org.anvilpowered.anvil.user
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.User
-import org.anvilpowered.anvil.domain.user.Audience
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.Player
 import org.anvilpowered.anvil.domain.user.Subject
-import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
-import com.velocitypowered.api.proxy.Player as VelocityPlayer
+import org.spongepowered.api.entity.living.player.server.ServerPlayer as SpongePlayer
 
-fun VelocityCommandSource.toAnvil(): CommandSource = AnvilVelocityCommandSource(this)
+fun SpongePlayer.toAnvilPlayer(): Player = AnvilSpongePlayer(this)
 
-private class AnvilVelocityCommandSource(
-    velocityCommandSource: VelocityCommandSource,
-) : CommandSource {
-    override val audience: Audience = velocityCommandSource
-    override val subject: Subject = velocityCommandSource.toAnvilSubject()
-    override val player: Player? = (velocityCommandSource as? VelocityPlayer)?.toAnvilPlayer()
-    override val user: User? = player?.user
-    override val gameUser: GameUser? = player?.gameUser
+private class AnvilSpongePlayer(
+    val spongePlayer: SpongePlayer,
+) : Player,
+    Subject by spongePlayer.toAnvilSubject() {
+    override val gameUser: GameUser = spongePlayer.user().toAnvilGameUser()
 }

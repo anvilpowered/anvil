@@ -1,5 +1,9 @@
 package org.anvilpowered.anvil.domain.user
 
-interface Player : Audience, PermissionSubject {
-    val user: GameUser
+/**
+ * An online player.
+ */
+interface Player : UserFacetScope, Subject, Audience {
+
+    val gameUser: GameUser
 }

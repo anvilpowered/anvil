@@ -16,11 +16,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.user
+package org.anvilpowered.anvil.api.system
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.hasPermissionSet
-import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.anvil.domain.system.GameType
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.subject.hasPermissionSet(permission) }
+interface GameTypeApi : GameType.DbScope {
+}

@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    commonMainImplementation(project(":anvil-api"))
+    commonMainApi(project(":anvil-api"))
     commonMainImplementation(libs.ktor.serialization)
     jvmMainImplementation(libs.bundles.ktor.server)
     jvmMainImplementation(libs.ktor.client.cio)

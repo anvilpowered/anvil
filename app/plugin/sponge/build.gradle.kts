@@ -6,6 +6,12 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
+// TODO: Should not be necessary, but it seems sponge is nuking the repositories define in settings
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
 dependencies {
     commonMainImplementation(project(":anvil-app-plugin-core"))
     commonMainImplementation(project(":anvil-infrastructure-game-sponge"))

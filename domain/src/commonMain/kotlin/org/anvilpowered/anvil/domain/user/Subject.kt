@@ -1,6 +1,6 @@
 package org.anvilpowered.anvil.domain.user
 
-interface PermissionSubject {
+interface Subject {
 
     /**
      * Checks if the subject has the specified permission.
@@ -12,6 +12,6 @@ interface PermissionSubject {
     fun hasPermission(permission: String): Boolean?
 }
 
-fun PermissionSubject.hasPermissionSet(permission: String): Boolean = hasPermission(permission) == true
-fun PermissionSubject.hasPermissionUnset(permission: String): Boolean = hasPermission(permission) == null
-fun PermissionSubject.hasPermissionNotSet(permission: String): Boolean = hasPermission(permission) == false
+fun Subject.hasPermissionSet(permission: String): Boolean = hasPermission(permission) == true
+fun Subject.hasPermissionUnset(permission: String): Boolean = hasPermission(permission) == null
+fun Subject.hasPermissionNotSet(permission: String): Boolean = hasPermission(permission) == false

@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.domain.datastore
+package org.anvilpowered.anvil.domain.system
 
 import org.sourcegrade.kontour.UUID
 

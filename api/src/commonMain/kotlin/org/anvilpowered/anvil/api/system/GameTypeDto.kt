@@ -16,11 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.user
+package org.anvilpowered.anvil.api.system
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.hasPermissionSet
-import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.anvil.domain.system.GameType
+import org.sourcegrade.kontour.Dto
+import org.sourcegrade.kontour.UUID
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.subject.hasPermissionSet(permission) }
+sealed interface GameTypeDto : Dto<GameType> {
+
+    override val entity: GameType
+        get() = GameType(id)
+
+    data class Basic(
+        override val id: UUID,
+        val name: String,
+    ) : GameTypeDto
+
+    data class Full(
+        override val id: UUID,
+        val name: String,
+        val website: String,
+    ) : GameTypeDto
+}

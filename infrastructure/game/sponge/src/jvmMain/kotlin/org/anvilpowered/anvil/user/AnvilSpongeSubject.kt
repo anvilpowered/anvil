@@ -16,11 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.user
+package org.anvilpowered.anvil.user
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.hasPermissionSet
-import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.anvil.domain.user.Subject
+import org.spongepowered.api.util.Tristate
+import org.spongepowered.api.service.permission.Subject as SpongeSubject
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.subject.hasPermissionSet(permission) }
+fun SpongeSubject.toAnvilSubject(): Subject = AnvilSpongeSubject(this)
+
+private class AnvilSpongeSubject(
+    private val spongeSubject: SpongeSubject,
+) : Subject {
+    override fun hasPermission(permission: String): Boolean? =
+        spongeSubject.permissionValue(permission).toBoolean()
+}
+
+private fun Tristate.toBoolean(): Boolean? = when (this) {
+    Tristate.TRUE -> true
+    Tristate.FALSE -> false
+    Tristate.UNDEFINED -> null
+}

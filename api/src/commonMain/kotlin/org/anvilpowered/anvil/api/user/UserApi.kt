@@ -18,9 +18,7 @@
 
 package org.anvilpowered.anvil.api.user
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.hasPermissionSet
-import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.anvil.domain.user.User
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.subject.hasPermissionSet(permission) }
+interface UserApi : User.PlatformScope, User.DbScope {
+}

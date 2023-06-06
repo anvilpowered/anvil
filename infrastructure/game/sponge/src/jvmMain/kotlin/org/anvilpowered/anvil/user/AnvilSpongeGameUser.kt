@@ -18,23 +18,23 @@
 
 package org.anvilpowered.anvil.user
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.User
-import org.anvilpowered.anvil.domain.user.Audience
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.Player
 import org.anvilpowered.anvil.domain.user.Subject
-import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
-import com.velocitypowered.api.proxy.Player as VelocityPlayer
+import org.sourcegrade.kontour.UUID
+import kotlin.jvm.optionals.getOrNull
+import org.spongepowered.api.entity.living.player.User as SpongeUser
 
-fun VelocityCommandSource.toAnvil(): CommandSource = AnvilVelocityCommandSource(this)
+fun SpongeUser.toAnvilGameUser(): GameUser = SpongeGameUser(this)
 
-private class AnvilVelocityCommandSource(
-    velocityCommandSource: VelocityCommandSource,
-) : CommandSource {
-    override val audience: Audience = velocityCommandSource
-    override val subject: Subject = velocityCommandSource.toAnvilSubject()
-    override val player: Player? = (velocityCommandSource as? VelocityPlayer)?.toAnvilPlayer()
-    override val user: User? = player?.user
-    override val gameUser: GameUser? = player?.gameUser
+private class SpongeGameUser(
+    val spongeUser: SpongeUser,
+) : GameUser,
+    Subject by spongeUser.toAnvilSubject() {
+    override val id: UUID
+        get() = spongeUser.uniqueId()
+    override val username: String
+        get() = spongeUser.name()
+    override val player: Player?
+        get() = spongeUser.player().getOrNull()?.toAnvilPlayer()
 }

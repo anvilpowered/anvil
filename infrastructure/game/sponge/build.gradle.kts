@@ -4,5 +4,8 @@ plugins {
 }
 
 dependencies {
-    commonMainImplementation(project(":anvil-domain"))
+//    commonMainImplementation(libs.coroutines)
+    commonMainImplementation(libs.kotlinx.coroutines)
+    commonMainImplementation(project(":anvil-infrastructure-game"))
+    jvmMainImplementation(libs.sponge)
 }

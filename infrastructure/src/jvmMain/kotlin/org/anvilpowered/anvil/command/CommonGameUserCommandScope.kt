@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.command
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.domain.command.GameUserCommandScope
 import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.datastore.GameUserScope
+import org.anvilpowered.anvil.domain.user.GameUserScope
 import org.anvilpowered.anvil.domain.user.Component
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.kbrig.argument.StringArgumentType

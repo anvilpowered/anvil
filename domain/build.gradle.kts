@@ -6,12 +6,13 @@ plugins {
 }
 
 dependencies {
+    commonMainApi(libs.annotations)
     commonMainApi(libs.kbrig.core)
     commonMainApi(libs.kotlinx.datetime)
     commonMainApi(libs.kontour) {
         exclude("org.slf4j")
     }
-    commonMainApi(libs.coroutines)
+    commonMainApi(libs.kotlinx.coroutines)
     jvmMainApi(platform(libs.adventure.bom))
     jvmMainApi("net.kyori:adventure-api")
     jvmMainApi("net.kyori:adventure-text-minimessage")

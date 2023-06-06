@@ -16,12 +16,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.datastore
+package org.anvilpowered.anvil.db.system
 
-import org.anvilpowered.anvil.domain.datastore.GameTypeScope
-import org.anvilpowered.anvil.domain.entity.GameType
-import org.anvilpowered.anvil.entity.GameTypes
-import org.anvilpowered.anvil.entity.setValuesFrom
+import org.anvilpowered.anvil.db.datastore.newSaveTransaction
+import org.anvilpowered.anvil.db.user.setValuesFrom
+import org.anvilpowered.anvil.domain.system.GameType
 import org.anvilpowered.anvil.entity.toGameType
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -31,10 +30,10 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.UUID
 
-internal object GameTypeScopeImpl : GameTypeScope {
+internal class DbGameTypeScope : GameType.DbScope {
 
     override suspend fun DomainEntity.Repository<GameType>.create(item: GameType.CreateDto): GameType =
-        newSaveTransaction(GameTypes, { setValuesFrom(item) }, ResultRow::toGameType)
+        newSaveTransaction(GameTypes, { org.anvilpowered.anvil.db.user.setValuesFrom(item) }, ResultRow::toGameType)
 
     override suspend fun DomainEntity.Repository<GameType>.findById(id: UUID): GameType? =
         newSuspendedTransaction { GameTypes.select(GameTypes.id eq id).firstOrNull()?.toGameType() }

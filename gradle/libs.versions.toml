@@ -1,13 +1,12 @@
 [versions]
 #kmongo = "4.8.0"
-kotlin = "1.8.21"
+kotlin = "1.9.0-Beta"
 ktor = "2.3.0"
 log4j = "2.20.0"
 
 [libraries]
 adventure-bom = "net.kyori:adventure-bom:4.13.1"
 annotations = "org.jetbrains:annotations:24.0.0"
-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0"
 exposed-bom = "org.jetbrains.exposed:exposed-bom:0.41.1"
 exposed-core = { module = "org.jetbrains.exposed:exposed-core" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao" }

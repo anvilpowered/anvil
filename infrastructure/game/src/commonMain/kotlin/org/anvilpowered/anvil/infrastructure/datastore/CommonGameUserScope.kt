@@ -1,6 +1,6 @@
 package org.anvilpowered.anvil.infrastructure.datastore
 
-import org.anvilpowered.anvil.domain.datastore.GameUserScope
+import org.anvilpowered.anvil.domain.user.GameUserScope
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.SizedIterable

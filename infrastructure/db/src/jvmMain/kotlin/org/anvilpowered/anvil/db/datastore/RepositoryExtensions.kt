@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.datastore
+package org.anvilpowered.anvil.db.datastore
 
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table

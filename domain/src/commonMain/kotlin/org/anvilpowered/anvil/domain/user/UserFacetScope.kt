@@ -16,11 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.user
+package org.anvilpowered.anvil.domain.user
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.hasPermissionSet
-import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.sourcegrade.kontour.DomainEntity
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.subject.hasPermissionSet(permission) }
+/**
+ * Some facet of a user which holds a reference to the parent [User].
+ */
+interface UserFacetScope<E : DomainEntity> {
+
+    /**
+     * The parent [User] represented by this facet.
+     */
+    val E.user: User
+}

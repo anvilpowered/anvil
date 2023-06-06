@@ -4,7 +4,6 @@ import csstype.BoxSizing
 import csstype.minus
 import csstype.pct
 import csstype.px
-import emotion.styled.styled
 import mui.material.AppBar
 import mui.material.Drawer
 import mui.material.DrawerAnchor

@@ -18,9 +18,25 @@
 
 package org.anvilpowered.anvil.api.user
 
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.hasPermissionSet
-import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.anvil.api.system.GameTypeDto
+import org.anvilpowered.anvil.domain.user.GameUser
+import org.sourcegrade.kontour.Dto
+import org.sourcegrade.kontour.UUID
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.subject.hasPermissionSet(permission) }
+sealed interface GameUserDto : Dto<GameUser> {
+
+    override val entity: GameUser
+        get() = GameUser(id)
+
+    data class Basic(
+        override val id: UUID,
+        val username: String,
+    ) : GameUserDto
+
+    data class Mid(
+        override val id: UUID,
+        val user: UserDto.Basic,
+        val gameType: GameTypeDto.Basic,
+        val username: String,
+    ) : GameUserDto
+}

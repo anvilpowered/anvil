@@ -6,7 +6,7 @@ import org.anvilpowered.anvil.ProxyServerScope
 import org.anvilpowered.anvil.domain.command.PlayerCommandScope
 import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.user.Player
-import org.anvilpowered.anvil.user.toAnvil
+import org.anvilpowered.anvil.user.toAnvilPlayer
 import org.anvilpowered.kbrig.argument.StringArgumentType
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.RequiredArgumentBuilder
@@ -29,7 +29,7 @@ class VelocityCustomCommand : PlayerCommandScope {
             .executes { context ->
                 val playerName = context.get<String>(name)
                 proxyServer.getPlayer(playerName).getOrNull()?.let { velocityPlayer ->
-                    command(context, velocityPlayer.toAnvil())
+                    command(context, velocityPlayer.toAnvilPlayer())
                 } ?: run {
                     context.source.audience.sendMessage(
                         Component.text()

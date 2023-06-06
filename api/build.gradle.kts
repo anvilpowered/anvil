@@ -4,7 +4,13 @@ plugins {
     id("anvil-publish")
 }
 
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
 dependencies {
-    commonMainApi(libs.logging)
+    commonMainApi("org.lighthousegames:logging:1.3.0")
+//    commonMainImplementation(libs.logging)
     commonMainApi(project(":anvil-domain"))
 }
