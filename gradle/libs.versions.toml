@@ -1,6 +1,6 @@
 [versions]
 #kmongo = "4.8.0"
-kotlin = "1.9.0-Beta"
+kotlin = "1.9.0"
 ktor = "2.3.0"
 log4j = "2.20.0"
 
