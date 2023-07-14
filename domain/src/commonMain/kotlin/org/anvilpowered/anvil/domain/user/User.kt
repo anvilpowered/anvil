@@ -1,10 +1,8 @@
 package org.anvilpowered.anvil.domain.user
 
-import org.anvilpowered.anvil.domain.system.GameType
 import org.sourcegrade.kontour.Creates
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.UUID
-import org.sourcegrade.kontour.scope.CrudScope
 
 /**
  * A user of the Anvil platform.
@@ -27,20 +25,4 @@ data class User(override val id: UUID) : DomainEntity {
 
         val User.player: Player?
     }
-
-    /**
-     * Operations scoped within a database context.
-     */
-    interface DbScope : CrudScope<User, CreateDto> {
-
-        suspend fun User.getUsername(): String
-
-        suspend fun User.getEmail(): String
-
-        suspend fun User.getGameUsers(gameType: GameType? = null): List<GameUser>
-
-        suspend fun DomainEntity.Repository<User>.findByUsername(username: String): User?
-    }
-
-    companion object Repository : DomainEntity.Repository<User>
 }

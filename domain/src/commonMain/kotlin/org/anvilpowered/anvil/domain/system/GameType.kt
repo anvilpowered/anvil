@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.domain.system
 import org.sourcegrade.kontour.Creates
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.UUID
-import org.sourcegrade.kontour.scope.CrudScope
 
 data class GameType(override val id: UUID) : DomainEntity {
 
@@ -29,17 +28,4 @@ data class GameType(override val id: UUID) : DomainEntity {
         val name: String,
         val website: String,
     ) : Creates<GameType>
-
-    interface DbScope : CrudScope<GameType, CreateDto> {
-
-        suspend fun GameType.getName(): String
-
-        suspend fun GameType.getWebsite(): String
-
-        suspend fun DomainEntity.Repository<GameType>.findByName(name: String): GameType?
-
-        suspend fun DomainEntity.Repository<GameType>.findByWebsite(website: String): GameType?
-    }
-
-    companion object Repository : DomainEntity.Repository<GameType>
 }

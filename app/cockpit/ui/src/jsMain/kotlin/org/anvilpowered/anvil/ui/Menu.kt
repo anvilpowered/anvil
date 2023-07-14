@@ -24,7 +24,7 @@ import react.router.useNavigate
 import mui.icons.material.Dashboard as DashboardIcon
 import mui.icons.material.Storage as StorageIcon
 
-val drawerWidth = 240;
+val drawerWidth = 240
 
 val Menu = FC<Props> {
 

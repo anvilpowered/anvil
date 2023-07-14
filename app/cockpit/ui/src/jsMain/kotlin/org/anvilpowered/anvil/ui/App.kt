@@ -10,7 +10,7 @@ import mui.material.Toolbar
 import mui.material.styles.ThemeProvider
 import mui.material.styles.createTheme
 import mui.system.sx
-import org.anvilpowered.anvil.datastore.Crypto
+import org.sourcegrade.kontour.Crypto
 import react.FC
 import react.Props
 import react.create

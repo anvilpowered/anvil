@@ -37,11 +37,11 @@ sequenceOf(
     "app-cockpit-ui",
     "app-cli",
     "domain",
-    "infrastructure",
-    "infrastructure-db",
-    "infrastructure-game",
-    "infrastructure-game-sponge",
-    "infrastructure-game-velocity",
+    "core",
+    "core-db",
+    "core-game",
+    "core-game-sponge",
+    "core-game-velocity",
 ).forEach {
     val project = ":anvil-$it"
     include(project)

@@ -27,9 +27,10 @@ class AnvilVelocityPlugin {
 
     fun registerCommands() {
         logger.info { "Anvil Agent is running!" }
-        proxyServer.commandManager.register(BrigadierCommand(
-            AnvilCommand.create()
-        ))
+        proxyServer.commandManager.register(
+            BrigadierCommand(
+                AnvilCommand.create(),
+            ),
+        )
     }
-
 }

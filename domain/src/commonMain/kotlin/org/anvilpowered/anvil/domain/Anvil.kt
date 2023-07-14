@@ -18,7 +18,4 @@
 
 package org.anvilpowered.anvil.domain
 
-interface Anvil {
-
-
-}
+interface Anvil

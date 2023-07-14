@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     commonMainImplementation(project(":anvil-app-plugin-core"))
-    commonMainImplementation(project(":anvil-infrastructure-game-sponge"))
+    commonMainImplementation(project(":anvil-core-game-sponge"))
 }
 
 sponge {

@@ -23,7 +23,6 @@ import mui.material.Container
 import mui.material.Divider
 import mui.material.IconButton
 import mui.material.Snackbar
-import mui.material.SnackbarOrigin
 import mui.material.SnackbarOriginHorizontal
 import mui.material.SnackbarOriginVertical
 import mui.material.SvgIconColor

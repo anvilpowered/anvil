@@ -2,8 +2,8 @@ package org.anvilpowered.anvil.domain.command
 
 import org.anvilpowered.anvil.domain.user.Audience
 import org.anvilpowered.anvil.domain.user.GameUser
-import org.anvilpowered.anvil.domain.user.Subject
 import org.anvilpowered.anvil.domain.user.Player
+import org.anvilpowered.anvil.domain.user.Subject
 import org.anvilpowered.anvil.domain.user.User
 
 interface CommandSource {

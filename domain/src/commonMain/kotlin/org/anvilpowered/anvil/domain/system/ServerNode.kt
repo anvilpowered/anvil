@@ -20,9 +20,7 @@ package org.anvilpowered.anvil.domain.system
 
 import org.sourcegrade.kontour.Creates
 import org.sourcegrade.kontour.DomainEntity
-import org.sourcegrade.kontour.SizedIterable
 import org.sourcegrade.kontour.UUID
-import org.sourcegrade.kontour.scope.CrudScope
 
 data class ServerNode(override val id: UUID) : DomainEntity {
 
@@ -30,15 +28,4 @@ data class ServerNode(override val id: UUID) : DomainEntity {
         val name: String,
         val gameTypeId: UUID,
     ) : Creates<ServerNode>
-
-    interface DbScope : CrudScope<ServerNode, CreateDto> {
-
-        suspend fun ServerNode.getName(): String
-
-        suspend fun ServerNode.getGameType(): GameType
-
-        suspend fun DomainEntity.Repository<ServerNode>.findByGameType(): GameTypeJoin<SizedIterable<ServerNode>>
-    }
-
-    companion object Repository : DomainEntity.Repository<ServerNode>
 }
