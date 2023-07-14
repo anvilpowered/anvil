@@ -16,17 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api
+package org.anvilpowered.anvil
 
-import org.lighthousegames.logging.KmLog
-import org.lighthousegames.logging.logging
+import com.velocitypowered.api.proxy.ProxyServer
+import org.anvilpowered.anvil.domain.GamePlatformScope
+import org.anvilpowered.anvil.domain.user.GameUser
+import org.anvilpowered.anvil.user.VelocityGameUserScope
 
-interface LoggingScope {
-    val logger: KmLog
+fun GamePlatformScope.Companion.createVelocity(proxyServer: ProxyServer): GamePlatformScope {
+    class Velocity(val proxyServer: ProxyServer) :
+        GamePlatformScope,
+        GameUser.GamePlatformScope by VelocityGameUserScope(proxyServer)
 
-    companion object {
-        fun create(name: String): LoggingScope = object : LoggingScope {
-            override val logger: KmLog = logging(name)
-        }
-    }
+    return Velocity(proxyServer)
 }

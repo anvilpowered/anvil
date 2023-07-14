@@ -16,11 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.user
+package org.anvilpowered.anvil.platform
 
-import org.anvilpowered.anvil.domain.user.GameUser
-import org.sourcegrade.kontour.UUID
+import com.velocitypowered.api.proxy.ProxyServer
+import org.anvilpowered.anvil.domain.platform.GamePlatform
+import org.anvilpowered.anvil.domain.platform.Plugin
 
-class VelocityGameUserFactory : GameUserPlatformScopeFactory {
-    override suspend fun createGameUser(id: UUID): GameUser = GameUser(id)
+internal class VelocityPlatform(private val proxyServer: ProxyServer) : GamePlatform {
+    override val name: String = "velocity"
+    override val platformVersion: String = proxyServer.version.version
+    override val isProxy: Boolean = true
+    override val plugins: List<Plugin>
+        get() = proxyServer.pluginManager.plugins.map { it.toAnvilPlugin() }
 }

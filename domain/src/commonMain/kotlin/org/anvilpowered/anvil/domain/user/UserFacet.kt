@@ -20,5 +20,7 @@ package org.anvilpowered.anvil.domain.user
 
 interface UserFacet {
 
-    val user: User
+    suspend fun getUserOrNull(): User?
+
+    suspend fun getUser(): User = getUserOrNull() ?: throw IllegalStateException("User not found")
 }

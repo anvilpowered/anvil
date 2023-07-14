@@ -27,12 +27,12 @@ import org.sourcegrade.kontour.UUID
 
 internal object UserTable : UUIDTable("users") {
     val username = varchar("username", 255).uniqueIndex()
-    val email = varchar("email", 255).uniqueIndex()
+    val email = varchar("email", 255).uniqueIndex().nullable()
 }
 
 internal class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     var username: String by UserTable.username
-    var email: String by UserTable.email
+    var email: String? by UserTable.email
     val gameUsers: SizedIterable<GameUserEntity> by GameUserEntity referrersOn GameUserTable.userId
 
     companion object : UUIDEntityClass<UserEntity>(UserTable)

@@ -5,13 +5,14 @@ import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.Player
 import org.anvilpowered.anvil.domain.user.Subject
 import org.anvilpowered.anvil.domain.user.User
+import org.anvilpowered.anvil.domain.user.UserFacet
 
-interface CommandSource {
+interface CommandSource : UserFacet {
 
     /**
      * The [User] associated with the executed command, if any.
      */
-    val user: User?
+    override suspend fun getUserOrNull(): User?
 
     val audience: Audience
 

@@ -2,7 +2,7 @@ package org.anvilpowered.anvil.command
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.ProxyServerScope
+import org.anvilpowered.anvil.AnvilVelocityApi
 import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.command.PlayerCommandScope
 import org.anvilpowered.anvil.domain.user.Player
@@ -14,7 +14,7 @@ import org.anvilpowered.kbrig.context.CommandContext
 import org.anvilpowered.kbrig.context.get
 import kotlin.jvm.optionals.getOrNull
 
-context(ProxyServerScope)
+context(AnvilVelocityApi)
 class VelocityCustomCommand : PlayerCommandScope {
 
     override fun ArgumentBuilder.Companion.player(

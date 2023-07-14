@@ -16,6 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.domain
+package org.anvilpowered.anvil.api
 
-interface Anvil
+import org.lighthousegames.logging.KmLog
+import org.lighthousegames.logging.logging
+
+interface LoggerScope {
+    val logger: KmLog
+
+    companion object {
+        fun create(name: String): LoggerScope = object : LoggerScope {
+            override val logger: KmLog = logging(name)
+        }
+    }
+}

@@ -13,7 +13,6 @@ data class User(override val id: UUID) : DomainEntity {
 
     data class CreateDto(
         val username: String,
-        val email: String,
     ) : Creates<User>
 
     /**

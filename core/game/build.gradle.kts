@@ -5,5 +5,6 @@ plugins {
 
 dependencies {
     commonMainApi(project(":anvil-core"))
+    commonMainApi(project(":anvil-core-db"))
     commonMainApi(project(":anvil-api-game"))
 }

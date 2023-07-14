@@ -39,6 +39,10 @@ object GameUserRepositoryImpl : GameUserRepository {
         GameUserEntity.find { GameUserTable.username eq username }.firstOrNull()?.let { GameUser(it.id.value) }
     }
 
+    override suspend fun countAll(): Long = newSuspendedTransaction {
+        GameUserEntity.all().count()
+    }
+
     override suspend fun create(item: GameUser.CreateDto): GameUser = newSuspendedTransaction {
         GameUserEntity.new(item.id) {
             user = UserEntity[item.userId]

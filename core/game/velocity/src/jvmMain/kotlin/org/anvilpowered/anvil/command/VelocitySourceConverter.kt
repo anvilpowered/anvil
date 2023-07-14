@@ -21,7 +21,7 @@
 package org.anvilpowered.anvil.command
 
 import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.user.toAnvil
+import org.anvilpowered.anvil.user.toAnvilCommandSource
 import org.anvilpowered.kbrig.brigadier.toBrigadier
 import org.anvilpowered.kbrig.tree.ArgumentCommandNode
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
@@ -34,10 +34,10 @@ import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
  * Converts a kbrig argument command node to a velocity brigadier argument command node.
  */
 fun <T> ArgumentCommandNode<CommandSource, T>.toVelocity(): BrigadierArgumentCommandNode<VelocityCommandSource, T> =
-    mapSource<CommandSource, VelocityCommandSource, T> { it.toAnvil() }.toBrigadier()
+    mapSource<CommandSource, VelocityCommandSource, T> { it.toAnvilCommandSource() }.toBrigadier()
 
 /**
  * Converts a kbrig literal command node to a velocity brigadier literal command node.
  */
 fun LiteralCommandNode<CommandSource>.toVelocity(): BrigadierLiteralCommandNode1<VelocityCommandSource> =
-    mapSource<CommandSource, VelocityCommandSource> { it.toAnvil() }.toBrigadier()
+    mapSource<CommandSource, VelocityCommandSource> { it.toAnvilCommandSource() }.toBrigadier()

@@ -23,8 +23,8 @@ import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.ProxyServer
-import org.anvilpowered.anvil.VelocityApiBindings
-import org.anvilpowered.anvil.plugin.command.AnvilCommand
+import org.anvilpowered.anvil.api.AnvilApi
+import org.anvilpowered.anvil.createVelocity
 import org.slf4j.Logger
 
 @Plugin(
@@ -34,15 +34,17 @@ import org.slf4j.Logger
     authors = ["AnvilPowered"],
 )
 class AnvilVelocityPluginBootstrap @Inject constructor(
-    private val proxyServer: ProxyServer,
     private val logger: Logger,
+    private val proxyServer: ProxyServer,
 ) {
 
-    val services = VelocityApiBindings(proxyServer)
+    private val plugin = with(AnvilApi.createVelocity(logger, proxyServer)) {
+        AnvilVelocityPlugin()
+    }
 
     @Subscribe
     fun onProxyInit(event: ProxyInitializeEvent) {
         logger.info("Anvil Agent is running!")
-        proxyServer.commandManager.register(BrigadierCommand(AnvilCommand.create()))
+        proxyServer.eventManager.register(this, plugin)
     }
 }

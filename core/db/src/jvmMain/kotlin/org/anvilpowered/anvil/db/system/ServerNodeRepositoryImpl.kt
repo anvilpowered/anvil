@@ -35,6 +35,7 @@ internal object ServerNodeRepositoryImpl : ServerNodeRepository {
         newSuspendedTransaction { ServerNodeEntity.findById(id) != null }
 
     override suspend fun findByGameType(): GameTypeJoin<SizedIterable<ServerNode>> = GameTypeJoinImpl
+    override suspend fun countAll(): Long = newSuspendedTransaction { ServerNodeEntity.all().count() }
 
     override suspend fun create(item: ServerNode.CreateDto): ServerNode = TODO()
     override suspend fun <D : Dto<ServerNode>> findDtoById(id: UUID, dtoType: KClass<D>): D? {

@@ -38,6 +38,10 @@ internal object GameTypeRepositoryImpl : GameTypeRepository {
             ?.let { GameType(it.id.value) }
     }
 
+    override suspend fun countAll(): Long = newSuspendedTransaction {
+        GameTypeEntity.all().count()
+    }
+
     override suspend fun create(item: GameType.CreateDto): GameType = newSuspendedTransaction {
         GameTypeEntity.new {
             name = item.name

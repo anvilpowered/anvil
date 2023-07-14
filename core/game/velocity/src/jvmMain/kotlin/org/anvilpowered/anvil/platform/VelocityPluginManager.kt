@@ -25,10 +25,4 @@ import com.velocitypowered.api.plugin.PluginManager as BackingPluginManager
 internal class VelocityPluginManager(private val backing: BackingPluginManager) : PluginManager {
     override val plugins: List<Plugin>
         get() = backing.plugins.map { VelocityPlugin(it) }
-
-    companion object {
-        fun createScope(backing: BackingPluginManager) = object : PluginManager.Scope {
-            override val pluginManager: PluginManager = VelocityPluginManager(backing)
-        }
-    }
 }

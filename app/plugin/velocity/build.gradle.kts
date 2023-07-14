@@ -1,4 +1,4 @@
- plugins {
+plugins {
     id("kotlin-jvm.base-conventions")
     kotlin("kapt")
 }

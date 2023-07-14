@@ -20,8 +20,4 @@ package org.anvilpowered.anvil.domain.platform
 
 interface PluginManager {
     val plugins: List<Plugin>
-
-    interface Scope {
-        val pluginManager: PluginManager
-    }
 }

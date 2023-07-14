@@ -28,4 +28,5 @@ interface RepositoryScope {
     val gameUserRepository: GameUserRepository
     val userRepository: UserRepository
     val serverNodeRepository: ServerNodeRepository
+    companion object
 }

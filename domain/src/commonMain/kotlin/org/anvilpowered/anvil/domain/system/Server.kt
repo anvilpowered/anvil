@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.domain
+package org.anvilpowered.anvil.domain.system
 
 interface Server {
     val id: String

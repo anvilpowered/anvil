@@ -1,5 +1,6 @@
 package org.anvilpowered.anvil.user
 
+import org.anvilpowered.anvil.db.RepositoryScopeImpl
 import org.anvilpowered.anvil.domain.user.Audience
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.Player
@@ -15,6 +16,8 @@ private class AnvilVelocityPlayer(
     Audience by velocityPlayer,
     Subject by velocityPlayer.toAnvilSubject() {
 
-    override val user: User = User(velocityPlayer.uniqueId)
     override val gameUser: GameUser = GameUser(velocityPlayer.uniqueId)
+
+    override suspend fun getUserOrNull(): User? =
+        RepositoryScopeImpl.userRepository.findByGameId(velocityPlayer.uniqueId)
 }

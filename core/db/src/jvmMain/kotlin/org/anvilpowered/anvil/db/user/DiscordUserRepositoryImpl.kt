@@ -28,6 +28,8 @@ import org.sourcegrade.kontour.UUID
 import kotlin.reflect.KClass
 
 object DiscordUserRepositoryImpl : DiscordUserRepository {
+    override suspend fun countAll(): Long = newSuspendedTransaction { DiscordUserEntity.all().count() }
+
     override suspend fun create(item: DiscordUser.CreateDto): DiscordUser = newSuspendedTransaction {
         DiscordUserEntity.new(item.id) {
             discordId = item.discordId

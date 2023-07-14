@@ -18,9 +18,9 @@ data class GameUser(override val id: UUID) : DomainEntity {
         val username: String,
     ) : Creates<GameUser>
 
-    interface GamePlatformScope {
+    interface GamePlatformScope { // TODO: Maybe just GameScope?
 
-        val GameUser.subject: Subject
+        val GameUser.subject: Subject?
 
         val GameUser.player: Player?
     }
