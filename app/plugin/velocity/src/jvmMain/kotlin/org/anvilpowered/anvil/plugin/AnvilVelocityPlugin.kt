@@ -24,9 +24,9 @@ import org.anvilpowered.anvil.command.toVelocity
 import org.anvilpowered.anvil.plugin.command.AnvilCommand
 
 context(AnvilVelocityApi)
-class AnvilVelocityPlugin {
+class AnvilVelocityPlugin : AnvilPlugin {
 
-    init {
+    override fun registerCommands() {
         logger.info { "Registering commands..." }
         proxyServer.commandManager
             .register(BrigadierCommand(AnvilCommand.create().toVelocity()))
