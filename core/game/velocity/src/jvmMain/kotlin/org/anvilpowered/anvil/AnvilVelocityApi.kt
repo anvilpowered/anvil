@@ -3,6 +3,8 @@ package org.anvilpowered.anvil
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.api.AnvilApi
 import org.anvilpowered.anvil.core.Slf4jDelegateLogger
+import org.anvilpowered.anvil.db.RepositoryScopeImpl
+import org.anvilpowered.anvil.domain.RepositoryScope
 import org.anvilpowered.anvil.platform.VelocityPlatform
 import org.anvilpowered.anvil.platform.VelocityPluginManager
 import org.slf4j.Logger as VelocityLogger
@@ -68,7 +70,7 @@ interface AnvilVelocityApi : AnvilApi {
  * ```
  */
 fun AnvilApi.Companion.createVelocity(logger: VelocityLogger, proxyServer: ProxyServer): AnvilVelocityApi {
-    return object : AnvilVelocityApi {
+    return object : AnvilVelocityApi, RepositoryScope by RepositoryScopeImpl {
         override val logger = Slf4jDelegateLogger(logger)
         override val platform = VelocityPlatform(proxyServer)
         override val pluginManager = VelocityPluginManager(proxyServer.pluginManager)

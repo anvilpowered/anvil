@@ -3,8 +3,7 @@ package org.anvilpowered.anvil.plugin.command
 import org.anvilpowered.anvil.api.AnvilApi
 import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.user.Component
-import org.anvilpowered.anvil.plugin.command.common.addHelpChild
-import org.anvilpowered.anvil.plugin.command.common.executesUsage
+import org.anvilpowered.anvil.plugin.command.common.addHelp
 import org.anvilpowered.anvil.plugin.command.plugin.PluginCommand
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
@@ -19,8 +18,7 @@ object AnvilCommand {
     context(AnvilApi)
     fun create(): LiteralCommandNode<CommandSource> =
         ArgumentBuilder.literal<CommandSource>("anvil")
-            .addHelpChild("anvil", children)
-            .executesUsage("anvil", children.keys)
+            .addHelp("anvil", children)
             .then(PluginCommand.create())
             .build()
 }

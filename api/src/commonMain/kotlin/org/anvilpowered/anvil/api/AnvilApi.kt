@@ -1,5 +1,6 @@
 package org.anvilpowered.anvil.api
 
+import org.anvilpowered.anvil.domain.RepositoryScope
 import org.anvilpowered.anvil.domain.platform.Platform
 import org.anvilpowered.anvil.domain.platform.PluginManager
 
@@ -18,7 +19,7 @@ import org.anvilpowered.anvil.domain.platform.PluginManager
  * AnvilApi.createVelocity("my-plugin", ....)
  * ```
  */
-interface AnvilApi : LoggerScope {
+interface AnvilApi : LoggerScope, RepositoryScope {
     val platform: Platform
 
     val pluginManager: PluginManager

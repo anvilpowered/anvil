@@ -1,6 +1,6 @@
 package org.anvilpowered.anvil.plugin
 
-interface AnvilPlugin {
+abstract class AnvilPlugin {
 
-    fun registerCommands()
+//    abstract fun registerCommands()
 }

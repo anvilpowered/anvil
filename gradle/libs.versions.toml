@@ -7,6 +7,7 @@ log4j = "2.20.0"
 [libraries]
 adventure-bom = "net.kyori:adventure-bom:4.13.1"
 annotations = "org.jetbrains:annotations:24.0.0"
+brigadier = "com.mojang:brigadier:1.0.18"
 exposed-bom = "org.jetbrains.exposed:exposed-bom:0.41.1"
 exposed-core = { module = "org.jetbrains.exposed:exposed-core" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao" }
@@ -32,6 +33,7 @@ ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", versio
 logging = "org.lighthousegames:logging:1.3.0"
 log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+paper = "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
 redux = "org.reduxkotlin:redux-kotlin-threadsafe:0.6.1"
 sponge = "org.spongepowered:spongeapi:8.1.0"
 velocity = "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"

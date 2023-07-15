@@ -20,7 +20,7 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(usage: String): B =
         0
     }
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(baseName: String, children: Iterable<String>): B =
+fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children: Map<String, Component>): B =
     executes { context ->
         context.source.audience.sendMessage(
             Component.text()
@@ -28,33 +28,31 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(baseName: String, ch
                 .append(Component.text("Command usage: ", NamedTextColor.GOLD))
                 .append(Component.text("/$baseName", NamedTextColor.GREEN))
                 .append(Component.space())
-                .append(Component.text("${children.joinToString("|")} ...", NamedTextColor.GREEN))
+                .append(Component.text("${children.keys.joinToString("|")} ...", NamedTextColor.GREEN))
                 .append(Component.newline())
                 .append(Component.text("For more information see ", NamedTextColor.AQUA))
                 .append(Component.text("/$baseName help", NamedTextColor.GREEN)),
         )
         0
-    }
-
-fun <B : ArgumentBuilder<CommandSource, B>> B.addHelpChild(baseName: String, children: Map<String, Component>): B = then(
-    ArgumentBuilder.literal<CommandSource>("help").executesSingleSuccess { context ->
-        context.source.audience.sendMessage(
-            Component.text()
-                .append(PluginMessages.pluginPrefix)
-                .append(Component.text("Command usage: ", NamedTextColor.GOLD))
-                .append(Component.text("/$baseName", NamedTextColor.GREEN))
-                .append(Component.newline())
-                .append(Component.text("Children:", NamedTextColor.AQUA))
-                .append(Component.newline())
-                .append(
-                    children.map { (command, description) ->
-                        Component.text()
-                            .append(Component.text(" /$baseName ", NamedTextColor.DARK_GRAY))
-                            .append(Component.text(command, NamedTextColor.GREEN))
-                            .append(Component.space())
-                            .append(description.color(NamedTextColor.GRAY))
-                    },
-                ),
-        )
-    },
-)
+    }.then(
+        ArgumentBuilder.literal<CommandSource>("help").executesSingleSuccess { context ->
+            context.source.audience.sendMessage(
+                Component.text()
+                    .append(PluginMessages.pluginPrefix)
+                    .append(Component.text("Command usage: ", NamedTextColor.GOLD))
+                    .append(Component.text("/$baseName", NamedTextColor.GREEN))
+                    .append(Component.newline())
+                    .append(Component.text("Children:", NamedTextColor.AQUA))
+                    .append(Component.newline())
+                    .append(
+                        children.map { (command, description) ->
+                            Component.text()
+                                .append(Component.text(" /$baseName ", NamedTextColor.DARK_GRAY))
+                                .append(Component.text(command, NamedTextColor.GREEN))
+                                .append(Component.space())
+                                .append(description.color(NamedTextColor.GRAY))
+                        },
+                    ),
+            )
+        },
+    )

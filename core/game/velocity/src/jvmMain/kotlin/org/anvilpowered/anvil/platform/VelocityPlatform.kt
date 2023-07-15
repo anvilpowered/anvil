@@ -23,9 +23,9 @@ import org.anvilpowered.anvil.domain.platform.GamePlatform
 import org.anvilpowered.anvil.domain.platform.Plugin
 
 internal class VelocityPlatform(private val proxyServer: ProxyServer) : GamePlatform {
-    override val name: String = "velocity"
-    override val platformVersion: String = proxyServer.version.version
     override val isProxy: Boolean = true
     override val plugins: List<Plugin>
         get() = proxyServer.pluginManager.plugins.map { it.toAnvilPlugin() }
+    override val name: String = "velocity"
+    override val platformVersion: String = proxyServer.version.version
 }

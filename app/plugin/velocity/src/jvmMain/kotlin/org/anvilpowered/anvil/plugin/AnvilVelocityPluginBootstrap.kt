@@ -38,7 +38,7 @@ class AnvilVelocityPluginBootstrap @Inject constructor(
     private val proxyServer: ProxyServer,
 ) {
 
-    private val plugin: AnvilPlugin = with(AnvilApi.createVelocity(logger, proxyServer)) {
+    private val plugin = with(AnvilApi.createVelocity(logger, proxyServer)) {
         AnvilVelocityPlugin()
     }
 

@@ -21,9 +21,9 @@ package org.anvilpowered.anvil.platform
 import com.velocitypowered.api.plugin.PluginContainer
 import org.anvilpowered.anvil.domain.platform.Plugin
 
+internal fun PluginContainer.toAnvilPlugin() = VelocityPlugin(this)
+
 internal class VelocityPlugin(private val container: PluginContainer) : Plugin {
     override val name: String
         get() = container.description.id
 }
-
-internal fun PluginContainer.toAnvilPlugin() = VelocityPlugin(this)

@@ -15,6 +15,7 @@ repositories {
 dependencies {
     commonMainImplementation(project(":anvil-app-plugin-core"))
     commonMainImplementation(project(":anvil-core-game-sponge"))
+    jvmMainCompileOnly(libs.brigadier)
 }
 
 sponge {

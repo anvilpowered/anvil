@@ -1,18 +1,12 @@
 package org.anvilpowered.anvil.plugin
 
-import com.google.inject.Inject
-import org.apache.logging.log4j.Logger
-import org.spongepowered.api.event.Listener
-import org.spongepowered.api.event.lifecycle.ConstructPluginEvent
-import org.spongepowered.plugin.builtin.jvm.Plugin
+import com.mojang.brigadier.tree.LiteralCommandNode
+import org.anvilpowered.anvil.AnvilSpongeApi
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent
 
-@Plugin("anvil-agent")
-class AnvilSpongePlugin @Inject constructor(
-    private val logger: Logger,
-) {
+context(AnvilSpongeApi)
+class AnvilSpongePlugin : AnvilPlugin() {
+    fun registerCommands(event: RegisterCommandEvent<LiteralCommandNode<*>>) {
 
-    @Listener
-    fun onServerStart(event: ConstructPluginEvent) {
-        logger.warn("Hello, world! ${event.plugin()}")
     }
 }

@@ -27,6 +27,7 @@ sequenceOf(
     "api-web",
     "app-plugin",
     "app-plugin-core",
+    "app-plugin-paper",
     "app-plugin-sponge",
     "app-plugin-velocity",
     "app-cockpit",
@@ -39,6 +40,7 @@ sequenceOf(
     "core",
     "core-db",
     "core-game",
+    "core-game-paper",
     "core-game-sponge",
     "core-game-velocity",
 ).forEach {
