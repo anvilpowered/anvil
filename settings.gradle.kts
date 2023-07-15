@@ -24,7 +24,6 @@ rootProject.name = "anvil"
 
 sequenceOf(
     "api",
-    "api-game",
     "api-web",
     "app-plugin",
     "app-plugin-core",

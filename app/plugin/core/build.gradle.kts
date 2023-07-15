@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(":anvil-api-game"))
+    commonMainApi(project(":anvil-api"))
     jvmMainApi(platform(libs.adventure.bom))
     jvmMainApi("net.kyori:adventure-api") // TODO: -> compileOnlyApi ASAP
 //    compileOnlyApi(libs.logging.api)
