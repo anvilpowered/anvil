@@ -28,7 +28,7 @@ import org.sourcegrade.kontour.UUID
 import kotlin.reflect.KClass
 
 object UserRepositoryImpl : UserRepository {
-    override suspend fun findByGameId(id: UUID): User? = newSuspendedTransaction {
+    override suspend fun findByGameUserId(id: UUID): User? = newSuspendedTransaction {
         // TODO: Does this send two queries to the database?
         GameUserEntity.findById(id)?.let { User(it.user.id.value) }
     }

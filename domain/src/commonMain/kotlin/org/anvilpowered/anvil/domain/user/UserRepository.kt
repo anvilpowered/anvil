@@ -22,6 +22,6 @@ import org.sourcegrade.kontour.Repository
 import org.sourcegrade.kontour.UUID
 
 interface UserRepository : Repository<User, User.CreateDto> {
-    suspend fun findByGameId(id: UUID): User?
+    suspend fun findByGameUserId(id: UUID): User?
     suspend fun findByUsername(username: String): User?
 }

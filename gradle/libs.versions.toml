@@ -48,6 +48,7 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = "org.jlleitschuh.gradle.ktlint:11.3.1"
+pluginyml = "net.minecrell.plugin-yml.paper:0.6.0"
 shadow = "com.github.johnrengelman.shadow:8.1.0"
 sponge = "org.spongepowered.gradle.plugin:2.1.1"
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }

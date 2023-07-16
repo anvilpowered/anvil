@@ -16,10 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("VelocitySourceConverter")
+@file:JvmName("PaperSourceConverter")
+@file:Suppress("UnstableApiUsage")
 
 package org.anvilpowered.anvil.command
 
+import io.papermc.paper.command.brigadier.CommandSourceStack
 import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.kbrig.brigadier.toBrigadier
 import org.anvilpowered.kbrig.tree.ArgumentCommandNode
@@ -27,16 +29,15 @@ import org.anvilpowered.kbrig.tree.LiteralCommandNode
 import org.anvilpowered.kbrig.tree.mapSource
 import com.mojang.brigadier.tree.ArgumentCommandNode as BrigadierArgumentCommandNode
 import com.mojang.brigadier.tree.LiteralCommandNode as BrigadierLiteralCommandNode1
-import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
 
 /**
  * Converts a kbrig argument command node to a velocity brigadier argument command node.
  */
-fun <T> ArgumentCommandNode<CommandSource, T>.toVelocity(): BrigadierArgumentCommandNode<VelocityCommandSource, T> =
-    mapSource<CommandSource, VelocityCommandSource, T> { it.toAnvilCommandSource() }.toBrigadier()
+fun <T> ArgumentCommandNode<CommandSource, T>.toPaper(): BrigadierArgumentCommandNode<CommandSourceStack, T> =
+    mapSource<CommandSource, CommandSourceStack, T> { it.toAnvilCommandSource() }.toBrigadier()
 
 /**
  * Converts a kbrig literal command node to a velocity brigadier literal command node.
  */
-fun LiteralCommandNode<CommandSource>.toVelocity(): BrigadierLiteralCommandNode1<VelocityCommandSource> =
-    mapSource<CommandSource, VelocityCommandSource> { it.toAnvilCommandSource() }.toBrigadier()
+fun LiteralCommandNode<CommandSource>.toPaper(): BrigadierLiteralCommandNode1<CommandSourceStack> =
+    mapSource<CommandSource, CommandSourceStack> { it.toAnvilCommandSource() }.toBrigadier()

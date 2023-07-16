@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    commonMainImplementation(project(":anvil-app-plugin-paper"))
     commonMainImplementation(project(":anvil-app-plugin-sponge"))
     commonMainImplementation(project(":anvil-app-plugin-velocity"))
 }

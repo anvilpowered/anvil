@@ -2,11 +2,17 @@
 
 package org.anvilpowered.anvil.plugin
 
-import io.papermc.paper.plugin.bootstrap.BootstrapContext
-import io.papermc.paper.plugin.bootstrap.PluginBootstrap
+import org.anvilpowered.anvil.api.AnvilApi
+import org.anvilpowered.anvil.createPaper
+import org.bukkit.plugin.java.JavaPlugin
 
-class AnvilPaperPluginBootstrap : PluginBootstrap{
-    override fun bootstrap(context: BootstrapContext) {
-        TODO("Not yet implemented")
+class AnvilPaperPluginBootstrap : JavaPlugin() {
+
+    private val plugin = with(AnvilApi.createPaper()) {
+        AnvilPaperPlugin()
+    }
+
+    override fun onLoad() {
+        plugin.registerCommands(this)
     }
 }

@@ -9,13 +9,12 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
 fun ServerPlayer.toAnvilPlayer(): Player = AnvilSpongePlayer(this)
 
-class AnvilSpongePlayer(
+private class AnvilSpongePlayer(
     val spongePlayer: ServerPlayer,
 ) : Player,
     Subject by spongePlayer.toAnvilSubject() {
-    override val gameUser: GameUser
-        get() = GameUser(spongePlayer.uniqueId())
+    override val gameUser: GameUser = GameUser(spongePlayer.uniqueId())
 
     override suspend fun getUserOrNull(): User? =
-        RepositoryScopeImpl.userRepository.findByGameId(spongePlayer.uniqueId())
+        RepositoryScopeImpl.userRepository.findByGameUserId(spongePlayer.uniqueId())
 }

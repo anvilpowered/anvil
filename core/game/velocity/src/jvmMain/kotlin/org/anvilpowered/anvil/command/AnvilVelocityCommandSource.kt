@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.user
+package org.anvilpowered.anvil.command
 
 import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.domain.user.Audience
@@ -24,6 +24,8 @@ import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.Player
 import org.anvilpowered.anvil.domain.user.Subject
 import org.anvilpowered.anvil.domain.user.User
+import org.anvilpowered.anvil.user.toAnvilPlayer
+import org.anvilpowered.anvil.user.toAnvilSubject
 import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
 import com.velocitypowered.api.proxy.Player as VelocityPlayer
 

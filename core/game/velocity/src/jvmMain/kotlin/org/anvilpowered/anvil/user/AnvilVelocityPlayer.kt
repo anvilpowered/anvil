@@ -19,5 +19,5 @@ private class AnvilVelocityPlayer(
     override val gameUser: GameUser = GameUser(velocityPlayer.uniqueId)
 
     override suspend fun getUserOrNull(): User? =
-        RepositoryScopeImpl.userRepository.findByGameId(velocityPlayer.uniqueId)
+        RepositoryScopeImpl.userRepository.findByGameUserId(velocityPlayer.uniqueId)
 }

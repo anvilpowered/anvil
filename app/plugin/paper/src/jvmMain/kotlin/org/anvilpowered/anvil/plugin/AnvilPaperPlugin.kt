@@ -1,11 +1,17 @@
 package org.anvilpowered.anvil.plugin
 
+import io.papermc.paper.command.brigadier.CommandBuilder
 import org.anvilpowered.anvil.AnvilPaperApi
-import org.bukkit.Bukkit
-import org.bukkit.plugin.PluginBase
-import org.bukkit.plugin.java.JavaPlugin
+import org.anvilpowered.anvil.command.toPaper
+import org.bukkit.plugin.Plugin
 
 context(AnvilPaperApi)
 class AnvilPaperPlugin : AnvilPlugin() {
-
+    fun registerCommands(bootstrap: Plugin) {
+        registerCommands { command ->
+            CommandBuilder.newCommandBuilder(bootstrap, "test")
+                .forward(command.toPaper(), null, false)
+                .register()
+        }
+    }
 }

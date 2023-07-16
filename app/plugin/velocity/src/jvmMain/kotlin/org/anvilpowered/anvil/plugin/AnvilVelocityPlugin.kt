@@ -21,15 +21,13 @@ package org.anvilpowered.anvil.plugin
 import com.velocitypowered.api.command.BrigadierCommand
 import org.anvilpowered.anvil.AnvilVelocityApi
 import org.anvilpowered.anvil.command.toVelocity
-import org.anvilpowered.anvil.plugin.command.AnvilCommand
 
 context(AnvilVelocityApi)
 class AnvilVelocityPlugin : AnvilPlugin() {
 
     fun registerCommands() {
-        logger.info { "Registering commands..." }
-        proxyServer.commandManager
-            .register(BrigadierCommand(AnvilCommand.create().toVelocity()))
-        logger.info { "Registered commands!" }
+        registerCommands { command ->
+            proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
+        }
     }
 }
