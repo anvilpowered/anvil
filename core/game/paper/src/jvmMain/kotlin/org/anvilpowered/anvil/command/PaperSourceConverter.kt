@@ -33,13 +33,13 @@ import com.mojang.brigadier.tree.ArgumentCommandNode as BrigadierArgumentCommand
 import com.mojang.brigadier.tree.LiteralCommandNode as BrigadierLiteralCommandNode1
 
 /**
- * Converts a kbrig argument command node to a velocity brigadier argument command node.
+ * Converts a kbrig argument command node to a paper brigadier argument command node.
  */
 fun <T> ArgumentCommandNode<CommandSource, T>.toPaper(): BrigadierArgumentCommandNode<CommandSourceStack, T> =
     mapSource<CommandSource, CommandSourceStack, T> { it.toAnvilCommandSource() }.toBrigadier()
 
 /**
- * Converts a kbrig literal command node to a velocity brigadier literal command node.
+ * Converts a kbrig literal command node to a paper brigadier literal command node.
  */
 fun LiteralCommandNode<CommandSource>.toPaper(): BrigadierLiteralCommandNode1<CommandSourceStack> =
     mapSource<CommandSource, CommandSourceStack> { it.toAnvilCommandSource() }.toBrigadier()
