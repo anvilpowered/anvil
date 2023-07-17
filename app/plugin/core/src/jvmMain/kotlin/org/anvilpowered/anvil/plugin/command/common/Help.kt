@@ -1,6 +1,7 @@
 package org.anvilpowered.anvil.plugin.command.common
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.anvil.plugin.PluginMessages
@@ -42,16 +43,19 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children
                     .append(Component.text("Command usage: ", NamedTextColor.GOLD))
                     .append(Component.text("/$baseName", NamedTextColor.GREEN))
                     .append(Component.newline())
-                    .append(Component.text("Children:", NamedTextColor.AQUA))
+                    .append(Component.text("Subcommands:", NamedTextColor.AQUA))
                     .append(Component.newline())
                     .append(
-                        children.map { (command, description) ->
-                            Component.text()
-                                .append(Component.text(" /$baseName ", NamedTextColor.DARK_GRAY))
-                                .append(Component.text(command, NamedTextColor.GREEN))
-                                .append(Component.space())
-                                .append(description.color(NamedTextColor.GRAY))
-                        },
+                        Component.join(
+                            JoinConfiguration.newlines(),
+                            children.map { (command, description) ->
+                                Component.text()
+                                    .append(Component.text(" /$baseName ", NamedTextColor.DARK_GRAY))
+                                    .append(Component.text(command, NamedTextColor.GREEN))
+                                    .append(Component.space())
+                                    .append(description.color(NamedTextColor.GRAY))
+                            },
+                        ),
                     ),
             )
         },

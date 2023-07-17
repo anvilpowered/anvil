@@ -12,6 +12,7 @@ dependencies {
 }
 
 paper {
+    name = "anvil-agent"
     main = "org.anvilpowered.anvil.plugin.AnvilPaperPluginBootstrap"
     foliaSupported = true
     apiVersion = "1.19"

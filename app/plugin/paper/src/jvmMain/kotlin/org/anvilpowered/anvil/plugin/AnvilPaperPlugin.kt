@@ -1,17 +1,17 @@
+@file:Suppress("UnstableApiUsage")
+
 package org.anvilpowered.anvil.plugin
 
-import io.papermc.paper.command.brigadier.CommandBuilder
+import io.papermc.paper.event.server.ServerResourcesLoadEvent
 import org.anvilpowered.anvil.AnvilPaperApi
-import org.anvilpowered.anvil.command.toPaper
+import org.anvilpowered.anvil.command.toPaperRoot
 import org.bukkit.plugin.Plugin
 
 context(AnvilPaperApi)
 class AnvilPaperPlugin : AnvilPlugin() {
-    fun registerCommands(bootstrap: Plugin) {
+    fun registerCommands(bootstrap: Plugin, event: ServerResourcesLoadEvent) {
         registerCommands { command ->
-            CommandBuilder.newCommandBuilder(bootstrap, "test")
-                .forward(command.toPaper(), null, false)
-                .register()
+            event.commands.register(command.toPaperRoot(bootstrap))
         }
     }
 }

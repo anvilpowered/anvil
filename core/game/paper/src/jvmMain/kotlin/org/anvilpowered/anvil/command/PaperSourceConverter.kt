@@ -21,12 +21,14 @@
 
 package org.anvilpowered.anvil.command
 
+import io.papermc.paper.command.brigadier.CommandBuilder
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import org.anvilpowered.anvil.domain.command.CommandSource
 import org.anvilpowered.kbrig.brigadier.toBrigadier
 import org.anvilpowered.kbrig.tree.ArgumentCommandNode
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 import org.anvilpowered.kbrig.tree.mapSource
+import org.bukkit.plugin.Plugin
 import com.mojang.brigadier.tree.ArgumentCommandNode as BrigadierArgumentCommandNode
 import com.mojang.brigadier.tree.LiteralCommandNode as BrigadierLiteralCommandNode1
 
@@ -41,3 +43,20 @@ fun <T> ArgumentCommandNode<CommandSource, T>.toPaper(): BrigadierArgumentComman
  */
 fun LiteralCommandNode<CommandSource>.toPaper(): BrigadierLiteralCommandNode1<CommandSourceStack> =
     mapSource<CommandSource, CommandSourceStack> { it.toAnvilCommandSource() }.toBrigadier()
+
+/**
+ * Paper requires some extra steps for command registration.
+ *
+ * Unfortunately, it is not possible to directly register a brigadier type.
+ * It is necessary to register Paper's custom [CommandBuilder].
+ *
+ * This method effectively clones the target command node into a newly created [CommandBuilder].
+ */
+fun LiteralCommandNode<CommandSource>.toPaperRoot(plugin: Plugin): CommandBuilder {
+    val delegate = toPaper()
+    val builder = CommandBuilder.newCommandBuilder(plugin, delegate.literal)
+    delegate.children.forEach { builder.then(it) }
+    builder.requires(delegate.requirement)
+    builder.executes(delegate.command)
+    return builder
+}
