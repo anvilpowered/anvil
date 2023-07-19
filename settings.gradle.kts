@@ -24,7 +24,6 @@ rootProject.name = "anvil"
 
 sequenceOf(
     "api",
-    "api-web",
     "app-plugin",
     "app-plugin-core",
     "app-plugin-paper",
@@ -38,11 +37,9 @@ sequenceOf(
     "app-cli",
     "domain",
     "core",
-    "core-db",
-    "core-game",
-    "core-game-paper",
-    "core-game-sponge",
-    "core-game-velocity",
+    "paper",
+    "sponge",
+    "velocity",
 ).forEach {
     val project = ":anvil-$it"
     include(project)

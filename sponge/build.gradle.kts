@@ -4,8 +4,7 @@ plugins {
 }
 
 dependencies {
-//    commonMainImplementation(libs.coroutines)
     commonMainImplementation(libs.kotlinx.coroutines)
-    commonMainImplementation(project(":anvil-core-game"))
+    commonMainImplementation(project(":anvil-core"))
     jvmMainImplementation(libs.sponge)
 }

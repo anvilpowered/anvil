@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     commonMainImplementation(project(":anvil-app-plugin-core"))
-    commonMainImplementation(project(":anvil-core-game-velocity"))
+    commonMainImplementation(project(":anvil-velocity"))
     jvmMainCompileOnly(libs.velocity)
     kapt(libs.velocity)
     commonMainImplementation(libs.kbrig.brigadier)

@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     commonMainImplementation(project(":anvil-app-plugin-core"))
-    commonMainImplementation(project(":anvil-core-game-paper"))
+    commonMainImplementation(project(":anvil-paper"))
     jvmMainCompileOnly(libs.brigadier)
     jvmMainCompileOnly(libs.paper)
 }
