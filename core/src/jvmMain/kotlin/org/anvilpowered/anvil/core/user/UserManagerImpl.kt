@@ -16,16 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.domain.system
+package org.anvilpowered.anvil.core.user
 
-import org.sourcegrade.kontour.Creates
-import org.sourcegrade.kontour.DomainEntity
+import org.anvilpowered.anvil.api.AnvilApi
+import org.anvilpowered.anvil.api.user.UserManager
 import org.sourcegrade.kontour.UUID
 
-data class GameType(override val id: UUID) : DomainEntity {
-
-    data class CreateDto(
-        val name: String,
-        val website: String,
-    ) : Creates<GameType>
+context(AnvilApi)
+class UserManagerImpl : UserManager {
+    override suspend fun ensureExists(gameUserId: UUID) {
+    }
 }

@@ -22,19 +22,51 @@ import org.anvilpowered.anvil.domain.user.User
 import org.anvilpowered.anvil.domain.user.UserRepository
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.sourcegrade.kontour.Dto
 import org.sourcegrade.kontour.UUID
-import kotlin.reflect.KClass
 
 object UserRepositoryImpl : UserRepository {
+
+    override suspend fun initializeFromGameUser(
+        gameUserId: UUID,
+        username: String,
+    ): User = newSuspendedTransaction {
+        val userId = GameUserTable
+            .slice(listOf(GameUserTable.id, GameUserTable.userId))
+            .select { GameUserTable.id eq gameUserId }
+            .firstOrNull()
+            ?.get(GameUserTable.userId)
+
+        // if a game user exists, a user must also already exist
+
+        userId?.let {
+            return@let User(it.value, username)
+        }
+
+        // otherwise, create a new user and game user
+
+        val user = UserEntity.new {
+            this.username = username
+        }
+
+        GameUserEntity.new {
+            this.user = user
+            this.gameType
+        }.let { User(it.id.value, username) }
+    }
+
     override suspend fun findByGameUserId(id: UUID): User? = newSuspendedTransaction {
-        // TODO: Does this send two queries to the database?
-        GameUserEntity.findById(id)?.let { User(it.user.id.value) }
+        GameUserTable.innerJoin(UserTable)
+            .select { GameUserTable.id eq id }
+            .firstOrNull()
+            ?.toUser()
     }
 
     override suspend fun findByUsername(username: String): User? = newSuspendedTransaction {
-        UserEntity.find { UserTable.username eq username }.firstOrNull()?.let { User(it.id.value) }
+        UserTable.select { UserTable.username eq username }
+            .firstOrNull()
+            ?.toUser()
     }
 
     override suspend fun countAll(): Long = newSuspendedTransaction { UserEntity.all().count() }
@@ -42,15 +74,12 @@ object UserRepositoryImpl : UserRepository {
     override suspend fun create(item: User.CreateDto): User = newSuspendedTransaction {
         UserEntity.new {
             username = item.username
-        }.let { User(it.id.value) }
+        }.let { User(it.id.value, item.username, item.email) }
     }
 
-    override suspend fun <D : Dto<User>> findDtoById(id: UUID, dtoType: KClass<D>): D? {
-        TODO("Not yet implemented")
+    override suspend fun exists(id: UUID): Boolean = newSuspendedTransaction {
+        UserEntity.findById(id) != null
     }
-
-    override suspend fun exists(id: UUID): Boolean =
-        newSuspendedTransaction { UserEntity.findById(id) != null }
 
     override suspend fun deleteById(id: UUID): Boolean = newSuspendedTransaction {
         UserTable.deleteWhere { UserTable.id eq id } > 0

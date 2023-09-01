@@ -16,27 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.user
+package org.anvilpowered.anvil.db
 
-import org.anvilpowered.anvil.api.system.GameTypeDto
-import org.anvilpowered.anvil.domain.user.GameUser
-import org.sourcegrade.kontour.Dto
-import org.sourcegrade.kontour.UUID
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.statements.InsertStatement
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.sourcegrade.kontour.DomainEntity
 
-sealed interface GameUserDto : Dto<GameUser> {
-
-    override val entity: GameUser
-        get() = GameUser(id)
-
-    data class Basic(
-        override val id: UUID,
-        val username: String,
-    ) : GameUserDto
-
-    data class Mid(
-        override val id: UUID,
-        val user: UserDto.Basic,
-        val gameType: GameTypeDto.Basic,
-        val username: String,
-    ) : GameUserDto
+internal suspend fun <T : Table, E : DomainEntity> newSaveTransaction(
+    table: T,
+    toTable: context(T) InsertStatement<Number>.() -> Unit,
+    toEntity: ResultRow.() -> E,
+): E {
+    val fromDB = newSuspendedTransaction {
+        table.insert { toTable(it) }
+    }.resultedValues?.firstOrNull()?.toEntity()
+    checkNotNull(fromDB) { "Failed to save entity" }
+    return fromDB
 }

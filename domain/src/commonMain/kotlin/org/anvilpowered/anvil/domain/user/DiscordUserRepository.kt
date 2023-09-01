@@ -20,4 +20,4 @@ package org.anvilpowered.anvil.domain.user
 
 import org.sourcegrade.kontour.Repository
 
-interface DiscordUserRepository : Repository<DiscordUser, DiscordUser.CreateDto>
+interface DiscordUserRepository : Repository<DiscordUser, DiscordUser>

@@ -4,10 +4,7 @@ import org.sourcegrade.kontour.Creates
 import org.sourcegrade.kontour.DomainEntity
 import org.sourcegrade.kontour.UUID
 
-data class DiscordUser(override val id: UUID) : DomainEntity {
-
-    data class CreateDto(
-        val id: UUID,
-        val discordId: String,
-    ) : Creates<DiscordUser>
-}
+data class DiscordUser(
+    override val id: UUID,
+    val discordId: String,
+) : DomainEntity, Creates<DiscordUser>

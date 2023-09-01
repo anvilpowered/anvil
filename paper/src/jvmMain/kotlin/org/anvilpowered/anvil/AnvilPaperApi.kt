@@ -2,7 +2,7 @@ package org.anvilpowered.anvil
 
 import org.anvilpowered.anvil.api.AnvilApi
 import org.anvilpowered.anvil.core.JULDelegateLogger
-import org.anvilpowered.anvil.db.RepositoryScopeImpl
+import org.anvilpowered.anvil.core.db.RepositoryScopeImpl
 import org.anvilpowered.anvil.domain.RepositoryScope
 import org.anvilpowered.anvil.platform.PaperPlatform
 import org.anvilpowered.anvil.platform.PaperPluginManager

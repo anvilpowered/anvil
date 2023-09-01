@@ -18,10 +18,12 @@
 
 package org.anvilpowered.anvil.db.user
 
+import org.anvilpowered.anvil.domain.user.User
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SizedIterable
 import org.sourcegrade.kontour.UUID
 
@@ -37,3 +39,9 @@ internal class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
 
     companion object : UUIDEntityClass<UserEntity>(UserTable)
 }
+
+internal fun ResultRow.toUser() = User(
+    id = this[UserTable.id].value,
+    username = this[UserTable.username],
+    email = this[UserTable.email]
+)

@@ -9,14 +9,13 @@ import org.sourcegrade.kontour.UUID
  *
  * Represents a single user of a game.
  */
-data class GameUser(override val id: UUID) : DomainEntity {
-
-    data class CreateDto(
-        val id: UUID,
-        val userId: UUID,
-        val gameTypeId: UUID,
-        val username: String,
-    ) : Creates<GameUser>
+data class GameUser(
+    override val id: UUID,
+    val userId: UUID,
+    val username: String,
+    val gameType: String,
+    val nickname: String? = null,
+) : DomainEntity, Creates<GameUser> {
 
     interface GamePlatformScope { // TODO: Maybe just GameScope?
 

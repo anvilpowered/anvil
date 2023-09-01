@@ -9,10 +9,15 @@ import org.sourcegrade.kontour.UUID
  *
  * Represents a single universal user across all games and platforms.
  */
-data class User(override val id: UUID) : DomainEntity {
+data class User(
+    override val id: UUID,
+    val username: String,
+    val email: String? = null,
+) : DomainEntity {
 
     data class CreateDto(
         val username: String,
+        val email: String? = null,
     ) : Creates<User>
 
     /**

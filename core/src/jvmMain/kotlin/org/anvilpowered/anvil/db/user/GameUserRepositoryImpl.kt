@@ -18,17 +18,15 @@
 
 package org.anvilpowered.anvil.db.user
 
-import org.anvilpowered.anvil.db.system.GameTypeEntity
 import org.anvilpowered.anvil.domain.user.GameUser
 import org.anvilpowered.anvil.domain.user.GameUserRepository
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.mapLazy
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.sourcegrade.kontour.Dto
 import org.sourcegrade.kontour.SizedIterable
 import org.sourcegrade.kontour.UUID
-import kotlin.reflect.KClass
 
 object GameUserRepositoryImpl : GameUserRepository {
     override suspend fun getAllUserNames(startWith: String): SizedIterable<String> = newSuspendedTransaction {
@@ -36,23 +34,22 @@ object GameUserRepositoryImpl : GameUserRepository {
     }
 
     override suspend fun findByUsername(username: String): GameUser? = newSuspendedTransaction {
-        GameUserEntity.find { GameUserTable.username eq username }.firstOrNull()?.let { GameUser(it.id.value) }
+        GameUserTable.select { GameUserTable.username eq username }
+            .firstOrNull()
+            ?.toGameUser()
     }
 
     override suspend fun countAll(): Long = newSuspendedTransaction {
         GameUserEntity.all().count()
     }
 
-    override suspend fun create(item: GameUser.CreateDto): GameUser = newSuspendedTransaction {
+    override suspend fun create(item: GameUser): GameUser = newSuspendedTransaction {
         GameUserEntity.new(item.id) {
             user = UserEntity[item.userId]
-            gameType = GameTypeEntity[item.gameTypeId]
+            gameType = item.gameType
             username = item.username
-        }.let { GameUser(it.id.value) }
-    }
-
-    override suspend fun <D : Dto<GameUser>> findDtoById(id: UUID, dtoType: KClass<D>): D? {
-        TODO()
+        }
+        item
     }
 
     override suspend fun exists(id: UUID): Boolean =

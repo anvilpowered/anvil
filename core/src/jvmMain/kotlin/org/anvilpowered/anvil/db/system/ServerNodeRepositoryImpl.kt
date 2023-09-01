@@ -18,7 +18,6 @@
 
 package org.anvilpowered.anvil.db.system
 
-import org.anvilpowered.anvil.domain.system.GameTypeJoin
 import org.anvilpowered.anvil.domain.system.ServerNode
 import org.anvilpowered.anvil.domain.system.ServerNodeRepository
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

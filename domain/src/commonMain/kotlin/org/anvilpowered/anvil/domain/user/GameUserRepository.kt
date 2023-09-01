@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.domain.user
 import org.sourcegrade.kontour.Repository
 import org.sourcegrade.kontour.SizedIterable
 
-interface GameUserRepository : Repository<GameUser, GameUser.CreateDto> {
+interface GameUserRepository : Repository<GameUser, GameUser> {
 
     suspend fun getAllUserNames(startWith: String = ""): SizedIterable<String>
 

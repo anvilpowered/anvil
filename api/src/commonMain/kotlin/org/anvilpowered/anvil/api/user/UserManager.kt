@@ -16,25 +16,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.api.system
+package org.anvilpowered.anvil.api.user
 
-import org.anvilpowered.anvil.domain.system.GameType
-import org.sourcegrade.kontour.Dto
 import org.sourcegrade.kontour.UUID
 
-sealed interface GameTypeDto : Dto<GameType> {
+interface UserManager {
 
-    override val entity: GameType
-        get() = GameType(id)
-
-    data class Basic(
-        override val id: UUID,
-        val name: String,
-    ) : GameTypeDto
-
-    data class Full(
-        override val id: UUID,
-        val name: String,
-        val website: String,
-    ) : GameTypeDto
+    suspend fun ensureExists(gameUserId: UUID)
 }

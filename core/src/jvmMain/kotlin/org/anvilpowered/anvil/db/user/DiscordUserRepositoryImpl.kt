@@ -23,21 +23,16 @@ import org.anvilpowered.anvil.domain.user.DiscordUserRepository
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.sourcegrade.kontour.Dto
 import org.sourcegrade.kontour.UUID
-import kotlin.reflect.KClass
 
 object DiscordUserRepositoryImpl : DiscordUserRepository {
     override suspend fun countAll(): Long = newSuspendedTransaction { DiscordUserEntity.all().count() }
 
-    override suspend fun create(item: DiscordUser.CreateDto): DiscordUser = newSuspendedTransaction {
+    override suspend fun create(item: DiscordUser): DiscordUser = newSuspendedTransaction {
         DiscordUserEntity.new(item.id) {
             discordId = item.discordId
-        }.let { DiscordUser(it.id.value) }
-    }
-
-    override suspend fun <D : Dto<DiscordUser>> findDtoById(id: UUID, dtoType: KClass<D>): D? {
-        TODO("Not yet implemented")
+        }
+        item
     }
 
     override suspend fun exists(id: UUID): Boolean = newSuspendedTransaction {

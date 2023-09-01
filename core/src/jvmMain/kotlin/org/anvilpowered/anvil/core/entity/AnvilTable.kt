@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.entity
+package org.anvilpowered.anvil.core.entity
 
 import org.jetbrains.exposed.dao.id.UUIDTable
 

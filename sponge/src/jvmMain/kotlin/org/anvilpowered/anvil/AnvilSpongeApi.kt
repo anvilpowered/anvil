@@ -2,7 +2,7 @@ package org.anvilpowered.anvil
 
 import org.anvilpowered.anvil.api.AnvilApi
 import org.anvilpowered.anvil.core.Slf4jDelegateLogger
-import org.anvilpowered.anvil.db.RepositoryScopeImpl
+import org.anvilpowered.anvil.core.db.RepositoryScopeImpl
 import org.anvilpowered.anvil.domain.RepositoryScope
 import org.anvilpowered.anvil.platform.SpongePlatform
 import org.anvilpowered.anvil.platform.SpongePluginManager

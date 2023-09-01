@@ -3,7 +3,7 @@ package org.anvilpowered.anvil
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.api.AnvilApi
 import org.anvilpowered.anvil.core.Slf4jDelegateLogger
-import org.anvilpowered.anvil.db.RepositoryScopeImpl
+import org.anvilpowered.anvil.core.db.RepositoryScopeImpl
 import org.anvilpowered.anvil.domain.RepositoryScope
 import org.anvilpowered.anvil.platform.VelocityPlatform
 import org.anvilpowered.anvil.platform.VelocityPluginManager

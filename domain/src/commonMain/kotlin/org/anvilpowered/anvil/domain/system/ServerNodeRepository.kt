@@ -23,5 +23,5 @@ import org.sourcegrade.kontour.SizedIterable
 
 interface ServerNodeRepository : Repository<ServerNode, ServerNode.CreateDto> {
 
-    suspend fun findByGameType(): GameTypeJoin<SizedIterable<ServerNode>>
+    suspend fun findByGameType(gameType: String): SizedIterable<ServerNode>
 }
