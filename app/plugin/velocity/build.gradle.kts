@@ -1,12 +1,11 @@
 plugins {
-    id("kotlin-jvm.base-conventions")
     kotlin("kapt")
 }
 
 dependencies {
-    commonMainImplementation(project(":anvil-app-plugin-core"))
-    commonMainImplementation(project(":anvil-velocity"))
-    jvmMainCompileOnly(libs.velocity)
+    implementation(project(":anvil-app-plugin-core"))
+    implementation(project(":anvil-velocity"))
+    compileOnly(libs.velocity)
     kapt(libs.velocity)
-    commonMainImplementation(libs.kbrig.brigadier)
+    implementation(libs.kbrig.brigadier)
 }

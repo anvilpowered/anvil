@@ -1,11 +1,16 @@
 plugins {
-    id("kotlin-jvm.base-conventions")
-    id("kotlin-js.base-conventions")
     id("anvil-publish")
+    `java-library`
 }
 
 dependencies {
-    commonMainApi(project(":anvil-api"))
-    jvmMainApi(platform(libs.exposed.bom))
-    jvmMainApi(libs.bundles.exposed)
+    api(project(":anvil-api"))
+
+    api(platform(libs.exposed.bom))
+    api(libs.bundles.exposed)
+
+    compileOnlyApi(platform(libs.adventure.bom))
+    compileOnlyApi("net.kyori:adventure-api")
+
+    api(libs.kontour)
 }

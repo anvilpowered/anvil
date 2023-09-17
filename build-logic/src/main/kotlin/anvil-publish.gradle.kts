@@ -16,7 +16,8 @@ extensions.configure<PublishingExtension> {
             url = URI(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
         }
     }
-    publications.withType<MavenPublication> {
+    publications.register<MavenPublication>("maven") {
+        from(components["java"])
         pom {
             name.set("anvil")
             url.set("https://www.anvilpowered.org")

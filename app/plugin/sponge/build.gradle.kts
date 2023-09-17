@@ -1,7 +1,6 @@
 import org.spongepowered.gradle.plugin.config.PluginLoaders
 
 plugins {
-    id("kotlin-jvm.base-conventions")
     alias(libs.plugins.sponge)
     alias(libs.plugins.shadow)
 }
@@ -13,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    commonMainImplementation(project(":anvil-app-plugin-core"))
-    commonMainImplementation(project(":anvil-sponge"))
-    jvmMainCompileOnly(libs.brigadier)
+    implementation(project(":anvil-app-plugin-core"))
+    implementation(project(":anvil-sponge"))
+    compileOnly(libs.brigadier)
 }
 
 sponge {

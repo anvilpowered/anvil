@@ -1,10 +1,9 @@
 plugins {
-    id("kotlin-jvm.base-conventions")
     id("anvil-publish")
 }
 
 dependencies {
-    commonMainImplementation(libs.kotlinx.coroutines)
-    commonMainImplementation(project(":anvil-core"))
-    jvmMainImplementation(libs.sponge)
+    implementation(libs.kotlinx.coroutines)
+    implementation(project(":anvil-core"))
+    implementation(libs.sponge)
 }

@@ -1,11 +1,7 @@
-plugins {
-    id("kotlin-jvm.base-conventions")
-}
-
 dependencies {
-    commonMainApi(project(":anvil-api"))
-    jvmMainApi(platform(libs.adventure.bom))
-    jvmMainApi("net.kyori:adventure-api") // TODO: -> compileOnlyApi ASAP
+    api(project(":anvil-api"))
+    api(platform(libs.adventure.bom))
+    api("net.kyori:adventure-api") // TODO: -> compileOnlyApi ASAP
 //    compileOnlyApi(libs.logging.api)
-    commonMainApi(libs.kbrig.core)
+    api(libs.kbrig.core)
 }

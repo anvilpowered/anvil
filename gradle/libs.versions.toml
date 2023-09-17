@@ -1,6 +1,6 @@
 [versions]
 #kmongo = "4.8.0"
-kotlin = "1.9.0"
+kotlin = "1.9.10"
 ktor = "2.3.0"
 log4j = "2.20.0"
 
@@ -45,7 +45,7 @@ ktor-server = ["ktor-server-auth", "ktor-server-content-negotiation", "ktor-serv
 
 [plugins]
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = "org.jlleitschuh.gradle.ktlint:11.3.1"
 pluginyml = "net.minecrell.plugin-yml.paper:0.6.0"

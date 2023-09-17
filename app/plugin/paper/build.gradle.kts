@@ -1,14 +1,13 @@
 plugins {
-    id("kotlin-jvm.base-conventions")
     alias(libs.plugins.shadow)
     alias(libs.plugins.pluginyml)
 }
 
 dependencies {
-    commonMainImplementation(project(":anvil-app-plugin-core"))
-    commonMainImplementation(project(":anvil-paper"))
-    jvmMainCompileOnly(libs.brigadier)
-    jvmMainCompileOnly(libs.paper)
+    implementation(project(":anvil-app-plugin-core"))
+    implementation(project(":anvil-paper"))
+    compileOnly(libs.brigadier)
+    compileOnly(libs.paper)
 }
 
 paper {
