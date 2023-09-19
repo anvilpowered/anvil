@@ -24,7 +24,7 @@ kotlin-stdlib8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.r
 mongo-java-driver = { module = "org.mongodb:mongodb-java-driver", version.ref = "mongo" }
 mongo-driver-sync = { module = "org.mongodb:mongodb-driver-sync", version.ref = "mongo" }
 morphia = "dev.morphia.morphia:core:1.6.1"
-microutils_logging = "io.github.microutils:kotlin-logging:1.5.4"
+microutils_logging = "io.github.microutils:kotlin-logging:1.12.5"
 paper = "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
 reflections = "org.reflections:reflections:0.9.10"
 serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"
