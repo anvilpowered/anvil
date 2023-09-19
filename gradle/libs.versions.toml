@@ -2,7 +2,7 @@
 configurate = "3.7.2"
 kotlin = "1.7.0"
 blossom = "1.3.0"
-mongo = "3.12.11"
+mongo = "3.12.14"
 
 [libraries]
 aopalliance = "aopalliance:aopalliance:1.0"
