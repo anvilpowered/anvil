@@ -19,9 +19,12 @@
 package org.anvilpowered.anvil.core.user
 
 import net.kyori.adventure.audience.Audience
+import java.util.UUID
 
 /**
  * An online player.
  */
 interface Player : Subject, Audience {
+
+    val id: UUID
 }

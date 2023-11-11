@@ -28,7 +28,6 @@ interface AnvilSpongeApi : AnvilApi {
     companion object
 }
 
-
 /**
  * Creates an Anvil API instance for Sponge.
  *

@@ -7,6 +7,5 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent
 context(AnvilSpongeApi)
 class AnvilSpongePlugin : AnvilPlugin() {
     fun registerCommands(event: RegisterCommandEvent<LiteralCommandNode<*>>) {
-
     }
 }
