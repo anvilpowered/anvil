@@ -1,7 +1,7 @@
 dependencies {
-    api(project(":anvil-api"))
+    api(project(":anvil-core"))
     api(platform(libs.adventure.bom))
-    api("net.kyori:adventure-api") // TODO: -> compileOnlyApi ASAP
+    compileOnlyApi("net.kyori:adventure-api")
 //    compileOnlyApi(libs.logging.api)
-    api(libs.kbrig.core)
+    api(libs.kbrig.brigadier)
 }

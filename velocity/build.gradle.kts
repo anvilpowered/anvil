@@ -4,6 +4,5 @@ plugins {
 
 dependencies {
     implementation(project(":anvil-core"))
-    implementation(libs.kbrig.brigadier)
-    compileOnly(libs.velocity)
+    compileOnlyApi(libs.velocity)
 }

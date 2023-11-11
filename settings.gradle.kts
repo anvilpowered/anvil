@@ -23,19 +23,11 @@ pluginManagement {
 rootProject.name = "anvil"
 
 sequenceOf(
-    "api",
     "app-plugin",
     "app-plugin-core",
     "app-plugin-paper",
     "app-plugin-sponge",
     "app-plugin-velocity",
-    "app-cockpit",
-    "app-cockpit-application",
-    "app-cockpit-backend",
-    "app-cockpit-domain",
-    "app-cockpit-ui",
-    "app-cli",
-    "domain",
     "core",
     "paper",
     "sponge",

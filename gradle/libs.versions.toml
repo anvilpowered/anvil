@@ -1,6 +1,6 @@
 [versions]
 #kmongo = "4.8.0"
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 ktor = "2.3.0"
 log4j = "2.20.0"
 
@@ -14,8 +14,6 @@ exposed-dao = { module = "org.jetbrains.exposed:exposed-dao" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc" }
 exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time" }
 kbrig-brigadier = "org.anvilpowered:kbrig-brigadier:0.1.0-SNAPSHOT"
-kbrig-core = "org.anvilpowered:kbrig-core:0.1.0-SNAPSHOT"
-kontour = "org.sourcegrade:kontour-domain:0.1.0-SNAPSHOT"
 kotest = "io.kotest:kotest-runner-junit5-jvm:5.5.4"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
