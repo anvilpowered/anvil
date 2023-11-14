@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 
-internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : KeyBuilder<T> {
+internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : NamedKeyBuilder<T> {
     private val type: TypeToken<T>
     private var name: String = ""
     private var fallbackValue: T? = null

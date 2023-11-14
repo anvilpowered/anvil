@@ -61,11 +61,11 @@ class Key<T : Any> internal constructor(
     override fun toString(): String = "Key(type=$type, name=$name, description=$description)"
 
     companion object {
-        fun <T : Any> builder(type: TypeToken<T>): KeyBuilder<T> = KeyBuilderImpl(type)
+        fun <T : Any> builder(type: TypeToken<T>): NamedKeyBuilder<T> = KeyBuilderImpl(type)
 
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
-        inline fun <reified T : Any> build(@BuilderInference block: KeyBuilder<T>.() -> Unit): Key<T> {
+        inline fun <reified T : Any> build(@BuilderInference block: NamedKeyBuilder<T>.() -> Unit): Key<T> {
             return builder(object : TypeToken<T>() {}).apply(block).build()
         }
 

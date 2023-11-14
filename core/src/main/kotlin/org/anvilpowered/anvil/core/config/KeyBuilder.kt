@@ -20,14 +20,6 @@ package org.anvilpowered.anvil.core.config
 
 @KeyBuilderDsl
 interface KeyBuilder<T : Any> {
-    /**
-     * Sets the name of the generated [Key]
-     *
-     * @param name The name to set
-     * @return `this`
-     */
-    @KeyBuilderDsl
-    fun name(name: String): KeyBuilder<T>
 
     /**
      * Sets the fallback value of the generated [Key]
@@ -72,4 +64,16 @@ interface KeyBuilder<T : Any> {
      */
     context(KeyNamespace)
     fun build(): Key<T>
+}
+
+@KeyBuilderDsl
+interface NamedKeyBuilder<T : Any> : KeyBuilder<T> {
+    /**
+     * Sets the name of the generated [Key]
+     *
+     * @param name The name to set
+     * @return `this`
+     */
+    @KeyBuilderDsl
+    fun name(name: String): KeyBuilder<T>
 }
