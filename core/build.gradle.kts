@@ -11,4 +11,5 @@ dependencies {
 
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")
+    compileOnlyApi("net.kyori:adventure-text-minimessage")
 }

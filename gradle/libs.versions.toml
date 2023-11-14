@@ -5,7 +5,7 @@ ktor = "2.3.0"
 log4j = "2.20.0"
 
 [libraries]
-adventure-bom = "net.kyori:adventure-bom:4.13.1"
+adventure-bom = "net.kyori:adventure-bom:4.14.0"
 annotations = "org.jetbrains:annotations:24.0.0"
 brigadier = "com.mojang:brigadier:1.0.18"
 exposed-bom = "org.jetbrains.exposed:exposed-bom:0.41.1"
