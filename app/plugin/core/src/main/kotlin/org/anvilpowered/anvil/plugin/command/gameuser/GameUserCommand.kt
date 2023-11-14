@@ -2,6 +2,8 @@ package org.anvilpowered.anvil.plugin.command.gameuser
 
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.core.command.CommandSource
+import org.anvilpowered.anvil.core.user.requiresPermission
 import org.anvilpowered.anvil.plugin.command.common.addHelp
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode

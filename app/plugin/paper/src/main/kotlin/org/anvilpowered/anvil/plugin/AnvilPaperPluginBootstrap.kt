@@ -3,7 +3,7 @@
 package org.anvilpowered.anvil.plugin
 
 import io.papermc.paper.event.server.ServerResourcesLoadEvent
-import org.anvilpowered.anvil.api.AnvilApi
+import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.createPaper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

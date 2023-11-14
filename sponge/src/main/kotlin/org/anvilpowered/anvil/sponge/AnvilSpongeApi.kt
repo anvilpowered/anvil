@@ -18,10 +18,11 @@
 
 package org.anvilpowered.anvil.sponge
 
+import com.google.inject.Injector
 import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.sponge.platform.SpongePlatform
 import org.anvilpowered.anvil.sponge.platform.SpongePluginManager
-import org.slf4j.Logger
+import org.apache.logging.log4j.Logger
 
 interface AnvilSpongeApi : AnvilApi {
 
@@ -63,8 +64,9 @@ interface AnvilSpongeApi : AnvilApi {
  * }
  * ```
  */
-fun AnvilApi.Companion.createSponge(logger: Logger): AnvilSpongeApi {
+fun AnvilApi.Companion.createSponge(injector: Injector): AnvilSpongeApi {
     return object : AnvilSpongeApi {
+        override val logger: Logger = injector.getInstance(Logger::class.java)
         override val platform = SpongePlatform
         override val pluginManager = SpongePluginManager
     }

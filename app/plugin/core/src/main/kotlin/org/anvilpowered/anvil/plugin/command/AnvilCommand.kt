@@ -1,8 +1,8 @@
 package org.anvilpowered.anvil.plugin.command
 
-import org.anvilpowered.anvil.api.AnvilApi
+import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.domain.user.Component
 import org.anvilpowered.anvil.plugin.command.common.addHelp
 import org.anvilpowered.anvil.plugin.command.plugin.PluginCommand
 import org.anvilpowered.kbrig.builder.ArgumentBuilder

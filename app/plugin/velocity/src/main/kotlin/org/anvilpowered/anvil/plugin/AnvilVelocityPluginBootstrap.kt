@@ -19,11 +19,12 @@
 package org.anvilpowered.anvil.plugin
 
 import com.google.inject.Inject
+import com.google.inject.Injector
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.ProxyServer
-import org.anvilpowered.anvil.api.AnvilApi
+import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.velocity.createVelocity
 import org.slf4j.Logger
 
@@ -36,9 +37,10 @@ import org.slf4j.Logger
 class AnvilVelocityPluginBootstrap @Inject constructor(
     private val logger: Logger,
     private val proxyServer: ProxyServer,
+    injector: Injector,
 ) {
 
-    private val plugin = with(AnvilApi.createVelocity(logger, proxyServer)) {
+    private val plugin = with(AnvilApi.createVelocity(injector)) {
         AnvilVelocityPlugin()
     }
 

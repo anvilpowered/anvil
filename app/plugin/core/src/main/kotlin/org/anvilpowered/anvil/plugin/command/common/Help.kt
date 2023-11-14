@@ -3,7 +3,7 @@ package org.anvilpowered.anvil.plugin.command.common
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.domain.command.CommandSource
+import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.plugin.PluginMessages
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.executesSingleSuccess

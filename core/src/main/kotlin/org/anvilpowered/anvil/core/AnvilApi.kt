@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.core
 
 import org.anvilpowered.anvil.core.platform.Platform
 import org.anvilpowered.anvil.core.platform.PluginManager
+import org.apache.logging.log4j.Logger
 
 /**
  * To create an instance of this interface, use the `AnvilApi.create` function.
@@ -37,6 +38,9 @@ import org.anvilpowered.anvil.core.platform.PluginManager
  * ```
  */
 interface AnvilApi {
+
+    val logger: Logger
+
     val platform: Platform
 
     val pluginManager: PluginManager

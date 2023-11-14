@@ -1,8 +1,8 @@
 package org.anvilpowered.anvil.plugin.command.gameuser
 
-import org.anvilpowered.anvil.api.AnvilApi
-import org.anvilpowered.anvil.domain.command.CommandSource
-import org.anvilpowered.anvil.domain.user.Component
+import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.plugin.command.common.executesUsage
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
