@@ -19,14 +19,16 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import kotlin.experimental.ExperimentalTypeInference
 
 context(KeyNamespace)
-class Key<T : Any>(
+class Key<T : Any> internal constructor(
     val type: TypeToken<T>,
     val name: String,
-    val description: String? = null,
-    private val parser: (String) -> T? = getDefaultParser(type), // TODO: Proper parser interface with parsing exception
-    private val printer: (T) -> String = { it.toString() },
+    val fallback: T,
+    val description: String?,
+    private val parser: (String) -> T?,
+    private val printer: (T) -> String,
 ) : Comparable<Key<T>> {
 
     val namespace: KeyNamespace = this@KeyNamespace
@@ -55,17 +57,16 @@ class Key<T : Any>(
     }
 
     override fun toString(): String = "Key(type=$type, name=$name, description=$description)"
-}
 
-private fun <T> getDefaultParser(type: TypeToken<T>): (String) -> T? {
-    @Suppress("UNCHECKED_CAST")
-    return when (type.type) {
-        String::class.java -> { it -> it }
-        Int::class.java -> { it: String -> it.toIntOrNull() }
-        Long::class.java -> { it: String -> it.toLongOrNull() }
-        Float::class.java -> { it: String -> it.toFloatOrNull() }
-        Double::class.java -> { it: String -> it.toDoubleOrNull() }
-        Boolean::class.java -> { it: String -> it.toBooleanStrictOrNull() }
-        else -> throw IllegalArgumentException("There is no default parser for $type")
-    } as (String) -> T?
+    companion object {
+        fun <T : Any> builder(type: TypeToken<T>): KeyBuilder<T> {
+            return KeyBuilderImpl(type)
+        }
+
+        context(KeyNamespace)
+        @OptIn(ExperimentalTypeInference::class)
+        inline fun <reified T : Any> build(@BuilderInference block: KeyBuilder<T>.() -> Unit): Key<T> {
+            return builder(object : TypeToken<T>() {}).apply(block).build()
+        }
+    }
 }
