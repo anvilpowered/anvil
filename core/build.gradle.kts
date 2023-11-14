@@ -8,6 +8,7 @@ dependencies {
     api(libs.bundles.exposed)
     api(libs.kbrig.brigadier)
     api(libs.logging.api)
+    api(libs.configurate.core)
 
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")
