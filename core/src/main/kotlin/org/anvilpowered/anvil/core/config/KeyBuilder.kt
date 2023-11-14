@@ -71,6 +71,5 @@ interface KeyBuilder<T : Any> {
      * @return The generated [Key]
      */
     context(KeyNamespace)
-    @KeyBuilderDsl
     fun build(): Key<T>
 }

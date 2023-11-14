@@ -20,6 +20,8 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 import kotlin.experimental.ExperimentalTypeInference
+import kotlin.properties.PropertyDelegateProvider
+import kotlin.properties.ReadOnlyProperty
 
 context(KeyNamespace)
 class Key<T : Any> internal constructor(
@@ -59,14 +61,24 @@ class Key<T : Any> internal constructor(
     override fun toString(): String = "Key(type=$type, name=$name, description=$description)"
 
     companion object {
-        fun <T : Any> builder(type: TypeToken<T>): KeyBuilder<T> {
-            return KeyBuilderImpl(type)
-        }
+        fun <T : Any> builder(type: TypeToken<T>): KeyBuilder<T> = KeyBuilderImpl(type)
 
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
         inline fun <reified T : Any> build(@BuilderInference block: KeyBuilder<T>.() -> Unit): Key<T> {
             return builder(object : TypeToken<T>() {}).apply(block).build()
+        }
+
+        context(KeyNamespace)
+        @OptIn(ExperimentalTypeInference::class)
+        inline fun <reified T : Any> building(
+            @BuilderInference crossinline block: KeyBuilder<T>.() -> Unit,
+        ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, Key<T>>> = PropertyDelegateProvider { _, property ->
+            val builder = builder(object : TypeToken<T>() {})
+            builder.name(property.name)
+            builder.block()
+            val key = builder.build()
+            ReadOnlyProperty { _, _ -> key }
         }
     }
 }
