@@ -9,6 +9,7 @@ dependencies {
     api(libs.kbrig.brigadier)
     api(libs.logging.api)
     api(libs.configurate.core)
+    api(libs.annotations)
 
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")

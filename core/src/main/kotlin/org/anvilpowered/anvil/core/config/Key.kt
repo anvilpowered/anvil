@@ -30,11 +30,9 @@ class Key<T : Any>(
 ) : Comparable<Key<T>> {
 
     val namespace: KeyNamespace = this@KeyNamespace
-    private val internalNamespace: KeyNamespaceImpl = this@KeyNamespace as KeyNamespaceImpl
 
     init {
-        check(name !in internalNamespace.keys) { "Key $name already exists in namespace $namespace" }
-        internalNamespace.keys[name] = this
+        namespace.add(this)
     }
 
     private val comparator = Comparator.comparing<Key<T>, String> { it.name }

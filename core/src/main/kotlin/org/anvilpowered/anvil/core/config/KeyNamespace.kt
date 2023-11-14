@@ -19,11 +19,15 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import org.jetbrains.annotations.ApiStatus
 
-sealed interface KeyNamespace {
+interface KeyNamespace {
     val name: String
 
     operator fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>?
+
+    @ApiStatus.Internal
+    fun <T : Any> add(key: Key<T>)
 
     companion object {
         fun create(name: String): KeyNamespace {
@@ -34,6 +38,7 @@ sealed interface KeyNamespace {
 
 internal class KeyNamespaceImpl(override val name: String) : KeyNamespace {
     val keys: MutableMap<String, Key<*>> = mutableMapOf()
+
     override fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>? {
         val key = keys[keyName] ?: return null
         if (key.type != type) {
@@ -41,6 +46,10 @@ internal class KeyNamespaceImpl(override val name: String) : KeyNamespace {
         }
         @Suppress("UNCHECKED_CAST")
         return key as Key<T>
+    }
+
+    override fun <T : Any> add(key: Key<T>) {
+        keys[key.name] = key
     }
 }
 
