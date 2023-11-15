@@ -16,21 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.sponge.user
 
-import net.kyori.adventure.audience.Audience
-import org.anvilpowered.anvil.core.PlatformType
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.Subject
+import org.anvilpowered.anvil.core.command.CommandExecutor
+import org.anvilpowered.anvil.core.command.CommandSource
+import org.spongepowered.api.Sponge
+import org.spongepowered.api.service.permission.Subject
 
-interface CommandSource : PlatformType {
-
-    val audience: Audience
-
-    val subject: Subject
-
-    /**
-     * The [Player] associated with the executed command, if any.
-     */
-    val player: Player?
+class SpongeCommandExecutor : CommandExecutor {
+    override suspend fun execute(source: CommandSource, command: String): Boolean {
+        return Sponge.server().commandManager().process(
+            source.subject.platformDelegate as Subject,
+            source.audience,
+            command,
+        ).isSuccess
+    }
 }

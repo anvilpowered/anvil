@@ -8,8 +8,8 @@ import java.util.UUID
 fun ServerPlayer.toAnvilPlayer(): Player = AnvilSpongePlayer(this)
 
 private class AnvilSpongePlayer(
-    val spongePlayer: ServerPlayer,
+    override val platformDelegate: ServerPlayer,
 ) : Player,
-    Subject by spongePlayer.toAnvilSubject() {
-    override val id: UUID = spongePlayer.uniqueId()
+    Subject by platformDelegate.toAnvilSubject() {
+    override val id: UUID = platformDelegate.uniqueId()
 }

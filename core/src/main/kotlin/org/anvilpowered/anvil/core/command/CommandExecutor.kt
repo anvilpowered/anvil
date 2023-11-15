@@ -18,19 +18,7 @@
 
 package org.anvilpowered.anvil.core.command
 
-import net.kyori.adventure.audience.Audience
-import org.anvilpowered.anvil.core.PlatformType
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.Subject
+interface CommandExecutor {
 
-interface CommandSource : PlatformType {
-
-    val audience: Audience
-
-    val subject: Subject
-
-    /**
-     * The [Player] associated with the executed command, if any.
-     */
-    val player: Player?
+    suspend fun execute(source: CommandSource, command: String): Boolean
 }

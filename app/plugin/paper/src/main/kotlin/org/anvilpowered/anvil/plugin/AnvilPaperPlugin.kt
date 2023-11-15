@@ -3,8 +3,8 @@
 package org.anvilpowered.anvil.plugin
 
 import io.papermc.paper.event.server.ServerResourcesLoadEvent
-import org.anvilpowered.anvil.AnvilPaperApi
-import org.anvilpowered.anvil.command.toPaper
+import org.anvilpowered.anvil.paper.AnvilPaperApi
+import org.anvilpowered.anvil.paper.command.toPaper
 import org.bukkit.plugin.Plugin
 
 context(AnvilPaperApi)

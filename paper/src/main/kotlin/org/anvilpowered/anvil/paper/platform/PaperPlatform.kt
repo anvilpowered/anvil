@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.platform
+package org.anvilpowered.anvil.paper.platform
 
 import org.anvilpowered.anvil.core.platform.GamePlatform
 import org.anvilpowered.anvil.core.platform.Plugin

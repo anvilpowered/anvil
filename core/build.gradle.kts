@@ -10,6 +10,7 @@ dependencies {
     api(libs.logging.api)
     api(libs.configurate.core)
     api(libs.annotations)
+    api(libs.kotlinx.coroutines)
 
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")

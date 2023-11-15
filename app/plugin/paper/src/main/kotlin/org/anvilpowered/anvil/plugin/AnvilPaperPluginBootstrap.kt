@@ -4,7 +4,7 @@ package org.anvilpowered.anvil.plugin
 
 import io.papermc.paper.event.server.ServerResourcesLoadEvent
 import org.anvilpowered.anvil.core.AnvilApi
-import org.anvilpowered.anvil.createPaper
+import org.anvilpowered.anvil.paper.createPaper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin

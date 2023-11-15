@@ -16,22 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.user
+package org.anvilpowered.anvil.paper.command
 
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.PlayerService
+import org.anvilpowered.anvil.core.command.CommandExecutor
+import org.anvilpowered.anvil.core.command.CommandSource
 import org.bukkit.Bukkit
-import java.util.UUID
+import org.bukkit.command.CommandSender
 
-class PaperPlayerService : PlayerService {
-    override fun get(username: String): Player? =
-        Bukkit.getPlayerExact(username)?.toAnvilPlayer()
-
-    override fun get(id: UUID): Player? =
-        Bukkit.getPlayer(id)?.toAnvilPlayer()
-
-    override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
-        "" -> Bukkit.getOnlinePlayers().asSequence().map { it.toAnvilPlayer() }
-        else -> Bukkit.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
+class PaperCommandExecutor : CommandExecutor {
+    override suspend fun execute(source: CommandSource, command: String): Boolean {
+        return Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command)
     }
 }

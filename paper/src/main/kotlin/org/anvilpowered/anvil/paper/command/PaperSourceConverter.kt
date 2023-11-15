@@ -19,7 +19,7 @@
 @file:JvmName("PaperSourceConverter")
 @file:Suppress("UnstableApiUsage")
 
-package org.anvilpowered.anvil.command
+package org.anvilpowered.anvil.paper.command
 
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import org.anvilpowered.anvil.core.command.CommandSource

@@ -18,21 +18,18 @@
 
 package org.anvilpowered.anvil.velocity.command
 
-import net.kyori.adventure.audience.Audience
+import kotlinx.coroutines.future.await
+import org.anvilpowered.anvil.core.command.CommandExecutor
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.Subject
-import org.anvilpowered.anvil.velocity.user.toAnvilPlayer
-import org.anvilpowered.anvil.velocity.user.toAnvilSubject
+import org.anvilpowered.anvil.velocity.ProxyServerScope
 import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
-import com.velocitypowered.api.proxy.Player as VelocityPlayer
 
-fun VelocityCommandSource.toAnvilCommandSource(): CommandSource = AnvilVelocityCommandSource(this)
-
-private class AnvilVelocityCommandSource(
-    override val platformDelegate: VelocityCommandSource,
-) : CommandSource {
-    override val audience: Audience = platformDelegate
-    override val subject: Subject = platformDelegate.toAnvilSubject()
-    override val player: Player? = (platformDelegate as? VelocityPlayer)?.toAnvilPlayer()
+context(ProxyServerScope)
+class VelocityCommandExecutor : CommandExecutor {
+    override suspend fun execute(source: CommandSource, command: String): Boolean {
+        return proxyServer.commandManager.executeAsync(
+            source.platformDelegate as VelocityCommandSource,
+            command,
+        ).await()
+    }
 }

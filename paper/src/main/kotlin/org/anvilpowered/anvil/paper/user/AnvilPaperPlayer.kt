@@ -1,4 +1,4 @@
-package org.anvilpowered.anvil.user
+package org.anvilpowered.anvil.paper.user
 
 import net.kyori.adventure.audience.Audience
 import org.anvilpowered.anvil.core.user.Player
@@ -9,9 +9,9 @@ import org.bukkit.entity.Player as PaperPlayer
 fun PaperPlayer.toAnvilPlayer(): Player = AnvilPaperPlayer(this)
 
 private class AnvilPaperPlayer(
-    val paperPlayer: PaperPlayer,
+    override val platformDelegate: PaperPlayer,
 ) : Player,
-    Audience by paperPlayer,
-    Subject by paperPlayer.toAnvilSubject() {
-    override val id: UUID = paperPlayer.uniqueId
+    Audience by platformDelegate,
+    Subject by platformDelegate.toAnvilSubject() {
+    override val id: UUID = platformDelegate.uniqueId
 }

@@ -16,21 +16,22 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.paper.user
 
-import net.kyori.adventure.audience.Audience
-import org.anvilpowered.anvil.core.PlatformType
 import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.Subject
+import org.anvilpowered.anvil.core.user.PlayerService
+import org.bukkit.Bukkit
+import java.util.UUID
 
-interface CommandSource : PlatformType {
+class PaperPlayerService : PlayerService {
+    override fun get(username: String): Player? =
+        Bukkit.getPlayerExact(username)?.toAnvilPlayer()
 
-    val audience: Audience
+    override fun get(id: UUID): Player? =
+        Bukkit.getPlayer(id)?.toAnvilPlayer()
 
-    val subject: Subject
-
-    /**
-     * The [Player] associated with the executed command, if any.
-     */
-    val player: Player?
+    override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
+        "" -> Bukkit.getOnlinePlayers().asSequence().map { it.toAnvilPlayer() }
+        else -> Bukkit.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
+    }
 }

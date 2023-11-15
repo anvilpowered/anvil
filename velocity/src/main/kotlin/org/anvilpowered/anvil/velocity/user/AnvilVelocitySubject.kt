@@ -7,10 +7,10 @@ import com.velocitypowered.api.permission.PermissionSubject as VelocitySubject
 fun VelocitySubject.toAnvilSubject(): Subject = AnvilVelocitySubject(this)
 
 private class AnvilVelocitySubject(
-    private val velocitySubject: VelocitySubject,
+    override val platformDelegate: VelocitySubject,
 ) : Subject {
     override fun hasPermission(permission: String): Boolean? =
-        velocitySubject.getPermissionValue(permission).toBoolean()
+        platformDelegate.getPermissionValue(permission).toBoolean()
 }
 
 private fun Tristate.toBoolean(): Boolean? = when (this) {

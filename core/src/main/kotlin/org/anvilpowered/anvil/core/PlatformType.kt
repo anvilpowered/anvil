@@ -16,21 +16,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.core
 
-import net.kyori.adventure.audience.Audience
-import org.anvilpowered.anvil.core.PlatformType
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.Subject
+interface PlatformType {
 
-interface CommandSource : PlatformType {
-
-    val audience: Audience
-
-    val subject: Subject
-
-    /**
-     * The [Player] associated with the executed command, if any.
-     */
-    val player: Player?
+    val platformDelegate: Any
 }

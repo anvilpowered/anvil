@@ -1,12 +1,12 @@
-package org.anvilpowered.anvil.command
+package org.anvilpowered.anvil.paper.command
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.AnvilPaperApi
+import org.anvilpowered.anvil.paper.AnvilPaperApi
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.command.PlayerCommandScope
 import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.user.toAnvilPlayer
+import org.anvilpowered.anvil.paper.user.toAnvilPlayer
 import org.anvilpowered.kbrig.argument.StringArgumentType
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.RequiredArgumentBuilder

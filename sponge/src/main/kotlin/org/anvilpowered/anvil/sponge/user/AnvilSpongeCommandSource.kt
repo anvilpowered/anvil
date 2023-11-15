@@ -16,23 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.command
+package org.anvilpowered.anvil.sponge.user
 
 import net.kyori.adventure.audience.Audience
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
-import org.anvilpowered.anvil.velocity.user.toAnvilPlayer
-import org.anvilpowered.anvil.velocity.user.toAnvilSubject
-import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
-import com.velocitypowered.api.proxy.Player as VelocityPlayer
+import org.spongepowered.api.command.parameter.CommandContext
+import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
-fun VelocityCommandSource.toAnvilCommandSource(): CommandSource = AnvilVelocityCommandSource(this)
+fun CommandContext.toAnvilCommandSource(): CommandSource = AnvilSpongeCommandSource(this)
 
-private class AnvilVelocityCommandSource(
-    override val platformDelegate: VelocityCommandSource,
+class AnvilSpongeCommandSource(
+    override val platformDelegate: CommandContext,
 ) : CommandSource {
-    override val audience: Audience = platformDelegate
-    override val subject: Subject = platformDelegate.toAnvilSubject()
-    override val player: Player? = (platformDelegate as? VelocityPlayer)?.toAnvilPlayer()
+    override val audience: Audience = platformDelegate.cause().audience()
+    override val subject: Subject = platformDelegate.cause().subject().toAnvilSubject()
+    override val player: Player? = platformDelegate.cause().first(ServerPlayer::class.java).orElse(null)?.toAnvilPlayer()
 }

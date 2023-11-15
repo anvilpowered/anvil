@@ -18,7 +18,9 @@
 
 package org.anvilpowered.anvil.core.user
 
-interface Subject {
+import org.anvilpowered.anvil.core.PlatformType
+
+interface Subject : PlatformType {
 
     /**
      * Checks if the subject has the specified permission.

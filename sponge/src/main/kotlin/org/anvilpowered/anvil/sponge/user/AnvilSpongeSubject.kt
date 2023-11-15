@@ -7,10 +7,10 @@ import org.spongepowered.api.service.permission.Subject as SpongeSubject
 fun SpongeSubject.toAnvilSubject(): Subject = AnvilSpongeSubject(this)
 
 private class AnvilSpongeSubject(
-    private val spongeSubject: SpongeSubject,
+    override val platformDelegate: SpongeSubject,
 ) : Subject {
     override fun hasPermission(permission: String): Boolean? =
-        spongeSubject.permissionValue(permission).toBoolean()
+        platformDelegate.permissionValue(permission).toBoolean()
 }
 
 private fun Tristate.toBoolean(): Boolean? = when (this) {
