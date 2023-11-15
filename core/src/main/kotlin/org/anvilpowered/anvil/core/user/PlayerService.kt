@@ -26,7 +26,7 @@ interface PlayerService {
 
     operator fun get(id: UUID): Player?
 
-    fun getAll(startsWith: String): Sequence<Player>
+    fun getAll(startsWith: String = ""): Sequence<Player>
 
     interface Scope {
         val playerService: PlayerService

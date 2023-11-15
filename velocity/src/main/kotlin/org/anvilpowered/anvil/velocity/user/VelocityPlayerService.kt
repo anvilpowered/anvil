@@ -31,6 +31,8 @@ class VelocityPlayerService : PlayerService {
     override fun get(id: UUID): Player? =
         proxyServer.getPlayer(id).orElse(null)?.toAnvilPlayer()
 
-    override fun getAll(startsWith: String): Sequence<Player> =
-        proxyServer.allPlayers.asSequence().map { it.toAnvilPlayer() }
+    override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
+        "" -> proxyServer.allPlayers.asSequence().map { it.toAnvilPlayer() }
+        else -> proxyServer.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
+    }
 }

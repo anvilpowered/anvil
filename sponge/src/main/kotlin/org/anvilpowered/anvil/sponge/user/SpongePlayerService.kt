@@ -30,6 +30,8 @@ class SpongePlayerService : PlayerService {
     override fun get(id: UUID): Player? =
         Sponge.server().player(id).orElse(null)?.toAnvilPlayer()
 
-    override fun getAll(startsWith: String): Sequence<Player> =
-        Sponge.server().onlinePlayers().asSequence().map { it.toAnvilPlayer() }
+    override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
+        "" -> Sponge.server().onlinePlayers().asSequence().map { it.toAnvilPlayer() }
+        else -> Sponge.server().onlinePlayers().asSequence().filter { it.name().startsWith(startsWith) }.map { it.toAnvilPlayer() }
+    }
 }

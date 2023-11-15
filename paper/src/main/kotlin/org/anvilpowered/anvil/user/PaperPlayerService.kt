@@ -30,6 +30,8 @@ class PaperPlayerService : PlayerService {
     override fun get(id: UUID): Player? =
         Bukkit.getPlayer(id)?.toAnvilPlayer()
 
-    override fun getAll(startsWith: String): Sequence<Player> =
-        Bukkit.getOnlinePlayers().asSequence().map { it.toAnvilPlayer() }
+    override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
+        "" -> Bukkit.getOnlinePlayers().asSequence().map { it.toAnvilPlayer() }
+        else -> Bukkit.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
+    }
 }
