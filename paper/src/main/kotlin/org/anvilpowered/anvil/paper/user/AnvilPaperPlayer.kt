@@ -1,6 +1,7 @@
 package org.anvilpowered.anvil.paper.user
 
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
 import java.util.UUID
@@ -14,4 +15,6 @@ private class AnvilPaperPlayer(
     Audience by platformDelegate,
     Subject by platformDelegate.toAnvilSubject() {
     override val id: UUID = platformDelegate.uniqueId
+    override val username: String = platformDelegate.name
+    override val displayname: Component = platformDelegate.displayName()
 }

@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.core.user
 
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
 import java.util.UUID
 
 /**
@@ -27,4 +28,8 @@ import java.util.UUID
 interface Player : Subject, Audience {
 
     val id: UUID
+
+    val username: String
+
+    val displayname: Component
 }
