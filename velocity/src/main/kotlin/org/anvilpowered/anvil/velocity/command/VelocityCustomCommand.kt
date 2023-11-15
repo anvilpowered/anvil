@@ -18,16 +18,16 @@ context(AnvilVelocityApi)
 class VelocityCustomCommand : PlayerCommandScope {
 
     override fun ArgumentBuilder.Companion.player(
-        name: String,
+        argumentName: String,
         command: (context: CommandContext<CommandSource>, player: Player) -> Int,
     ): RequiredArgumentBuilder<CommandSource, String> =
-        required<CommandSource, String>(name, StringArgumentType.SingleWord)
+        required<CommandSource, String>(argumentName, StringArgumentType.SingleWord)
             .suggests { _, builder ->
                 proxyServer.allPlayers.forEach { player -> builder.suggest(player.username) }
                 builder.build()
             }
             .executes { context ->
-                val playerName = context.get<String>(name)
+                val playerName = context.get<String>(argumentName)
                 proxyServer.getPlayer(playerName).getOrNull()?.let { velocityPlayer ->
                     command(context, velocityPlayer.toAnvilPlayer())
                 } ?: run {

@@ -26,7 +26,7 @@ import org.anvilpowered.kbrig.context.CommandContext
 interface PlayerCommandScope {
 
     fun ArgumentBuilder.Companion.player(
-        name: String = "player",
+        argumentName: String = "player",
         command: (context: CommandContext<CommandSource>, player: Player) -> Int,
     ): RequiredArgumentBuilder<CommandSource, String>
 }

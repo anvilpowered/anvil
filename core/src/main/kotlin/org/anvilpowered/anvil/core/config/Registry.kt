@@ -22,4 +22,8 @@ interface Registry {
     fun <T : Any> getStrict(key: Key<T>): T?
     fun <T : Any> getDefault(key: Key<T>): T
     operator fun <T : Any> get(key: Key<T>): T = getStrict(key) ?: getDefault(key)
+
+    interface Scope {
+        val registry: Registry
+    }
 }

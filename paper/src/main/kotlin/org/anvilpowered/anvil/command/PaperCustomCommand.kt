@@ -18,23 +18,23 @@ context(AnvilPaperApi)
 class PaperCustomCommand : PlayerCommandScope {
 
     override fun ArgumentBuilder.Companion.player(
-        name: String,
+        argumentName: String,
         command: (context: CommandContext<CommandSource>, player: Player) -> Int,
     ): RequiredArgumentBuilder<CommandSource, String> =
-        required<CommandSource, String>(name, StringArgumentType.SingleWord)
+        required<CommandSource, String>(argumentName, StringArgumentType.SingleWord)
             .suggests { _, builder ->
                 Bukkit.getOnlinePlayers().forEach { player -> builder.suggest(player.name) }
                 builder.build()
             }
             .executes { context ->
-                val playerName = context.get<String>(name)
-                Bukkit.getPlayer(playerName)?.let { paperPlayer ->
+                val username = context.get<String>(argumentName)
+                Bukkit.getPlayer(username)?.let { paperPlayer ->
                     command(context, paperPlayer.toAnvilPlayer())
                 } ?: run {
                     context.source.audience.sendMessage(
                         Component.text()
                             .append(Component.text("Player with name ", NamedTextColor.RED))
-                            .append(Component.text(playerName, NamedTextColor.GOLD))
+                            .append(Component.text(username, NamedTextColor.GOLD))
                             .append(Component.text(" not found!", NamedTextColor.RED)),
                     )
                     0
