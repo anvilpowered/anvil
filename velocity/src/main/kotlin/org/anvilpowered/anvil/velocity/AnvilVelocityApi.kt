@@ -22,8 +22,10 @@ import com.google.inject.Injector
 import com.velocitypowered.api.plugin.PluginDescription
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.core.user.PlayerService
 import org.anvilpowered.anvil.velocity.platform.VelocityPlatform
 import org.anvilpowered.anvil.velocity.platform.VelocityPluginManager
+import org.anvilpowered.anvil.velocity.user.VelocityPlayerService
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -34,8 +36,7 @@ import org.apache.logging.log4j.Logger
  *
  * If you are using Java, the method [AnvilVelocityApi.doNotUse] is provided as an alternative.
  */
-interface AnvilVelocityApi : AnvilApi {
-    val proxyServer: ProxyServer
+interface AnvilVelocityApi : AnvilApi, ProxyServerScope {
 
     companion object {
         /**
@@ -95,5 +96,6 @@ fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
         override val platform = VelocityPlatform(proxyServer)
         override val pluginManager = VelocityPluginManager(proxyServer.pluginManager)
         override val proxyServer: ProxyServer = proxyServer
+        override val playerService: PlayerService = VelocityPlayerService()
     }
 }

@@ -20,8 +20,10 @@ package org.anvilpowered.anvil.sponge
 
 import com.google.inject.Injector
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.core.user.PlayerService
 import org.anvilpowered.anvil.sponge.platform.SpongePlatform
 import org.anvilpowered.anvil.sponge.platform.SpongePluginManager
+import org.anvilpowered.anvil.sponge.user.SpongePlayerService
 import org.apache.logging.log4j.Logger
 
 interface AnvilSpongeApi : AnvilApi {
@@ -69,5 +71,6 @@ fun AnvilApi.Companion.createSponge(injector: Injector): AnvilSpongeApi {
         override val logger: Logger = injector.getInstance(Logger::class.java)
         override val platform = SpongePlatform
         override val pluginManager = SpongePluginManager
+        override val playerService: PlayerService = SpongePlayerService()
     }
 }

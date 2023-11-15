@@ -16,35 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core
+package org.anvilpowered.anvil.velocity.user
 
-import org.anvilpowered.anvil.core.platform.Platform
-import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.PlayerService
-import org.apache.logging.log4j.Logger
+import org.anvilpowered.anvil.velocity.ProxyServerScope
+import java.util.UUID
 
-/**
- * To create an instance of this interface, use the `AnvilApi.create` function.
- * This is available for each platform in the corresponding `anvil-<platform>` module.
- *
- * Generally, the method will look something like this:
- * ```kt
- * AnvilApi.create<<<platform>>>("my-plugin", ....)
- * ```
- *
- * For example, for Velocity:
- *
- * ```kt
- * AnvilApi.createVelocity("my-plugin", ....)
- * ```
- */
-interface AnvilApi : PlayerService.Scope {
+context(ProxyServerScope)
+class VelocityPlayerService : PlayerService {
+    override fun get(username: String): Player? =
+        proxyServer.getPlayer(username).orElse(null)?.toAnvilPlayer()
 
-    val logger: Logger
+    override fun get(id: UUID): Player? =
+        proxyServer.getPlayer(id).orElse(null)?.toAnvilPlayer()
 
-    val platform: Platform
-
-    val pluginManager: PluginManager
-
-    companion object
+    override fun getAll(startsWith: String): Sequence<Player> =
+        proxyServer.allPlayers.asSequence().map { it.toAnvilPlayer() }
 }

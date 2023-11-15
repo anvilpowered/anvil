@@ -16,35 +16,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core
+package org.anvilpowered.anvil.sponge.user
 
-import org.anvilpowered.anvil.core.platform.Platform
-import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.PlayerService
-import org.apache.logging.log4j.Logger
+import org.spongepowered.api.Sponge
+import java.util.UUID
 
-/**
- * To create an instance of this interface, use the `AnvilApi.create` function.
- * This is available for each platform in the corresponding `anvil-<platform>` module.
- *
- * Generally, the method will look something like this:
- * ```kt
- * AnvilApi.create<<<platform>>>("my-plugin", ....)
- * ```
- *
- * For example, for Velocity:
- *
- * ```kt
- * AnvilApi.createVelocity("my-plugin", ....)
- * ```
- */
-interface AnvilApi : PlayerService.Scope {
+class SpongePlayerService : PlayerService {
+    override fun get(username: String): Player? =
+        Sponge.server().player(username).orElse(null)?.toAnvilPlayer()
 
-    val logger: Logger
+    override fun get(id: UUID): Player? =
+        Sponge.server().player(id).orElse(null)?.toAnvilPlayer()
 
-    val platform: Platform
-
-    val pluginManager: PluginManager
-
-    companion object
+    override fun getAll(startsWith: String): Sequence<Player> =
+        Sponge.server().onlinePlayers().asSequence().map { it.toAnvilPlayer() }
 }
