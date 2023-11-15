@@ -51,11 +51,11 @@ interface KeyBuilder<T : Any> {
     /**
      * Sets the toStringer of the generated [Key].
      *
-     * @param toStringer The toStringer to set or `null` to remove it
+     * @param printer The toStringer to set or `null` to remove it
      * @return `this`
      */
     @KeyBuilderDsl
-    fun printer(toStringer: ((T) -> String)?): KeyBuilder<T>
+    fun printer(printer: ((T) -> String)?): KeyBuilder<T>
 
     /**
      * Generates a [Key] based on this builder.
