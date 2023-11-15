@@ -32,4 +32,11 @@ class VelocityCommandExecutor : CommandExecutor {
             command,
         ).await()
     }
+
+    override suspend fun executeAsConsole(command: String): Boolean {
+        return proxyServer.commandManager.executeAsync(
+            proxyServer.consoleCommandSource,
+            command,
+        ).await()
+    }
 }

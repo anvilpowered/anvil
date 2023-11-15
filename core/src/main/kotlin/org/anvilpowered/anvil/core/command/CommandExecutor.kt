@@ -18,7 +18,40 @@
 
 package org.anvilpowered.anvil.core.command
 
+import org.anvilpowered.anvil.core.LoggerScope
+
 interface CommandExecutor {
 
     suspend fun execute(source: CommandSource, command: String): Boolean
+
+    suspend fun executeAsConsole(command: String): Boolean
+
+    interface Scope {
+        val commandExecutor: CommandExecutor
+    }
+
+    companion object {
+        context(Scope, LoggerScope)
+        fun withLogging(prefix: String = "command"): CommandExecutor = object : CommandExecutor {
+            private fun log(success: Boolean, prefix: String, command: String) {
+                if (success) {
+                    logger.info("$prefix: $command")
+                } else {
+                    logger.error("Failed to execute $prefix: $command")
+                }
+            }
+
+            override suspend fun execute(source: CommandSource, command: String): Boolean {
+                val success = commandExecutor.execute(source, command)
+                log(success, prefix, command)
+                return success
+            }
+
+            override suspend fun executeAsConsole(command: String): Boolean {
+                val success = commandExecutor.executeAsConsole(command)
+                log(success, "console via $prefix", command)
+                return success
+            }
+        }
+    }
 }

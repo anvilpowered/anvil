@@ -31,4 +31,11 @@ class SpongeCommandExecutor : CommandExecutor {
             command,
         ).isSuccess
     }
+
+    override suspend fun executeAsConsole(command: String): Boolean {
+        return Sponge.server().commandManager().process(
+            Sponge.systemSubject(),
+            command,
+        ).isSuccess
+    }
 }

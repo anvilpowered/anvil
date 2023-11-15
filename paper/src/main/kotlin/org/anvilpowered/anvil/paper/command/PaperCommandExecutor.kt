@@ -27,4 +27,8 @@ class PaperCommandExecutor : CommandExecutor {
     override suspend fun execute(source: CommandSource, command: String): Boolean {
         return Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command)
     }
+
+    override suspend fun executeAsConsole(command: String): Boolean {
+        return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
+    }
 }
