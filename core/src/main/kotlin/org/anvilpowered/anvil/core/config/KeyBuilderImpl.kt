@@ -20,17 +20,12 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 
-internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : NamedKeyBuilder<T> {
-    private val type: TypeToken<T>
+internal class KeyBuilderImpl<T : Any>(private val type: TypeToken<T>) : NamedKeyBuilder<T> {
     private var name: String = ""
     private var fallbackValue: T? = null
     private var description: String? = null
-    private var parser: ((String) -> T)? = null
-    private var printer: ((T) -> String)? = null
-
-    init {
-        this.type = type
-    }
+    private var serializer: ((T) -> String)? = null
+    private var deserializer: ((String) -> T)? = null
 
     override fun name(name: String): KeyBuilderImpl<T> {
         this.name = name
@@ -47,13 +42,13 @@ internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : NamedKeyBuilder<T> 
         return this
     }
 
-    override fun parser(parser: ((String) -> T)?): KeyBuilderImpl<T> {
-        this.parser = parser
+    override fun serializer(printer: ((T) -> String)?): KeyBuilderImpl<T> {
+        this.serializer = printer
         return this
     }
 
-    override fun printer(printer: ((T) -> String)?): KeyBuilderImpl<T> {
-        this.printer = printer
+    override fun deserializer(parser: ((String) -> T)?): KeyBuilderImpl<T> {
+        this.deserializer = parser
         return this
     }
 
@@ -63,12 +58,12 @@ internal class KeyBuilderImpl<T : Any>(type: TypeToken<T>) : NamedKeyBuilder<T> 
         name,
         requireNotNull(fallbackValue) { "fallbackValue not set" },
         description,
-        parser ?: getDefaultParser(type), // TODO: Proper parser interface with parsing exception
-        printer ?: { it.toString() },
+        serializer ?: { it.toString() },
+        deserializer ?: getDefaultDeserializer(type), // TODO: Proper deserializer interface with parsing exception
     )
 }
 
-private fun <T> getDefaultParser(type: TypeToken<T>): (String) -> T? {
+private fun <T> getDefaultDeserializer(type: TypeToken<T>): (String) -> T? {
     @Suppress("UNCHECKED_CAST")
     return when (type.type) {
         String::class.java -> { it -> it }

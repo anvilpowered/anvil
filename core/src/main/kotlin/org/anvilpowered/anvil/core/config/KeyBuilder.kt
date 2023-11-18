@@ -46,7 +46,7 @@ interface KeyBuilder<T : Any> {
      * @return `this`
      */
     @KeyBuilderDsl
-    fun parser(parser: ((String) -> T)?): KeyBuilder<T>
+    fun deserializer(parser: ((String) -> T)?): KeyBuilder<T>
 
     /**
      * Sets the toStringer of the generated [Key].
@@ -55,7 +55,7 @@ interface KeyBuilder<T : Any> {
      * @return `this`
      */
     @KeyBuilderDsl
-    fun printer(printer: ((T) -> String)?): KeyBuilder<T>
+    fun serializer(printer: ((T) -> String)?): KeyBuilder<T>
 
     /**
      * Generates a [Key] based on this builder.

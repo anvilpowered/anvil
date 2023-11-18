@@ -24,7 +24,7 @@ package org.anvilpowered.anvil.core.config
 class EnvironmentRegistry(private val delegate: Registry? = null) : Registry {
     override fun <T : Any> getStrict(key: Key<T>): T? {
         val value = System.getenv(key.name) ?: return delegate?.getStrict(key)
-        return key.parse(value)
+        return key.deserialize(value)
     }
 
     override fun <T : Any> getDefault(key: Key<T>): T {

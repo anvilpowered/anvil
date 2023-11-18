@@ -29,8 +29,8 @@ class Key<T : Any> internal constructor(
     val name: String,
     val fallback: T,
     val description: String?,
-    private val parser: (String) -> T?,
-    private val printer: (T) -> String,
+    private val serializer: (T) -> String,
+    private val deserializer: (String) -> T?,
 ) : Comparable<Key<T>> {
 
     val namespace: KeyNamespace = this@KeyNamespace
@@ -42,8 +42,8 @@ class Key<T : Any> internal constructor(
     private val comparator = Comparator.comparing<Key<T>, String> { it.name }
         .thenComparing(Comparator.comparing { it.type.type.typeName })
 
-    fun parse(value: String): T? = parser(value)
-    fun print(value: T): String = printer(value)
+    fun serialize(value: T): String = serializer(value)
+    fun deserialize(value: String): T? = deserializer(value)
 
     override fun compareTo(other: Key<T>): Int = comparator.compare(this, other)
     override fun equals(other: Any?): Boolean {
@@ -65,9 +65,8 @@ class Key<T : Any> internal constructor(
 
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
-        inline fun <reified T : Any> build(@BuilderInference block: NamedKeyBuilder<T>.() -> Unit): Key<T> {
-            return builder(object : TypeToken<T>() {}).apply(block).build()
-        }
+        inline fun <reified T : Any> build(@BuilderInference block: NamedKeyBuilder<T>.() -> Unit): Key<T> =
+            builder(object : TypeToken<T>() {}).apply(block).build()
 
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
