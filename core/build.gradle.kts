@@ -11,6 +11,7 @@ dependencies {
     api(libs.configurate.core)
     api(libs.annotations)
     api(libs.kotlinx.coroutines)
+    api(libs.guava)
 
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")
