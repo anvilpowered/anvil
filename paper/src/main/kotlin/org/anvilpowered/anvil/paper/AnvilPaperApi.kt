@@ -21,9 +21,11 @@
 package org.anvilpowered.anvil.paper
 
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.platform.Server
 import org.anvilpowered.anvil.core.user.PlayerService
-import org.anvilpowered.anvil.paper.platform.PaperPlatform
 import org.anvilpowered.anvil.paper.platform.PaperPluginManager
+import org.anvilpowered.anvil.paper.platform.PaperServer
 import org.anvilpowered.anvil.paper.user.PaperPlayerService
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -35,8 +37,8 @@ context(JavaPlugin)
 fun AnvilApi.Companion.createPaper(): AnvilPaperApi {
     return object : AnvilPaperApi {
         override val logger: Logger = LogManager.getLogger(pluginMeta.name)
-        override val platform = PaperPlatform
-        override val pluginManager = PaperPluginManager
+        override val server: Server = PaperServer
+        override val pluginManager: PluginManager = PaperPluginManager
         override val playerService: PlayerService = PaperPlayerService()
     }
 }

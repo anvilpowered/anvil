@@ -18,10 +18,9 @@
 
 package org.anvilpowered.anvil.core
 
-import org.anvilpowered.anvil.core.platform.Platform
 import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.platform.Server
 import org.anvilpowered.anvil.core.user.PlayerService
-import org.apache.logging.log4j.Logger
 
 /**
  * To create an instance of this interface, use the `AnvilApi.create` function.
@@ -38,9 +37,7 @@ import org.apache.logging.log4j.Logger
  * AnvilApi.createVelocity("my-plugin", ....)
  * ```
  */
-interface AnvilApi : PlayerService.Scope, LoggerScope {
-
-    val platform: Platform
+interface AnvilApi : PlayerService.Scope, LoggerScope, Server.Scope {
 
     val pluginManager: PluginManager
 

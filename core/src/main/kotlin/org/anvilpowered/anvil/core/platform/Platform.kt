@@ -20,5 +20,8 @@ package org.anvilpowered.anvil.core.platform
 
 interface Platform {
     val name: String
-    val platformVersion: String
+    val version: String
+
+    val isProxy: Boolean
+    val plugins: List<Plugin>
 }
