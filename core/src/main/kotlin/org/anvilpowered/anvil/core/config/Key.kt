@@ -23,55 +23,111 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 
-context(KeyNamespace)
-class Key<T : Any> internal constructor(
-    val type: TypeToken<T>,
-    val name: String,
-    val fallback: T,
-    val description: String?,
-    private val serializer: (T) -> String,
-    private val deserializer: (String) -> T?,
-) : Comparable<Key<T>> {
+interface Key<T : Any> : Comparable<Key<T>> {
 
-    val namespace: KeyNamespace = this@KeyNamespace
+    val type: TypeToken<T>
 
-    init {
-        namespace.add(this)
+    val name: String
+
+    val fallback: T?
+
+    val description: String?
+
+    @KeyBuilderDsl
+    interface BuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> {
+        /**
+         * Sets the fallback value of the generated [Key]
+         *
+         * @param fallback The fallback value to set
+         * @return `this`
+         */
+        @KeyBuilderDsl
+        fun fallback(fallback: T?): B
+
+        /**
+         * Sets the description of the generated [Key].
+         *
+         * @param description The description to set or `null` to remove it
+         * @return `this`
+         */
+        @KeyBuilderDsl
+        fun description(description: String?): B
     }
 
-    private val comparator = Comparator.comparing<Key<T>, String> { it.name }
-        .thenComparing(Comparator.comparing { it.type.type.typeName })
-
-    fun serialize(value: T): String = serializer(value)
-    fun deserialize(value: String): T? = deserializer(value)
-
-    override fun compareTo(other: Key<T>): Int = comparator.compare(this, other)
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Key<*>) return false
-        return name == other.name && type.type == other.type.type
+    @KeyBuilderDsl
+    interface NamedBuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> : BuilderFacet<T, K, B> {
+        /**
+         * Sets the name of the generated [Key]
+         *
+         * @param name The name to set
+         * @return `this`
+         */
+        @KeyBuilderDsl
+        fun name(name: String): B
     }
 
-    override fun hashCode(): Int {
-        var result = type.hashCode()
-        result = 31 * result + name.hashCode()
-        return result
+    @KeyBuilderDsl
+    interface Builder<T : Any, K : Key<T>, B : Builder<T, K, B>> : NamedBuilderFacet<T, K, B> {
+        /**
+         * Generates a [Key] based on this builder.
+         *
+         * @return The generated [Key]
+         */
+        context(KeyNamespace)
+        @KeyBuilderDsl
+        fun build(): K
     }
-
-    override fun toString(): String = "Key(type=$type, name=$name, description=$description)"
 
     companion object {
-        fun <T : Any> builder(type: TypeToken<T>): NamedKeyBuilder<T> = KeyBuilderImpl(type)
+
+        @JvmStatic
+        val comparator: Comparator<Key<*>> = Comparator.comparing<Key<*>, String> { it.name }
+            .thenComparing(Comparator.comparing { it.type.type.typeName })
+
+        @JvmStatic
+        fun equals(a: Key<*>?, b: Key<*>?): Boolean {
+            if (a === b) return true
+            if (a == null || b == null) return false
+            return a.name == b.name && a.type.type.typeName == b.type.type.typeName
+        }
+
+        @JvmStatic
+        fun hashCode(key: Key<*>): Int {
+            var result = key.type.hashCode()
+            result = 31 * result + key.name.hashCode()
+            return result
+        }
+
+        fun <T : Any> simpleBuilder(type: TypeToken<T>): SimpleKey.NamedBuilderFacet<T> = AbstractKeyBuilder(type)
+        fun <E : Any> listBuilder(type: TypeToken<E>): ListKey.NamedBuilderFacet<E> = AbstractKeyBuilder(type)
+        fun <K : Any, V : Any> mapBuilder(type: TypeToken<T>): ListKey.NamedBuilderFacet<T> = AbstractKeyBuilder(type)
 
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
-        inline fun <reified T : Any> build(@BuilderInference block: NamedKeyBuilder<T>.() -> Unit): Key<T> =
+        inline fun <reified T : Any> build(@BuilderInference block: NamedBuilderFacet<T>.() -> Unit): Key<T> =
             builder(object : TypeToken<T>() {}).apply(block).build()
 
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
         inline fun <reified T : Any> building(
-            @BuilderInference crossinline block: KeyBuilder<T>.() -> Unit,
+            @BuilderInference crossinline block: BuilderFacet<T>.() -> Unit,
+        ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, Key<T>>> = PropertyDelegateProvider { _, property ->
+            val builder = builder(object : TypeToken<T>() {})
+            builder.name(property.name)
+            builder.block()
+            val key = builder.build()
+            ReadOnlyProperty { _, _ -> key }
+        }
+
+        context(KeyNamespace)
+        @OptIn(ExperimentalTypeInference::class)
+        inline fun <reified T : Any> buildList(@BuilderInference block: NamedBuilderFacet<T>.() -> Unit): Key<T> =
+            builder(object : TypeToken<T>() {}).apply(block).build()
+
+        context(KeyNamespace)
+        @OptIn(ExperimentalTypeInference::class)
+        inline fun <reified T : Any> buildingList(
+            @BuilderInference crossinline block: BuilderFacet<T>.() -> Unit,
         ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, Key<T>>> = PropertyDelegateProvider { _, property ->
             val builder = builder(object : TypeToken<T>() {})
             builder.name(property.name)

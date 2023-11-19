@@ -22,12 +22,62 @@ package org.anvilpowered.anvil.core.config
  * A [Registry] implementation that checks environment variables.
  */
 class EnvironmentRegistry(private val delegate: Registry? = null) : Registry {
-    override fun <T : Any> getStrict(key: Key<T>): T? {
+    override fun <T : Any> getStrict(key: SimpleKey<T>): T? {
         val value = System.getenv(key.name) ?: return delegate?.getStrict(key)
         return key.deserialize(value)
     }
 
-    override fun <T : Any> getDefault(key: Key<T>): T {
+    override fun <T : Any> getDefault(key: SimpleKey<T>): T {
         return delegate?.getDefault(key) ?: throw NoSuchElementException("No default value for key ${key.name}")
+    }
+
+    override fun <E : Any> getStrict(key: ListKey<E>): List<E>? {
+        val value = System.getenv(key.name) ?: return delegate?.getStrict(key)
+        val tokens = value.split(",")
+        return tokens.mapNotNull { key.deserializeElement(it) }
+    }
+
+    override fun <E : Any> getDefault(key: ListKey<E>): List<E> {
+        return delegate?.getDefault(key) ?: throw NoSuchElementException("No default value for key ${key.name}")
+    }
+
+    override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? {
+        val value = System.getenv(key.name) ?: return delegate?.getStrict(key, index)
+        val tokens = value.split(",")
+        return key.deserializeElement(tokens[index])
+    }
+
+    override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E {
+        return delegate?.getDefault(key, index) ?: throw NoSuchElementException("No default value for key ${key.name}")
+    }
+
+    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? {
+        val value = System.getenv(key.name) ?: return delegate?.getStrict(key)
+        val tokens = value.split(",")
+        return tokens.associate { token ->
+            val (k, v) = token.split("=")
+            val mapKey = requireNotNull(key.deserializeKey(k)) { "Could not deserialize mapKey $k for key $key" }
+            val mapValue = requireNotNull(key.deserializeValue(v)) { "Could not deserialize mapValue $v for mapKey $k for key $key" }
+            mapKey to mapValue
+        }
+    }
+
+    override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>): Map<K, V> {
+        return delegate?.getDefault(key) ?: throw NoSuchElementException("No default value for key ${key.name}")
+    }
+
+    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? {
+        val value = System.getenv(key.name) ?: return delegate?.getStrict(key, mapKey)
+        return value.split(",").asSequence()
+            .map { it.split("=").zipWithNext().single() }
+            .firstOrNull { (k, _) ->
+                mapKey == requireNotNull(key.deserializeKey(k)) { "Could not deserialize mapKey $k for key $key" }
+            }?.let { (k, v) ->
+                requireNotNull(key.deserializeValue(v)) { "Could not deserialize mapValue $v for mapKey $k for key $key" }
+            }
+    }
+
+    override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V {
+        return delegate?.getDefault(key, mapKey) ?: throw NoSuchElementException("No default value for key ${key.name}")
     }
 }

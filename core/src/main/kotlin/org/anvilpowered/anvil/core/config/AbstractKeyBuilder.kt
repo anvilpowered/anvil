@@ -20,47 +20,36 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 
-internal class KeyBuilderImpl<T : Any>(private val type: TypeToken<T>) : NamedKeyBuilder<T> {
-    private var name: String = ""
-    private var fallbackValue: T? = null
-    private var description: String? = null
-    private var serializer: ((T) -> String)? = null
-    private var deserializer: ((String) -> T)? = null
+internal abstract class AbstractKeyBuilder<
+    T : Any, K : Key<T>, B : Key.Builder<T, K, B>,
+    AF : Key.BuilderFacet<T, K, AF>, NF : Key.NamedBuilderFacet<T, K, NF>,
+    >(
+    val type: TypeToken<T>,
+) : Key.Builder<T, K, B> {
 
-    override fun name(name: String): KeyBuilderImpl<T> {
+    var name: String? = null
+    var fallback: T? = null
+    var description: String? = null
+
+    protected abstract fun self(): B
+
+    override fun name(name: String): B {
         this.name = name
-        return this
+        return self()
     }
 
-    override fun fallback(fallbackValue: T?): KeyBuilderImpl<T> {
-        this.fallbackValue = fallbackValue
-        return this
+    override fun fallback(fallback: T?): B {
+        this.fallback = fallback
+        return self()
     }
 
-    override fun description(description: String?): KeyBuilderImpl<T> {
+    override fun description(description: String?): B {
         this.description = description
-        return this
+        return self()
     }
 
-    override fun serializer(printer: ((T) -> String)?): KeyBuilderImpl<T> {
-        this.serializer = printer
-        return this
-    }
-
-    override fun deserializer(parser: ((String) -> T)?): KeyBuilderImpl<T> {
-        this.deserializer = parser
-        return this
-    }
-
-    context(KeyNamespace)
-    override fun build(): Key<T> = Key(
-        type,
-        name,
-        requireNotNull(fallbackValue) { "fallbackValue not set" },
-        description,
-        serializer ?: { it.toString() },
-        deserializer ?: getDefaultDeserializer(type), // TODO: Proper deserializer interface with parsing exception
-    )
+    abstract fun asAnonymousFacet(): AF
+    abstract fun asNamedFacet(): NF
 }
 
 private fun <T> getDefaultDeserializer(type: TypeToken<T>): (String) -> T? {

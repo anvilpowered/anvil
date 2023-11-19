@@ -41,15 +41,15 @@ internal class KeyNamespaceImpl(override val name: String) : KeyNamespace {
 
     override fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>? {
         val key = keys[keyName] ?: return null
-        if (key.type != type) {
-            throw TypeCastException("Key $name has type ${key.type} which does not match provided type $type")
+        if (key.meta.type != type) {
+            throw TypeCastException("Key $name has type ${key.meta.type} which does not match provided type $type")
         }
         @Suppress("UNCHECKED_CAST")
         return key as Key<T>
     }
 
     override fun <T : Any> add(key: Key<T>) {
-        keys[key.name] = key
+        keys[key.meta.name] = key
     }
 }
 
