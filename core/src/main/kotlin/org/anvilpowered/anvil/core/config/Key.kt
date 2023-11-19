@@ -127,10 +127,19 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
             valueType: TypeToken<V>,
         ): MapKey.FacetedBuilder<K, V> = MapKeyBuilder(type, keyType, valueType)
 
+        inline fun <reified T : Any> simpleBuilder() =
+            simpleBuilder(object : TypeToken<T>() {})
+
+        inline fun <reified E : Any> listBuilder() =
+            listBuilder(object : TypeToken<List<E>>() {}, object : TypeToken<E>() {})
+
+        inline fun <reified K : Any, reified V : Any> mapBuilder() =
+            mapBuilder(object : TypeToken<Map<K, V>>() {}, object : TypeToken<K>() {}, object : TypeToken<V>() {})
+
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
         inline fun <reified T : Any> buildSimple(@BuilderInference block: SimpleKey.NamedBuilderFacet<T>.() -> Unit): SimpleKey<T> {
-            val builder = simpleBuilder(object : TypeToken<T>() {})
+            val builder = simpleBuilder<T>()
             builder.asNamedFacet().block()
             return builder.build()
         }
@@ -140,7 +149,7 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
         inline fun <reified T : Any> buildingSimple(
             @BuilderInference crossinline block: SimpleKey.AnonymousBuilderFacet<T>.() -> Unit,
         ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, SimpleKey<T>>> = PropertyDelegateProvider { _, property ->
-            val builder = simpleBuilder(object : TypeToken<T>() {})
+            val builder = simpleBuilder<T>()
             builder.name(property.name)
             builder.asAnonymousFacet().block()
             val key = builder.build()
@@ -150,7 +159,7 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
         inline fun <reified E : Any> buildList(@BuilderInference block: ListKey.NamedBuilderFacet<E>.() -> Unit): ListKey<E> {
-            val builder = listBuilder(object : TypeToken<List<E>>() {}, object : TypeToken<E>() {})
+            val builder = listBuilder<E>()
             builder.asNamedFacet().block()
             return builder.build()
         }
@@ -160,7 +169,7 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
         inline fun <reified E : Any> buildingList(
             @BuilderInference crossinline block: ListKey.AnonymousBuilderFacet<E>.() -> Unit,
         ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, ListKey<E>>> = PropertyDelegateProvider { _, property ->
-            val builder = listBuilder(object : TypeToken<List<E>>() {}, object : TypeToken<E>() {})
+            val builder = listBuilder<E>()
             builder.name(property.name)
             builder.asAnonymousFacet().block()
             val key = builder.build()
@@ -170,7 +179,7 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
         context(KeyNamespace)
         @OptIn(ExperimentalTypeInference::class)
         inline fun <reified K : Any, reified V : Any> buildMap(@BuilderInference block: MapKey.NamedBuilderFacet<K, V>.() -> Unit): MapKey<K, V> {
-            val builder = mapBuilder(object : TypeToken<Map<K, V>>() {}, object : TypeToken<K>() {}, object : TypeToken<V>() {})
+            val builder = mapBuilder<K, V>()
             builder.asNamedFacet().block()
             return builder.build()
         }
@@ -180,7 +189,7 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
         inline fun <reified K : Any, reified V : Any> buildingMap(
             @BuilderInference crossinline block: MapKey.AnonymousBuilderFacet<K, V>.() -> Unit,
         ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, MapKey<K, V>>> = PropertyDelegateProvider { _, property ->
-            val builder = mapBuilder(object : TypeToken<Map<K, V>>() {}, object : TypeToken<K>() {}, object : TypeToken<V>() {})
+            val builder = mapBuilder<K, V>()
             builder.name(property.name)
             builder.asAnonymousFacet().block()
             val key = builder.build()
