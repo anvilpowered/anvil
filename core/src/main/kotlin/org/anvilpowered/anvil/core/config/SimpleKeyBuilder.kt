@@ -4,20 +4,21 @@ import io.leangen.geantyref.TypeToken
 
 internal class SimpleKeyBuilder<T : Any>(
     type: TypeToken<T>,
-) : AbstractKeyBuilder<T, SimpleKey<T>, SimpleKey.Builder<T>, SimpleKey.AnonymousBuilderFacet<T>, SimpleKey.NamedBuilderFacet<T>>(type),
-    SimpleKey.Builder<T> {
+) : AbstractKeyBuilder<T, SimpleKey<T>, SimpleKey.FacetedBuilder<T>, SimpleKey.AnonymousBuilderFacet<T>, SimpleKey.NamedBuilderFacet<T>>(
+    type,
+), SimpleKey.FacetedBuilder<T> {
 
     private var serializer: ((T) -> String)? = null
     private var deserializer: ((String) -> T)? = null
 
-    override fun self(): SimpleKey.Builder<T> = this
+    override fun self(): SimpleKey.FacetedBuilder<T> = this
 
-    override fun serializer(serializer: ((T) -> String)?): SimpleKey.Builder<T> {
+    override fun serializer(serializer: ((T) -> String)?): SimpleKey.FacetedBuilder<T> {
         this.serializer = serializer
         return self()
     }
 
-    override fun deserializer(deserializer: ((String) -> T)?): SimpleKey.Builder<T> {
+    override fun deserializer(deserializer: ((String) -> T)?): SimpleKey.FacetedBuilder<T> {
         this.deserializer = deserializer
         return self()
     }
@@ -35,7 +36,7 @@ internal class SimpleKeyBuilder<T : Any>(
     override fun asAnonymousFacet(): SimpleKey.AnonymousBuilderFacet<T> {
         return object : SimpleKey.AnonymousBuilderFacet<T> {
             override fun fallback(fallback: T?): SimpleKey.AnonymousBuilderFacet<T> {
-                this@SimpleKeyBuilder.fallback(fallback).let {this }
+                this@SimpleKeyBuilder.fallback(fallback).let { this }
                 return this
             }
 

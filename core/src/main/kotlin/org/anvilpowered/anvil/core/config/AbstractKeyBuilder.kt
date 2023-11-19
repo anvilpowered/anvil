@@ -21,11 +21,11 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 internal abstract class AbstractKeyBuilder<
-    T : Any, K : Key<T>, B : Key.Builder<T, K, B>,
+    T : Any, K : Key<T>, B : Key.FacetedBuilder<T, K, B, AF, NF>,
     AF : Key.BuilderFacet<T, K, AF>, NF : Key.NamedBuilderFacet<T, K, NF>,
     >(
     val type: TypeToken<T>,
-) : Key.Builder<T, K, B> {
+) : Key.FacetedBuilder<T, K, B, AF, NF> {
 
     var name: String? = null
     var fallback: T? = null
@@ -47,9 +47,6 @@ internal abstract class AbstractKeyBuilder<
         this.description = description
         return self()
     }
-
-    abstract fun asAnonymousFacet(): AF
-    abstract fun asNamedFacet(): NF
 }
 
 private fun <T> getDefaultDeserializer(type: TypeToken<T>): (String) -> T? {

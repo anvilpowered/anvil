@@ -7,32 +7,33 @@ internal class MapKeyBuilder<K : Any, V : Any>(
     private val keyType: TypeToken<K>,
     private val valueType: TypeToken<V>,
 ) : AbstractKeyBuilder<
-    Map<K, V>, MapKey<K, V>, MapKey.Builder<K, V>, MapKey.AnonymousBuilderFacet<K, V>,
+    Map<K, V>, MapKey<K, V>, MapKey.FacetedBuilder<K, V>, MapKey.AnonymousBuilderFacet<K, V>,
     MapKey.NamedBuilderFacet<K, V>,
-    >(type), MapKey.Builder<K, V> {
+    >(type), MapKey.FacetedBuilder<K, V> {
+
     private var keySerializer: ((K) -> String)? = null
     private var keyDeserializer: ((String) -> K)? = null
     private var valueSerializer: ((V) -> String)? = null
     private var valueDeserializer: ((String) -> V)? = null
 
-    override fun self(): MapKey.Builder<K, V> = this
+    override fun self(): MapKey.FacetedBuilder<K, V> = this
 
-    override fun keySerializer(serializer: ((K) -> String)?): MapKey.Builder<K, V> {
+    override fun keySerializer(serializer: ((K) -> String)?): MapKey.FacetedBuilder<K, V> {
         this.keySerializer = serializer
         return this
     }
 
-    override fun keyDeserializer(deserializer: ((String) -> K)?): MapKey.Builder<K, V> {
+    override fun keyDeserializer(deserializer: ((String) -> K)?): MapKey.FacetedBuilder<K, V> {
         this.keyDeserializer = deserializer
         return this
     }
 
-    override fun valueSerializer(serializer: ((V) -> String)?): MapKey.Builder<K, V> {
+    override fun valueSerializer(serializer: ((V) -> String)?): MapKey.FacetedBuilder<K, V> {
         this.valueSerializer = serializer
         return this
     }
 
-    override fun valueDeserializer(deserializer: ((String) -> V)?): MapKey.Builder<K, V> {
+    override fun valueDeserializer(deserializer: ((String) -> V)?): MapKey.FacetedBuilder<K, V> {
         this.valueDeserializer = deserializer
         return this
     }

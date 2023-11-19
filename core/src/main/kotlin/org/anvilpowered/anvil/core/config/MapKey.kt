@@ -3,7 +3,7 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 context(KeyNamespace)
-class MapKey<K : Any, V : Any>(
+class MapKey<K : Any, V : Any> internal constructor(
     override val type: TypeToken<Map<K, V>>,
     override val name: String,
     override val fallback: Map<K, V>,
@@ -82,4 +82,8 @@ class MapKey<K : Any, V : Any>(
     @KeyBuilderDsl
     interface Builder<K : Any, V : Any> : BuilderFacet<K, V, Builder<K, V>>,
         Key.Builder<Map<K, V>, MapKey<K, V>, Builder<K, V>>
+
+    @KeyBuilderDsl
+    interface FacetedBuilder<K : Any, V : Any> : BuilderFacet<K, V, FacetedBuilder<K, V>>,
+        Key.FacetedBuilder<Map<K, V>, MapKey<K, V>, FacetedBuilder<K, V>, AnonymousBuilderFacet<K, V>, NamedBuilderFacet<K, V>>
 }

@@ -3,7 +3,7 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 context(KeyNamespace)
-class SimpleKey<T : Any>(
+class SimpleKey<T : Any> internal constructor(
     override val type: TypeToken<T>,
     override val name: String,
     override val fallback: T,
@@ -58,4 +58,8 @@ class SimpleKey<T : Any>(
     @KeyBuilderDsl
     interface Builder<T : Any> : BuilderFacet<T, Builder<T>>,
         Key.Builder<T, SimpleKey<T>, Builder<T>>
+
+    @KeyBuilderDsl
+    interface FacetedBuilder<T : Any> : BuilderFacet<T, FacetedBuilder<T>>,
+        Key.FacetedBuilder<T, SimpleKey<T>, FacetedBuilder<T>, AnonymousBuilderFacet<T>, NamedBuilderFacet<T>>
 }

@@ -5,20 +5,20 @@ import io.leangen.geantyref.TypeToken
 internal class ListKeyBuilder<E : Any>(
     type: TypeToken<List<E>>,
     private val elementType: TypeToken<E>,
-) : AbstractKeyBuilder<List<E>, ListKey<E>, ListKey.Builder<E>, ListKey.AnonymousBuilderFacet<E>, ListKey.NamedBuilderFacet<E>>(type),
-    ListKey.Builder<E> {
+) : AbstractKeyBuilder<List<E>, ListKey<E>, ListKey.FacetedBuilder<E>, ListKey.AnonymousBuilderFacet<E>, ListKey.NamedBuilderFacet<E>>(type),
+    ListKey.FacetedBuilder<E> {
 
     private var elementSerializer: ((E) -> String)? = null
     private var elementDeserializer: ((String) -> E)? = null
 
-    override fun self(): ListKey.Builder<E> = this
+    override fun self(): ListKey.FacetedBuilder<E> = this
 
-    override fun elementSerializer(serializer: ((E) -> String)?): ListKey.Builder<E> {
+    override fun elementSerializer(serializer: ((E) -> String)?): ListKey.FacetedBuilder<E> {
         this.elementSerializer = serializer
         return this
     }
 
-    override fun elementDeserializer(deserializer: ((String) -> E)?): ListKey.Builder<E> {
+    override fun elementDeserializer(deserializer: ((String) -> E)?): ListKey.FacetedBuilder<E> {
         this.elementDeserializer = deserializer
         return this
     }

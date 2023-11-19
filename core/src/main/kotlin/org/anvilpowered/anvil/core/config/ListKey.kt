@@ -3,7 +3,7 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 context(KeyNamespace)
-class ListKey<E : Any>(
+class ListKey<E : Any> internal constructor(
     override val type: TypeToken<List<E>>,
     override val name: String,
     override val fallback: List<E>,
@@ -59,4 +59,8 @@ class ListKey<E : Any>(
     @KeyBuilderDsl
     interface Builder<E : Any> : BuilderFacet<E, Builder<E>>,
         Key.Builder<List<E>, ListKey<E>, Builder<E>>
+
+    @KeyBuilderDsl
+    interface FacetedBuilder<E : Any> : BuilderFacet<E, FacetedBuilder<E>>,
+        Key.FacetedBuilder<List<E>, ListKey<E>, FacetedBuilder<E>, AnonymousBuilderFacet<E>, NamedBuilderFacet<E>>
 }
