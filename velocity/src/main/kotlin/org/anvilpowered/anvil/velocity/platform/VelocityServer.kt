@@ -7,5 +7,6 @@ import org.anvilpowered.anvil.core.platform.Server
 
 class VelocityServer(proxyServer: ProxyServer) : Server {
     override val platform: Platform = VelocityPlatform(proxyServer)
+    override val broadcastAudience: Audience = proxyServer
     override val systemSubject: Audience = proxyServer.consoleCommandSource
 }

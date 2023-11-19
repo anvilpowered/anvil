@@ -6,6 +6,8 @@ interface Server {
 
     val platform: Platform
 
+    val broadcastAudience: Audience
+
     val systemSubject: Audience
 
     interface Scope {

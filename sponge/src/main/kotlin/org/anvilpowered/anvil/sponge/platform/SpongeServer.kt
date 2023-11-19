@@ -8,6 +8,8 @@ import org.spongepowered.api.Sponge
 object SpongeServer : Server {
     override val platform: Platform
         get() = SpongePlatform
+    override val broadcastAudience: Audience
+        get() = Sponge.server().broadcastAudience()
     override val systemSubject: Audience
-        get() = Sponge.systemSubject()
+        get() = Sponge.game().systemSubject()
 }
