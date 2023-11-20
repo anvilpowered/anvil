@@ -15,4 +15,6 @@ private class AnvilSpongePlayer(
     override val id: UUID = platformDelegate.uniqueId()
     override val username: String = platformDelegate.name()
     override val displayname: Component = platformDelegate.displayName().get()
+    override val latencyMs: Int
+        get() = platformDelegate.connection().latency()
 }

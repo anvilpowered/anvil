@@ -17,4 +17,6 @@ private class AnvilVelocityPlayer(
     override val id: UUID = velocityPlayer.uniqueId
     override val username: String = velocityPlayer.username
     override val displayname: Component = Component.text(velocityPlayer.username)
+    override val latencyMs: Int
+        get() = velocityPlayer.ping.toInt()
 }

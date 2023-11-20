@@ -32,4 +32,6 @@ interface Player : Subject, Audience {
     val username: String
 
     val displayname: Component
+
+    val latencyMs: Int
 }

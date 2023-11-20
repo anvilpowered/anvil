@@ -17,4 +17,6 @@ private class AnvilPaperPlayer(
     override val id: UUID = platformDelegate.uniqueId
     override val username: String = platformDelegate.name
     override val displayname: Component = platformDelegate.displayName()
+    override val latencyMs: Int
+        get() = platformDelegate.ping
 }
