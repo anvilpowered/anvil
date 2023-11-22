@@ -1,8 +1,8 @@
 package org.anvilpowered.anvil.plugin.command.plugin
 
 import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.CommandSource
+import org.anvilpowered.anvil.core.platform.PluginManager
 import org.anvilpowered.anvil.core.user.requiresPermission
 import org.anvilpowered.anvil.plugin.command.common.addHelp
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
@@ -14,8 +14,7 @@ private val children = mapOf(
     "info <name>" to Component.text("Shows information about a plugin"),
 )
 
-object PluginCommand {
-    context(AnvilApi)
+class PluginCommandBuilder(val pluginManager: PluginManager) {
     fun create(): LiteralCommandNode<CommandSource> =
         ArgumentBuilder.literal<CommandSource>("plugin")
             .addHelp("anvil plugin", children)

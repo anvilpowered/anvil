@@ -18,9 +18,7 @@
 
 package org.anvilpowered.anvil.core
 
-import org.anvilpowered.anvil.core.platform.PluginManager
-import org.anvilpowered.anvil.core.platform.Server
-import org.anvilpowered.anvil.core.user.PlayerService
+import org.koin.core.module.Module
 
 /**
  * To create an instance of this interface, use the `AnvilApi.create` function.
@@ -37,9 +35,9 @@ import org.anvilpowered.anvil.core.user.PlayerService
  * AnvilApi.createVelocity("my-plugin", ....)
  * ```
  */
-interface AnvilApi : PlayerService.Scope, LoggerScope, Server.Scope {
+interface AnvilApi {
 
-    val pluginManager: PluginManager
+    val module: Module
 
     companion object
 }

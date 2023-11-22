@@ -20,9 +20,24 @@ package org.anvilpowered.anvil.core.command
 
 import org.apache.logging.log4j.Logger
 
-interface CommandExecutor {
+fun CommandExecutor.withLogging(logger: Logger, prefix: String = "command"): CommandExecutor = object : CommandExecutor {
+    private fun log(success: Boolean, prefix: String, command: String) {
+        if (success) {
+            logger.info("$prefix: $command")
+        } else {
+            logger.error("Failed to execute $prefix: $command")
+        }
+    }
 
-    suspend fun execute(source: CommandSource, command: String): Boolean
+    override suspend fun execute(source: CommandSource, command: String): Boolean {
+        val success = this@withLogging.execute(source, command)
+        log(success, prefix, command)
+        return success
+    }
 
-    suspend fun executeAsConsole(command: String): Boolean
+    override suspend fun executeAsConsole(command: String): Boolean {
+        val success = this@withLogging.executeAsConsole(command)
+        log(success, "console via $prefix", command)
+        return success
+    }
 }

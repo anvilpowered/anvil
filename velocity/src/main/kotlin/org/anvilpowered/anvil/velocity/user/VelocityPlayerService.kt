@@ -18,13 +18,12 @@
 
 package org.anvilpowered.anvil.velocity.user
 
+import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.PlayerService
-import org.anvilpowered.anvil.velocity.ProxyServerScope
 import java.util.UUID
 
-context(ProxyServerScope)
-class VelocityPlayerService : PlayerService {
+class VelocityPlayerService(private val proxyServer: ProxyServer) : PlayerService {
     override fun get(username: String): Player? =
         proxyServer.getPlayer(username).orElse(null)?.toAnvilPlayer()
 

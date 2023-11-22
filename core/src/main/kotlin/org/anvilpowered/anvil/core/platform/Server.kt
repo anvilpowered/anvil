@@ -9,8 +9,4 @@ interface Server {
     val broadcastAudience: Audience
 
     val systemSubject: Audience
-
-    interface Scope {
-        val server: Server
-    }
 }

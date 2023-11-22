@@ -23,7 +23,7 @@ import org.anvilpowered.anvil.core.user.PlayerService
 import org.spongepowered.api.Sponge
 import java.util.UUID
 
-class SpongePlayerService : PlayerService {
+object SpongePlayerService : PlayerService {
     override fun get(username: String): Player? =
         Sponge.server().player(username).orElse(null)?.toAnvilPlayer()
 

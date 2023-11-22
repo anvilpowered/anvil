@@ -2,7 +2,6 @@ package org.anvilpowered.anvil.plugin.command.plugin
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.plugin.command.common.executesUsage
 import org.anvilpowered.kbrig.Command
@@ -11,8 +10,7 @@ import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.context.get
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
-context(AnvilApi)
-fun PluginCommand.createInfo(): LiteralCommandNode<CommandSource> =
+fun PluginCommandBuilder.createInfo(): LiteralCommandNode<CommandSource> =
     ArgumentBuilder.literal<CommandSource>("info")
         .executesUsage("anvil plugin info <name>")
         .then(

@@ -1,11 +1,11 @@
 package org.anvilpowered.anvil.velocity.command
 
+import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.command.PlayerCommandScope
 import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.velocity.AnvilVelocityApi
 import org.anvilpowered.anvil.velocity.user.toAnvilPlayer
 import org.anvilpowered.kbrig.argument.StringArgumentType
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
@@ -14,8 +14,7 @@ import org.anvilpowered.kbrig.context.CommandContext
 import org.anvilpowered.kbrig.context.get
 import kotlin.jvm.optionals.getOrNull
 
-context(AnvilVelocityApi)
-class VelocityCustomCommand : PlayerCommandScope {
+class VelocityCustomCommand(private val proxyServer: ProxyServer) : PlayerCommandScope {
 
     override fun ArgumentBuilder.Companion.player(
         argumentName: String,

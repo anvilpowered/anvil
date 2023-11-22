@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.velocity
 
 import com.google.inject.Injector
+import com.velocitypowered.api.plugin.PluginContainer
 import com.velocitypowered.api.plugin.PluginDescription
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.AnvilApi
@@ -30,6 +31,13 @@ import org.anvilpowered.anvil.velocity.platform.VelocityServer
 import org.anvilpowered.anvil.velocity.user.VelocityPlayerService
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import org.koin.core.context.KoinContext
+import org.koin.core.context.startKoin
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 
 /**
  * A subtype of [AnvilApi] that also provides access to Velocity-specific APIs such as [ProxyServer].
@@ -38,7 +46,7 @@ import org.apache.logging.log4j.Logger
  *
  * If you are using Java, the method [AnvilVelocityApi.doNotUse] is provided as an alternative.
  */
-interface AnvilVelocityApi : AnvilApi, ProxyServerScope {
+interface AnvilVelocityApi : AnvilApi {
 
     companion object {
         /**
@@ -93,11 +101,24 @@ interface AnvilVelocityApi : AnvilApi, ProxyServerScope {
 fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
     val proxyServer = injector.getInstance(ProxyServer::class.java)
     val pluginDescription = injector.getInstance(PluginDescription::class.java)
+    val velocityModule = module {
+        single<Logger> { LogManager.getLogger(pluginDescription.id) }
+        single<Server> { VelocityServer(proxyServer) }
+        single<PluginManager> { VelocityPluginManager(proxyServer.pluginManager) }
+        single<ProxyServer> { proxyServer }
+        single<PluginDescription> { pluginDescription }
+        single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
+        singleOf(::VelocityPlayerService) {
+            bind<PlayerService>()
+        }
+    }
+
+    val koin = koinApplication {
+        modules(velocityModule)
+    }.koin
+
+
     return object : AnvilVelocityApi {
-        override val logger: Logger = LogManager.getLogger(pluginDescription.id)
-        override val server: Server = VelocityServer(proxyServer)
-        override val pluginManager: PluginManager = VelocityPluginManager(proxyServer.pluginManager)
-        override val proxyServer: ProxyServer = proxyServer
-        override val playerService: PlayerService = VelocityPlayerService()
+        override val module: Module = velocityModule
     }
 }

@@ -18,14 +18,15 @@
 
 package org.anvilpowered.anvil.velocity.command
 
+import com.velocitypowered.api.proxy.ProxyServer
 import kotlinx.coroutines.future.await
 import org.anvilpowered.anvil.core.command.CommandExecutor
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.velocity.ProxyServerScope
 import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
 
-context(ProxyServerScope)
-class VelocityCommandExecutor : CommandExecutor {
+class VelocityCommandExecutor(
+    private val proxyServer: ProxyServer,
+) : CommandExecutor {
     override suspend fun execute(source: CommandSource, command: String): Boolean {
         return proxyServer.commandManager.executeAsync(
             source.platformDelegate as VelocityCommandSource,

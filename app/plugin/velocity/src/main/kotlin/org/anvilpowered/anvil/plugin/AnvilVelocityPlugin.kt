@@ -19,14 +19,18 @@
 package org.anvilpowered.anvil.plugin
 
 import com.velocitypowered.api.command.BrigadierCommand
+import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.velocity.AnvilVelocityApi
 import org.anvilpowered.anvil.velocity.command.toVelocity
 
 context(AnvilVelocityApi)
-class AnvilVelocityPlugin : AnvilPlugin() {
+class AnvilVelocityPlugin(
+    private val proxyServer: ProxyServer,
+    private val plugin: AnvilPlugin,
+) {
 
     fun registerCommands() {
-        registerCommands { command ->
+        plugin.registerCommands { command ->
             proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
         }
     }

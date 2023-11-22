@@ -38,8 +38,4 @@ interface Registry {
     fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V?
     fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V
     operator fun <K : Any, V : Any> get(key: MapKey<K, V>, mapKey: K): V = getStrict(key, mapKey) ?: getDefault(key, mapKey)
-
-    interface Scope {
-        val registry: Registry
-    }
 }

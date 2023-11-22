@@ -23,7 +23,7 @@ import org.anvilpowered.anvil.core.user.PlayerService
 import org.bukkit.Bukkit
 import java.util.UUID
 
-class PaperPlayerService : PlayerService {
+object PaperPlayerService : PlayerService {
     override fun get(username: String): Player? =
         Bukkit.getPlayerExact(username)?.toAnvilPlayer()
 

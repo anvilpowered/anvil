@@ -2,7 +2,6 @@ package org.anvilpowered.anvil.paper.command
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.paper.AnvilPaperApi
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.command.PlayerCommandScope
 import org.anvilpowered.anvil.core.user.Player
@@ -14,7 +13,6 @@ import org.anvilpowered.kbrig.context.CommandContext
 import org.anvilpowered.kbrig.context.get
 import org.bukkit.Bukkit
 
-context(AnvilPaperApi)
 class PaperCustomCommand : PlayerCommandScope {
 
     override fun ArgumentBuilder.Companion.player(

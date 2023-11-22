@@ -26,6 +26,9 @@ import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.velocity.createVelocity
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 import org.slf4j.Logger
 
 @Plugin(
@@ -37,17 +40,21 @@ import org.slf4j.Logger
 class AnvilVelocityPluginBootstrap @Inject constructor(
     private val logger: Logger,
     private val proxyServer: ProxyServer,
-    injector: Injector,
+    private val injector: Injector,
 ) {
 
-    private val plugin = with(AnvilApi.createVelocity(injector)) {
-        AnvilVelocityPlugin()
-    }
+    private lateinit var plugin: AnvilVelocityPlugin
 
     @Subscribe
     fun onProxyInit(event: ProxyInitializeEvent) {
-        logger.info("Anvil Agent is running!")
+        logger.info("Registering events")
         proxyServer.eventManager.register(this, plugin)
+        plugin = koinApplication {
+            modules(
+                AnvilApi.createVelocity(injector).module,
+                module { singleOf(::AnvilVelocityPlugin) },
+            )
+        }.koin.get()
         plugin.registerCommands()
     }
 }

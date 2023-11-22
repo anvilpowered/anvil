@@ -30,15 +30,20 @@ import org.anvilpowered.anvil.paper.user.PaperPlayerService
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.module.Module
+import org.koin.dsl.module
 
 interface AnvilPaperApi : AnvilApi
 
 context(JavaPlugin)
 fun AnvilApi.Companion.createPaper(): AnvilPaperApi {
+    val paperModule = module {
+        single<Logger> { LogManager.getLogger(pluginMeta.name) }
+        single<Server> { PaperServer }
+        single<PluginManager> { PaperPluginManager }
+        single<PlayerService> { PaperPlayerService }
+    }
     return object : AnvilPaperApi {
-        override val logger: Logger = LogManager.getLogger(pluginMeta.name)
-        override val server: Server = PaperServer
-        override val pluginManager: PluginManager = PaperPluginManager
-        override val playerService: PlayerService = PaperPlayerService()
+        override val module: Module = paperModule
     }
 }

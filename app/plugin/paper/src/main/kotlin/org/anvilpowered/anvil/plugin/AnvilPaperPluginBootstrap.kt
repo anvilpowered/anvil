@@ -8,16 +8,23 @@ import org.anvilpowered.anvil.paper.createPaper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 
 class AnvilPaperPluginBootstrap : JavaPlugin(), Listener {
 
-    private val plugin = with(AnvilApi.createPaper()) {
-        AnvilPaperPlugin()
-    }
+    private lateinit var plugin: AnvilPaperPlugin
 
     override fun onEnable() {
         logger.info { "Registering events" }
         server.pluginManager.registerEvents(this, this)
+        plugin = koinApplication {
+            modules(
+                AnvilApi.createPaper().module,
+                module { singleOf(::AnvilPaperPlugin) },
+            )
+        }.koin.get()
     }
 
     @EventHandler
