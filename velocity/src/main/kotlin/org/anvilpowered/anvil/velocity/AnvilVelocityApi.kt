@@ -23,9 +23,11 @@ import com.velocitypowered.api.plugin.PluginContainer
 import com.velocitypowered.api.plugin.PluginDescription
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.core.command.CommandExecutor
 import org.anvilpowered.anvil.core.platform.PluginManager
 import org.anvilpowered.anvil.core.platform.Server
 import org.anvilpowered.anvil.core.user.PlayerService
+import org.anvilpowered.anvil.velocity.command.VelocityCommandExecutor
 import org.anvilpowered.anvil.velocity.platform.VelocityPluginManager
 import org.anvilpowered.anvil.velocity.platform.VelocityServer
 import org.anvilpowered.anvil.velocity.user.VelocityPlayerService
@@ -110,6 +112,9 @@ fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
         single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
         singleOf(::VelocityPlayerService) {
             bind<PlayerService>()
+        }
+        singleOf(::VelocityCommandExecutor) {
+            bind<CommandExecutor>()
         }
     }
 

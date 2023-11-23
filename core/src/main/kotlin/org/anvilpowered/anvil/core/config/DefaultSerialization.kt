@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 internal fun <T> Key.Companion.getDefaultDeserializer(type: TypeToken<T>): (String) -> T {
-    println("getDefaultDeserializer($type)")
     @Suppress("UNCHECKED_CAST")
     return when (type.type) {
         String::class.java -> { it -> it }

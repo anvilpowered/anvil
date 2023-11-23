@@ -21,24 +21,28 @@ package org.anvilpowered.anvil.core.config
 /**
  * A [Registry] implementation that checks environment variables.
  */
-class EnvironmentRegistry(private val delegate: Registry? = null) : Registry {
+class EnvironmentRegistry(private val prefix: String, private val delegate: Registry? = null) : Registry {
+
+    private val Key<*>.environmentName: String
+        get() = prefix + "_" + name
+
     override fun <T : Any> getDefault(key: Key<T>): T {
         return delegate?.getDefault(key) ?: key.fallback
     }
 
     override fun <T : Any> getStrict(key: SimpleKey<T>): T? {
-        val value = System.getenv(key.name) ?: return delegate?.getStrict(key)
+        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
         return key.deserialize(value)
     }
 
     override fun <E : Any> getStrict(key: ListKey<E>): List<E>? {
-        val value = System.getenv(key.name) ?: return delegate?.getStrict(key)
+        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
         val tokens = value.split(",")
         return tokens.map { key.deserializeElement(it) }
     }
 
     override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? {
-        val value = System.getenv(key.name) ?: return delegate?.getStrict(key, index)
+        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, index)
         val tokens = value.split(",")
         return key.deserializeElement(tokens[index])
     }
@@ -50,7 +54,7 @@ class EnvironmentRegistry(private val delegate: Registry? = null) : Registry {
     }
 
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? {
-        val value = System.getenv(key.name) ?: return delegate?.getStrict(key)
+        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
         val tokens = value.split(",")
         return tokens.associate { token ->
             val (k, v) = token.split("=")
@@ -61,7 +65,7 @@ class EnvironmentRegistry(private val delegate: Registry? = null) : Registry {
     }
 
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? {
-        val value = System.getenv(key.name) ?: return delegate?.getStrict(key, mapKey)
+        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, mapKey)
         return value.split(",").asSequence()
             .map { it.split("=").zipWithNext().single() }
             .firstOrNull { (k, _) ->
