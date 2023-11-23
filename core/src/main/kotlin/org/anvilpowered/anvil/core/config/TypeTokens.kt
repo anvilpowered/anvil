@@ -19,11 +19,16 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import net.kyori.adventure.text.Component
 import java.time.ZoneId
 
-object TypeTokens {
+@Suppress("PropertyName")
+open class TypeTokens {
     val BOOLEAN: TypeToken<Boolean> = TypeToken.get(Boolean::class.java)
     val INTEGER: TypeToken<Int> = TypeToken.get(Int::class.java)
     val STRING: TypeToken<String> = TypeToken.get(String::class.java)
+    val COMPONENT: TypeToken<Component> = TypeToken.get(Component::class.java)
     val ZONE_ID: TypeToken<ZoneId> = TypeToken.get(ZoneId::class.java)
+
+    companion object : TypeTokens()
 }

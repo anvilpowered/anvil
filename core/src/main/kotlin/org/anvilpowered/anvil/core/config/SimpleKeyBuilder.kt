@@ -2,7 +2,7 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 
-internal class SimpleKeyBuilder<T : Any>(
+class SimpleKeyBuilder<T : Any>(
     type: TypeToken<T>,
 ) : AbstractKeyBuilder<T, SimpleKey<T>, SimpleKey.FacetedBuilder<T>, SimpleKey.AnonymousBuilderFacet<T>, SimpleKey.NamedBuilderFacet<T>>(
     type,

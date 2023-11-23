@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 internal fun <T> Key.Companion.getDefaultDeserializer(type: TypeToken<T>): (String) -> T {
+    println("getDefaultDeserializer($type)")
     @Suppress("UNCHECKED_CAST")
     return when (type.type) {
         String::class.java -> { it -> it }
@@ -29,6 +30,6 @@ internal fun <T> Key.Companion.getDefaultDeserializer(type: TypeToken<T>): (Stri
         Float::class.java -> { it: String -> it.toFloatOrNull() }
         Double::class.java -> { it: String -> it.toDoubleOrNull() }
         Boolean::class.java -> { it: String -> it.toBooleanStrictOrNull() }
-        else -> throw IllegalArgumentException("There is no default parser for $type")
+        else -> throw IllegalArgumentException("There is no default parser for ${type.type}")
     } as (String) -> T
 }

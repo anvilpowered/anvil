@@ -1,12 +1,13 @@
 package org.anvilpowered.anvil.core.config
 
+import io.leangen.geantyref.TypeFactory
 import io.leangen.geantyref.TypeToken
 
-internal class ListKeyBuilder<E : Any>(
-    type: TypeToken<List<E>>,
+class ListKeyBuilder<E : Any>(
     private val elementType: TypeToken<E>,
-) : AbstractKeyBuilder<List<E>, ListKey<E>, ListKey.FacetedBuilder<E>, ListKey.AnonymousBuilderFacet<E>, ListKey.NamedBuilderFacet<E>>(type),
-    ListKey.FacetedBuilder<E> {
+) : AbstractKeyBuilder<List<E>, ListKey<E>, ListKey.FacetedBuilder<E>, ListKey.AnonymousBuilderFacet<E>, ListKey.NamedBuilderFacet<E>>(
+    createListTypeToken(elementType),
+), ListKey.FacetedBuilder<E> {
 
     private var elementSerializer: ((E) -> String)? = null
     private var elementDeserializer: ((String) -> E)? = null
@@ -87,3 +88,7 @@ internal class ListKeyBuilder<E : Any>(
         }
     }
 }
+
+@Suppress("UNCHECKED_CAST")
+private fun <E : Any> createListTypeToken(elementType: TypeToken<E>): TypeToken<List<E>> =
+    TypeToken.get(TypeFactory.parameterizedClass(List::class.java, elementType.type)) as TypeToken<List<E>>

@@ -1,15 +1,15 @@
 package org.anvilpowered.anvil.core.config
 
+import io.leangen.geantyref.TypeFactory
 import io.leangen.geantyref.TypeToken
 
-internal class MapKeyBuilder<K : Any, V : Any>(
-    type: TypeToken<Map<K, V>>,
-    private val keyType: TypeToken<K>,
-    private val valueType: TypeToken<V>,
+class MapKeyBuilder<K : Any, V : Any>(
+    private val mapKeyType: TypeToken<K>,
+    private val mapValueType: TypeToken<V>,
 ) : AbstractKeyBuilder<
     Map<K, V>, MapKey<K, V>, MapKey.FacetedBuilder<K, V>, MapKey.AnonymousBuilderFacet<K, V>,
     MapKey.NamedBuilderFacet<K, V>,
-    >(type), MapKey.FacetedBuilder<K, V> {
+    >(createMapTypeToken(mapKeyType, mapValueType)), MapKey.FacetedBuilder<K, V> {
 
     private var keySerializer: ((K) -> String)? = null
     private var keyDeserializer: ((String) -> K)? = null
@@ -44,12 +44,12 @@ internal class MapKeyBuilder<K : Any, V : Any>(
         requireNotNull(name) { "Name is null" },
         requireNotNull(fallback) { "Fallback is null" },
         description,
-        keyType,
+        mapKeyType,
         keySerializer,
-        keyDeserializer ?: Key.getDefaultDeserializer(keyType),
-        valueType,
+        keyDeserializer ?: Key.getDefaultDeserializer(mapKeyType),
+        mapValueType,
         valueSerializer,
-        valueDeserializer ?: Key.getDefaultDeserializer(valueType),
+        valueDeserializer ?: Key.getDefaultDeserializer(mapValueType),
     )
 
     override fun asAnonymousFacet(): MapKey.AnonymousBuilderFacet<K, V> {
@@ -125,3 +125,7 @@ internal class MapKeyBuilder<K : Any, V : Any>(
         }
     }
 }
+
+@Suppress("UNCHECKED_CAST")
+private fun <K : Any, V : Any> createMapTypeToken(mapKeyType: TypeToken<K>, mapValueType: TypeToken<V>): TypeToken<Map<K, V>> =
+    TypeToken.get(TypeFactory.parameterizedClass(Map::class.java, mapKeyType.type, mapValueType.type)) as TypeToken<Map<K, V>>
