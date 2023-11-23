@@ -20,31 +20,15 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 
-internal abstract class AbstractKeyBuilder<
-    T : Any, K : Key<T>, B : Key.FacetedBuilder<T, K, B, AF, NF>,
-    AF : Key.BuilderFacet<T, K, AF>, NF : Key.NamedBuilderFacet<T, K, NF>,
-    >(
-    val type: TypeToken<T>,
-) : Key.FacetedBuilder<T, K, B, AF, NF> {
-
-    var name: String? = null
-    var fallback: T? = null
-    var description: String? = null
-
-    protected abstract fun self(): B
-
-    override fun name(name: String): B {
-        this.name = name
-        return self()
-    }
-
-    override fun fallback(fallback: T?): B {
-        this.fallback = fallback
-        return self()
-    }
-
-    override fun description(description: String?): B {
-        this.description = description
-        return self()
-    }
+internal fun <T> Key.Companion.getDefaultDeserializer(type: TypeToken<T>): (String) -> T {
+    @Suppress("UNCHECKED_CAST")
+    return when (type.type) {
+        String::class.java -> { it -> it }
+        Int::class.java -> { it: String -> it.toIntOrNull() }
+        Long::class.java -> { it: String -> it.toLongOrNull() }
+        Float::class.java -> { it: String -> it.toFloatOrNull() }
+        Double::class.java -> { it: String -> it.toDoubleOrNull() }
+        Boolean::class.java -> { it: String -> it.toBooleanStrictOrNull() }
+        else -> throw IllegalArgumentException("There is no default parser for $type")
+    } as (String) -> T
 }

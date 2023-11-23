@@ -9,8 +9,8 @@ class ListKey<E : Any> internal constructor(
     override val fallback: List<E>,
     override val description: String?,
     private val elementType: TypeToken<E>,
-    private val elementSerializer: (E) -> String,
-    private val elementDeserializer: (String) -> E?,
+    private val elementSerializer: ((E) -> String)?,
+    private val elementDeserializer: (String) -> E,
 ) : Key<List<E>> {
     private val namespace: KeyNamespace = this@KeyNamespace
 
@@ -18,8 +18,18 @@ class ListKey<E : Any> internal constructor(
         namespace.add(this)
     }
 
-    fun serializeElement(element: E): String = elementSerializer(element)
-    fun deserializeElement(element: String): E? = elementDeserializer(element)
+    fun serializeElement(element: E): String = elementSerializer?.invoke(element) ?: element.toString()
+    fun deserializeElement(element: String): E = elementDeserializer(element)
+
+    override fun serialize(value: List<E>): String {
+        return value.joinToString(",") { serializeElement(it) }
+    }
+
+    override fun deserialize(value: String): List<E>? {
+        return value.splitToSequence(",")
+            .map { deserializeElement(it) }
+            .toList()
+    }
 
     override fun compareTo(other: Key<List<E>>): Int = Key.comparator.compare(this, other)
     override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false

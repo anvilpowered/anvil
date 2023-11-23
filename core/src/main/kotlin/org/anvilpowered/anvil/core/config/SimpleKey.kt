@@ -8,8 +8,8 @@ class SimpleKey<T : Any> internal constructor(
     override val name: String,
     override val fallback: T,
     override val description: String?,
-    private val serializer: (T) -> String,
-    private val deserializer: (String) -> T?,
+    private val serializer: ((T) -> String)?,
+    private val deserializer: (String) -> T,
 ) : Key<T> {
     private val namespace: KeyNamespace = this@KeyNamespace
 
@@ -17,8 +17,8 @@ class SimpleKey<T : Any> internal constructor(
         namespace.add(this)
     }
 
-    fun serialize(value: T): String = serializer(value)
-    fun deserialize(value: String): T? = deserializer(value)
+    override fun serialize(value: T): String = serializer?.invoke(value) ?: value.toString()
+    override fun deserialize(value: String): T = deserializer(value)
 
     override fun compareTo(other: Key<T>): Int = Key.comparator.compare(this, other)
     override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false

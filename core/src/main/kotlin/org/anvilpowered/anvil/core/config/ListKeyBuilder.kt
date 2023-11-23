@@ -30,8 +30,8 @@ internal class ListKeyBuilder<E : Any>(
         requireNotNull(fallback) { "Fallback is null" },
         description,
         elementType,
-        requireNotNull(elementSerializer) { "Element serializer is null" },
-        requireNotNull(elementDeserializer) { "Element deserializer is null" },
+        elementSerializer,
+        elementDeserializer ?: Key.getDefaultDeserializer(elementType),
     )
 
     override fun asAnonymousFacet(): ListKey.AnonymousBuilderFacet<E> {

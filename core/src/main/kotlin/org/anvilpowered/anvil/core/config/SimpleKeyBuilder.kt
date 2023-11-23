@@ -29,8 +29,8 @@ internal class SimpleKeyBuilder<T : Any>(
         requireNotNull(name) { "Name is null" },
         requireNotNull(fallback) { "Fallback is null" },
         description,
-        requireNotNull(serializer) { "Serializer is null" },
-        requireNotNull(deserializer) { "Deserializer is null" },
+        serializer,
+        deserializer ?: Key.getDefaultDeserializer(type),
     )
 
     override fun asAnonymousFacet(): SimpleKey.AnonymousBuilderFacet<T> {

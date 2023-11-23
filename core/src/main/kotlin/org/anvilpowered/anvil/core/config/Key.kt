@@ -29,9 +29,19 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
 
     val name: String
 
-    val fallback: T?
+    val fallback: T
 
     val description: String?
+
+    /**
+     * Serializes the given value in a simple [String] representation.
+     */
+    fun serialize(value: T): String
+
+    /**
+     * Deserializes the given value from a simple [String] representation.
+     */
+    fun deserialize(value: String): T?
 
     @KeyBuilderDsl
     interface BuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> {

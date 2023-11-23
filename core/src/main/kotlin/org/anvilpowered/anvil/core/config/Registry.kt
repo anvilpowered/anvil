@@ -19,12 +19,12 @@
 package org.anvilpowered.anvil.core.config
 
 interface Registry {
+    fun <T : Any> getDefault(key: Key<T>): T
+
     fun <T : Any> getStrict(key: SimpleKey<T>): T?
-    fun <T : Any> getDefault(key: SimpleKey<T>): T
     operator fun <T : Any> get(key: SimpleKey<T>): T = getStrict(key) ?: getDefault(key)
 
     fun <E : Any> getStrict(key: ListKey<E>): List<E>?
-    fun <E : Any> getDefault(key: ListKey<E>): List<E>
     operator fun <E : Any> get(key: ListKey<E>): List<E> = getStrict(key) ?: getDefault(key)
 
     fun <E : Any> getStrict(key: ListKey<E>, index: Int): E?
@@ -32,7 +32,6 @@ interface Registry {
     operator fun <E : Any> get(key: ListKey<E>, index: Int): E = getStrict(key, index) ?: getDefault(key, index)
 
     fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>?
-    fun <K : Any, V : Any> getDefault(key: MapKey<K, V>): Map<K, V>
     operator fun <K : Any, V : Any> get(key: MapKey<K, V>): Map<K, V> = getStrict(key) ?: getDefault(key)
 
     fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V?

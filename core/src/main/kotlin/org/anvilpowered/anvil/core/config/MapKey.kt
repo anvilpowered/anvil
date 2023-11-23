@@ -9,11 +9,11 @@ class MapKey<K : Any, V : Any> internal constructor(
     override val fallback: Map<K, V>,
     override val description: String?,
     private val keyType: TypeToken<K>,
-    private val keySerializer: (K) -> String,
-    private val keyDeserializer: (String) -> K?,
+    private val keySerializer: ((K) -> String)?,
+    private val keyDeserializer: (String) -> K,
     private val valueType: TypeToken<V>,
-    private val valueSerializer: (V) -> String,
-    private val valueDeserializer: (String) -> V?,
+    private val valueSerializer: ((V) -> String)?,
+    private val valueDeserializer: (String) -> V,
 ) : Key<Map<K, V>> {
     private val namespace: KeyNamespace = this@KeyNamespace
 
@@ -21,10 +21,23 @@ class MapKey<K : Any, V : Any> internal constructor(
         namespace.add(this)
     }
 
-    fun serializeKey(key: K): String = keySerializer(key)
-    fun deserializeKey(key: String): K? = keyDeserializer(key)
-    fun serializeValue(value: V): String = valueSerializer(value)
-    fun deserializeValue(value: String): V? = valueDeserializer(value)
+    fun serializeKey(mapKey: K): String = keySerializer?.invoke(mapKey) ?: mapKey.toString()
+    fun deserializeKey(mapKey: String): K = keyDeserializer(mapKey)
+    fun serializeValue(mapValue: V): String = valueSerializer?.invoke(mapValue) ?: mapValue.toString()
+    fun deserializeValue(mapValue: String): V = valueDeserializer(mapValue)
+
+    override fun serialize(value: Map<K, V>): String {
+        return value.entries.joinToString(",") { (key, value) ->
+            "${serializeKey(key)}=${serializeValue(value)}"
+        }
+    }
+
+    override fun deserialize(value: String): Map<K, V> {
+        return value.splitToSequence(",")
+            .map { it.split("=", limit = 2) }
+            .map { (key, value) -> deserializeKey(key) to deserializeValue(value) }
+            .toMap()
+    }
 
     override fun compareTo(other: Key<Map<K, V>>): Int = Key.comparator.compare(this, other)
     override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false

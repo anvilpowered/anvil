@@ -45,11 +45,11 @@ internal class MapKeyBuilder<K : Any, V : Any>(
         requireNotNull(fallback) { "Fallback is null" },
         description,
         keyType,
-        requireNotNull(keySerializer) { "Key serializer is null" },
-        requireNotNull(keyDeserializer) { "Key deserializer is null" },
+        keySerializer,
+        keyDeserializer ?: Key.getDefaultDeserializer(keyType),
         valueType,
-        requireNotNull(valueSerializer) { "Value serializer is null" },
-        requireNotNull(valueDeserializer) { "Value deserializer is null" },
+        valueSerializer,
+        valueDeserializer ?: Key.getDefaultDeserializer(valueType),
     )
 
     override fun asAnonymousFacet(): MapKey.AnonymousBuilderFacet<K, V> {
