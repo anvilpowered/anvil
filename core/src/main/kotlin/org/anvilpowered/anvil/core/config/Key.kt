@@ -114,13 +114,16 @@ sealed interface Key<T : Any> : Comparable<Key<T>> {
             return result
         }
 
+        @JvmStatic
         fun <T : Any> simpleBuilder(type: TypeToken<T>): SimpleKey.FacetedBuilder<T> = SimpleKeyBuilder(type)
 
+        @JvmStatic
         fun <E : Any> listBuilder(
             type: TypeToken<List<E>>,
             elementType: TypeToken<E>,
         ): ListKey.FacetedBuilder<E> = ListKeyBuilder(type, elementType)
 
+        @JvmStatic
         fun <K : Any, V : Any> mapBuilder(
             type: TypeToken<Map<K, V>>,
             keyType: TypeToken<K>,
