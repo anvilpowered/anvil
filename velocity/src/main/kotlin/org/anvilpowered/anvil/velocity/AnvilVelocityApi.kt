@@ -113,11 +113,6 @@ fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
         }
     }
 
-    val koin = koinApplication {
-        modules(velocityModule)
-    }.koin
-
-
     return object : AnvilVelocityApi {
         override val module: Module = velocityModule
     }
