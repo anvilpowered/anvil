@@ -14,7 +14,7 @@ private val children = mapOf(
     "info <name>" to Component.text("Shows information about a plugin"),
 )
 
-class PluginCommandBuilder(val pluginManager: PluginManager) {
+class PluginCommandFactory(val pluginManager: PluginManager) {
     fun create(): LiteralCommandNode<CommandSource> =
         ArgumentBuilder.literal<CommandSource>("plugin")
             .addHelp("anvil plugin", children)

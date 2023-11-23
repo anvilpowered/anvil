@@ -10,7 +10,7 @@ import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.context.get
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
-fun PluginCommandBuilder.createInfo(): LiteralCommandNode<CommandSource> =
+fun PluginCommandFactory.createInfo(): LiteralCommandNode<CommandSource> =
     ArgumentBuilder.literal<CommandSource>("info")
         .executesUsage("anvil plugin info <name>")
         .then(

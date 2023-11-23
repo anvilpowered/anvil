@@ -7,7 +7,7 @@ import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.executesSingleSuccess
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
-fun PluginCommandBuilder.createList(): LiteralCommandNode<CommandSource> =
+fun PluginCommandFactory.createList(): LiteralCommandNode<CommandSource> =
     ArgumentBuilder.literal<CommandSource>("list")
         .executesSingleSuccess { context ->
             val pluginNamesString = pluginManager.plugins.joinToString(", ") { it.name }
