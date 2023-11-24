@@ -21,4 +21,10 @@ package org.anvilpowered.anvil.core.db
 
 interface MutableRepository<E : DomainEntity, C : Creates<E>> : Repository<E> {
     suspend fun create(item: C): E
+    suspend fun getOrCreate(item: C): GetOrCreateResult<E>
+
+    data class GetOrCreateResult<E : DomainEntity>(
+        val entity: E,
+        val created: Boolean,
+    )
 }
