@@ -1,7 +1,6 @@
 /*
- *   Kontour - SourceGrade.org
- *   Copyright (C) 2023 Alexander Städing
- *   Copyright (C) 2023 Contributors
+ *   Anvil - AnvilPowered.org
+ *   Copyright (C) 2019-2024 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
