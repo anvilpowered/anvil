@@ -34,7 +34,7 @@ ktor-server-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = 
 ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 logging-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 logging-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
-paper = "io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT"
+paper = "io.papermc.paper:paper-api:1.20.2-brigadier-SNAPSHOT"
 redux = "org.reduxkotlin:redux-kotlin-threadsafe:0.6.1"
 sponge = "org.spongepowered:spongeapi:8.1.0"
 velocity = "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
