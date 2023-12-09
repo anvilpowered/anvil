@@ -1,11 +1,20 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    id("anvil-publish")
+    `java-library`
 }
 
 dependencies {
-    api(project(":anvil-api"))
-    api(libs.kotlin.reflect)
-    api(libs.configurate.hocon)
-    implementation(libs.reflections)
+    api(platform(libs.exposed.bom))
+    api(libs.bundles.exposed)
+    api(libs.kbrig.brigadier)
+    api(libs.logging.api)
+    api(libs.configurate.core)
+    api(libs.annotations)
+    api(libs.kotlinx.coroutines)
+    api(libs.guava)
+    api(libs.koin)
+
+    compileOnlyApi(platform(libs.adventure.bom))
+    compileOnlyApi("net.kyori:adventure-api")
+    compileOnlyApi("net.kyori:adventure-text-minimessage")
 }

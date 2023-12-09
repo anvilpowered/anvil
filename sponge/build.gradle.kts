@@ -1,10 +1,9 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.shadow)
+    id("anvil-publish")
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines)
     implementation(project(":anvil-core"))
-    compileOnly(libs.sponge)
+    implementation(libs.sponge)
 }

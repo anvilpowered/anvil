@@ -1,25 +1,39 @@
+@file:Suppress("UnstableApiUsage")
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven("https://nexus.anvilpowered.org/repository/maven-public/")
+        mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://libraries.minecraft.net")
+        maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://repo.spongepowered.org/repository/maven-public/")
+    }
+}
+
+pluginManagement {
+    includeBuild("build-logic")
     repositories {
         mavenCentral()
-        maven("https://repo.spongepowered.org/repository/maven-public/")
-        maven("https://papermc.io/repo/repository/maven-public/")
-        maven("https://libraries.minecraft.net/")
+        gradlePluginPortal()
     }
 }
 
 rootProject.name = "anvil"
 
-include("anvil-md5")
-
 sequenceOf(
-    "api",
+    "app-plugin",
+    "app-plugin-core",
+    "app-plugin-paper",
+    "app-plugin-sponge",
+    "app-plugin-velocity",
     "core",
     "paper",
     "sponge",
-    "velocity"
+    "velocity",
 ).forEach {
     val project = ":anvil-$it"
     include(project)
-    project(project).projectDir = file(it)
+    project(project).projectDir = file(it.replace('-', '/'))
 }
