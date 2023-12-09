@@ -1,7 +1,6 @@
 [versions]
 configurate = "4.1.2"
 kotlin = "1.9.21"
-ktor = "2.3.0"
 log4j = "2.20.0"
 
 [libraries]
@@ -20,29 +19,14 @@ kbrig-brigadier = "org.anvilpowered:kbrig-brigadier:0.1.0-SNAPSHOT"
 koin = "io.insert-koin:koin-core:3.5.2-RC1"
 kotest = "io.kotest:kotest-runner-junit5-jvm:5.5.4"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0"
-kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
-kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1"
-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
-ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
-ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
-ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
-ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
-ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
-ktor-server-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
-ktor-server-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
-ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 logging-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 logging-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 paper = "io.papermc.paper:paper-api:1.20.2-brigadier-SNAPSHOT"
-redux = "org.reduxkotlin:redux-kotlin-threadsafe:0.6.1"
 sponge = "org.spongepowered:spongeapi:8.1.0"
 velocity = "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
 
 [bundles]
 exposed = ["exposed-core", "exposed-dao", "exposed-jdbc", "exposed-java-time"]
-ktor-client = ["ktor-client-cio", "ktor-serialization"]
-ktor-server = ["ktor-server-auth", "ktor-server-content-negotiation", "ktor-server-cors", "ktor-server-netty", "ktor-server-resources", "ktor-server-sessions", "ktor-server-status-pages"]
 
 [plugins]
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
@@ -52,4 +36,3 @@ ktlint = "org.jlleitschuh.gradle.ktlint:11.3.1"
 pluginyml = "net.minecrell.plugin-yml.paper:0.6.0"
 shadow = "com.github.johnrengelman.shadow:8.1.0"
 sponge = "org.spongepowered.gradle.plugin:2.1.1"
-ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
