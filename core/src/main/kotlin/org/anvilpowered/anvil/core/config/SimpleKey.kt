@@ -66,18 +66,22 @@ class SimpleKey<T : Any> internal constructor(
     }
 
     @KeyBuilderDsl
-    interface AnonymousBuilderFacet<T : Any> : BuilderFacet<T, AnonymousBuilderFacet<T>>,
+    interface AnonymousBuilderFacet<T : Any> :
+        BuilderFacet<T, AnonymousBuilderFacet<T>>,
         Key.BuilderFacet<T, SimpleKey<T>, AnonymousBuilderFacet<T>>
 
     @KeyBuilderDsl
-    interface NamedBuilderFacet<T : Any> : BuilderFacet<T, NamedBuilderFacet<T>>,
+    interface NamedBuilderFacet<T : Any> :
+        BuilderFacet<T, NamedBuilderFacet<T>>,
         Key.NamedBuilderFacet<T, SimpleKey<T>, NamedBuilderFacet<T>>
 
     @KeyBuilderDsl
-    interface Builder<T : Any> : BuilderFacet<T, Builder<T>>,
+    interface Builder<T : Any> :
+        BuilderFacet<T, Builder<T>>,
         Key.Builder<T, SimpleKey<T>, Builder<T>>
 
     @KeyBuilderDsl
-    interface FacetedBuilder<T : Any> : BuilderFacet<T, FacetedBuilder<T>>,
+    interface FacetedBuilder<T : Any> :
+        BuilderFacet<T, FacetedBuilder<T>>,
         Key.FacetedBuilder<T, SimpleKey<T>, FacetedBuilder<T>, AnonymousBuilderFacet<T>, NamedBuilderFacet<T>>
 }

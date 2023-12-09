@@ -24,7 +24,8 @@ class SimpleKeyBuilder<T : Any>(
     type: TypeToken<T>,
 ) : AbstractKeyBuilder<T, SimpleKey<T>, SimpleKey.FacetedBuilder<T>, SimpleKey.AnonymousBuilderFacet<T>, SimpleKey.NamedBuilderFacet<T>>(
     type,
-), SimpleKey.FacetedBuilder<T> {
+),
+    SimpleKey.FacetedBuilder<T> {
 
     private var serializer: ((T) -> String)? = null
     private var deserializer: ((String) -> T)? = null

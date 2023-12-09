@@ -103,18 +103,22 @@ class MapKey<K : Any, V : Any> internal constructor(
     }
 
     @KeyBuilderDsl
-    interface AnonymousBuilderFacet<K : Any, V : Any> : BuilderFacet<K, V, AnonymousBuilderFacet<K, V>>,
+    interface AnonymousBuilderFacet<K : Any, V : Any> :
+        BuilderFacet<K, V, AnonymousBuilderFacet<K, V>>,
         Key.BuilderFacet<Map<K, V>, MapKey<K, V>, AnonymousBuilderFacet<K, V>>
 
     @KeyBuilderDsl
-    interface NamedBuilderFacet<K : Any, V : Any> : BuilderFacet<K, V, NamedBuilderFacet<K, V>>,
+    interface NamedBuilderFacet<K : Any, V : Any> :
+        BuilderFacet<K, V, NamedBuilderFacet<K, V>>,
         Key.NamedBuilderFacet<Map<K, V>, MapKey<K, V>, NamedBuilderFacet<K, V>>
 
     @KeyBuilderDsl
-    interface Builder<K : Any, V : Any> : BuilderFacet<K, V, Builder<K, V>>,
+    interface Builder<K : Any, V : Any> :
+        BuilderFacet<K, V, Builder<K, V>>,
         Key.Builder<Map<K, V>, MapKey<K, V>, Builder<K, V>>
 
     @KeyBuilderDsl
-    interface FacetedBuilder<K : Any, V : Any> : BuilderFacet<K, V, FacetedBuilder<K, V>>,
+    interface FacetedBuilder<K : Any, V : Any> :
+        BuilderFacet<K, V, FacetedBuilder<K, V>>,
         Key.FacetedBuilder<Map<K, V>, MapKey<K, V>, FacetedBuilder<K, V>, AnonymousBuilderFacet<K, V>, NamedBuilderFacet<K, V>>
 }

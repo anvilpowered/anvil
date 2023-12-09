@@ -77,18 +77,22 @@ class ListKey<E : Any> internal constructor(
     }
 
     @KeyBuilderDsl
-    interface AnonymousBuilderFacet<E : Any> : BuilderFacet<E, AnonymousBuilderFacet<E>>,
+    interface AnonymousBuilderFacet<E : Any> :
+        BuilderFacet<E, AnonymousBuilderFacet<E>>,
         Key.BuilderFacet<List<E>, ListKey<E>, AnonymousBuilderFacet<E>>
 
     @KeyBuilderDsl
-    interface NamedBuilderFacet<E : Any> : BuilderFacet<E, NamedBuilderFacet<E>>,
+    interface NamedBuilderFacet<E : Any> :
+        BuilderFacet<E, NamedBuilderFacet<E>>,
         Key.NamedBuilderFacet<List<E>, ListKey<E>, NamedBuilderFacet<E>>
 
     @KeyBuilderDsl
-    interface Builder<E : Any> : BuilderFacet<E, Builder<E>>,
+    interface Builder<E : Any> :
+        BuilderFacet<E, Builder<E>>,
         Key.Builder<List<E>, ListKey<E>, Builder<E>>
 
     @KeyBuilderDsl
-    interface FacetedBuilder<E : Any> : BuilderFacet<E, FacetedBuilder<E>>,
+    interface FacetedBuilder<E : Any> :
+        BuilderFacet<E, FacetedBuilder<E>>,
         Key.FacetedBuilder<List<E>, ListKey<E>, FacetedBuilder<E>, AnonymousBuilderFacet<E>, NamedBuilderFacet<E>>
 }

@@ -33,12 +33,9 @@ import org.anvilpowered.anvil.velocity.platform.VelocityServer
 import org.anvilpowered.anvil.velocity.user.VelocityPlayerService
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import org.koin.core.context.KoinContext
-import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
 /**

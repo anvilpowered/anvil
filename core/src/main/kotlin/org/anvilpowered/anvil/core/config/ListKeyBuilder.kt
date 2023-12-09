@@ -25,7 +25,8 @@ class ListKeyBuilder<E : Any>(
     private val elementType: TypeToken<E>,
 ) : AbstractKeyBuilder<List<E>, ListKey<E>, ListKey.FacetedBuilder<E>, ListKey.AnonymousBuilderFacet<E>, ListKey.NamedBuilderFacet<E>>(
     createListTypeToken(elementType),
-), ListKey.FacetedBuilder<E> {
+),
+    ListKey.FacetedBuilder<E> {
 
     private var elementSerializer: ((E) -> String)? = null
     private var elementDeserializer: ((String) -> E)? = null

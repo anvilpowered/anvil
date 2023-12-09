@@ -27,7 +27,8 @@ class MapKeyBuilder<K : Any, V : Any>(
 ) : AbstractKeyBuilder<
     Map<K, V>, MapKey<K, V>, MapKey.FacetedBuilder<K, V>, MapKey.AnonymousBuilderFacet<K, V>,
     MapKey.NamedBuilderFacet<K, V>,
-    >(createMapTypeToken(mapKeyType, mapValueType)), MapKey.FacetedBuilder<K, V> {
+    >(createMapTypeToken(mapKeyType, mapValueType)),
+    MapKey.FacetedBuilder<K, V> {
 
     private var keySerializer: ((K) -> String)? = null
     private var keyDeserializer: ((String) -> K)? = null

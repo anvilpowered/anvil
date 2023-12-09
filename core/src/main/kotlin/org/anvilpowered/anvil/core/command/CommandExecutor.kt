@@ -18,8 +18,6 @@
 
 package org.anvilpowered.anvil.core.command
 
-import org.apache.logging.log4j.Logger
-
 interface CommandExecutor {
 
     suspend fun execute(source: CommandSource, command: String): Boolean
