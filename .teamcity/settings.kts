@@ -147,6 +147,10 @@ class Publish : BuildType() {
             configureBaseFeatures()
         }
 
+        requirements {
+            contains("env.AGENT_NAME", "publishing")
+        }
+
         steps {
             gradle {
                 id = "gradle_runner"
