@@ -14,7 +14,10 @@ allprojects {
     group = "org.anvilpowered"
     version = projectVersion
     System.getenv("BUILD_NUMBER")?.let { buildNumber ->
-        version = version.toString().replace("SNAPSHOT", "RC$buildNumber")
+        version = when (val branch = System.getenv("VCS_BRANCH")?.replace('/', '-') ?: "unknown-branch") {
+            "master" -> version.toString().replace("SNAPSHOT", "RC$buildNumber")
+            else -> version.toString().replace("SNAPSHOT", "B$buildNumber-$branch")
+        }
     }
     kotlin {
         compilerOptions {

@@ -148,7 +148,10 @@ class Style : BuildType() {
 class PluginJar : BuildType() {
     init {
         name = "plugin-jar"
-        buildNumberPattern = "%build.counter%-%teamcity.build.branch%"
+
+        params {
+            param("env.VCS_BRANCH", "%teamcity.build.branch%")
+        }
 
         configureVcs()
         configureTriggers()
@@ -160,7 +163,7 @@ class PluginJar : BuildType() {
         steps {
             gradle {
                 id = "gradle_runner"
-                tasks = ":anvil-app-plugin:shadowJar"
+                tasks = "clean :anvil-app-plugin:shadowJar"
             }
         }
 
