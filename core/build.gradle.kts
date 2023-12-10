@@ -1,5 +1,6 @@
 plugins {
     id("anvil-publish")
+    id("anvil-sign")
     `java-library`
 }
 
