@@ -1,11 +1,14 @@
-import jetbrains.buildServer.configs.kotlin.*
+import jetbrains.buildServer.configs.kotlin.BuildType
+import jetbrains.buildServer.configs.kotlin.DslContext
 import jetbrains.buildServer.configs.kotlin.buildFeatures.PullRequests
 import jetbrains.buildServer.configs.kotlin.buildFeatures.commitStatusPublisher
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
 import jetbrains.buildServer.configs.kotlin.buildFeatures.pullRequests
 import jetbrains.buildServer.configs.kotlin.buildSteps.gradle
+import jetbrains.buildServer.configs.kotlin.project
 import jetbrains.buildServer.configs.kotlin.projectFeatures.githubIssues
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
+import jetbrains.buildServer.configs.kotlin.version
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -34,6 +37,7 @@ version = "2023.11"
 project {
 
     buildType(Test)
+    buildType(Style)
 
     features {
         githubIssues {
@@ -48,20 +52,13 @@ project {
     }
 }
 
-object Test : BuildType({
-    name = "test"
-
+fun BuildType.configureVcs() {
     vcs {
         root(DslContext.settingsRoot)
     }
+}
 
-    steps {
-        gradle {
-            id = "gradle_runner"
-            tasks = "clean test"
-        }
-    }
-
+fun BuildType.configureTriggers() {
     triggers {
         vcs {
             branchFilter = """
@@ -72,7 +69,9 @@ object Test : BuildType({
             """.trimIndent()
         }
     }
+}
 
+fun BuildType.configureFeatures() {
     features {
         perfmon {
         }
@@ -95,4 +94,38 @@ object Test : BuildType({
             }
         }
     }
-})
+}
+
+object Test : BuildType(
+    {
+        name = "test"
+
+        configureVcs()
+        configureTriggers()
+        configureFeatures()
+
+        steps {
+            gradle {
+                id = "gradle_runner"
+                tasks = "clean test"
+            }
+        }
+    },
+)
+
+object Style : BuildType(
+    {
+        name = "style"
+
+        configureVcs()
+        configureTriggers()
+        configureFeatures()
+
+        steps {
+            gradle {
+                id = "gradle_runner"
+                tasks = "clean ktlintCheck"
+            }
+        }
+    },
+)
