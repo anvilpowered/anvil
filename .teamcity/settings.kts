@@ -40,12 +40,12 @@ project {
 
     val test = Test()
     val style = Style()
-    val assemblePlugin = AssemblePlugin()
+    val pluginJar = PluginJar()
     val publish = Publish(test, style)
 
     buildType(test)
     buildType(style)
-    buildType(assemblePlugin)
+    buildType(pluginJar)
     buildType(publish)
 
     features {
@@ -145,9 +145,9 @@ class Style : BuildType() {
     }
 }
 
-class AssemblePlugin : BuildType() {
+class PluginJar : BuildType() {
     init {
-        name = "assemble-plugin"
+        name = "plugin-jar"
 
         configureVcs()
         features {
