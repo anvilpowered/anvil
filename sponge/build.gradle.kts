@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
+    api(project(":anvil-core"))
+    compileOnlyApi(libs.sponge)
     implementation(libs.kotlinx.coroutines)
-    implementation(project(":anvil-core"))
-    implementation(libs.sponge)
 }

@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":anvil-core"))
+    api(project(":anvil-core"))
     compileOnlyApi(libs.velocity)
 }

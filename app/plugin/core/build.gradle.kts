@@ -3,5 +3,4 @@ dependencies {
     api(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")
 //    compileOnlyApi(libs.logging.api)
-    api(libs.kbrig.brigadier)
 }
