@@ -154,10 +154,13 @@ class PluginJar : BuildType() {
         }
 
         configureVcs()
-        configureTriggers()
+        triggers {
+            vcs {
+                branchFilter = "+:master"
+            }
+        }
         features {
             configureBaseFeatures()
-            configurePullRequests()
         }
 
         steps {
