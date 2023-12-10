@@ -1,6 +1,7 @@
 import jetbrains.buildServer.configs.kotlin.BuildFeatures
 import jetbrains.buildServer.configs.kotlin.BuildType
 import jetbrains.buildServer.configs.kotlin.DslContext
+import jetbrains.buildServer.configs.kotlin.FailureAction
 import jetbrains.buildServer.configs.kotlin.buildFeatures.PullRequests
 import jetbrains.buildServer.configs.kotlin.buildFeatures.commitStatusPublisher
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
@@ -37,9 +38,13 @@ version = "2023.11"
 
 project {
 
-    buildType(Test())
-    buildType(Style())
-    buildType(Publish())
+    val test = Test()
+    val style = Style()
+    val publish = Publish(test, style)
+
+    buildType(test)
+    buildType(style)
+    buildType(publish)
 
     features {
         githubIssues {
@@ -138,9 +143,18 @@ class Style : BuildType() {
     }
 }
 
-class Publish : BuildType() {
+class Publish(test: BuildType, style: BuildType) : BuildType() {
     init {
         name = "publish"
+
+        dependencies {
+            snapshot(test) {
+                onDependencyFailure = FailureAction.FAIL_TO_START
+            }
+            snapshot(style) {
+                onDependencyFailure = FailureAction.FAIL_TO_START
+            }
+        }
 
         configureVcs()
         features {
