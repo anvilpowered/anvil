@@ -13,8 +13,8 @@ extensions.configure<PublishingExtension> {
     repositories {
         maven {
             credentials {
-                username = project.findProperty("sonatypeUsername") as? String
-                password = project.findProperty("sonatypePassword") as? String
+                username = System.getenv("sonatype_username")
+                password = System.getenv("sonatype_password")
             }
             val releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             val snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
