@@ -35,4 +35,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ktlint = "org.jlleitschuh.gradle.ktlint:11.6.1"
 pluginyml = "net.minecrell.plugin-yml.paper:0.6.0"
 shadow = "com.github.johnrengelman.shadow:8.1.1"
-sponge = "org.spongepowered.gradle.plugin:2.1.1"
+sponge = "org.spongepowered.gradle.plugin:2.2.0"
