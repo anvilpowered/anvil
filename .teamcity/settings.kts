@@ -33,7 +33,7 @@ version = "2023.11"
 
 project {
 
-    buildType(build)
+    buildType(Test)
 
     features {
         githubIssues {
@@ -48,8 +48,8 @@ project {
     }
 }
 
-object build : BuildType({
-    name = "build"
+object Test : BuildType({
+    name = "test"
 
     vcs {
         root(DslContext.settingsRoot)
@@ -58,8 +58,7 @@ object build : BuildType({
     steps {
         gradle {
             id = "gradle_runner"
-            tasks = "clean build"
-            gradleWrapperPath = ""
+            tasks = "clean test"
         }
     }
 
@@ -69,6 +68,7 @@ object build : BuildType({
                 +:master
                 +:dev
                 +:dev-*
+                +:renovate/*
             """.trimIndent()
         }
     }
