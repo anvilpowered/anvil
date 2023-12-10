@@ -13,6 +13,9 @@ allprojects {
     apply(plugin = "java-library")
     group = "org.anvilpowered"
     version = projectVersion
+    System.getenv("BUILD_NUMBER")?.let { buildNumber ->
+        version = version.toString().replace("SNAPSHOT", "RC$buildNumber")
+    }
     kotlin {
         compilerOptions {
             freeCompilerArgs = listOf(
