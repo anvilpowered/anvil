@@ -10,6 +10,6 @@ dependencies {
 
 tasks {
     shadowJar {
-        archiveFileName = "anvil-agent-${project.version}.jar"
+        archiveFileName = "anvil-plugin-${project.version}.jar"
     }
 }

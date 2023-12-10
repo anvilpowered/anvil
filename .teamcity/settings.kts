@@ -40,10 +40,12 @@ project {
 
     val test = Test()
     val style = Style()
+    val assemblePlugin = AssemblePlugin()
     val publish = Publish(test, style)
 
     buildType(test)
     buildType(style)
+    buildType(assemblePlugin)
     buildType(publish)
 
     features {
@@ -140,6 +142,27 @@ class Style : BuildType() {
                 tasks = "ktlintCheck"
             }
         }
+    }
+}
+
+class AssemblePlugin : BuildType() {
+    init {
+        name = "assemble-plugin"
+
+        configureVcs()
+        features {
+            configureBaseFeatures()
+            configurePullRequests()
+        }
+
+        steps {
+            gradle {
+                id = "gradle_runner"
+                tasks = ":anvil-app-plugin:shadowJar"
+            }
+        }
+
+        artifactRules = "app/plugin/build/libs/"
     }
 }
 
