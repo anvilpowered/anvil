@@ -13,9 +13,6 @@ allprojects {
     apply(plugin = "java-library")
     group = "org.anvilpowered"
     version = projectVersion
-    project.findProperty("buildNumber")
-        ?.takeIf { version.toString().contains("SNAPSHOT") }
-        ?.also { version = version.toString().replace("SNAPSHOT", "RC$it") }
     kotlin {
         compilerOptions {
             freeCompilerArgs = listOf(
