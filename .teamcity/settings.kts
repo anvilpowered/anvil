@@ -148,6 +148,7 @@ class Style : BuildType() {
 class PluginJar : BuildType() {
     init {
         name = "plugin-jar"
+        buildNumberPattern = "%build.counter%-%teamcity.build.branch%"
 
         configureVcs()
         configureTriggers()
