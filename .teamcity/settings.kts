@@ -1,3 +1,4 @@
+import jetbrains.buildServer.configs.kotlin.BuildFeatures
 import jetbrains.buildServer.configs.kotlin.BuildType
 import jetbrains.buildServer.configs.kotlin.DslContext
 import jetbrains.buildServer.configs.kotlin.buildFeatures.PullRequests
@@ -38,6 +39,7 @@ project {
 
     buildType(Test())
     buildType(Style())
+    buildType(Publish())
 
     features {
         githubIssues {
@@ -71,27 +73,27 @@ fun BuildType.configureTriggers() {
     }
 }
 
-fun BuildType.configureFeatures() {
-    features {
-        perfmon {
-        }
-        commitStatusPublisher {
-            vcsRootExtId = "${DslContext.settingsRoot.id}"
-            publisher = github {
-                githubUrl = "https://api.github.com"
-                authType = personalToken {
-                    token = "credentialsJSON:446a66f5-8a12-41b4-a31f-6eb9ee6087ba"
-                }
+fun BuildFeatures.configureBaseFeatures() {
+    perfmon {}
+    commitStatusPublisher {
+        vcsRootExtId = "${DslContext.settingsRoot.id}"
+        publisher = github {
+            githubUrl = "https://api.github.com"
+            authType = personalToken {
+                token = "credentialsJSON:446a66f5-8a12-41b4-a31f-6eb9ee6087ba"
             }
         }
-        pullRequests {
-            vcsRootExtId = "${DslContext.settingsRoot.id}"
-            provider = github {
-                authType = token {
-                    token = "credentialsJSON:a30ebfc3-045a-4821-9f62-f061490d2987"
-                }
-                filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+    }
+}
+
+fun BuildFeatures.configurePullRequests() {
+    pullRequests {
+        vcsRootExtId = "${DslContext.settingsRoot.id}"
+        provider = github {
+            authType = token {
+                token = "credentialsJSON:a30ebfc3-045a-4821-9f62-f061490d2987"
             }
+            filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
         }
     }
 }
@@ -102,7 +104,10 @@ class Test : BuildType() {
 
         configureVcs()
         configureTriggers()
-        configureFeatures()
+        features {
+            configureBaseFeatures()
+            configurePullRequests()
+        }
 
         steps {
             gradle {
@@ -119,12 +124,33 @@ class Style : BuildType() {
 
         configureVcs()
         configureTriggers()
-        configureFeatures()
+        features {
+            configureBaseFeatures()
+            configurePullRequests()
+        }
 
         steps {
             gradle {
                 id = "gradle_runner"
                 tasks = "ktlintCheck"
+            }
+        }
+    }
+}
+
+class Publish : BuildType() {
+    init {
+        name = "publish"
+
+        configureVcs()
+        features {
+            configureBaseFeatures()
+        }
+
+        steps {
+            gradle {
+                id = "gradle_runner"
+                tasks = "publish"
             }
         }
     }
