@@ -36,8 +36,8 @@ version = "2023.11"
 
 project {
 
-    buildType(Test)
-    buildType(Style)
+    buildType(Test())
+    buildType(Style())
 
     features {
         githubIssues {
@@ -96,8 +96,8 @@ fun BuildType.configureFeatures() {
     }
 }
 
-object Test : BuildType(
-    {
+class Test : BuildType() {
+    init {
         name = "test"
 
         configureVcs()
@@ -107,14 +107,14 @@ object Test : BuildType(
         steps {
             gradle {
                 id = "gradle_runner"
-                tasks = "clean test"
+                tasks = "test"
             }
         }
-    },
-)
+    }
+}
 
-object Style : BuildType(
-    {
+class Style : BuildType() {
+    init {
         name = "style"
 
         configureVcs()
@@ -124,8 +124,8 @@ object Style : BuildType(
         steps {
             gradle {
                 id = "gradle_runner"
-                tasks = "clean ktlintCheck"
+                tasks = "ktlintCheck"
             }
         }
-    },
-)
+    }
+}
