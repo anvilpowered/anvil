@@ -150,6 +150,7 @@ class PluginJar : BuildType() {
         name = "plugin-jar"
 
         configureVcs()
+        configureTriggers()
         features {
             configureBaseFeatures()
             configurePullRequests()
@@ -162,7 +163,7 @@ class PluginJar : BuildType() {
             }
         }
 
-        artifactRules = "app/plugin/build/libs/"
+        artifactRules = "+:app/plugin/build/libs/*.jar"
     }
 }
 
