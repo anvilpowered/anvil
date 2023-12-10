@@ -1,7 +1,7 @@
 [versions]
 configurate = "4.1.2"
 kotlin = "1.9.21"
-log4j = "2.20.0"
+log4j = "2.22.0"
 
 [libraries]
 adventure-bom = "net.kyori:adventure-bom:4.14.0"
