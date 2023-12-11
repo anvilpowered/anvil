@@ -1,6 +1,6 @@
+import jetbrains.buildServer.configs.kotlin.AbsoluteId
 import jetbrains.buildServer.configs.kotlin.BuildFeatures
 import jetbrains.buildServer.configs.kotlin.BuildType
-import jetbrains.buildServer.configs.kotlin.DslContext
 import jetbrains.buildServer.configs.kotlin.FailureAction
 import jetbrains.buildServer.configs.kotlin.buildFeatures.PullRequests
 import jetbrains.buildServer.configs.kotlin.buildFeatures.commitStatusPublisher
@@ -10,6 +10,7 @@ import jetbrains.buildServer.configs.kotlin.buildSteps.gradle
 import jetbrains.buildServer.configs.kotlin.project
 import jetbrains.buildServer.configs.kotlin.projectFeatures.githubIssues
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
+import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 import jetbrains.buildServer.configs.kotlin.version
 
 /*
@@ -36,7 +37,20 @@ To debug in IntelliJ Idea, open the 'Maven Projects' tool window (View
 
 version = "2023.11"
 
+object AnvilVcsRoot : GitVcsRoot() {
+    init {
+        id = AbsoluteId("anvil_git")
+        name = "anvil"
+        url = "https://github.com/anvilpowered/anvil.git"
+        branch = "refs/heads/master"
+        branchSpec = "+:refs/heads/*"
+        userNameStyle = UserNameStyle.FULL
+    }
+}
+
 project {
+
+    vcsRoot(AnvilVcsRoot)
 
     val test = Test()
     val style = Style()
@@ -54,7 +68,7 @@ project {
             displayName = "anvilpowered/anvil"
             repositoryURL = "https://github.com/anvilpowered/anvil"
             authType = accessToken {
-                accessToken = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e"
+                accessToken = "credentialsJSON:f57a4fdd-fb30-41c0-9983-620364336d03"
             }
             param("tokenId", "")
         }
@@ -63,7 +77,7 @@ project {
 
 fun BuildType.configureVcs() {
     vcs {
-        root(DslContext.settingsRoot)
+        root(AnvilVcsRoot)
     }
 }
 
@@ -83,11 +97,11 @@ fun BuildType.configureTriggers() {
 fun BuildFeatures.configureBaseFeatures() {
     perfmon {}
     commitStatusPublisher {
-        vcsRootExtId = "${DslContext.settingsRoot.id}"
+        vcsRootExtId = "${AnvilVcsRoot.id}"
         publisher = github {
             githubUrl = "https://api.github.com"
             authType = personalToken {
-                token = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e"
+                token = "credentialsJSON:f57a4fdd-fb30-41c0-9983-620364336d03"
             }
         }
     }
@@ -95,10 +109,10 @@ fun BuildFeatures.configureBaseFeatures() {
 
 fun BuildFeatures.configurePullRequests() {
     pullRequests {
-        vcsRootExtId = "${DslContext.settingsRoot.id}"
+        vcsRootExtId = "${AnvilVcsRoot.id}"
         provider = github {
             authType = token {
-                token = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e"
+                token = "credentialsJSON:f57a4fdd-fb30-41c0-9983-620364336d03"
             }
             filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
         }
