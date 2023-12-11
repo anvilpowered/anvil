@@ -1,6 +1,6 @@
-import jetbrains.buildServer.configs.kotlin.AbsoluteId
 import jetbrains.buildServer.configs.kotlin.BuildFeatures
 import jetbrains.buildServer.configs.kotlin.BuildType
+import jetbrains.buildServer.configs.kotlin.DslContext
 import jetbrains.buildServer.configs.kotlin.FailureAction
 import jetbrains.buildServer.configs.kotlin.buildFeatures.PullRequests
 import jetbrains.buildServer.configs.kotlin.buildFeatures.commitStatusPublisher
@@ -10,7 +10,6 @@ import jetbrains.buildServer.configs.kotlin.buildSteps.gradle
 import jetbrains.buildServer.configs.kotlin.project
 import jetbrains.buildServer.configs.kotlin.projectFeatures.githubIssues
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
-import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 import jetbrains.buildServer.configs.kotlin.version
 
 /*
@@ -37,20 +36,7 @@ To debug in IntelliJ Idea, open the 'Maven Projects' tool window (View
 
 version = "2023.11"
 
-object AnvilVcsRoot : GitVcsRoot() {
-    init {
-        id = AbsoluteId("anvil_git")
-        name = "anvil"
-        url = "https://github.com/anvilpowered/anvil.git"
-        branch = "refs/heads/master"
-        branchSpec = "+:refs/heads/*"
-        userNameStyle = UserNameStyle.FULL
-    }
-}
-
 project {
-
-    vcsRoot(AnvilVcsRoot)
 
     val test = Test()
     val style = Style()
@@ -77,7 +63,7 @@ project {
 
 fun BuildType.configureVcs() {
     vcs {
-        root(AnvilVcsRoot)
+        root(DslContext.settingsRoot)
     }
 }
 
@@ -97,7 +83,7 @@ fun BuildType.configureTriggers() {
 fun BuildFeatures.configureBaseFeatures() {
     perfmon {}
     commitStatusPublisher {
-        vcsRootExtId = "${AnvilVcsRoot.id}"
+        vcsRootExtId = "${DslContext.settingsRoot.id}"
         publisher = github {
             githubUrl = "https://api.github.com"
             authType = personalToken {
@@ -109,7 +95,7 @@ fun BuildFeatures.configureBaseFeatures() {
 
 fun BuildFeatures.configurePullRequests() {
     pullRequests {
-        vcsRootExtId = "${AnvilVcsRoot.id}"
+        vcsRootExtId = "${DslContext.settingsRoot.id}"
         provider = github {
             authType = token {
                 token = "credentialsJSON:f57a4fdd-fb30-41c0-9983-620364336d03"
