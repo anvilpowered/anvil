@@ -54,7 +54,7 @@ project {
             displayName = "anvilpowered/anvil"
             repositoryURL = "https://github.com/anvilpowered/anvil"
             authType = accessToken {
-                accessToken = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e\n"
+                accessToken = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e"
             }
             param("tokenId", "")
         }
@@ -87,7 +87,7 @@ fun BuildFeatures.configureBaseFeatures() {
         publisher = github {
             githubUrl = "https://api.github.com"
             authType = personalToken {
-                token = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e\n"
+                token = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e"
             }
         }
     }
@@ -98,7 +98,7 @@ fun BuildFeatures.configurePullRequests() {
         vcsRootExtId = "${DslContext.settingsRoot.id}"
         provider = github {
             authType = token {
-                token = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e\n"
+                token = "credentialsJSON:7a0f679e-94e2-4f3e-b19a-db375294d40e"
             }
             filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
         }
