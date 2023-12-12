@@ -2,12 +2,6 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
@@ -35,31 +29,16 @@ fun Registry.serialize(key: Key<*>, json: Json = Json): String = when (key) {
     else -> throw IllegalArgumentException("Unknown key type: ${key::class.simpleName}")
 }
 
-private object StringSerializer : KSerializer<String> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("AnvilString", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): String {
-        val composite = decoder.beginStructure(descriptor)
-        val result = composite.decodeStringElement(descriptor, index = 0)
-        composite.endStructure(descriptor)
-        return result
-    }
-
-    override fun serialize(encoder: Encoder, value: String) {
-        val composite = encoder.beginStructure(descriptor)
-        composite.encodeStringElement(descriptor, index = 0, value)
-        composite.endStructure(descriptor)
-    }
-}
-
 fun <T> TypeToken<T>.getDefaultSerializer(): KSerializer<T> {
     @Suppress("UNCHECKED_CAST")
-    println("getDefaultSerializer: $type")
-    return when (type) {
-        String::class.java -> {
-            println("getDefaultSerializer: String")
-            StringSerializer as KSerializer<T>
-        }
-        else -> serializer(type) as KSerializer<T>
+    return serializer(type) as KSerializer<T>
+}
+
+internal fun <T> String.prepareForDecode(targetType: TypeToken<T>): String {
+    // We use the JSON deserializer for all values
+    // It expects input String to be quoted when the target type is a String
+    return when (targetType.type) {
+        String::class.java -> "\"$this\""
+        else -> this
     }
 }

@@ -29,10 +29,10 @@ class MapKey<K : Any, V : Any> internal constructor(
     override val name: String,
     override val fallback: Map<K, V>,
     override val description: String?,
-    private val keyType: TypeToken<K>,
-    private val keySerializer: KSerializer<K>,
-    private val valueType: TypeToken<V>,
-    private val valueSerializer: KSerializer<V>,
+    val keyType: TypeToken<K>,
+    val keySerializer: KSerializer<K>,
+    val valueType: TypeToken<V>,
+    val valueSerializer: KSerializer<V>,
 ) : Key<Map<K, V>> {
 
     private val namespace: KeyNamespace = this@KeyNamespace
@@ -43,9 +43,9 @@ class MapKey<K : Any, V : Any> internal constructor(
     }
 
     fun serializeKey(key: K, json: Json = Json): String = json.encodeToString(keySerializer, key)
-    fun deserializeKey(key: String, json: Json = Json): K = json.decodeFromString(keySerializer, key)
+    fun deserializeKey(key: String, json: Json = Json): K = json.decodeFromString(keySerializer, key.prepareForDecode(keyType))
     fun serializeValue(value: V, json: Json = Json): String = json.encodeToString(valueSerializer, value)
-    fun deserializeValue(value: String, json: Json = Json): V = json.decodeFromString(valueSerializer, value)
+    fun deserializeValue(value: String, json: Json = Json): V = json.decodeFromString(valueSerializer, value.prepareForDecode(valueType))
 
     override fun serialize(value: Map<K, V>, json: Json): String = json.encodeToString(serializer, value)
     override fun deserialize(value: String, json: Json): Map<K, V> = json.decodeFromString(serializer, value)
@@ -71,7 +71,6 @@ class MapKey<K : Any, V : Any> internal constructor(
         @KeyBuilderDsl
         fun keySerializer(serializer: KSerializer<K>?): B
 
-
         /**
          * Sets the value serializer of the generated [Key].
          *
@@ -84,7 +83,6 @@ class MapKey<K : Any, V : Any> internal constructor(
          */
         @KeyBuilderDsl
         fun valueSerializer(serializer: KSerializer<V>?): B
-
     }
 
     @KeyBuilderDsl

@@ -28,7 +28,7 @@ class SimpleKey<T : Any> internal constructor(
     override val name: String,
     override val fallback: T,
     override val description: String?,
-    private val serializer: KSerializer<T>,
+    val serializer: KSerializer<T>,
 ) : Key<T> {
     private val namespace: KeyNamespace = this@KeyNamespace
 
@@ -37,7 +37,7 @@ class SimpleKey<T : Any> internal constructor(
     }
 
     override fun serialize(value: T, json: Json): String = json.encodeToString(serializer, value)
-    override fun deserialize(value: String, json: Json): T = json.decodeFromString(serializer, value)
+    override fun deserialize(value: String, json: Json): T = json.decodeFromString(serializer, value.prepareForDecode(type))
 
     override fun compareTo(other: Key<T>): Int = Key.comparator.compare(this, other)
     override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false

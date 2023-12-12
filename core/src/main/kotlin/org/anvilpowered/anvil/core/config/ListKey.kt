@@ -40,8 +40,11 @@ class ListKey<E : Any> internal constructor(
         namespace.add(this)
     }
 
-    fun serializeElement(element: E, json: Json = Json): String = json.encodeToString(elementSerializer, element)
-    fun deserializeElement(element: String, json: Json = Json): E = json.decodeFromString(elementSerializer, element)
+    fun serializeElement(element: E, json: Json = Json): String =
+        json.encodeToString(elementSerializer, element)
+
+    fun deserializeElement(element: String, json: Json = Json): E =
+        json.decodeFromString(elementSerializer, element.prepareForDecode(elementType))
 
     override fun serialize(value: List<E>, json: Json): String = Json.encodeToString(serializer, value)
     override fun deserialize(value: String, json: Json): List<E> = Json.decodeFromString(serializer, value)
