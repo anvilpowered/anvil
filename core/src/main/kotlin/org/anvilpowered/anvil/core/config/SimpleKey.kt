@@ -50,7 +50,11 @@ class SimpleKey<T : Any> internal constructor(
         /**
          * Sets the serializer of the generated [Key].
          *
-         * @param serializer The serializer to set or `null` to remove it
+         * This is entirely optional, as the default serializer will be used if this is not set.
+         * The default serializer requires the element type to be trivially serializable or annotated with `@Serializable`
+         * from the kotlinx-serialization framework.
+         *
+         * @param serializer The serializer to set or `null` to use the default
          * @return `this`
          */
         @KeyBuilderDsl
