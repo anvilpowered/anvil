@@ -70,12 +70,7 @@ fun BuildType.configureVcs() {
 fun BuildType.configureTriggers() {
     triggers {
         vcs {
-            branchFilter = """
-                +:master
-                +:dev
-                +:dev-*
-                +:renovate/*
-            """.trimIndent()
+            branchFilter = "+:*"
         }
     }
 }
@@ -93,6 +88,7 @@ fun BuildFeatures.configureBaseFeatures() {
     }
 }
 
+// TODO: Doesn't trigger builds
 fun BuildFeatures.configurePullRequests() {
     pullRequests {
         vcsRootExtId = "${DslContext.settingsRoot.id}"
@@ -113,7 +109,7 @@ class Test : BuildType() {
         configureTriggers()
         features {
             configureBaseFeatures()
-            configurePullRequests()
+//            configurePullRequests()
         }
 
         steps {
@@ -133,7 +129,7 @@ class Style : BuildType() {
         configureTriggers()
         features {
             configureBaseFeatures()
-            configurePullRequests()
+//            configurePullRequests()
         }
 
         steps {
