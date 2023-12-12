@@ -14,6 +14,7 @@ dependencies {
     api(libs.kotlinx.coroutines)
     api(libs.guava)
     api(libs.koin)
+    api(libs.kotlinx.serialization)
 
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")

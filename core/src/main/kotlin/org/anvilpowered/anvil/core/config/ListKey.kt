@@ -19,6 +19,9 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
 
 context(KeyNamespace)
 class ListKey<E : Any> internal constructor(
@@ -26,28 +29,22 @@ class ListKey<E : Any> internal constructor(
     override val name: String,
     override val fallback: List<E>,
     override val description: String?,
-    private val elementType: TypeToken<E>,
-    private val elementSerializer: ((E) -> String)?,
-    private val elementDeserializer: (String) -> E,
+    val elementType: TypeToken<E>,
+    val elementSerializer: KSerializer<E>,
 ) : Key<List<E>> {
+
     private val namespace: KeyNamespace = this@KeyNamespace
+    private val serializer = ListSerializer(elementSerializer)
 
     init {
         namespace.add(this)
     }
 
-    fun serializeElement(element: E): String = elementSerializer?.invoke(element) ?: element.toString()
-    fun deserializeElement(element: String): E = elementDeserializer(element)
+    fun serializeElement(element: E, json: Json = Json): String = json.encodeToString(elementSerializer, element)
+    fun deserializeElement(element: String, json: Json = Json): E = json.decodeFromString(elementSerializer, element)
 
-    override fun serialize(value: List<E>): String {
-        return value.joinToString(",") { serializeElement(it) }
-    }
-
-    override fun deserialize(value: String): List<E>? {
-        return value.splitToSequence(",")
-            .map { deserializeElement(it) }
-            .toList()
-    }
+    override fun serialize(value: List<E>, json: Json): String = Json.encodeToString(serializer, value)
+    override fun deserialize(value: String, json: Json): List<E> = Json.decodeFromString(serializer, value)
 
     override fun compareTo(other: Key<List<E>>): Int = Key.comparator.compare(this, other)
     override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false
@@ -60,20 +57,15 @@ class ListKey<E : Any> internal constructor(
         /**
          * Sets the element serializer of the generated [Key].
          *
-         * @param serializer The element serializer to set or `null` to remove it
-         * @return `this`
-         */
-        @KeyBuilderDsl
-        fun elementSerializer(serializer: ((E) -> String)?): B
-
-        /**
-         * Sets the element deserializer of the generated [Key].
+         * This is entirely optional, as the default serializer will be used if this is not set.
+         * The default serializer requires the element type to be trivially serializable or annotated with `@Serializable`
+         * from the kotlinx-serialization framework.
          *
-         * @param deserializer The element deserializer to set or `null` to remove it
+         * @param serializer The element serializer to set or `null` to use the default
          * @return `this`
          */
         @KeyBuilderDsl
-        fun elementDeserializer(deserializer: ((String) -> E)?): B
+        fun elementSerializer(serializer: KSerializer<E>?): B
     }
 
     @KeyBuilderDsl

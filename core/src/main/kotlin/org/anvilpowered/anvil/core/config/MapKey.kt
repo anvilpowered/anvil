@@ -19,6 +19,9 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.json.Json
 
 context(KeyNamespace)
 class MapKey<K : Any, V : Any> internal constructor(
@@ -27,35 +30,25 @@ class MapKey<K : Any, V : Any> internal constructor(
     override val fallback: Map<K, V>,
     override val description: String?,
     private val keyType: TypeToken<K>,
-    private val keySerializer: ((K) -> String)?,
-    private val keyDeserializer: (String) -> K,
+    private val keySerializer: KSerializer<K>,
     private val valueType: TypeToken<V>,
-    private val valueSerializer: ((V) -> String)?,
-    private val valueDeserializer: (String) -> V,
+    private val valueSerializer: KSerializer<V>,
 ) : Key<Map<K, V>> {
+
     private val namespace: KeyNamespace = this@KeyNamespace
+    private val serializer = MapSerializer(keySerializer, valueSerializer)
 
     init {
         namespace.add(this)
     }
 
-    fun serializeKey(mapKey: K): String = keySerializer?.invoke(mapKey) ?: mapKey.toString()
-    fun deserializeKey(mapKey: String): K = keyDeserializer(mapKey)
-    fun serializeValue(mapValue: V): String = valueSerializer?.invoke(mapValue) ?: mapValue.toString()
-    fun deserializeValue(mapValue: String): V = valueDeserializer(mapValue)
+    fun serializeKey(key: K, json: Json = Json): String = json.encodeToString(keySerializer, key)
+    fun deserializeKey(key: String, json: Json = Json): K = json.decodeFromString(keySerializer, key)
+    fun serializeValue(value: V, json: Json = Json): String = json.encodeToString(valueSerializer, value)
+    fun deserializeValue(value: String, json: Json = Json): V = json.decodeFromString(valueSerializer, value)
 
-    override fun serialize(value: Map<K, V>): String {
-        return value.entries.joinToString(",") { (key, value) ->
-            "${serializeKey(key)}=${serializeValue(value)}"
-        }
-    }
-
-    override fun deserialize(value: String): Map<K, V> {
-        return value.splitToSequence(",")
-            .map { it.split("=", limit = 2) }
-            .map { (key, value) -> deserializeKey(key) to deserializeValue(value) }
-            .toMap()
-    }
+    override fun serialize(value: Map<K, V>, json: Json): String = json.encodeToString(serializer, value)
+    override fun deserialize(value: String, json: Json): Map<K, V> = json.decodeFromString(serializer, value)
 
     override fun compareTo(other: Key<Map<K, V>>): Int = Key.comparator.compare(this, other)
     override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false
@@ -68,38 +61,30 @@ class MapKey<K : Any, V : Any> internal constructor(
         /**
          * Sets the key serializer of the generated [Key].
          *
-         * @param serializer The key serializer to set or `null` to remove it
-         * @return `this`
-         */
-        @KeyBuilderDsl
-        fun keySerializer(serializer: ((K) -> String)?): B
-
-        /**
-         * Sets the key deserializer of the generated [Key].
+         * This is entirely optional, as the default serializer will be used if this is not set.
+         * The default serializer requires the element type to be trivially serializable or annotated with `@Serializable`
+         * from the kotlinx-serialization framework.
          *
-         * @param deserializer The key deserializer to set or `null` to remove it
+         * @param serializer The key serializer to set or `null` to use the default
          * @return `this`
          */
         @KeyBuilderDsl
-        fun keyDeserializer(deserializer: ((String) -> K)?): B
+        fun keySerializer(serializer: KSerializer<K>?): B
+
 
         /**
          * Sets the value serializer of the generated [Key].
          *
-         * @param serializer The value serializer to set or `null` to remove it
-         * @return `this`
-         */
-        @KeyBuilderDsl
-        fun valueSerializer(serializer: ((V) -> String)?): B
-
-        /**
-         * Sets the value deserializer of the generated [Key].
+         * This is entirely optional, as the default serializer will be used if this is not set.
+         * The default serializer requires the element type to be trivially serializable or annotated with `@Serializable`
+         * from the kotlinx-serialization framework.
          *
-         * @param deserializer The value deserializer to set or `null` to remove it
+         * @param serializer The value serializer to set or `null` to use the default
          * @return `this`
          */
         @KeyBuilderDsl
-        fun valueDeserializer(deserializer: ((String) -> V)?): B
+        fun valueSerializer(serializer: KSerializer<V>?): B
+
     }
 
     @KeyBuilderDsl

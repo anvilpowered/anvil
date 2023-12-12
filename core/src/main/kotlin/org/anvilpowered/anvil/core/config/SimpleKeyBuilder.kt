@@ -19,6 +19,8 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.serializer
 
 class SimpleKeyBuilder<T : Any>(
     type: TypeToken<T>,
@@ -27,18 +29,12 @@ class SimpleKeyBuilder<T : Any>(
 ),
     SimpleKey.FacetedBuilder<T> {
 
-    private var serializer: ((T) -> String)? = null
-    private var deserializer: ((String) -> T)? = null
+    private var serializer: KSerializer<T>? = null
 
     override fun self(): SimpleKey.FacetedBuilder<T> = this
 
-    override fun serializer(serializer: ((T) -> String)?): SimpleKey.FacetedBuilder<T> {
+    override fun serializer(serializer: KSerializer<T>?): SimpleKey.FacetedBuilder<T> {
         this.serializer = serializer
-        return self()
-    }
-
-    override fun deserializer(deserializer: ((String) -> T)?): SimpleKey.FacetedBuilder<T> {
-        this.deserializer = deserializer
         return self()
     }
 
@@ -48,8 +44,7 @@ class SimpleKeyBuilder<T : Any>(
         requireNotNull(name) { "Name is null" },
         requireNotNull(fallback) { "Fallback is null" },
         description,
-        serializer,
-        deserializer ?: Key.getDefaultDeserializer(type),
+        serializer ?: type.getDefaultSerializer(),
     )
 
     override fun asAnonymousFacet(): SimpleKey.AnonymousBuilderFacet<T> {
@@ -64,13 +59,8 @@ class SimpleKeyBuilder<T : Any>(
                 return this
             }
 
-            override fun serializer(serializer: ((T) -> String)?): SimpleKey.AnonymousBuilderFacet<T> {
+            override fun serializer(serializer: KSerializer<T>?): SimpleKey.AnonymousBuilderFacet<T> {
                 this@SimpleKeyBuilder.serializer(serializer)
-                return this
-            }
-
-            override fun deserializer(deserializer: ((String) -> T)?): SimpleKey.AnonymousBuilderFacet<T> {
-                this@SimpleKeyBuilder.deserializer(deserializer)
                 return this
             }
         }
@@ -93,13 +83,8 @@ class SimpleKeyBuilder<T : Any>(
                 return this
             }
 
-            override fun serializer(serializer: ((T) -> String)?): SimpleKey.NamedBuilderFacet<T> {
+            override fun serializer(serializer: KSerializer<T>?): SimpleKey.NamedBuilderFacet<T> {
                 this@SimpleKeyBuilder.serializer(serializer)
-                return this
-            }
-
-            override fun deserializer(deserializer: ((String) -> T)?): SimpleKey.NamedBuilderFacet<T> {
-                this@SimpleKeyBuilder.deserializer(deserializer)
                 return this
             }
         }

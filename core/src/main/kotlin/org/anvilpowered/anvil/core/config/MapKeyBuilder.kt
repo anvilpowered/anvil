@@ -20,6 +20,8 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeFactory
 import io.leangen.geantyref.TypeToken
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.serializer
 
 class MapKeyBuilder<K : Any, V : Any>(
     private val mapKeyType: TypeToken<K>,
@@ -30,45 +32,32 @@ class MapKeyBuilder<K : Any, V : Any>(
     >(createMapTypeToken(mapKeyType, mapValueType)),
     MapKey.FacetedBuilder<K, V> {
 
-    private var keySerializer: ((K) -> String)? = null
-    private var keyDeserializer: ((String) -> K)? = null
-    private var valueSerializer: ((V) -> String)? = null
-    private var valueDeserializer: ((String) -> V)? = null
+    private var keySerializer: KSerializer<K>? = null
+    private var valueSerializer: KSerializer<V>? = null
 
     override fun self(): MapKey.FacetedBuilder<K, V> = this
 
-    override fun keySerializer(serializer: ((K) -> String)?): MapKey.FacetedBuilder<K, V> {
+    override fun keySerializer(serializer: KSerializer<K>?): MapKey.FacetedBuilder<K, V> {
         this.keySerializer = serializer
         return this
     }
 
-    override fun keyDeserializer(deserializer: ((String) -> K)?): MapKey.FacetedBuilder<K, V> {
-        this.keyDeserializer = deserializer
-        return this
-    }
-
-    override fun valueSerializer(serializer: ((V) -> String)?): MapKey.FacetedBuilder<K, V> {
+    override fun valueSerializer(serializer: KSerializer<V>?): MapKey.FacetedBuilder<K, V> {
         this.valueSerializer = serializer
         return this
     }
 
-    override fun valueDeserializer(deserializer: ((String) -> V)?): MapKey.FacetedBuilder<K, V> {
-        this.valueDeserializer = deserializer
-        return this
-    }
-
     context(KeyNamespace)
+    @Suppress("UNCHECKED_CAST")
     override fun build(): MapKey<K, V> = MapKey(
         type,
         requireNotNull(name) { "Name is null" },
         requireNotNull(fallback) { "Fallback is null" },
         description,
         mapKeyType,
-        keySerializer,
-        keyDeserializer ?: Key.getDefaultDeserializer(mapKeyType),
+        keySerializer ?: mapKeyType.getDefaultSerializer(),
         mapValueType,
-        valueSerializer,
-        valueDeserializer ?: Key.getDefaultDeserializer(mapValueType),
+        valueSerializer ?: mapValueType.getDefaultSerializer(),
     )
 
     override fun asAnonymousFacet(): MapKey.AnonymousBuilderFacet<K, V> {
@@ -83,23 +72,13 @@ class MapKeyBuilder<K : Any, V : Any>(
                 return this
             }
 
-            override fun keySerializer(serializer: ((K) -> String)?): MapKey.AnonymousBuilderFacet<K, V> {
+            override fun keySerializer(serializer: KSerializer<K>?): MapKey.AnonymousBuilderFacet<K, V> {
                 this@MapKeyBuilder.keySerializer(serializer)
                 return this
             }
 
-            override fun keyDeserializer(deserializer: ((String) -> K)?): MapKey.AnonymousBuilderFacet<K, V> {
-                this@MapKeyBuilder.keyDeserializer(deserializer)
-                return this
-            }
-
-            override fun valueSerializer(serializer: ((V) -> String)?): MapKey.AnonymousBuilderFacet<K, V> {
+            override fun valueSerializer(serializer: KSerializer<V>?): MapKey.AnonymousBuilderFacet<K, V> {
                 this@MapKeyBuilder.valueSerializer(serializer)
-                return this
-            }
-
-            override fun valueDeserializer(deserializer: ((String) -> V)?): MapKey.AnonymousBuilderFacet<K, V> {
-                this@MapKeyBuilder.valueDeserializer(deserializer)
                 return this
             }
         }
@@ -122,23 +101,13 @@ class MapKeyBuilder<K : Any, V : Any>(
                 return this
             }
 
-            override fun keySerializer(serializer: ((K) -> String)?): MapKey.NamedBuilderFacet<K, V> {
+            override fun keySerializer(serializer: KSerializer<K>?): MapKey.NamedBuilderFacet<K, V> {
                 this@MapKeyBuilder.keySerializer(serializer)
                 return this
             }
 
-            override fun keyDeserializer(deserializer: ((String) -> K)?): MapKey.NamedBuilderFacet<K, V> {
-                this@MapKeyBuilder.keyDeserializer(deserializer)
-                return this
-            }
-
-            override fun valueSerializer(serializer: ((V) -> String)?): MapKey.NamedBuilderFacet<K, V> {
+            override fun valueSerializer(serializer: KSerializer<V>?): MapKey.NamedBuilderFacet<K, V> {
                 this@MapKeyBuilder.valueSerializer(serializer)
-                return this
-            }
-
-            override fun valueDeserializer(deserializer: ((String) -> V)?): MapKey.NamedBuilderFacet<K, V> {
-                this@MapKeyBuilder.valueDeserializer(deserializer)
                 return this
             }
         }

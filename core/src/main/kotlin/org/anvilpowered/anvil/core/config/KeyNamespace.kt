@@ -24,6 +24,8 @@ import org.jetbrains.annotations.ApiStatus
 interface KeyNamespace {
     val name: String
 
+    val keys: Set<Key<*>>
+
     operator fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>?
 
     @ApiStatus.Internal
@@ -37,10 +39,13 @@ interface KeyNamespace {
 }
 
 internal class KeyNamespaceImpl(override val name: String) : KeyNamespace {
-    private val keys: MutableMap<String, Key<*>> = mutableMapOf()
+    private val keyMap: MutableMap<String, Key<*>> = mutableMapOf()
+
+    private val _keys: MutableSet<Key<*>> = mutableSetOf()
+    override val keys: Set<Key<*>> by ::_keys
 
     override fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>? {
-        val key = keys[keyName] ?: return null
+        val key = keyMap[keyName] ?: return null
         if (key.type != type) {
             throw TypeCastException("Key $name has type ${key.type} which does not match provided type $type")
         }
@@ -49,7 +54,8 @@ internal class KeyNamespaceImpl(override val name: String) : KeyNamespace {
     }
 
     override fun <T : Any> add(key: Key<T>) {
-        keys[key.name] = key
+        check(keyMap.put(key.name, key) == null) { "Key with name ${key.name} already exists" }
+        assert(_keys.add(key)) { "Unable to add key" }
     }
 }
 

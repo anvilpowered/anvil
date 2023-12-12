@@ -19,6 +19,8 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.json.Json
 
 context(KeyNamespace)
 class SimpleKey<T : Any> internal constructor(
@@ -26,8 +28,7 @@ class SimpleKey<T : Any> internal constructor(
     override val name: String,
     override val fallback: T,
     override val description: String?,
-    private val serializer: ((T) -> String)?,
-    private val deserializer: (String) -> T,
+    private val serializer: KSerializer<T>,
 ) : Key<T> {
     private val namespace: KeyNamespace = this@KeyNamespace
 
@@ -35,8 +36,8 @@ class SimpleKey<T : Any> internal constructor(
         namespace.add(this)
     }
 
-    override fun serialize(value: T): String = serializer?.invoke(value) ?: value.toString()
-    override fun deserialize(value: String): T = deserializer(value)
+    override fun serialize(value: T, json: Json): String = json.encodeToString(serializer, value)
+    override fun deserialize(value: String, json: Json): T = json.decodeFromString(serializer, value)
 
     override fun compareTo(other: Key<T>): Int = Key.comparator.compare(this, other)
     override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false
@@ -53,16 +54,7 @@ class SimpleKey<T : Any> internal constructor(
          * @return `this`
          */
         @KeyBuilderDsl
-        fun serializer(serializer: ((T) -> String)?): B
-
-        /**
-         * Sets the deserializer of the generated [Key].
-         *
-         * @param deserializer The deserializer to set or `null` to remove it
-         * @return `this`
-         */
-        @KeyBuilderDsl
-        fun deserializer(deserializer: ((String) -> T)?): B
+        fun serializer(serializer: KSerializer<T>?): B
     }
 
     @KeyBuilderDsl

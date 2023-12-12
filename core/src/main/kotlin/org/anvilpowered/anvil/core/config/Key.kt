@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
+import kotlinx.serialization.json.Json
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 
@@ -35,12 +36,12 @@ interface Key<T : Any> : Comparable<Key<T>> {
     /**
      * Serializes the given value in a simple [String] representation.
      */
-    fun serialize(value: T): String
+    fun serialize(value: T, json: Json = Json): String
 
     /**
      * Deserializes the given value from a simple [String] representation.
      */
-    fun deserialize(value: String): T?
+    fun deserialize(value: String, json: Json = Json): T?
 
     @KeyBuilderDsl
     interface BuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> {
