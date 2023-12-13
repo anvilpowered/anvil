@@ -6,15 +6,15 @@ plugins {
 
 dependencies {
     api(platform(libs.exposed.bom))
+    api(libs.kotlinx.serialization)
+    api(libs.kotlinx.coroutines)
     api(libs.bundles.exposed)
     api(libs.kbrig.brigadier)
     api(libs.logging.api)
     api(libs.configurate.core)
     api(libs.annotations)
-    api(libs.kotlinx.coroutines)
     api(libs.guava)
     api(libs.koin)
-    api(libs.kotlinx.serialization)
 
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")
