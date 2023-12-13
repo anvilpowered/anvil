@@ -19,7 +19,7 @@ kbrig-brigadier = "org.anvilpowered:kbrig-brigadier:0.2.0-SNAPSHOT"
 koin = "io.insert-koin:koin-core:3.5.2-RC1"
 kotest = "io.kotest:kotest-runner-junit5-jvm:5.8.0"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0"
-kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
+kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
 logging-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 logging-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 paper = "io.papermc.paper:paper-api:1.20.2-brigadier-SNAPSHOT"
