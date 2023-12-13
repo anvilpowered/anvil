@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeFactory
 import io.leangen.geantyref.TypeToken
+import kotlinx.serialization.KSerializer
 
 class ListKeyBuilder<E : Any>(
     private val elementType: TypeToken<E>,
@@ -28,30 +29,24 @@ class ListKeyBuilder<E : Any>(
 ),
     ListKey.FacetedBuilder<E> {
 
-    private var elementSerializer: ((E) -> String)? = null
-    private var elementDeserializer: ((String) -> E)? = null
+    private var elementSerializer: KSerializer<E>? = null
 
     override fun self(): ListKey.FacetedBuilder<E> = this
 
-    override fun elementSerializer(serializer: ((E) -> String)?): ListKey.FacetedBuilder<E> {
+    override fun elementSerializer(serializer: KSerializer<E>?): ListKey.FacetedBuilder<E> {
         this.elementSerializer = serializer
         return this
     }
 
-    override fun elementDeserializer(deserializer: ((String) -> E)?): ListKey.FacetedBuilder<E> {
-        this.elementDeserializer = deserializer
-        return this
-    }
-
     context(KeyNamespace)
+    @Suppress("UNCHECKED_CAST")
     override fun build(): ListKey<E> = ListKey(
         type,
         requireNotNull(name) { "Name is null" },
         requireNotNull(fallback) { "Fallback is null" },
         description,
         elementType,
-        elementSerializer,
-        elementDeserializer ?: Key.getDefaultDeserializer(elementType),
+        elementSerializer ?: elementType.getDefaultSerializer(),
     )
 
     override fun asAnonymousFacet(): ListKey.AnonymousBuilderFacet<E> {
@@ -66,13 +61,8 @@ class ListKeyBuilder<E : Any>(
                 return this
             }
 
-            override fun elementSerializer(serializer: ((E) -> String)?): ListKey.AnonymousBuilderFacet<E> {
+            override fun elementSerializer(serializer: KSerializer<E>?): ListKey.AnonymousBuilderFacet<E> {
                 this@ListKeyBuilder.elementSerializer(serializer)
-                return this
-            }
-
-            override fun elementDeserializer(deserializer: ((String) -> E)?): ListKey.AnonymousBuilderFacet<E> {
-                this@ListKeyBuilder.elementDeserializer(deserializer)
                 return this
             }
         }
@@ -95,13 +85,8 @@ class ListKeyBuilder<E : Any>(
                 return this
             }
 
-            override fun elementSerializer(serializer: ((E) -> String)?): ListKey.NamedBuilderFacet<E> {
+            override fun elementSerializer(serializer: KSerializer<E>?): ListKey.NamedBuilderFacet<E> {
                 this@ListKeyBuilder.elementSerializer(serializer)
-                return this
-            }
-
-            override fun elementDeserializer(deserializer: ((String) -> E)?): ListKey.NamedBuilderFacet<E> {
-                this@ListKeyBuilder.elementDeserializer(deserializer)
                 return this
             }
         }

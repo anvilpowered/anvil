@@ -16,19 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.config
+package org.anvilpowered.anvil.core.command.config
 
-import io.leangen.geantyref.TypeToken
+import org.anvilpowered.anvil.core.command.CommandSource
+import org.anvilpowered.anvil.core.config.KeyNamespace
+import org.anvilpowered.anvil.core.config.Registry
+import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
-internal fun <T> Key.Companion.getDefaultDeserializer(type: TypeToken<T>): (String) -> T {
-    @Suppress("UNCHECKED_CAST")
-    return when (type.type) {
-        String::class.java -> { it -> it }
-        Int::class.java -> { it: String -> it.toIntOrNull() }
-        Long::class.java -> { it: String -> it.toLongOrNull() }
-        Float::class.java -> { it: String -> it.toFloatOrNull() }
-        Double::class.java -> { it: String -> it.toDoubleOrNull() }
-        Boolean::class.java -> { it: String -> it.toBooleanStrictOrNull() }
-        else -> throw IllegalArgumentException("There is no default parser for ${type.type}")
-    } as (String) -> T
+class ConfigCommandFactory(
+    val registry: Registry,
+    val keyNamespace: KeyNamespace,
+) {
+    fun create(): LiteralCommandNode<CommandSource> {
+        return ArgumentBuilder.literal<CommandSource>("config")
+            .then(createGet())
+            .build()
+    }
 }

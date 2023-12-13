@@ -37,14 +37,12 @@ class EnvironmentRegistry(private val prefix: String, private val delegate: Regi
 
     override fun <E : Any> getStrict(key: ListKey<E>): List<E>? {
         val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-        val tokens = value.split(",")
-        return tokens.map { key.deserializeElement(it) }
+        return key.deserialize(value)
     }
 
     override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? {
         val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, index)
-        val tokens = value.split(",")
-        return key.deserializeElement(tokens[index])
+        return key.deserialize(value)[index]
     }
 
     override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E {
@@ -55,24 +53,12 @@ class EnvironmentRegistry(private val prefix: String, private val delegate: Regi
 
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? {
         val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-        val tokens = value.split(",")
-        return tokens.associate { token ->
-            val (k, v) = token.split("=")
-            val mapKey = requireNotNull(key.deserializeKey(k)) { "Could not deserialize mapKey $k for key $key" }
-            val mapValue = requireNotNull(key.deserializeValue(v)) { "Could not deserialize mapValue $v for mapKey $k for key $key" }
-            mapKey to mapValue
-        }
+        return key.deserialize(value)
     }
 
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? {
         val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, mapKey)
-        return value.split(",").asSequence()
-            .map { it.split("=").zipWithNext().single() }
-            .firstOrNull { (k, _) ->
-                mapKey == requireNotNull(key.deserializeKey(k)) { "Could not deserialize mapKey $k for key $key" }
-            }?.let { (k, v) ->
-                requireNotNull(key.deserializeValue(v)) { "Could not deserialize mapValue $v for mapKey $k for key $key" }
-            }
+        return key.deserialize(value)[mapKey]
     }
 
     override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V {
