@@ -16,19 +16,8 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.platform
+package org.anvilpowered.anvil.core.platform
 
-import org.anvilpowered.anvil.core.platform.Platform
-import org.anvilpowered.anvil.core.platform.PluginMeta
-import org.spongepowered.api.Sponge
-import org.spongepowered.api.Platform as SPlatform
-
-internal object SpongePlatform : Platform {
-    override val isProxy: Boolean = false
-    override val plugins: List<PluginMeta>
-        get() = Sponge.pluginManager().plugins().map { it.metadata().toAnvilPluginMeta() }
-    override val name: String
-        get() = "sponge"
-    override val version: String
-        get() = Sponge.platform().container(SPlatform.Component.IMPLEMENTATION).metadata().version().qualifier
+interface PluginMeta {
+    val name: String
 }

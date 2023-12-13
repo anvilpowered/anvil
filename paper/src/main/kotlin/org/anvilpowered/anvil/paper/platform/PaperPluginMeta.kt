@@ -16,8 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.platform
+@file:Suppress("UnstableApiUsage")
 
-interface Plugin {
-    val name: String
+package org.anvilpowered.anvil.paper.platform
+
+import org.anvilpowered.anvil.core.platform.PluginMeta
+import io.papermc.paper.plugin.configuration.PluginMeta as PaperPluginMeta
+
+internal fun PaperPluginMeta.toAnvilPluginMeta() = PaperPluginMeta(this)
+
+class PaperPluginMeta(private val delegate: PaperPluginMeta) : PluginMeta {
+    override val name: String
+        get() = delegate.name
 }

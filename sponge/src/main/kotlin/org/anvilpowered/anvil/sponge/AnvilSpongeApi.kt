@@ -21,13 +21,16 @@ package org.anvilpowered.anvil.sponge
 import com.google.inject.Injector
 import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.anvilpowered.anvil.core.platform.Server
 import org.anvilpowered.anvil.core.user.PlayerService
 import org.anvilpowered.anvil.sponge.platform.SpongePluginManager
+import org.anvilpowered.anvil.sponge.platform.SpongePluginMeta
 import org.anvilpowered.anvil.sponge.platform.SpongeServer
 import org.anvilpowered.anvil.sponge.user.SpongePlayerService
 import org.apache.logging.log4j.Logger
 import org.koin.dsl.module
+import org.spongepowered.plugin.metadata.PluginMetadata
 
 interface AnvilSpongeApi : AnvilApi {
 
@@ -70,13 +73,16 @@ interface AnvilSpongeApi : AnvilApi {
  * ```
  */
 fun AnvilApi.Companion.createSponge(injector: Injector): AnvilSpongeApi {
+    val logger = injector.getInstance(Logger::class.java)
     val spongeModule = module {
-        single<Logger> { injector.getInstance(Logger::class.java) }
+        single<Logger> { logger }
         single<Server> { SpongeServer }
         single<PluginManager> { SpongePluginManager }
         single<PlayerService> { SpongePlayerService }
+        single<PluginMeta> { SpongePluginMeta(injector.getInstance(PluginMetadata::class.java)) }
     }
     return object : AnvilSpongeApi {
+        override val logger: Logger = logger
         override val module = spongeModule
     }
 }

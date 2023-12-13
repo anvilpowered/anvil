@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.sponge.platform
 
-import org.anvilpowered.anvil.core.platform.Plugin
-import org.spongepowered.plugin.PluginContainer
+import org.anvilpowered.anvil.core.platform.PluginMeta
+import org.spongepowered.plugin.metadata.PluginMetadata
 
-internal fun PluginContainer.toAnvilPlugin() = SpongePlugin(this)
+internal fun PluginMetadata.toAnvilPluginMeta() = SpongePluginMeta(this)
 
-internal class SpongePlugin(private val container: PluginContainer) : Plugin {
+internal class SpongePluginMeta(private val delegate: PluginMetadata) : PluginMeta {
     override val name: String
-        get() = container.metadata().id()
+        get() = delegate.id()
 }

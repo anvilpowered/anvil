@@ -12,6 +12,8 @@ dependencies {
     api(libs.kbrig.brigadier)
     api(libs.logging.api)
     api(libs.configurate.core)
+    api(libs.configurate.hocon)
+    api(libs.configurate.yaml)
     api(libs.annotations)
     api(libs.guava)
     api(libs.koin)
@@ -19,4 +21,6 @@ dependencies {
     compileOnlyApi(platform(libs.adventure.bom))
     compileOnlyApi("net.kyori:adventure-api")
     compileOnlyApi("net.kyori:adventure-text-minimessage")
+
+    runtimeElements(libs.postgresql)
 }

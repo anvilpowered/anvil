@@ -30,6 +30,18 @@ class EnvironmentRegistry(private val prefix: String, private val delegate: Regi
         return delegate?.getDefault(key) ?: key.fallback
     }
 
+    override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E {
+        return delegate?.getDefault(key, index)
+            ?: key.fallback.getOrNull(index)
+            ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
+    }
+
+    override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V {
+        return delegate?.getDefault(key, mapKey)
+            ?: key.fallback[mapKey]
+            ?: throw NoSuchElementException("No default value for key ${key.name} with mapKey $mapKey")
+    }
+
     override fun <T : Any> getStrict(key: SimpleKey<T>): T? {
         val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
         return key.deserialize(value)
@@ -45,12 +57,6 @@ class EnvironmentRegistry(private val prefix: String, private val delegate: Regi
         return key.deserialize(value)[index]
     }
 
-    override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E {
-        return delegate?.getDefault(key, index)
-            ?: key.fallback.getOrNull(index)
-            ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
-    }
-
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? {
         val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
         return key.deserialize(value)
@@ -59,11 +65,5 @@ class EnvironmentRegistry(private val prefix: String, private val delegate: Regi
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? {
         val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, mapKey)
         return key.deserialize(value)[mapKey]
-    }
-
-    override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V {
-        return delegate?.getDefault(key, mapKey)
-            ?: key.fallback[mapKey]
-            ?: throw NoSuchElementException("No default value for key ${key.name} with mapKey $mapKey")
     }
 }

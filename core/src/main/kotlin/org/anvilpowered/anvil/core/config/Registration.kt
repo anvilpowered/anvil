@@ -16,19 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.platform
+package org.anvilpowered.anvil.core.config
 
-import org.anvilpowered.anvil.core.platform.Platform
 import org.anvilpowered.anvil.core.platform.PluginMeta
-import org.spongepowered.api.Sponge
-import org.spongepowered.api.Platform as SPlatform
+import org.apache.logging.log4j.Logger
+import org.koin.core.module.Module
+import java.nio.file.Path
 
-internal object SpongePlatform : Platform {
-    override val isProxy: Boolean = false
-    override val plugins: List<PluginMeta>
-        get() = Sponge.pluginManager().plugins().map { it.metadata().toAnvilPluginMeta() }
-    override val name: String
-        get() = "sponge"
-    override val version: String
-        get() = Sponge.platform().container(SPlatform.Component.IMPLEMENTATION).metadata().version().qualifier
+context(Module)
+fun Registry.Companion.configureDefaults(basePath: Path, logger: Logger) {
+    ConfigurateRegistryExporter.registerAll(basePath)
+    val configurateRegistry = ConfigurateRegistry.discover(basePath)
+    if (configurateRegistry == null) {
+        logger.warn("No configuration file found, using environment variables only.")
+    } else {
+        logger.info("Using configuration file: ${configurateRegistry.path}")
+    }
+    single<Registry> { EnvironmentRegistry(get<PluginMeta>().name.uppercase(), configurateRegistry?.registry) }
 }

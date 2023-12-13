@@ -23,5 +23,5 @@ interface Platform {
     val version: String
 
     val isProxy: Boolean
-    val plugins: List<Plugin>
+    val plugins: List<PluginMeta>
 }

@@ -16,16 +16,18 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 package org.anvilpowered.anvil.paper.platform
 
 import org.anvilpowered.anvil.core.platform.Platform
-import org.anvilpowered.anvil.core.platform.Plugin
+import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.bukkit.Bukkit
 
 internal object PaperPlatform : Platform {
     override val isProxy: Boolean = false
-    override val plugins: List<Plugin>
-        get() = Bukkit.getPluginManager().plugins.map { it.toAnvilPlugin() }
+    override val plugins: List<PluginMeta>
+        get() = Bukkit.getPluginManager().plugins.map { it.pluginMeta.toAnvilPluginMeta() }
     override val name: String
         get() = "paper"
     override val version: String

@@ -25,9 +25,11 @@ import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.CommandExecutor
 import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.anvilpowered.anvil.core.platform.Server
 import org.anvilpowered.anvil.core.user.PlayerService
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecutor
+import org.anvilpowered.anvil.velocity.platform.VelocityPluginMeta
 import org.anvilpowered.anvil.velocity.platform.VelocityPluginManager
 import org.anvilpowered.anvil.velocity.platform.VelocityServer
 import org.anvilpowered.anvil.velocity.user.VelocityPlayerService
@@ -100,13 +102,15 @@ interface AnvilVelocityApi : AnvilApi {
 fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
     val proxyServer = injector.getInstance(ProxyServer::class.java)
     val pluginDescription = injector.getInstance(PluginDescription::class.java)
+    val logger = LogManager.getLogger(pluginDescription.id)
     val velocityModule = module {
-        single<Logger> { LogManager.getLogger(pluginDescription.id) }
+        single<Logger> { logger }
         single<Server> { VelocityServer(proxyServer) }
         single<PluginManager> { VelocityPluginManager(proxyServer.pluginManager) }
         single<ProxyServer> { proxyServer }
         single<PluginDescription> { pluginDescription }
         single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
+        single<PluginMeta> { VelocityPluginMeta(pluginDescription) }
         singleOf(::VelocityPlayerService) {
             bind<PlayerService>()
         }
@@ -116,6 +120,7 @@ fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
     }
 
     return object : AnvilVelocityApi {
+        override val logger: Logger = logger
         override val module: Module = velocityModule
     }
 }
