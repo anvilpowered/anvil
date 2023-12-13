@@ -35,9 +35,7 @@ fun KeyNamespace.keyArgument(
 ): RequiredArgumentBuilder<CommandSource, String> =
     ArgumentBuilder.required<CommandSource, String>(argumentName, StringArgumentType.SingleWord)
         .suggests { _, builder ->
-            println("Suggesting keys")
-            keys.filter { it.name.startsWith(builder.input) }.forEach { key ->
-                println("Suggesting ${key.name}")
+            keys.filter { it.name.startsWith(builder.remainingLowerCase, ignoreCase = true) }.forEach { key ->
                 builder.suggest(key.name)
             }
             builder.build()
