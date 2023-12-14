@@ -56,7 +56,7 @@ private fun CommentedConfigurationNode.setAllFrom(registry: Registry, keyNamespa
 }
 
 private fun <T : Any> CommentedConfigurationNode.setFrom(key: Key<T>, registry: Registry) {
-    node(key.name).let { node ->
+    node(key.configNodePath).let { node ->
         node.set(key.type, registry[key])
         node.comment(key.description)
     }

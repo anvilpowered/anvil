@@ -22,8 +22,10 @@ import org.apache.logging.log4j.Logger
 import org.spongepowered.configurate.ConfigurationNode
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import java.nio.file.Path
+import kotlin.io.path.createDirectory
 import kotlin.io.path.extension
 import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.notExists
 
 class ConfigurateRegistry(
     private val rootNode: ConfigurationNode,
@@ -42,10 +44,10 @@ class ConfigurateRegistry(
             ?: throw NoSuchElementException("No default value for key ${key.name} at key $mapKey")
     }
 
-    override fun <T : Any> getStrict(key: SimpleKey<T>): T? = rootNode.node(key.name)[key.type]
-    override fun <E : Any> getStrict(key: ListKey<E>): List<E>? = rootNode.node(key.name)[key.type]
+    override fun <T : Any> getStrict(key: SimpleKey<T>): T? = rootNode.node(key.configNodePath)[key.type]
+    override fun <E : Any> getStrict(key: ListKey<E>): List<E>? = rootNode.node(key.configNodePath)[key.type]
     override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? = getStrict(key)?.let { return it[index] }
-    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? = rootNode.node(key.name)[key.type]
+    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? = rootNode.node(key.configNodePath)[key.type]
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? = getStrict(key)?.let { return it[mapKey] }
 
     companion object {
@@ -58,6 +60,11 @@ class ConfigurateRegistry(
             serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
             delegate: Registry? = null,
         ): DiscoverResult? {
+
+            if (basePath.notExists()) {
+                basePath.createDirectory()
+            }
+
             val configFiles = basePath.listDirectoryEntries()
                 .map { it to ConfigurateFileType.fromName(it.extension) }
                 .onEach { logger.info("Found file ${it.first} with type ${it.second}") }
@@ -68,8 +75,8 @@ class ConfigurateRegistry(
                 return null
             } else if (configFiles.size >= 2) {
                 throw IllegalStateException(
-                    "Detected multiple configuration files for plugin ${basePath.fileName}, " +
-                        "please make sure there is only one configuration file per plugin",
+                    "Detected multiple configuration files for plugin ${basePath.fileName}: ${configFiles.map { it.first }}. " +
+                        "Please make sure there is only one configuration file per plugin",
                 )
             }
 
@@ -78,3 +85,6 @@ class ConfigurateRegistry(
         }
     }
 }
+
+val Key<*>.configNodePath: List<String>
+    get() = name.split('_').map { it.lowercase() }
