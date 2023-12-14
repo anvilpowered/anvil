@@ -19,5 +19,5 @@
 package org.anvilpowered.anvil.core.platform
 
 interface PluginManager {
-    val plugins: List<Plugin>
+    val plugins: List<PluginMeta>
 }

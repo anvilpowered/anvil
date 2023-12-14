@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.serializer
 
 class SimpleKeyBuilder<T : Any>(
     type: TypeToken<T>,

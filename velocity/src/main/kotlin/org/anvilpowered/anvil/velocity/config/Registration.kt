@@ -16,14 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.velocity.platform
+package org.anvilpowered.anvil.velocity.config
 
-import com.velocitypowered.api.plugin.PluginContainer
-import org.anvilpowered.anvil.core.platform.Plugin
+import com.google.inject.Injector
+import com.google.inject.Key
+import com.velocitypowered.api.plugin.annotation.DataDirectory
+import org.anvilpowered.anvil.core.config.Registry
+import org.anvilpowered.anvil.core.config.configureDefaults
+import org.apache.logging.log4j.Logger
+import org.koin.core.module.Module
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
+import java.nio.file.Path
 
-internal fun PluginContainer.toAnvilPlugin() = VelocityPlugin(this)
-
-internal class VelocityPlugin(private val container: PluginContainer) : Plugin {
-    override val name: String
-        get() = container.description.id
+context(Module)
+fun Registry.Companion.configureVelocityDefaults(
+    injector: Injector,
+    logger: Logger,
+    serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
+) {
+    configureDefaults(injector.getInstance(Key.get(Path::class.java, DataDirectory::class.java)), logger, serializers)
 }

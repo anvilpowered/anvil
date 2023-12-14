@@ -19,18 +19,23 @@
 package org.anvilpowered.anvil.core.command.config
 
 import org.anvilpowered.anvil.core.command.CommandSource
+import org.anvilpowered.anvil.core.config.ConfigurateRegistryExporter
 import org.anvilpowered.anvil.core.config.KeyNamespace
 import org.anvilpowered.anvil.core.config.Registry
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
 class ConfigCommandFactory(
     val registry: Registry,
     val keyNamespace: KeyNamespace,
+    val exporters: List<ConfigurateRegistryExporter>,
+    val serializers: TypeSerializerCollection,
 ) {
     fun create(): LiteralCommandNode<CommandSource> {
         return ArgumentBuilder.literal<CommandSource>("config")
             .then(createGet())
+            .then(createGenerate())
             .build()
     }
 }

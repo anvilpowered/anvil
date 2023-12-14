@@ -20,21 +20,28 @@ package org.anvilpowered.anvil.core.config
 
 interface Registry {
     fun <T : Any> getDefault(key: Key<T>): T
+    fun <E : Any> getDefault(key: ListKey<E>, index: Int): E
+    fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V
 
     fun <T : Any> getStrict(key: SimpleKey<T>): T?
-    operator fun <T : Any> get(key: SimpleKey<T>): T = getStrict(key) ?: getDefault(key)
-
     fun <E : Any> getStrict(key: ListKey<E>): List<E>?
-    operator fun <E : Any> get(key: ListKey<E>): List<E> = getStrict(key) ?: getDefault(key)
-
     fun <E : Any> getStrict(key: ListKey<E>, index: Int): E?
-    fun <E : Any> getDefault(key: ListKey<E>, index: Int): E
-    operator fun <E : Any> get(key: ListKey<E>, index: Int): E = getStrict(key, index) ?: getDefault(key, index)
-
     fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>?
-    operator fun <K : Any, V : Any> get(key: MapKey<K, V>): Map<K, V> = getStrict(key) ?: getDefault(key)
-
     fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V?
-    fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V
+
+    operator fun <T : Any> get(key: SimpleKey<T>): T = getStrict(key) ?: getDefault(key)
+    operator fun <E : Any> get(key: ListKey<E>): List<E> = getStrict(key) ?: getDefault(key)
+    operator fun <E : Any> get(key: ListKey<E>, index: Int): E = getStrict(key, index) ?: getDefault(key, index)
+    operator fun <K : Any, V : Any> get(key: MapKey<K, V>): Map<K, V> = getStrict(key) ?: getDefault(key)
     operator fun <K : Any, V : Any> get(key: MapKey<K, V>, mapKey: K): V = getStrict(key, mapKey) ?: getDefault(key, mapKey)
+
+    @Suppress("UNCHECKED_CAST")
+    operator fun <T : Any> get(key: Key<T>): T = when (key) {
+        is SimpleKey -> get(key)
+        is ListKey<*> -> get(key) as T
+        is MapKey<*, *> -> get(key) as T
+        else -> throw IllegalArgumentException("Unknown key type: ${key::class.simpleName}")
+    }
+
+    companion object
 }

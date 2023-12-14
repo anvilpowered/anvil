@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.core
 
+import org.apache.logging.log4j.Logger
 import org.koin.core.module.Module
 
 /**
@@ -36,6 +37,8 @@ import org.koin.core.module.Module
  * ```
  */
 interface AnvilApi {
+
+    val logger: Logger
 
     val module: Module
 

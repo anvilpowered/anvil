@@ -18,11 +18,11 @@
 
 package org.anvilpowered.anvil.velocity.platform
 
-import org.anvilpowered.anvil.core.platform.Plugin
 import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.platform.PluginMeta
 import com.velocitypowered.api.plugin.PluginManager as BackingPluginManager
 
 internal class VelocityPluginManager(private val backing: BackingPluginManager) : PluginManager {
-    override val plugins: List<Plugin>
-        get() = backing.plugins.map { VelocityPlugin(it) }
+    override val plugins: List<PluginMeta>
+        get() = backing.plugins.map { it.description.toAnvilPluginMeta() }
 }

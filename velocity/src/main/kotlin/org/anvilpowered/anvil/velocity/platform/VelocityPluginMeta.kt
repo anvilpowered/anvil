@@ -16,14 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.paper.platform
+package org.anvilpowered.anvil.velocity.platform
 
-import org.anvilpowered.anvil.core.platform.Plugin
-import org.bukkit.plugin.Plugin as BukkitPlugin
+import com.velocitypowered.api.plugin.PluginDescription
+import org.anvilpowered.anvil.core.platform.PluginMeta
 
-internal fun BukkitPlugin.toAnvilPlugin() = PaperPlugin(this)
+internal fun PluginDescription.toAnvilPluginMeta() = VelocityPluginMeta(this)
 
-class PaperPlugin(private val delegate: BukkitPlugin) : Plugin {
+internal class VelocityPluginMeta(private val delegate: PluginDescription) : PluginMeta {
     override val name: String
-        get() = delegate.name
+        get() = delegate.id
 }

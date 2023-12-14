@@ -24,8 +24,8 @@ import java.time.ZoneId
 
 @Suppress("PropertyName")
 open class TypeTokens {
-    val BOOLEAN: TypeToken<Boolean> = TypeToken.get(Boolean::class.java)
-    val INTEGER: TypeToken<Int> = TypeToken.get(Int::class.java)
+    val BOOLEAN: TypeToken<Boolean> = TypeToken.get(Boolean::class.javaObjectType)
+    val INTEGER: TypeToken<Int> = TypeToken.get(Int::class.javaObjectType)
     val STRING: TypeToken<String> = TypeToken.get(String::class.java)
     val COMPONENT: TypeToken<Component> = TypeToken.get(Component::class.java)
     val ZONE_ID: TypeToken<ZoneId> = TypeToken.get(ZoneId::class.java)

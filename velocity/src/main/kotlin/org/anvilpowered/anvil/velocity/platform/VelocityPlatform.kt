@@ -20,12 +20,12 @@ package org.anvilpowered.anvil.velocity.platform
 
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.platform.Platform
-import org.anvilpowered.anvil.core.platform.Plugin
+import org.anvilpowered.anvil.core.platform.PluginMeta
 
 internal class VelocityPlatform(private val proxyServer: ProxyServer) : Platform {
     override val isProxy: Boolean = true
-    override val plugins: List<Plugin>
-        get() = proxyServer.pluginManager.plugins.map { it.toAnvilPlugin() }
+    override val plugins: List<PluginMeta>
+        get() = proxyServer.pluginManager.plugins.map { it.description.toAnvilPluginMeta() }
     override val name: String = "velocity"
     override val version: String = proxyServer.version.version
 }
