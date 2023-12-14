@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.core.config
 import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.koin.core.module.Module
 import org.spongepowered.configurate.CommentedConfigurationNode
-import org.spongepowered.configurate.ConfigurationNode
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import java.nio.file.Path
 
 class ConfigurateRegistryExporter(
@@ -31,10 +31,14 @@ class ConfigurateRegistryExporter(
     val keyNamespace: KeyNamespace,
 ) {
 
-    val configPath = basePath.resolve("${pluginMeta.name}.${type.fileExtension}")
+    val configPath: Path = basePath.resolve("${pluginMeta.name}.${type.fileExtension}")
 
-    fun export(registry: Registry) = type.createBuilder()
-        .path(configPath).build().save(keyNamespace.toConfigurationNode(registry))
+    fun export(registry: Registry, serializers: TypeSerializerCollection) {
+        val loader = type.createBuilder(serializers).path(configPath).build()
+        val root = loader.createNode()
+        root.setAllFrom(registry, keyNamespace)
+        loader.save(root)
+    }
 
     companion object {
         context(Module)
@@ -45,12 +49,10 @@ class ConfigurateRegistryExporter(
     }
 }
 
-private fun KeyNamespace.toConfigurationNode(registry: Registry): ConfigurationNode {
-    val node = CommentedConfigurationNode.root()
-    for (key in keys) {
-        node.setFrom(key, registry)
+private fun CommentedConfigurationNode.setAllFrom(registry: Registry, keyNamespace: KeyNamespace) {
+    for (key in keyNamespace.keys) {
+        setFrom(key, registry)
     }
-    return node
 }
 
 private fun <T : Any> CommentedConfigurationNode.setFrom(key: Key<T>, registry: Registry) {

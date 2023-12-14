@@ -23,31 +23,37 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.withOptions
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader
+import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.nio.file.Path
 
 sealed interface ConfigurateFileType<B : AbstractConfigurationLoader.Builder<B, out AbstractConfigurationLoader<CommentedConfigurationNode>>> {
     val name: String
     val fileExtension: String
-    fun createBuilder(): B
+    fun createBuilder(serializers: TypeSerializerCollection): B
 
     data object Hocon : ConfigurateFileType<HoconConfigurationLoader.Builder> {
         override val name: String = "HOCON"
         override val fileExtension: String = "conf"
-        override fun createBuilder(): HoconConfigurationLoader.Builder = HoconConfigurationLoader.builder()
+        override fun toString(): String = fullName
+        override fun createBuilder(serializers: TypeSerializerCollection): HoconConfigurationLoader.Builder =
+            HoconConfigurationLoader.builder().configure(serializers)
     }
 
     data object Yaml : ConfigurateFileType<YamlConfigurationLoader.Builder> {
         override val name: String = "YAML"
         override val fileExtension: String = "yaml"
-        override fun createBuilder(): YamlConfigurationLoader.Builder = YamlConfigurationLoader.builder()
+        override fun toString(): String = fullName
+        override fun createBuilder(serializers: TypeSerializerCollection): YamlConfigurationLoader.Builder =
+            YamlConfigurationLoader.builder().configure(serializers)
     }
 
     companion object {
         fun fromName(fileEnding: String): ConfigurateFileType<*>? = when (fileEnding) {
-            Yaml.name -> Yaml
-            Hocon.name -> Hocon
+            Yaml.fileExtension -> Yaml
+            Hocon.fileExtension -> Hocon
             else -> null
         }
     }
@@ -67,3 +73,11 @@ fun ConfigurateFileType<*>.registerExporter(basePath: Path) {
         )
     }.withOptions { named(fileExtension) }
 }
+
+private fun <B : AbstractConfigurationLoader.Builder<B, *>> B.configure(serializers: TypeSerializerCollection): B =
+    defaultOptions {
+        it.serializers { builder ->
+            builder.registerAll(serializers)
+            builder.registerAnnotatedObjects(objectMapperFactory())
+        }
+    }

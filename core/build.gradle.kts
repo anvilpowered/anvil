@@ -14,6 +14,7 @@ dependencies {
     api(libs.configurate.core)
     api(libs.configurate.hocon)
     api(libs.configurate.yaml)
+    api(libs.configurate.extra.kotlin)
     api(libs.annotations)
     api(libs.guava)
     api(libs.koin)

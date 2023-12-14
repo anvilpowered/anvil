@@ -18,9 +18,12 @@
 
 package org.anvilpowered.anvil.core.config
 
+import org.apache.logging.log4j.Logger
 import org.spongepowered.configurate.ConfigurationNode
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import java.nio.file.Path
 import kotlin.io.path.extension
+import kotlin.io.path.listDirectoryEntries
 
 class ConfigurateRegistry(
     private val rootNode: ConfigurationNode,
@@ -47,14 +50,17 @@ class ConfigurateRegistry(
 
     companion object {
 
-        data class DiscoverResult internal constructor(
-            val registry: Registry,
-            val path: Path,
-        )
+        data class DiscoverResult internal constructor(val registry: Registry, val path: Path)
 
-        fun discover(basePath: Path, delegate: Registry? = null): DiscoverResult? {
-            val configFiles = basePath.asSequence()
+        fun discover(
+            basePath: Path,
+            logger: Logger,
+            serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
+            delegate: Registry? = null,
+        ): DiscoverResult? {
+            val configFiles = basePath.listDirectoryEntries()
                 .map { it to ConfigurateFileType.fromName(it.extension) }
+                .onEach { logger.info("Found file ${it.first} with type ${it.second}") }
                 .mapNotNull { (path, type) -> type?.let { path to it } }
                 .toList()
 
@@ -68,7 +74,7 @@ class ConfigurateRegistry(
             }
 
             val (path, type) = configFiles.single()
-            return DiscoverResult(ConfigurateRegistry(type.createBuilder().path(path).build().load(), delegate), path)
+            return DiscoverResult(ConfigurateRegistry(type.createBuilder(serializers).path(path).build().load(), delegate), path)
         }
     }
 }

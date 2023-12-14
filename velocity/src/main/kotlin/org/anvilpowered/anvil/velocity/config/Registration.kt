@@ -25,9 +25,14 @@ import org.anvilpowered.anvil.core.config.Registry
 import org.anvilpowered.anvil.core.config.configureDefaults
 import org.apache.logging.log4j.Logger
 import org.koin.core.module.Module
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import java.nio.file.Path
 
 context(Module)
-fun Registry.Companion.configureVelocityDefaults(injector: Injector, logger: Logger) {
-    configureDefaults(injector.getInstance(Key.get(Path::class.java, DataDirectory::class.java)), logger)
+fun Registry.Companion.configureVelocityDefaults(
+    injector: Injector,
+    logger: Logger,
+    serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
+) {
+    configureDefaults(injector.getInstance(Key.get(Path::class.java, DataDirectory::class.java)), logger, serializers)
 }

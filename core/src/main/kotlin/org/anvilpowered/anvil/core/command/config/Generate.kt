@@ -45,7 +45,6 @@ fun ConfigCommandFactory.createGenerate(): LiteralCommandNode<CommandSource> =
         .then(
             ArgumentBuilder.required<CommandSource, String>("type", StringArgumentType.SingleWord)
                 .suggests { _, builder ->
-                    println("Suggestions for ${builder.remainingLowerCase}")
                     exporters
                         .filter { it.type.name.startsWith(builder.remainingLowerCase, ignoreCase = true) }
                         .forEach { builder.suggest(it.type.name) }
@@ -92,7 +91,7 @@ private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force
                 .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
                 .build(),
         )
-        exporter.export(DefaultRegistry)
+        exporter.export(DefaultRegistry, serializers)
         context.source.audience.sendMessage(
             Component.text()
                 .append(Component.text("File ", NamedTextColor.GREEN))
