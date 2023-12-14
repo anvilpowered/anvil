@@ -29,8 +29,8 @@ import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.anvilpowered.anvil.core.platform.Server
 import org.anvilpowered.anvil.core.user.PlayerService
 import org.anvilpowered.anvil.velocity.command.VelocityCommandExecutor
-import org.anvilpowered.anvil.velocity.platform.VelocityPluginMeta
 import org.anvilpowered.anvil.velocity.platform.VelocityPluginManager
+import org.anvilpowered.anvil.velocity.platform.VelocityPluginMeta
 import org.anvilpowered.anvil.velocity.platform.VelocityServer
 import org.anvilpowered.anvil.velocity.user.VelocityPlayerService
 import org.apache.logging.log4j.LogManager

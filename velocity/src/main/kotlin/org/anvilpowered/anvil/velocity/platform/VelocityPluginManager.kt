@@ -18,8 +18,8 @@
 
 package org.anvilpowered.anvil.velocity.platform
 
-import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.platform.PluginMeta
 import com.velocitypowered.api.plugin.PluginManager as BackingPluginManager
 
 internal class VelocityPluginManager(private val backing: BackingPluginManager) : PluginManager {

@@ -60,7 +60,6 @@ class ConfigurateRegistry(
             serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
             delegate: Registry? = null,
         ): DiscoverResult? {
-
             if (basePath.notExists()) {
                 basePath.createDirectory()
             }
