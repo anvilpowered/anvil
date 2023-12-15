@@ -20,8 +20,6 @@ package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
 import kotlinx.serialization.json.Json
-import kotlin.properties.PropertyDelegateProvider
-import kotlin.properties.ReadOnlyProperty
 
 interface Key<T : Any> : Comparable<Key<T>> {
 
@@ -105,7 +103,6 @@ interface Key<T : Any> : Comparable<Key<T>> {
     }
 
     companion object {
-
         val comparator: Comparator<Key<*>> = Comparator.comparing<Key<*>, String> { it.name }
             .thenComparing(Comparator.comparing { it.type.type.typeName })
 
@@ -119,71 +116,6 @@ interface Key<T : Any> : Comparable<Key<T>> {
             var result = key.type.hashCode()
             result = 31 * result + key.name.hashCode()
             return result
-        }
-
-        context(KeyNamespace)
-        inline fun <T : Any> buildSimple(type: TypeToken<T>, block: SimpleKey.NamedBuilderFacet<T>.() -> Unit): SimpleKey<T> {
-            val builder = SimpleKeyBuilder(type)
-            builder.asNamedFacet().block()
-            return builder.build()
-        }
-
-        context(KeyNamespace)
-        inline fun <T : Any> buildingSimple(
-            type: TypeToken<T>,
-            crossinline block: SimpleKey.AnonymousBuilderFacet<T>.() -> Unit,
-        ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, SimpleKey<T>>> = PropertyDelegateProvider { _, property ->
-            val builder = SimpleKeyBuilder(type)
-            builder.name(property.name)
-            builder.asAnonymousFacet().block()
-            val key = builder.build()
-            ReadOnlyProperty { _, _ -> key }
-        }
-
-        context(KeyNamespace)
-        inline fun <E : Any> buildList(
-            elementType: TypeToken<E>,
-            block: ListKey.NamedBuilderFacet<E>.() -> Unit,
-        ): ListKey<E> {
-            val builder = ListKeyBuilder(elementType)
-            builder.asNamedFacet().block()
-            return builder.build()
-        }
-
-        context(KeyNamespace)
-        inline fun <E : Any> buildingList(
-            elementType: TypeToken<E>,
-            crossinline block: ListKey.AnonymousBuilderFacet<E>.() -> Unit,
-        ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, ListKey<E>>> = PropertyDelegateProvider { _, property ->
-            val builder = ListKeyBuilder(elementType)
-            builder.name(property.name)
-            builder.asAnonymousFacet().block()
-            val key = builder.build()
-            ReadOnlyProperty { _, _ -> key }
-        }
-
-        context(KeyNamespace)
-        inline fun <K : Any, V : Any> buildMap(
-            keyType: TypeToken<K>,
-            valueType: TypeToken<V>,
-            block: MapKey.NamedBuilderFacet<K, V>.() -> Unit,
-        ): MapKey<K, V> {
-            val builder = MapKeyBuilder(keyType, valueType)
-            builder.asNamedFacet().block()
-            return builder.build()
-        }
-
-        context(KeyNamespace)
-        inline fun <K : Any, V : Any> buildingMap(
-            keyType: TypeToken<K>,
-            valueType: TypeToken<V>,
-            crossinline block: MapKey.AnonymousBuilderFacet<K, V>.() -> Unit,
-        ): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, MapKey<K, V>>> = PropertyDelegateProvider { _, property ->
-            val builder = MapKeyBuilder(keyType, valueType)
-            builder.name(property.name)
-            builder.asAnonymousFacet().block()
-            val key = builder.build()
-            ReadOnlyProperty { _, _ -> key }
         }
     }
 }
