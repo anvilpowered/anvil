@@ -44,7 +44,9 @@ interface Key<T : Any> : Comparable<Key<T>> {
     @KeyBuilderDsl
     interface BuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> {
         /**
-         * Sets the fallback value of the generated [Key]
+         * Sets the fallback value of the generated [Key].
+         *
+         * This value is used when a [Registry] does not have a value or default value for this key.
          *
          * @param fallback The fallback value to set
          * @return `this`
@@ -54,6 +56,8 @@ interface Key<T : Any> : Comparable<Key<T>> {
 
         /**
          * Sets the description of the generated [Key].
+         *
+         * This is used for documentation; for example, in a configuration file.
          *
          * @param description The description to set or `null` to remove it
          * @return `this`
@@ -65,7 +69,20 @@ interface Key<T : Any> : Comparable<Key<T>> {
     @KeyBuilderDsl
     interface NamedBuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> : BuilderFacet<T, K, B> {
         /**
-         * Sets the name of the generated [Key]
+         * Sets the name of the generated [Key].
+         *
+         * The name is used to identify the key in a [Registry].
+         * It is also used as an underscore-separated node path in configuration files.
+         *
+         * Example: `JOIN_LISTENER_ENABLED` will become (in HOCON):
+         *
+         * ```
+         * join {
+         *   listener {
+         *     enabled = ...
+         *   }
+         * }
+         * ```
          *
          * @param name The name to set
          * @return `this`
