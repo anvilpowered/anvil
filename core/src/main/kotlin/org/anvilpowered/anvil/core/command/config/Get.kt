@@ -40,7 +40,7 @@ fun ConfigCommandFactory.createGet(): LiteralCommandNode<CommandSource> =
             keyNamespace.keyArgument { context, key ->
                 val defaultValue = registry.serializeDefault(key, prettyJson)
                 val currentValue = registry.serialize(key, prettyJson)
-                context.source.audience.sendMessage(
+                context.source.sendMessage(
                     Component.text()
                         .append(Component.text("Key ").color(NamedTextColor.GREEN))
                         .append(Component.text(key.name).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))

@@ -23,11 +23,7 @@ import org.anvilpowered.anvil.core.PlatformType
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
 
-interface CommandSource : PlatformType {
-
-    val audience: Audience
-
-    val subject: Subject
+interface CommandSource : PlatformType, Audience, Subject {
 
     /**
      * The [Player] associated with the executed command, if any.

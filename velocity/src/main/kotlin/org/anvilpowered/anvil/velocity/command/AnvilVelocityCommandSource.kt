@@ -31,8 +31,8 @@ fun VelocityCommandSource.toAnvilCommandSource(): CommandSource = AnvilVelocityC
 
 private class AnvilVelocityCommandSource(
     override val platformDelegate: VelocityCommandSource,
-) : CommandSource {
-    override val audience: Audience = platformDelegate
-    override val subject: Subject = platformDelegate.toAnvilSubject()
+) : CommandSource,
+    Audience by platformDelegate,
+    Subject by platformDelegate.toAnvilSubject() {
     override val player: Player? = (platformDelegate as? VelocityPlayer)?.toAnvilPlayer()
 }

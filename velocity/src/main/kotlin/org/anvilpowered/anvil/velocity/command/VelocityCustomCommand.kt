@@ -48,7 +48,7 @@ class VelocityCustomCommand(private val proxyServer: ProxyServer) : PlayerComman
                 proxyServer.getPlayer(playerName).getOrNull()?.let { velocityPlayer ->
                     command(context, velocityPlayer.toAnvilPlayer())
                 } ?: run {
-                    context.source.audience.sendMessage(
+                    context.source.sendMessage(
                         Component.text()
                             .append(Component.text("Player with name ", NamedTextColor.RED))
                             .append(Component.text(playerName, NamedTextColor.GOLD))

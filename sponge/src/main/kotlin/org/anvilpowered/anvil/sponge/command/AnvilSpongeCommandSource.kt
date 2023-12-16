@@ -16,12 +16,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.user
+package org.anvilpowered.anvil.sponge.command
 
 import net.kyori.adventure.audience.Audience
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
+import org.anvilpowered.anvil.sponge.user.toAnvilPlayer
+import org.anvilpowered.anvil.sponge.user.toAnvilSubject
 import org.spongepowered.api.command.parameter.CommandContext
 import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
@@ -29,8 +31,8 @@ fun CommandContext.toAnvilCommandSource(): CommandSource = AnvilSpongeCommandSou
 
 class AnvilSpongeCommandSource(
     override val platformDelegate: CommandContext,
-) : CommandSource {
-    override val audience: Audience = platformDelegate.cause().audience()
-    override val subject: Subject = platformDelegate.cause().subject().toAnvilSubject()
+) : CommandSource,
+    Audience by platformDelegate.cause().audience(),
+    Subject by platformDelegate.cause().toAnvilSubject() {
     override val player: Player? = platformDelegate.cause().first(ServerPlayer::class.java).orElse(null)?.toAnvilPlayer()
 }

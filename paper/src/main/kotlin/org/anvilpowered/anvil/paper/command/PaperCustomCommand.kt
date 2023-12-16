@@ -47,7 +47,7 @@ class PaperCustomCommand : PlayerCommandScope {
                 Bukkit.getPlayer(username)?.let { paperPlayer ->
                     command(context, paperPlayer.toAnvilPlayer())
                 } ?: run {
-                    context.source.audience.sendMessage(
+                    context.source.sendMessage(
                         Component.text()
                             .append(Component.text("Player with name ", NamedTextColor.RED))
                             .append(Component.text(username, NamedTextColor.GOLD))

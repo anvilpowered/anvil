@@ -30,7 +30,7 @@ import org.anvilpowered.kbrig.builder.executesSingleSuccess
 
 fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(usage: String): B =
     executes {
-        it.source.audience.sendMessage(
+        it.source.sendMessage(
             Component.text()
                 .append(PluginMessages.pluginPrefix)
                 .append(Component.text("Command usage: ", NamedTextColor.GOLD))
@@ -41,7 +41,7 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(usage: String): B =
 
 fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children: Map<String, Component>): B =
     executes { context ->
-        context.source.audience.sendMessage(
+        context.source.sendMessage(
             Component.text()
                 .append(PluginMessages.pluginPrefix)
                 .append(Component.text("Command usage: ", NamedTextColor.GOLD))
@@ -55,7 +55,7 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children
         0
     }.then(
         ArgumentBuilder.literal<CommandSource>("help").executesSingleSuccess { context ->
-            context.source.audience.sendMessage(
+            context.source.sendMessage(
                 Component.text()
                     .append(PluginMessages.pluginPrefix)
                     .append(Component.text("Command usage: ", NamedTextColor.GOLD))

@@ -29,7 +29,7 @@ fun PluginCommandFactory.createList(): LiteralCommandNode<CommandSource> =
     ArgumentBuilder.literal<CommandSource>("list")
         .executesSingleSuccess { context ->
             val pluginNamesString = pluginManager.plugins.joinToString(", ") { it.name }
-            context.source.audience.sendMessage(
+            context.source.sendMessage(
                 Component.text("Plugins: $pluginNamesString").color(NamedTextColor.AQUA),
             )
         }.build()

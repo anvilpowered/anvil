@@ -44,7 +44,7 @@ fun KeyNamespace.keyArgument(
             keys.find { it.name == keyName }?.let { key ->
                 command(context, key)
             } ?: run {
-                context.source.audience.sendMessage(
+                context.source.sendMessage(
                     Component.text()
                         .append(Component.text("Key with name ", NamedTextColor.RED))
                         .append(Component.text(keyName, NamedTextColor.GOLD))

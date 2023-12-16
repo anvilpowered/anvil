@@ -35,8 +35,8 @@ fun CommandSourceStack.toAnvilCommandSource(): CommandSource = AnvilPaperCommand
 
 private class AnvilPaperCommandSource(
     override val platformDelegate: CommandSender,
-) : CommandSource {
-    override val audience: Audience = platformDelegate
-    override val subject: Subject = platformDelegate.toAnvilSubject()
+) : CommandSource,
+    Audience by platformDelegate,
+    Subject by platformDelegate.toAnvilSubject() {
     override val player: Player? = (platformDelegate as? PaperPlayer)?.toAnvilPlayer()
 }

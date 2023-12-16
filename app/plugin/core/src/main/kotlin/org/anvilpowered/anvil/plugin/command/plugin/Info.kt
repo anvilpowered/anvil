@@ -37,14 +37,14 @@ fun PluginCommandFactory.createInfo(): LiteralCommandNode<CommandSource> =
                     val name = context.get<String>("name")
                     val plugin = pluginManager.plugins.find { it.name == name }
                     if (plugin == null) {
-                        context.source.audience.sendMessage(
+                        context.source.sendMessage(
                             Component.text()
                                 .append(Component.text("Plugin not found: ").color(NamedTextColor.RED))
                                 .append(Component.text(name).color(NamedTextColor.WHITE)),
                         )
                         0
                     } else {
-                        context.source.audience.sendMessage(
+                        context.source.sendMessage(
                             Component.text()
                                 .append(Component.text("Plugin: ").color(NamedTextColor.AQUA))
                                 .append(Component.text(plugin.name).color(NamedTextColor.WHITE)),

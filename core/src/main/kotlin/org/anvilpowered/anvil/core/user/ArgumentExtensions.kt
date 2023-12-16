@@ -22,4 +22,4 @@ import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 
 fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-    requires { it.subject.hasPermissionSet(permission) }
+    requires { it.hasPermissionSet(permission) }

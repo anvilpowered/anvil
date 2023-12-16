@@ -34,7 +34,7 @@ import kotlin.io.path.pathString
 fun ConfigCommandFactory.createGenerate(): LiteralCommandNode<CommandSource> =
     ArgumentBuilder.literal<CommandSource>("generate")
         .executes { context ->
-            context.source.audience.sendMessage(
+            context.source.sendMessage(
                 Component.text()
                     .append(Component.text("Please specify configuration format. Available: ", NamedTextColor.GREEN))
                     .append(Component.text(exporters.joinToString(", ") { it.type.fullName }, NamedTextColor.GOLD))
@@ -60,7 +60,7 @@ private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force
     exporters.find { it.type.name == targetType }?.let { exporter ->
         if (exporter.configPath.exists()) {
             if (force) {
-                context.source.audience.sendMessage(
+                context.source.sendMessage(
                     Component.text()
                         .append(Component.text("File ", NamedTextColor.GREEN))
                         .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
@@ -75,7 +75,7 @@ private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force
                         .build()
                 }
             } else {
-                context.source.audience.sendMessage(
+                context.source.sendMessage(
                     Component.text()
                         .append(Component.text("File ", NamedTextColor.RED))
                         .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
@@ -85,14 +85,14 @@ private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force
                 return@let 0
             }
         }
-        context.source.audience.sendMessage(
+        context.source.sendMessage(
             Component.text()
                 .append(Component.text("Generating file ", NamedTextColor.GREEN))
                 .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
                 .build(),
         )
         exporter.export(DefaultRegistry, serializers)
-        context.source.audience.sendMessage(
+        context.source.sendMessage(
             Component.text()
                 .append(Component.text("File ", NamedTextColor.GREEN))
                 .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
@@ -101,7 +101,7 @@ private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force
         )
         1
     } ?: run {
-        context.source.audience.sendMessage(
+        context.source.sendMessage(
             Component.text()
                 .append(Component.text("Configurate exporter for file type ", NamedTextColor.RED))
                 .append(Component.text(targetType, NamedTextColor.GOLD))

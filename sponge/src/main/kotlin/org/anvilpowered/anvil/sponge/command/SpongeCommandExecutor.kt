@@ -16,18 +16,18 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.sponge.user
+package org.anvilpowered.anvil.sponge.command
 
 import org.anvilpowered.anvil.core.command.CommandExecutor
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.spongepowered.api.Sponge
-import org.spongepowered.api.service.permission.Subject
+import org.spongepowered.api.service.permission.Subject as SpongeSubject
 
 class SpongeCommandExecutor : CommandExecutor {
     override suspend fun execute(source: CommandSource, command: String): Boolean {
         return Sponge.server().commandManager().process(
-            source.subject.platformDelegate as Subject,
-            source.audience,
+            source.platformDelegate as SpongeSubject,
+            source,
             command,
         ).isSuccess
     }
