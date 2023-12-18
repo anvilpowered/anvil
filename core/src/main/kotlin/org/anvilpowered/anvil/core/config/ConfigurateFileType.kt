@@ -26,6 +26,7 @@ import org.spongepowered.configurate.hocon.HoconConfigurationLoader
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
+import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.nio.file.Path
 
@@ -47,7 +48,7 @@ sealed interface ConfigurateFileType<B : AbstractConfigurationLoader.Builder<B, 
         override val fileExtension: String = "yaml"
         override fun toString(): String = fullName
         override fun createBuilder(serializers: TypeSerializerCollection): YamlConfigurationLoader.Builder =
-            YamlConfigurationLoader.builder().configure(serializers)
+            YamlConfigurationLoader.builder().configure(serializers).nodeStyle(NodeStyle.BLOCK)
     }
 
     companion object {
