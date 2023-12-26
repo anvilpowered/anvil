@@ -116,6 +116,7 @@ class Test : BuildType() {
             gradle {
                 id = "gradle_runner"
                 tasks = "test"
+                gradleParams = "--refresh-dependencies"
             }
         }
     }
@@ -163,6 +164,7 @@ class PluginJar : BuildType() {
             gradle {
                 id = "gradle_runner"
                 tasks = "clean :anvil-app-plugin:shadowJar"
+                gradleParams = "--refresh-dependencies"
             }
         }
 
@@ -196,6 +198,7 @@ class Publish(test: BuildType, style: BuildType) : BuildType() {
             gradle {
                 id = "gradle_runner"
                 tasks = "publish"
+                gradleParams = "--refresh-dependencies"
             }
         }
     }
