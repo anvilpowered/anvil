@@ -42,10 +42,7 @@ fun ArgumentBuilder.Companion.requirePlayerArgument(
 ): RequiredArgumentBuilder<CommandSource, String> =
     required<CommandSource, String>("player", StringArgumentType.SingleWord)
         .suggestPlayerArgument(proxyServer)
-        .executesScoped {
-            val player = extractPlayerArgument(proxyServer, argumentName)
-            yield(command(context, player))
-        }
+        .executesScoped { yield(command(context, extractPlayerArgument(proxyServer, argumentName))) }
 
 fun ArgumentBuilder.Companion.requirePlayerArgumentScoped(
     proxyServer: ProxyServer,
@@ -54,15 +51,12 @@ fun ArgumentBuilder.Companion.requirePlayerArgumentScoped(
 ): RequiredArgumentBuilder<CommandSource, String> =
     required<CommandSource, String>("player", StringArgumentType.SingleWord)
         .suggestPlayerArgument(proxyServer)
-        .executesScoped {
-            val player = extractPlayerArgument(proxyServer, argumentName)
-            command(player)
-        }
+        .executesScoped { command(extractPlayerArgument(proxyServer, argumentName)) }
 
 fun <S> RequiredArgumentBuilder<S, String>.suggestPlayerArgument(
     proxyServer: ProxyServer,
 ): RequiredArgumentBuilder<S, String> =
-    suggestsScoped { proxyServer.allPlayers.suggestAll { it.username } }
+    suggestsScoped { proxyServer.allPlayers.suggestAllFiltered { it.username } }
 
 @CommandContextScopeDsl
 suspend fun CommandExecutionScope<CommandSource>.extractPlayerArgument(
