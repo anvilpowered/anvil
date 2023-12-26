@@ -27,11 +27,12 @@ import org.anvilpowered.kbrig.argument.StringArgumentType
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.builder.RequiredArgumentBuilder
 import org.anvilpowered.kbrig.context.CommandContext
+import org.anvilpowered.kbrig.context.CommandContextScopeDsl
 import org.anvilpowered.kbrig.context.CommandExecutionScope
-import org.anvilpowered.kbrig.context.CommandExecutionScopeDsl
 import org.anvilpowered.kbrig.context.executesScoped
 import org.anvilpowered.kbrig.context.get
 import org.anvilpowered.kbrig.context.yieldError
+import org.anvilpowered.kbrig.suggestion.suggestsScoped
 import kotlin.jvm.optionals.getOrNull
 
 fun ArgumentBuilder.Companion.requirePlayerArgument(
@@ -39,7 +40,8 @@ fun ArgumentBuilder.Companion.requirePlayerArgument(
     argumentName: String = "player",
     command: suspend (context: CommandContext<CommandSource>, player: Player) -> Int,
 ): RequiredArgumentBuilder<CommandSource, String> =
-    requirePlayerArgumentBase(proxyServer)
+    required<CommandSource, String>("player", StringArgumentType.SingleWord)
+        .suggestPlayerArgument(proxyServer)
         .executesScoped {
             val player = extractPlayerArgument(proxyServer, argumentName)
             yield(command(context, player))
@@ -50,22 +52,19 @@ fun ArgumentBuilder.Companion.requirePlayerArgumentScoped(
     argumentName: String = "player",
     command: suspend CommandExecutionScope<CommandSource>.(player: Player) -> Unit,
 ): RequiredArgumentBuilder<CommandSource, String> =
-    requirePlayerArgumentBase(proxyServer)
+    required<CommandSource, String>("player", StringArgumentType.SingleWord)
+        .suggestPlayerArgument(proxyServer)
         .executesScoped {
             val player = extractPlayerArgument(proxyServer, argumentName)
             command(player)
         }
 
-private fun ArgumentBuilder.Companion.requirePlayerArgumentBase(
+fun <S> RequiredArgumentBuilder<S, String>.suggestPlayerArgument(
     proxyServer: ProxyServer,
-): RequiredArgumentBuilder<CommandSource, String> =
-    required<CommandSource, String>("player", StringArgumentType.SingleWord)
-        .suggests { _, builder ->
-            proxyServer.allPlayers.forEach { player -> builder.suggest(player.username) }
-            builder.build()
-        }
+): RequiredArgumentBuilder<S, String> =
+    suggestsScoped { proxyServer.allPlayers.suggestAll { it.username } }
 
-@CommandExecutionScopeDsl
+@CommandContextScopeDsl
 suspend fun CommandExecutionScope<CommandSource>.extractPlayerArgument(
     proxyServer: ProxyServer,
     argumentName: String = "player",
@@ -77,22 +76,26 @@ suspend fun CommandExecutionScope<CommandSource>.extractPlayerArgument(
             Component.text()
                 .append(Component.text("Player with name ", NamedTextColor.RED))
                 .append(Component.text(playerName, NamedTextColor.GOLD))
-                .append(Component.text(" not found!", NamedTextColor.RED)),
+                .append(Component.text(" not found!", NamedTextColor.RED))
+                .build(),
         )
         yieldError()
     }
     return player
 }
 
-@CommandExecutionScopeDsl
+@CommandContextScopeDsl
 suspend fun CommandExecutionScope<CommandSource>.extractPlayerSource(): Player {
-    val player = context.source as? Player
+    val player = extractPlayerSourceOrNull()
     if (player == null) {
-        context.source.sendMessage(
-            Component.text()
-                .append(Component.text("You must be a player to use this command!", NamedTextColor.RED)),
-        )
+        context.source.sendMessage(Component.text("You must be a player to use this command!", NamedTextColor.RED))
         yieldError()
     }
     return player
 }
+
+@CommandContextScopeDsl
+fun CommandContext.Scope<CommandSource>.extractPlayerSourceOrNull(): Player? = context.source as? Player
+
+@CommandContextScopeDsl
+suspend fun CommandContext.Scope<CommandSource>.extractPlayerSourceOrAbort(): Player = extractPlayerSourceOrNull() ?: abort()
