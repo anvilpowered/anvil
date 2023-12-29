@@ -87,7 +87,7 @@ suspend fun CommandExecutionScope<CommandSource>.extractPlayerSource(): Player {
 }
 
 @CommandContextScopeDsl
-fun CommandContext.Scope<CommandSource>.extractPlayerSourceOrNull(): Player? = context.source as? Player
+fun CommandContext.Scope<CommandSource>.extractPlayerSourceOrNull(): Player? = context.source.player
 
 @CommandContextScopeDsl
 suspend fun CommandContext.Scope<CommandSource>.extractPlayerSourceOrAbort(): Player = extractPlayerSourceOrNull() ?: abort()

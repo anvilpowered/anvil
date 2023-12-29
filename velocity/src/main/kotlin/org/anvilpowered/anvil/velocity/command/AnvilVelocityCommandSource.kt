@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.velocity.command
 
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.audience.ForwardingAudience
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
@@ -32,7 +33,11 @@ fun VelocityCommandSource.toAnvilCommandSource(): CommandSource = AnvilVelocityC
 private class AnvilVelocityCommandSource(
     override val platformDelegate: VelocityCommandSource,
 ) : CommandSource,
-    Audience by platformDelegate,
+    ForwardingAudience,
     Subject by platformDelegate.toAnvilSubject() {
+
+    val delegateAudiences = listOf<Audience>(platformDelegate)
+    override fun audiences(): Iterable<Audience> = delegateAudiences
+
     override val player: Player? = (platformDelegate as? VelocityPlayer)?.toAnvilPlayer()
 }
