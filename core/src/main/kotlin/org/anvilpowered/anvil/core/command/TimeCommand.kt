@@ -49,8 +49,7 @@ suspend fun CommandExecutionScope<CommandSource>.extractDurationArgument(
                 .append(Component.text(" - Provide at least one value", NamedTextColor.GRAY))
                 .append(Component.newline())
                 .append(Component.text(" - Negatives values are accepted (e.g. 5h -30m == 4h 30m)", NamedTextColor.GRAY)),
-
-            )
+        )
         yieldError()
     }
     val years = matcher.group("years")?.toLongOrNull() ?: 0
@@ -81,7 +80,7 @@ fun Duration.format(maxCharacters: Int = -1, maxUnits: Int = -1): String {
 
     data class State(
         val result: String,
-        val seconds: Long,
+        val secondsLeft: Long,
         val maxCharacters: Int,
         val maxUnits: Int,
         val fallThrough: Boolean = false,
@@ -89,25 +88,25 @@ fun Duration.format(maxCharacters: Int = -1, maxUnits: Int = -1): String {
 
     val initialState = State(
         result = "",
-        seconds = seconds,
+        secondsLeft = seconds,
         maxCharacters = maxCharacters.takeIf { it >= 0 } ?: Int.MAX_VALUE,
         maxUnits = maxUnits.takeIf { it >= 0 } ?: Int.MAX_VALUE,
     )
 
     return sequenceOf(
-        "years" to SECONDS_IN_YEAR,
-        "months" to SECONDS_IN_MONTH,
-        "weeks" to SECONDS_IN_WEEK,
-        "days" to SECONDS_IN_DAY,
-        "hours" to SECONDS_IN_HOUR,
-        "minutes" to SECONDS_IN_MINUTE,
-        "seconds" to 1L,
+        "year" to SECONDS_IN_YEAR,
+        "month" to SECONDS_IN_MONTH,
+        "week" to SECONDS_IN_WEEK,
+        "day" to SECONDS_IN_DAY,
+        "hour" to SECONDS_IN_HOUR,
+        "minute" to SECONDS_IN_MINUTE,
+        "second" to 1L,
     ).fold(initialState) { state, (label, divisor) ->
         if (state.fallThrough) {
             return@fold state
         }
 
-        val result = when (val num = seconds / divisor) {
+        val result = when (val num = state.secondsLeft / divisor) {
             0L -> return@fold state
             1L -> "${state.result}$num $label, "
             else -> "${state.result}$num ${label}s, "
@@ -115,7 +114,7 @@ fun Duration.format(maxCharacters: Int = -1, maxUnits: Int = -1): String {
 
         state.copy(
             result = result,
-            seconds = state.seconds % divisor,
+            secondsLeft = state.secondsLeft % divisor,
             maxCharacters = state.maxCharacters - result.length,
             maxUnits = state.maxUnits - 1,
         ).takeIf { it.maxCharacters >= 0 && it.maxUnits >= 0 }
