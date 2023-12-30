@@ -35,6 +35,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import java.nio.file.Path
@@ -53,7 +54,7 @@ fun AnvilApi.Companion.createPaper(plugin: JavaPlugin): AnvilPaperApi {
         single<PlayerService> { PaperPlayerService }
         single<PluginMeta> { PaperPluginMeta(plugin.pluginMeta) }
         single { PaperPlayerService }.bind<PlayerService>()
-        single { PaperCommandExecutor }.bind<CommandExecutor>()
+        singleOf(::PaperCommandExecutor).bind<CommandExecutor>()
     }
 
     return object : AnvilPaperApi {

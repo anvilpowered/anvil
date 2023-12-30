@@ -18,15 +18,23 @@
 
 package org.anvilpowered.anvil.paper.command
 
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.anvilpowered.anvil.core.command.CommandExecutor
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.plugin.java.JavaPlugin
+import java.util.concurrent.Executor
 
-object PaperCommandExecutor : CommandExecutor {
+class PaperCommandExecutor(private val plugin: JavaPlugin) : CommandExecutor {
+
+    private val executor = Executor { runnable -> plugin.server.scheduler.runTask(plugin, runnable) }
+        .asCoroutineDispatcher()
+
     override suspend fun execute(source: CommandSource, command: String): Boolean =
-        Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command)
+        withContext(executor) { Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command) }
 
     override suspend fun executeAsConsole(command: String): Boolean =
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
+        withContext(executor) { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command) }
 }
