@@ -21,10 +21,12 @@
 package org.anvilpowered.anvil.paper
 
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.core.command.CommandExecutor
 import org.anvilpowered.anvil.core.platform.PluginManager
 import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.anvilpowered.anvil.core.platform.Server
 import org.anvilpowered.anvil.core.user.PlayerService
+import org.anvilpowered.anvil.paper.command.PaperCommandExecutor
 import org.anvilpowered.anvil.paper.platform.PaperPluginManager
 import org.anvilpowered.anvil.paper.platform.PaperPluginMeta
 import org.anvilpowered.anvil.paper.platform.PaperServer
@@ -33,22 +35,31 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.module.Module
+import org.koin.dsl.bind
 import org.koin.dsl.module
+import java.nio.file.Path
 
-interface AnvilPaperApi : AnvilApi
+interface AnvilPaperApi : AnvilApi {
+    val plugin: JavaPlugin
+}
 
-context(JavaPlugin)
-fun AnvilApi.Companion.createPaper(): AnvilPaperApi {
-    val logger = LogManager.getLogger(pluginMeta.name)
+fun AnvilApi.Companion.createPaper(plugin: JavaPlugin): AnvilPaperApi {
+    val logger = LogManager.getLogger(plugin.pluginMeta.name)
     val paperModule = module {
+        single<JavaPlugin> { plugin }
         single<Logger> { logger }
         single<Server> { PaperServer }
         single<PluginManager> { PaperPluginManager }
         single<PlayerService> { PaperPlayerService }
-        single<PluginMeta> { PaperPluginMeta(pluginMeta) }
+        single<PluginMeta> { PaperPluginMeta(plugin.pluginMeta) }
+        single { PaperPlayerService }.bind<PlayerService>()
+        single { PaperCommandExecutor }.bind<CommandExecutor>()
     }
+
     return object : AnvilPaperApi {
+        override val plugin: JavaPlugin = plugin
         override val logger: Logger = logger
+        override val configDir: Path = plugin.dataFolder.toPath()
         override val module: Module = paperModule
     }
 }

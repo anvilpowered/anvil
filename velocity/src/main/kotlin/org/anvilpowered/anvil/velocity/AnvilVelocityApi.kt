@@ -19,8 +19,10 @@
 package org.anvilpowered.anvil.velocity
 
 import com.google.inject.Injector
+import com.google.inject.Key
 import com.velocitypowered.api.plugin.PluginContainer
 import com.velocitypowered.api.plugin.PluginDescription
+import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.CommandExecutor
@@ -36,9 +38,10 @@ import org.anvilpowered.anvil.velocity.user.VelocityPlayerService
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
+import java.nio.file.Path
 
 /**
  * A subtype of [AnvilApi] that also provides access to Velocity-specific APIs such as [ProxyServer].
@@ -111,16 +114,13 @@ fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
         single<PluginDescription> { pluginDescription }
         single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
         single<PluginMeta> { VelocityPluginMeta(pluginDescription) }
-        singleOf(::VelocityPlayerService) {
-            bind<PlayerService>()
-        }
-        singleOf(::VelocityCommandExecutor) {
-            bind<CommandExecutor>()
-        }
+        singleOf(::VelocityPlayerService).bind<PlayerService>()
+        singleOf(::VelocityCommandExecutor).bind<CommandExecutor>()
     }
 
     return object : AnvilVelocityApi {
         override val logger: Logger = logger
+        override val configDir: Path = injector.getInstance(Key.get(Path::class.java, DataDirectory()))
         override val module: Module = velocityModule
     }
 }

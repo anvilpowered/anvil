@@ -23,12 +23,10 @@ import org.anvilpowered.anvil.core.command.CommandSource
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
-class PaperCommandExecutor : CommandExecutor {
-    override suspend fun execute(source: CommandSource, command: String): Boolean {
-        return Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command)
-    }
+object PaperCommandExecutor : CommandExecutor {
+    override suspend fun execute(source: CommandSource, command: String): Boolean =
+        Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command)
 
-    override suspend fun executeAsConsole(command: String): Boolean {
-        return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
-    }
+    override suspend fun executeAsConsole(command: String): Boolean =
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
 }

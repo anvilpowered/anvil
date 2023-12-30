@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.core
 
 import org.apache.logging.log4j.Logger
 import org.koin.core.module.Module
+import java.nio.file.Path
 
 /**
  * To create an instance of this interface, use the `AnvilApi.create` function.
@@ -39,6 +40,8 @@ import org.koin.core.module.Module
 interface AnvilApi {
 
     val logger: Logger
+
+    val configDir: Path
 
     val module: Module
 

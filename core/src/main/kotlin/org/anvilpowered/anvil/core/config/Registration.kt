@@ -18,25 +18,23 @@
 
 package org.anvilpowered.anvil.core.config
 
+import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.config.ConfigCommandFactory
 import org.anvilpowered.anvil.core.platform.PluginMeta
-import org.apache.logging.log4j.Logger
 import org.koin.core.module.Module
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
-import java.nio.file.Path
 
 context(Module)
 fun Registry.Companion.configureDefaults(
-    basePath: Path,
-    logger: Logger,
+    anvil: AnvilApi,
     serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
 ) {
-    ConfigurateRegistryExporter.registerAll(basePath)
-    val configurateRegistry = ConfigurateRegistry.discover(basePath, logger, serializers)
+    ConfigurateRegistryExporter.registerAll(anvil.configDir)
+    val configurateRegistry = ConfigurateRegistry.discover(anvil.configDir, anvil.logger, serializers)
     if (configurateRegistry == null) {
-        logger.warn("No configuration file found, using environment variables only.")
+        anvil.logger.warn("No configuration file found, using environment variables only.")
     } else {
-        logger.info("Using configuration file: ${configurateRegistry.path}")
+        anvil.logger.info("Using configuration file: ${configurateRegistry.path}")
     }
     single<Registry> { EnvironmentRegistry(get<PluginMeta>().name.uppercase(), configurateRegistry?.registry) }
     single { ConfigCommandFactory(get(), get(), getAll(), serializers) }

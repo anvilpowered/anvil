@@ -23,19 +23,10 @@ import org.anvilpowered.anvil.core.command.CommandSource
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.service.permission.Subject as SpongeSubject
 
-class SpongeCommandExecutor : CommandExecutor {
-    override suspend fun execute(source: CommandSource, command: String): Boolean {
-        return Sponge.server().commandManager().process(
-            source.platformDelegate as SpongeSubject,
-            source,
-            command,
-        ).isSuccess
-    }
+object SpongeCommandExecutor : CommandExecutor {
+    override suspend fun execute(source: CommandSource, command: String): Boolean =
+        Sponge.server().commandManager().process(source.platformDelegate as SpongeSubject, source, command).isSuccess
 
-    override suspend fun executeAsConsole(command: String): Boolean {
-        return Sponge.server().commandManager().process(
-            Sponge.systemSubject(),
-            command,
-        ).isSuccess
-    }
+    override suspend fun executeAsConsole(command: String): Boolean =
+        Sponge.server().commandManager().process(Sponge.systemSubject(), command).isSuccess
 }
