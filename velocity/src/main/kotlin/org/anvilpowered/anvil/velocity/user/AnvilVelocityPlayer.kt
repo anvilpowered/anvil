@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.velocity.user
 
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.audience.ForwardingAudience
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
@@ -28,13 +29,17 @@ import com.velocitypowered.api.proxy.Player as VelocityPlayer
 fun VelocityPlayer.toAnvilPlayer(): Player = AnvilVelocityPlayer(this)
 
 private class AnvilVelocityPlayer(
-    val velocityPlayer: VelocityPlayer,
+    override val platformDelegate: VelocityPlayer,
 ) : Player,
-    Audience by velocityPlayer,
-    Subject by velocityPlayer.toAnvilSubject() {
-    override val id: UUID = velocityPlayer.uniqueId
-    override val username: String = velocityPlayer.username
-    override val displayname: Component = Component.text(velocityPlayer.username)
+    ForwardingAudience,
+    Subject by platformDelegate.toAnvilSubject() {
+
+    val delegateAudiences = listOf<Audience>(platformDelegate)
+    override fun audiences(): Iterable<Audience> = delegateAudiences
+
+    override val id: UUID = platformDelegate.uniqueId
+    override val username: String = platformDelegate.username
+    override val displayname: Component = Component.text(platformDelegate.username)
     override val latencyMs: Int
-        get() = velocityPlayer.ping.toInt()
+        get() = platformDelegate.ping.toInt()
 }
