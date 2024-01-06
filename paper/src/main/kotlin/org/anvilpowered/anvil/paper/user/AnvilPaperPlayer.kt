@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.paper.user
 
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.audience.ForwardingAudience
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
@@ -30,8 +31,12 @@ fun PaperPlayer.toAnvilPlayer(): Player = AnvilPaperPlayer(this)
 private class AnvilPaperPlayer(
     override val platformDelegate: PaperPlayer,
 ) : Player,
-    Audience by platformDelegate,
+    ForwardingAudience,
     Subject by platformDelegate.toAnvilSubject() {
+
+    val delegateAudiences = listOf<Audience>(platformDelegate)
+    override fun audiences(): Iterable<Audience> = delegateAudiences
+
     override val id: UUID = platformDelegate.uniqueId
     override val username: String = platformDelegate.name
     override val displayname: Component = platformDelegate.displayName()

@@ -19,6 +19,7 @@
 package org.anvilpowered.anvil.sponge.command
 
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.audience.ForwardingAudience
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
@@ -29,10 +30,14 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer
 
 fun CommandContext.toAnvilCommandSource(): CommandSource = AnvilSpongeCommandSource(this)
 
-class AnvilSpongeCommandSource(
+private class AnvilSpongeCommandSource(
     override val platformDelegate: CommandContext,
 ) : CommandSource,
-    Audience by platformDelegate.cause().audience(),
+    ForwardingAudience,
     Subject by platformDelegate.cause().toAnvilSubject() {
+
+    val delegateAudiences = listOf<Audience>(platformDelegate.cause().audience())
+    override fun audiences(): Iterable<Audience> = delegateAudiences
+
     override val player: Player? = platformDelegate.cause().first(ServerPlayer::class.java).orElse(null)?.toAnvilPlayer()
 }

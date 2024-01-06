@@ -20,6 +20,7 @@ package org.anvilpowered.anvil.paper.command
 
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.audience.ForwardingAudience
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.user.Player
 import org.anvilpowered.anvil.core.user.Subject
@@ -36,7 +37,11 @@ fun CommandSourceStack.toAnvilCommandSource(): CommandSource = AnvilPaperCommand
 private class AnvilPaperCommandSource(
     override val platformDelegate: CommandSender,
 ) : CommandSource,
-    Audience by platformDelegate,
+    ForwardingAudience,
     Subject by platformDelegate.toAnvilSubject() {
+
+    val delegateAudiences = listOf<Audience>(platformDelegate)
+    override fun audiences(): Iterable<Audience> = delegateAudiences
+
     override val player: Player? = (platformDelegate as? PaperPlayer)?.toAnvilPlayer()
 }
