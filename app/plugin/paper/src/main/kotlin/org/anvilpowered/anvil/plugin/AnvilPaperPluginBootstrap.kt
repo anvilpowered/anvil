@@ -39,7 +39,7 @@ class AnvilPaperPluginBootstrap : JavaPlugin(), Listener {
         server.pluginManager.registerEvents(this, this)
         plugin = koinApplication {
             modules(
-                AnvilApi.createPaper().module,
+                AnvilApi.createPaper(this@AnvilPaperPluginBootstrap).module,
                 module { singleOf(::AnvilPaperPlugin) },
             )
         }.koin.get()
