@@ -160,14 +160,9 @@ class PluginJar : BuildType() {
         }
 
         steps {
-            exec {
-                name = "Clean up old builds"
-                path = "rm"
-                arguments = "-f app/plugin/build/libs/*.jar"
-            }
             gradle {
                 name = "Build jar"
-                tasks = ":anvil-app-plugin:shadowJar"
+                tasks = "clean :anvil-app-plugin:shadowJar"
                 gradleParams = "--refresh-dependencies"
             }
         }
