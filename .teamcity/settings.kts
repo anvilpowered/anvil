@@ -198,7 +198,7 @@ class Publish(test: BuildType, style: BuildType) : BuildType() {
             gradle {
                 id = "gradle_runner"
                 tasks = "publish"
-                gradleParams = "--refresh-dependencies"
+                gradleParams = "--refresh-dependencies -PrawVersion"
             }
         }
     }

@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.ByteArrayOutputStream
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -6,20 +7,33 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val projectVersion = file("version").readLines().first()
+val projectVersion: String = run {
+    val rawVersion = file("version").readLines().first()
+    if (project.hasProperty("rawVersion")) {
+        rawVersion
+    } else {
+        val branch = System.getenv("VCS_BRANCH")?.replace('/', '-') ?: "unknown-branch"
+        System.getenv("BUILD_NUMBER")?.let { buildNumber ->
+            val gitRev = ByteArrayOutputStream()
+            exec {
+                commandLine("git", "rev-parse", "--short", "HEAD")
+                standardOutput = gitRev
+            }.assertNormalExitValue()
+            rawVersion.replace("SNAPSHOT", "BETA$buildNumber-$branch-${gitRev.toString().trim()}")
+        } ?: rawVersion
+    }
+}
+
+logger.warn("Resolved project version $projectVersion")
 
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "java-library")
+
     group = "org.anvilpowered"
     version = projectVersion
-    System.getenv("BUILD_NUMBER")?.let { buildNumber ->
-        version = when (val branch = System.getenv("VCS_BRANCH")?.replace('/', '-') ?: "unknown-branch") {
-            "master" -> version.toString().replace("SNAPSHOT", "RC$buildNumber")
-            else -> version.toString().replace("SNAPSHOT", "B$buildNumber-$branch")
-        }
-    }
+
     kotlin {
         compilerOptions {
             freeCompilerArgs = listOf(
