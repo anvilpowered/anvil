@@ -3,7 +3,7 @@
 dependencyResolutionManagement {
 //    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven("https://nexus.anvilpowered.org/repository/maven-public/")
+        maven("https://repo.anvilpowered.org/repository/maven-public/")
         mavenCentral()
         maven("https://oss.sonatype.org/content/repositories/snapshots/")
         maven("https://libraries.minecraft.net")
