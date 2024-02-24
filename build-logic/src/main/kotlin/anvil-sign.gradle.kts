@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tooling.BuildKotlinToolingMetadataTask
-
 plugins {
     signing
 }
