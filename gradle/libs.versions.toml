@@ -4,7 +4,7 @@ kotlin = "1.9.21"
 log4j = "2.23.0"
 
 [libraries]
-adventure-bom = "net.kyori:adventure-bom:4.16.0"
+adventure-bom = "net.kyori:adventure-bom:4.17.0"
 annotations = "org.jetbrains:annotations:24.1.0"
 brigadier = "com.mojang:brigadier:1.0.18"
 configurate-core = { module = "org.spongepowered:configurate-core", version.ref = "configurate" }
