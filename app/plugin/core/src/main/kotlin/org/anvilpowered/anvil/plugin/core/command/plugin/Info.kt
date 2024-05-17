@@ -16,12 +16,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin.command.plugin
+package org.anvilpowered.anvil.plugin.core.command.plugin
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.plugin.command.common.executesUsage
+import org.anvilpowered.anvil.plugin.core.command.common.executesUsage
 import org.anvilpowered.kbrig.Command
 import org.anvilpowered.kbrig.argument.StringArgumentType
 import org.anvilpowered.kbrig.builder.ArgumentBuilder

@@ -16,18 +16,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
+package org.anvilpowered.anvil.plugin.sponge
 
-package org.anvilpowered.anvil.plugin
+import com.google.inject.Inject
+import org.apache.logging.log4j.Logger
+import org.spongepowered.api.event.Listener
+import org.spongepowered.api.event.lifecycle.ConstructPluginEvent
+import org.spongepowered.plugin.builtin.jvm.Plugin
 
-import io.papermc.paper.event.server.ServerResourcesLoadEvent
-import org.anvilpowered.anvil.paper.command.toPaper
-import org.bukkit.plugin.Plugin
+@Plugin("anvil-agent")
+class AnvilSpongePluginBootstrap @Inject constructor(
+    private val logger: Logger,
+) {
 
-class AnvilPaperPlugin(private val plugin: AnvilPlugin) {
-    fun registerCommands(bootstrap: Plugin, event: ServerResourcesLoadEvent) {
-        plugin.registerCommands { command ->
-            event.commands.register(bootstrap.pluginMeta, command.toPaper())
-        }
+    @Listener
+    fun onServerStart(event: ConstructPluginEvent) {
+        logger.warn("Hello, world! ${event.plugin()}")
     }
 }

@@ -16,19 +16,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin
+package org.anvilpowered.anvil.plugin.velocity
 
 import com.google.inject.Inject
 import com.google.inject.Injector
+import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.plugin.core.AnvilPlugin
+import org.anvilpowered.anvil.velocity.command.toVelocity
 import org.anvilpowered.anvil.velocity.createVelocity
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.koinApplication
-import org.koin.dsl.module
 
 @Plugin(
     id = "anvil-agent",
@@ -41,17 +42,14 @@ class AnvilVelocityPluginBootstrap @Inject constructor(
     private val injector: Injector,
 ) {
 
-    private lateinit var plugin: AnvilVelocityPlugin
+    private lateinit var plugin: AnvilPlugin
 
     @Subscribe
     fun onProxyInit(event: ProxyInitializeEvent) {
-        plugin = koinApplication {
-            modules(
-                AnvilApi.createVelocity(injector).module,
-                module { singleOf(::AnvilVelocityPlugin) },
-            )
-        }.koin.get()
-        plugin.registerCommands()
+        plugin = koinApplication { modules(AnvilApi.createVelocity(injector).module) }.koin.get()
+        plugin.registerCommands { command ->
+            proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
+        }
         proxyServer.eventManager.register(this, plugin)
     }
 }

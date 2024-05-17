@@ -16,21 +16,32 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin
+package org.anvilpowered.anvil.plugin.core
 
-import com.google.inject.Inject
+import org.anvilpowered.anvil.core.command.CommandSource
+import org.anvilpowered.anvil.plugin.core.command.AnvilCommandFactory
+import org.anvilpowered.kbrig.tree.LiteralCommandNode
 import org.apache.logging.log4j.Logger
-import org.spongepowered.api.event.Listener
-import org.spongepowered.api.event.lifecycle.ConstructPluginEvent
-import org.spongepowered.plugin.builtin.jvm.Plugin
 
-@Plugin("anvil-agent")
-class AnvilSpongePluginBootstrap @Inject constructor(
+class AnvilPlugin(
     private val logger: Logger,
+    private val anvilCommandFactory: AnvilCommandFactory,
 ) {
 
-    @Listener
-    fun onServerStart(event: ConstructPluginEvent) {
-        logger.warn("Hello, world! ${event.plugin()}")
+    fun enable() {
+        logger.info("Enabled anvil plugin")
+        logger.info("Please note that this plugin is not required to use Anvil plugins")
+    }
+
+    fun disable() {
+        logger.info("Disabled anvil plugin")
+    }
+
+    fun registerCommands(callback: (LiteralCommandNode<CommandSource>) -> Unit) {
+        logger.info("Building command tree...")
+        val command = anvilCommandFactory.create()
+        logger.info("Registering commands...")
+        callback(command)
+        logger.info("Finished registering commands.")
     }
 }

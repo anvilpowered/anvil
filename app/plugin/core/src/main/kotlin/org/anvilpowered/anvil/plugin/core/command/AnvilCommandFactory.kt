@@ -16,28 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin.command.plugin
+package org.anvilpowered.anvil.plugin.core.command
 
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.core.platform.PluginManager
-import org.anvilpowered.anvil.core.user.requiresPermission
-import org.anvilpowered.anvil.plugin.command.common.addHelp
+import org.anvilpowered.anvil.plugin.core.command.common.addHelp
+import org.anvilpowered.anvil.plugin.core.command.plugin.PluginCommandFactory
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 private val children = mapOf(
     "help" to Component.text("Shows this help message"),
-    "list" to Component.text("Lists all plugins"),
-    "info <name>" to Component.text("Shows information about a plugin"),
+    "plugin" to Component.text("Plugin management"),
+    "version" to Component.text("Shows the Anvil Agent version"),
 )
 
-class PluginCommandFactory(val pluginManager: PluginManager) {
+class AnvilCommandFactory(private val pluginCommandFactory: PluginCommandFactory) {
     fun create(): LiteralCommandNode<CommandSource> =
-        ArgumentBuilder.literal<CommandSource>("plugin")
-            .addHelp("anvil plugin", children)
-            .requiresPermission("anvil.agent.plugin")
-            .then(createList())
-            .then(createInfo())
+        ArgumentBuilder.literal<CommandSource>("anvil")
+            .addHelp("anvil", children)
+            .then(pluginCommandFactory.create())
             .build()
 }

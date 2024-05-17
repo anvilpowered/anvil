@@ -6,6 +6,7 @@ dependencyResolutionManagement {
         maven("https://repo.anvilpowered.org/repository/maven-public/")
         mavenCentral()
         maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
         maven("https://libraries.minecraft.net")
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://repo.spongepowered.org/repository/maven-public/")

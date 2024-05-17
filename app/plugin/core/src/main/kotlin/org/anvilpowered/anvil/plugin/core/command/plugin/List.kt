@@ -16,13 +16,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin
+package org.anvilpowered.anvil.plugin.core.command.plugin
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.core.command.CommandSource
+import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.kbrig.builder.executesSingleSuccess
+import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
-object PluginMessages {
-    val pluginPrefix = Component.text("[Anvil Agent] ").color(NamedTextColor.GOLD)
-    val notEnoughArgs = Component.text("Not enough arguments!").color(NamedTextColor.RED)
-    val noPermission = Component.text("Insufficient Permissions!").color(NamedTextColor.RED)
-}
+fun PluginCommandFactory.createList(): LiteralCommandNode<CommandSource> =
+    ArgumentBuilder.literal<CommandSource>("list")
+        .executesSingleSuccess { context ->
+            val pluginNamesString = pluginManager.plugins.joinToString(", ") { it.name }
+            context.source.sendMessage(
+                Component.text("Plugins: $pluginNamesString").color(NamedTextColor.AQUA),
+            )
+        }.build()

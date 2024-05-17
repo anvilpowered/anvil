@@ -16,22 +16,26 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin
+package org.anvilpowered.anvil.plugin.core.command.gameuser
 
+import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.plugin.command.AnvilCommandFactory
+import org.anvilpowered.anvil.core.user.requiresPermission
+import org.anvilpowered.anvil.plugin.core.command.common.addHelp
+import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
-import org.apache.logging.log4j.Logger
 
-abstract class AnvilPlugin(
-    private val logger: Logger,
-    private val anvilCommandFactory: AnvilCommandFactory,
-) {
-    fun registerCommands(registrationCallback: (LiteralCommandNode<CommandSource>) -> Unit) {
-        logger.info("Building command tree...")
-        val command = anvilCommandFactory.create()
-        logger.info("Registering commands...")
-        registrationCallback(command)
-        logger.info("Finished registering commands.")
-    }
+private val children = mapOf(
+    "help" to Component.text("Shows this help message"),
+    "info" to Component.text("Shows information about a game user"),
+)
+
+object GameUserCommand {
+    context(AnvilApi)
+    fun create(): LiteralCommandNode<CommandSource> =
+        ArgumentBuilder.literal<CommandSource>("gameuser")
+            .addHelp("anvil gameuser", children)
+            .requiresPermission("anvil.agent.gameuser")
+            .build()
 }

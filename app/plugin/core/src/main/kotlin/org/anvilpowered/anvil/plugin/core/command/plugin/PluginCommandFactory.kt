@@ -16,22 +16,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin.command.gameuser
+package org.anvilpowered.anvil.plugin.core.command.plugin
 
 import net.kyori.adventure.text.Component
-import org.anvilpowered.anvil.core.AnvilApi
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.plugin.command.common.executesUsage
+import org.anvilpowered.anvil.core.platform.PluginManager
+import org.anvilpowered.anvil.core.user.requiresPermission
+import org.anvilpowered.anvil.plugin.core.command.common.addHelp
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 private val children = mapOf(
     "help" to Component.text("Shows this help message"),
-    "info" to Component.text("Shows information about a game user"),
+    "list" to Component.text("Lists all plugins"),
+    "info <name>" to Component.text("Shows information about a plugin"),
 )
 
-context(AnvilApi)
-fun GameUserCommand.createInfo(): LiteralCommandNode<CommandSource> =
-    ArgumentBuilder.literal<CommandSource>("info")
-        .executesUsage("anvil gameuser info <name|uuid>")
-        .build()
+class PluginCommandFactory(val pluginManager: PluginManager) {
+    fun create(): LiteralCommandNode<CommandSource> =
+        ArgumentBuilder.literal<CommandSource>("plugin")
+            .addHelp("anvil plugin", children)
+            .requiresPermission("anvil.agent.plugin")
+            .then(createList())
+            .then(createInfo())
+            .build()
+}

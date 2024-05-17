@@ -24,7 +24,7 @@ kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
 kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
 logging-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 logging-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
-paper = "io.papermc.paper:paper-api:1.20.2-brigadier-SNAPSHOT"
+paper = "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT"
 sponge = "org.spongepowered:spongeapi:8.2.0"
 velocity = "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
 
@@ -37,5 +37,5 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = "org.jlleitschuh.gradle.ktlint:11.6.1"
 pluginyml = "net.minecrell.plugin-yml.paper:0.6.0"
-shadow = "com.github.johnrengelman.shadow:8.1.1"
+shadow = "io.github.goooler.shadow:8.1.7"
 sponge = "org.spongepowered.gradle.plugin:2.2.0"

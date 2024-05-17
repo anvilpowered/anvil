@@ -16,22 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.plugin
+package org.anvilpowered.anvil.plugin.core
 
-import com.velocitypowered.api.command.BrigadierCommand
-import com.velocitypowered.api.proxy.ProxyServer
-import org.anvilpowered.anvil.velocity.AnvilVelocityApi
-import org.anvilpowered.anvil.velocity.command.toVelocity
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 
-context(AnvilVelocityApi)
-class AnvilVelocityPlugin(
-    private val proxyServer: ProxyServer,
-    private val plugin: AnvilPlugin,
-) {
-
-    fun registerCommands() {
-        plugin.registerCommands { command ->
-            proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
-        }
-    }
+object PluginMessages {
+    val pluginPrefix = Component.text("[Anvil Agent] ").color(NamedTextColor.GOLD)
+    val notEnoughArgs = Component.text("Not enough arguments!").color(NamedTextColor.RED)
+    val noPermission = Component.text("Insufficient Permissions!").color(NamedTextColor.RED)
 }

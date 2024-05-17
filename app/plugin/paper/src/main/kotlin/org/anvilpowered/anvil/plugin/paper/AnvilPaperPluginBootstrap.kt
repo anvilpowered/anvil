@@ -18,36 +18,32 @@
 
 @file:Suppress("UnstableApiUsage")
 
-package org.anvilpowered.anvil.plugin
+package org.anvilpowered.anvil.plugin.paper
 
-import io.papermc.paper.event.server.ServerResourcesLoadEvent
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.anvilpowered.anvil.core.AnvilApi
+import org.anvilpowered.anvil.paper.command.toPaper
 import org.anvilpowered.anvil.paper.createPaper
-import org.bukkit.event.EventHandler
+import org.anvilpowered.anvil.plugin.core.AnvilPlugin
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.koinApplication
-import org.koin.dsl.module
 
 class AnvilPaperPluginBootstrap : JavaPlugin(), Listener {
 
-    private lateinit var plugin: AnvilPaperPlugin
+    private lateinit var plugin: AnvilPlugin
 
     override fun onEnable() {
+        val bootstrapPlugin = this
         logger.info { "Registering events" }
-        server.pluginManager.registerEvents(this, this)
-        plugin = koinApplication {
-            modules(
-                AnvilApi.createPaper(this@AnvilPaperPluginBootstrap).module,
-                module { singleOf(::AnvilPaperPlugin) },
-            )
-        }.koin.get()
+        plugin = koinApplication { modules(AnvilApi.createPaper(bootstrapPlugin).module) }.koin.get()
+        plugin.enable()
+        lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
+            plugin.registerCommands { command ->
+                event.registrar().register(command.toPaper())
+            }
+        }
     }
 
-    @EventHandler
-    fun load(event: ServerResourcesLoadEvent) {
-        logger.info { "Load event" }
-        plugin.registerCommands(this, event)
-    }
+    override fun onDisable() = plugin.disable()
 }
