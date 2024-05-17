@@ -16,7 +16,7 @@ exposed-core = { module = "org.jetbrains.exposed:exposed-core" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc" }
 exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time" }
-guava = "com.google.guava:guava:32.1.3-jre"
+guava = "com.google.guava:guava:33.2.0-jre"
 kbrig-brigadier = "org.anvilpowered:kbrig-brigadier:0.2.0-SNAPSHOT"
 koin = "io.insert-koin:koin-core:3.5.3"
 kotest = "io.kotest:kotest-runner-junit5-jvm:5.8.0"
