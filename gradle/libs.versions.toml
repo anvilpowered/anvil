@@ -11,7 +11,7 @@ configurate-core = { module = "org.spongepowered:configurate-core", version.ref 
 configurate-hocon = { module = "org.spongepowered:configurate-hocon", version.ref = "configurate" }
 configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
 configurate-extra-kotlin = { module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate" }
-exposed-bom = "org.jetbrains.exposed:exposed-bom:0.47.0"
+exposed-bom = "org.jetbrains.exposed:exposed-bom:0.50.1"
 exposed-core = { module = "org.jetbrains.exposed:exposed-core" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc" }
