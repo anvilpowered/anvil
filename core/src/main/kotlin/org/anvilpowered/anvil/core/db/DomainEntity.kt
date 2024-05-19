@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.core.db
 import java.util.UUID
 
 interface DomainEntity {
-    val id: UUID
+    val uuid: UUID
     // TODO: createdUtc, updatedUtc
 }
 
