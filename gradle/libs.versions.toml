@@ -11,12 +11,6 @@ configurate-core = { module = "org.spongepowered:configurate-core", version.ref 
 configurate-hocon = { module = "org.spongepowered:configurate-hocon", version.ref = "configurate" }
 configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
 configurate-extra-kotlin = { module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate" }
-exposed-bom = "org.jetbrains.exposed:exposed-bom:0.50.1"
-exposed-core = { module = "org.jetbrains.exposed:exposed-core" }
-exposed-dao = { module = "org.jetbrains.exposed:exposed-dao" }
-exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc" }
-exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time" }
-guava = "com.google.guava:guava:32.1.3-jre"
 kbrig-brigadier = "org.anvilpowered:kbrig-brigadier:0.2.0-SNAPSHOT"
 koin = "io.insert-koin:koin-core:3.5.6"
 kotest = "io.kotest:kotest-runner-junit5-jvm:5.8.0"
@@ -27,9 +21,6 @@ logging-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "
 paper = "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT"
 sponge = "org.spongepowered:spongeapi:8.2.0"
 velocity = "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
-
-[bundles]
-exposed = ["exposed-core", "exposed-dao", "exposed-jdbc", "exposed-java-time"]
 
 [plugins]
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
