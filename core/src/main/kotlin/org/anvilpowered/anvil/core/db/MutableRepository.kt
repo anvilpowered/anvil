@@ -22,7 +22,7 @@ interface MutableRepository<E : DomainEntity, C : Creates<E>> : Repository<E> {
     suspend fun create(item: C): E
     suspend fun put(item: C): PutResult<E>
 
-    data class PutResult<E : DomainEntity>(
+    data class PutResult<out E : DomainEntity>(
         val entity: E,
         val created: Boolean,
     )
