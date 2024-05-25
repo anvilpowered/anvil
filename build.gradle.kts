@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.ByteArrayOutputStream
 
 plugins {
@@ -36,6 +36,7 @@ allprojects {
 
     kotlin {
         compilerOptions {
+            jvmTarget = JvmTarget.JVM_21
             freeCompilerArgs = listOf(
                 "-opt-in=kotlin.RequiresOptIn",
                 "-Xcontext-receivers",
@@ -45,16 +46,5 @@ allprojects {
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-    }
-
-    tasks {
-        withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = "21"
-        }
-        withType<JavaCompile> {
-            options.encoding = "UTF-8"
-            sourceCompatibility = "21"
-            targetCompatibility = "21"
-        }
     }
 }
