@@ -18,6 +18,7 @@
 
 package org.anvilpowered.anvil.core.config
 
+import org.anvilpowered.anvil.core.config.ConfigurateRegistry.Factory.DiscoveryClosure
 import org.apache.logging.log4j.Logger
 import org.spongepowered.configurate.ConfigurationNode
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
@@ -50,9 +51,13 @@ class ConfigurateRegistry(
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? = rootNode.node(key.configNodePath)[key.type]
     override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? = getStrict(key)?.let { return it[mapKey] }
 
-    companion object {
+    companion object Factory {
 
-        data class DiscoverResult internal constructor(val registry: Registry, val path: Path)
+        data class DiscoverResult internal constructor(
+            val registry: Registry,
+            val path: Path,
+            val type: ConfigurateFileType<*>,
+        )
 
         fun discover(
             basePath: Path,
@@ -66,7 +71,6 @@ class ConfigurateRegistry(
 
             val configFiles = basePath.listDirectoryEntries()
                 .map { it to ConfigurateFileType.fromName(it.extension) }
-                .onEach { logger.info("Found file ${it.first} with type ${it.second}") }
                 .mapNotNull { (path, type) -> type?.let { path to it } }
                 .toList()
 
@@ -80,7 +84,18 @@ class ConfigurateRegistry(
             }
 
             val (path, type) = configFiles.single()
-            return DiscoverResult(ConfigurateRegistry(type.createBuilder(serializers).path(path).build().load(), delegate), path)
+            return DiscoverResult(ConfigurateRegistry(type.createBuilder(serializers).path(path).build().load(), delegate), path, type)
+        }
+
+        fun createDiscoveryClosure(
+            basePath: Path,
+            logger: Logger,
+            serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
+            delegate: Registry? = null,
+        ) = DiscoveryClosure { discover(basePath, logger, serializers, delegate) }
+
+        fun interface DiscoveryClosure {
+            fun discover(): DiscoverResult?
         }
     }
 }

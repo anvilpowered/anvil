@@ -30,12 +30,14 @@ fun Registry.Companion.configureDefaults(
     serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
 ) {
     ConfigurateRegistryExporter.registerAll(anvil.configDir)
-    val configurateRegistry = ConfigurateRegistry.discover(anvil.configDir, anvil.logger, serializers)
+    val configurateRegistryClosure = ConfigurateRegistry.createDiscoveryClosure(anvil.configDir, anvil.logger, serializers)
+    val configurateRegistry = configurateRegistryClosure.discover()
     if (configurateRegistry == null) {
         anvil.logger.warn("No configuration file found, using environment variables only.")
     } else {
         anvil.logger.info("Using configuration file: ${configurateRegistry.path}")
     }
+    single<ConfigurateRegistry.Factory.DiscoveryClosure> { configurateRegistryClosure }
     single<Registry> { EnvironmentRegistry(get<PluginMeta>().name.uppercase(), configurateRegistry?.registry) }
-    single { ConfigCommandFactory(get(), get(), getAll(), serializers) }
+    single { ConfigCommandFactory(get(), get(), get(), getAll(), serializers) }
 }

@@ -21,14 +21,18 @@ package org.anvilpowered.anvil.core.command.config
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.core.command.CommandSource
+import org.anvilpowered.anvil.core.config.ConfigurateRegistryExporter
 import org.anvilpowered.anvil.core.config.DefaultRegistry
 import org.anvilpowered.anvil.core.config.fullName
 import org.anvilpowered.kbrig.argument.StringArgumentType
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.kbrig.context.CommandContextScopeDsl
+import org.anvilpowered.kbrig.context.CommandExecutionScope
+import org.anvilpowered.kbrig.context.executesScoped
 import org.anvilpowered.kbrig.context.get
+import org.anvilpowered.kbrig.context.yieldError
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 import kotlin.io.path.deleteIfExists
-import kotlin.io.path.exists
 import kotlin.io.path.pathString
 
 fun ConfigCommandFactory.createGenerate(): LiteralCommandNode<CommandSource> =
@@ -55,52 +59,12 @@ fun ConfigCommandFactory.createGenerate(): LiteralCommandNode<CommandSource> =
         ).build()
 
 context(ConfigCommandFactory)
-private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force: Boolean): B = executes { context ->
-    val targetType = context.get<String>("type")
-    exporters.find { it.type.name == targetType }?.let { exporter ->
-        if (exporter.configPath.exists()) {
-            if (force) {
-                context.source.sendMessage(
-                    Component.text()
-                        .append(Component.text("File ", NamedTextColor.GREEN))
-                        .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
-                        .append(Component.text(" already exists! Overwriting because of --force!", NamedTextColor.GREEN))
-                        .build(),
-                )
-                if (!exporter.configPath.deleteIfExists()) {
-                    Component.text()
-                        .append(Component.text("File ", NamedTextColor.RED))
-                        .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
-                        .append(Component.text(" could not be deleted!", NamedTextColor.RED))
-                        .build()
-                }
-            } else {
-                context.source.sendMessage(
-                    Component.text()
-                        .append(Component.text("File ", NamedTextColor.RED))
-                        .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
-                        .append(Component.text(" already exists! Use --force to overwrite.", NamedTextColor.RED))
-                        .build(),
-                )
-                return@let 0
-            }
-        }
-        context.source.sendMessage(
-            Component.text()
-                .append(Component.text("Generating file ", NamedTextColor.GREEN))
-                .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
-                .build(),
-        )
-        exporter.export(DefaultRegistry, serializers)
-        context.source.sendMessage(
-            Component.text()
-                .append(Component.text("File ", NamedTextColor.GREEN))
-                .append(Component.text(exporter.configPath.pathString, NamedTextColor.GOLD))
-                .append(Component.text(" generated!", NamedTextColor.GREEN))
-                .build(),
-        )
-        1
-    } ?: run {
+@CommandContextScopeDsl
+private suspend fun CommandExecutionScope<CommandSource>.extractExporterArgument(
+    argumentName: String = "type",
+): ConfigurateRegistryExporter {
+    val targetType = context.get<String>(argumentName)
+    val exporter = exporters.find { it.type.name == targetType } ?: run {
         context.source.sendMessage(
             Component.text()
                 .append(Component.text("Configurate exporter for file type ", NamedTextColor.RED))
@@ -108,6 +72,77 @@ private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force
                 .append(Component.text(" not found!", NamedTextColor.RED))
                 .build(),
         )
-        0
+        yieldError()
     }
+    return exporter
+}
+
+context(ConfigCommandFactory)
+private fun <B : ArgumentBuilder<CommandSource, B>> B.executesWithExporter(force: Boolean): B = executesScoped {
+    val exporter = extractExporterArgument()
+    val newType = exporter.type
+    val newPath = exporter.configPath.pathString
+    val configurateRegistry = configurateRegistryClosure.discover()
+    if (configurateRegistry != null) {
+        val existingType = configurateRegistry.type
+        val existingPath = configurateRegistry.path.pathString
+        if (force) {
+            context.source.sendMessage(
+                Component.text()
+                    .append(Component.text("File ", NamedTextColor.YELLOW))
+                    .append(Component.text(existingPath, NamedTextColor.GOLD))
+                    .append(Component.text(" already exists! ", NamedTextColor.YELLOW))
+                    .append(Component.newline())
+                    .append(
+                        Component.text(
+                            if (existingType == newType) {
+                                "Overwriting because of --force!"
+                            } else {
+                                "Replacing with $newPath because of --force!"
+                            },
+                            NamedTextColor.YELLOW,
+                        ),
+                    )
+                    .build(),
+            )
+            if (!configurateRegistry.path.deleteIfExists()) {
+                Component.text()
+                    .append(Component.text("File ", NamedTextColor.RED))
+                    .append(Component.text(existingPath, NamedTextColor.GOLD))
+                    .append(Component.text(" could not be deleted!", NamedTextColor.RED))
+                    .build()
+            }
+        } else {
+            context.source.sendMessage(
+                Component.text()
+                    .append(Component.text("File ", NamedTextColor.RED))
+                    .append(Component.text(existingPath, NamedTextColor.GOLD))
+                    .append(Component.text(" already exists!", NamedTextColor.RED))
+                    .append(Component.newline())
+                    .append(Component.text("Use --force to ", NamedTextColor.RED))
+                    .append(
+                        if (existingType == newType) {
+                            Component.text("overwrite.", NamedTextColor.RED)
+                        } else {
+                            Component.text()
+                                .append(Component.text("replace with ", NamedTextColor.RED))
+                                .append(Component.text(newPath, NamedTextColor.GOLD))
+                                .append(Component.text(".", NamedTextColor.RED))
+                        },
+                    )
+                    .build(),
+            )
+            yieldError()
+        }
+    }
+    exporter.export(DefaultRegistry, serializers)
+    context.source.sendMessage(
+        Component.text()
+            .append(Component.text("Generated ", NamedTextColor.GREEN))
+            .append(Component.text(newPath, NamedTextColor.GOLD))
+            .append(Component.text("!", NamedTextColor.GREEN))
+            .append(Component.newline())
+            .append(Component.text("Please restart the server to apply changes.", NamedTextColor.DARK_GREEN))
+            .build(),
+    )
 }
