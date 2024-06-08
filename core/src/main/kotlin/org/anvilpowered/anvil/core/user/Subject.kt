@@ -34,4 +34,4 @@ interface Subject : PlatformType {
 
 fun Subject.hasPermissionSet(permission: String): Boolean = hasPermission(permission) == true
 fun Subject.hasPermissionUnset(permission: String): Boolean = hasPermission(permission) == null
-fun Subject.hasPermissionNotSet(permission: String): Boolean = hasPermission(permission) == false
+fun Subject.hasPermissionNotSet(permission: String): Boolean = !hasPermissionSet(permission)
