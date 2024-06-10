@@ -27,4 +27,6 @@ interface PlayerService {
     operator fun get(id: UUID): Player?
 
     fun getAll(startsWith: String = ""): Sequence<Player>
+
+    fun count(): Int
 }

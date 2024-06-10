@@ -34,4 +34,6 @@ object PaperPlayerService : PlayerService {
         "" -> Bukkit.getOnlinePlayers().asSequence().map { it.toAnvilPlayer() }
         else -> Bukkit.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
     }
+
+    override fun count(): Int = Bukkit.getOnlinePlayers().size
 }

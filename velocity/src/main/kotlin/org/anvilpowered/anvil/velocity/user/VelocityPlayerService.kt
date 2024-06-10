@@ -34,4 +34,6 @@ class VelocityPlayerService(private val proxyServer: ProxyServer) : PlayerServic
         "" -> proxyServer.allPlayers.asSequence().map { it.toAnvilPlayer() }
         else -> proxyServer.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
     }
+
+    override fun count(): Int = proxyServer.playerCount
 }

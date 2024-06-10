@@ -34,4 +34,6 @@ object SpongePlayerService : PlayerService {
         "" -> Sponge.server().onlinePlayers().asSequence().map { it.toAnvilPlayer() }
         else -> Sponge.server().onlinePlayers().asSequence().filter { it.name().startsWith(startsWith) }.map { it.toAnvilPlayer() }
     }
+
+    override fun count(): Int = Sponge.server().onlinePlayers().size
 }
