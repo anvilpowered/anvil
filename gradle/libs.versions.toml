@@ -26,7 +26,7 @@ velocity = "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ktlint = "org.jlleitschuh.gradle.ktlint:11.6.1"
+ktlint = "org.jlleitschuh.gradle.ktlint:12.3.0"
 pluginyml = "net.minecrell.plugin-yml.paper:0.6.0"
 shadow = "io.github.goooler.shadow:8.1.7"
 sponge = "org.spongepowered.gradle.plugin:2.2.0"
