@@ -13,7 +13,7 @@ configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref 
 configurate-extra-kotlin = { module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate" }
 kbrig-brigadier = "org.anvilpowered:kbrig-brigadier:0.2.0-SNAPSHOT"
 koin = "io.insert-koin:koin-core:3.5.6"
-kotest = "io.kotest:kotest-runner-junit5-jvm:5.8.0"
+kotest = "io.kotest:kotest-runner-junit5-jvm:5.9.1"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
 kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
 logging-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
