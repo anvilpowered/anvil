@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -8,13 +9,16 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.get()}")
 }
 
-tasks {
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
     }
+}
+
+tasks {
     withType<JavaCompile> {
         options.encoding = "UTF-8"
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
     }
 }
