@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,6 @@ import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.bukkit.Bukkit
 
 internal object PaperPluginManager : PluginManager {
-    override val plugins: List<PluginMeta>
-        get() = Bukkit.getPluginManager().plugins.map { it.pluginMeta.toAnvilPluginMeta() }
+  override val plugins: List<PluginMeta>
+    get() = Bukkit.getPluginManager().plugins.map { it.pluginMeta.toAnvilPluginMeta() }
 }

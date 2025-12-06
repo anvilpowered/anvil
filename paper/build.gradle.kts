@@ -1,9 +1,9 @@
 plugins {
-    id("anvil-publish")
-    id("anvil-sign")
+  id("anvil-publish")
+  id("anvil-sign")
 }
 
 dependencies {
-    api(project(":anvil-core"))
-    compileOnlyApi(libs.paper)
+  api(project(":anvil-core"))
+  compileOnlyApi(libs.paper)
 }

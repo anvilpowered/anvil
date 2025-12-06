@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -25,14 +25,14 @@ import com.velocitypowered.api.permission.PermissionSubject as VelocitySubject
 fun VelocitySubject.toAnvilSubject(): Subject = AnvilVelocitySubject(this)
 
 private class AnvilVelocitySubject(
-    override val platformDelegate: VelocitySubject,
+  override val platformDelegate: VelocitySubject,
 ) : Subject {
-    override fun hasPermission(permission: String): Boolean? =
-        platformDelegate.getPermissionValue(permission).toBoolean()
+  override fun hasPermission(permission: String): Boolean? =
+    platformDelegate.getPermissionValue(permission).toBoolean()
 }
 
 private fun Tristate.toBoolean(): Boolean? = when (this) {
-    Tristate.TRUE -> true
-    Tristate.FALSE -> false
-    Tristate.UNDEFINED -> null
+  Tristate.TRUE -> true
+  Tristate.FALSE -> false
+  Tristate.UNDEFINED -> null
 }

@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -21,28 +21,28 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 abstract class AbstractKeyBuilder<
-    T : Any, K : Key<T>, B : Key.FacetedBuilder<T, K, B, AF, NF>,
-    AF : Key.BuilderFacet<T, K, AF>, NF : Key.NamedBuilderFacet<T, K, NF>,
-    >(val type: TypeToken<T>) : Key.FacetedBuilder<T, K, B, AF, NF> {
+  T : Any, K : Key<T>, B : Key.FacetedBuilder<T, K, B, AF, NF>,
+  AF : Key.BuilderFacet<T, K, AF>, NF : Key.NamedBuilderFacet<T, K, NF>,
+  >(val type: TypeToken<T>) : Key.FacetedBuilder<T, K, B, AF, NF> {
 
-    var name: String? = null
-    var fallback: T? = null
-    var description: String? = null
+  var name: String? = null
+  var fallback: T? = null
+  var description: String? = null
 
-    protected abstract fun self(): B
+  protected abstract fun self(): B
 
-    override fun name(name: String): B {
-        this.name = name
-        return self()
-    }
+  override fun name(name: String): B {
+    this.name = name
+    return self()
+  }
 
-    override fun fallback(fallback: T?): B {
-        this.fallback = fallback
-        return self()
-    }
+  override fun fallback(fallback: T?): B {
+    this.fallback = fallback
+    return self()
+  }
 
-    override fun description(description: String?): B {
-        this.description = description
-        return self()
-    }
+  override fun description(description: String?): B {
+    this.description = description
+    return self()
+  }
 }

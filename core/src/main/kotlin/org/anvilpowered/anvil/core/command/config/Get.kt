@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -30,39 +30,39 @@ import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 private val prettyJson = Json {
-    prettyPrint = true
-    encodeDefaults = true
+  prettyPrint = true
+  encodeDefaults = true
 }
 
 fun ConfigCommandFactory.createGet(): LiteralCommandNode<CommandSource> =
-    ArgumentBuilder.literal<CommandSource>("get")
-        .then(
-            keyNamespace.keyArgument { context, key ->
-                val defaultValue = registry.serializeDefault(key, prettyJson)
-                val currentValue = registry.serialize(key, prettyJson)
-                context.source.sendMessage(
-                    Component.text()
-                        .append(Component.text("Key ").color(NamedTextColor.GREEN))
-                        .append(Component.text(key.name).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
-                        .append(Component.newline())
-                        .append(Component.text("Type: ").color(NamedTextColor.GREEN))
-                        .append(Component.text(key.type.type.toString()).color(NamedTextColor.GRAY))
-                        .append(Component.newline())
-                        .append(Component.text("Default value: ").color(NamedTextColor.GREEN))
-                        .append(
-                            Component.text(defaultValue).color(NamedTextColor.GRAY)
-                                .hoverEvent(Component.text("Click to copy default value").color(NamedTextColor.GRAY))
-                                .clickEvent(ClickEvent.copyToClipboard(defaultValue)),
-                        )
-                        .append(Component.newline())
-                        .append(Component.text("Current value: ").color(NamedTextColor.GREEN))
-                        .append(
-                            Component.text(currentValue).color(NamedTextColor.GRAY)
-                                .hoverEvent(Component.text("Click to copy current value").color(NamedTextColor.GRAY))
-                                .clickEvent(ClickEvent.copyToClipboard(currentValue)),
-                        )
-                        .build(),
-                )
-                1
-            },
-        ).build()
+  ArgumentBuilder.literal<CommandSource>("get")
+    .then(
+      keyNamespace.keyArgument { context, key ->
+        val defaultValue = registry.serializeDefault(key, prettyJson)
+        val currentValue = registry.serialize(key, prettyJson)
+        context.source.sendMessage(
+          Component.text()
+            .append(Component.text("Key ").color(NamedTextColor.GREEN))
+            .append(Component.text(key.name).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
+            .append(Component.newline())
+            .append(Component.text("Type: ").color(NamedTextColor.GREEN))
+            .append(Component.text(key.type.type.toString()).color(NamedTextColor.GRAY))
+            .append(Component.newline())
+            .append(Component.text("Default value: ").color(NamedTextColor.GREEN))
+            .append(
+              Component.text(defaultValue).color(NamedTextColor.GRAY)
+                .hoverEvent(Component.text("Click to copy default value").color(NamedTextColor.GRAY))
+                .clickEvent(ClickEvent.copyToClipboard(defaultValue)),
+            )
+            .append(Component.newline())
+            .append(Component.text("Current value: ").color(NamedTextColor.GREEN))
+            .append(
+              Component.text(currentValue).color(NamedTextColor.GRAY)
+                .hoverEvent(Component.text("Click to copy current value").color(NamedTextColor.GRAY))
+                .clickEvent(ClickEvent.copyToClipboard(currentValue)),
+            )
+            .build(),
+        )
+        1
+      },
+    ).build()

@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.core.command
 
 interface CommandExecutor {
 
-    suspend fun execute(source: CommandSource, command: String): Boolean
+  suspend fun execute(source: CommandSource, command: String): Boolean
 
-    suspend fun executeAsConsole(command: String): Boolean
+  suspend fun executeAsConsole(command: String): Boolean
 }

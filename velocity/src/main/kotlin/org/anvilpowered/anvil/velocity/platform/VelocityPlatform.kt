@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -23,9 +23,9 @@ import org.anvilpowered.anvil.core.platform.Platform
 import org.anvilpowered.anvil.core.platform.PluginMeta
 
 internal class VelocityPlatform(private val proxyServer: ProxyServer) : Platform {
-    override val isProxy: Boolean = true
-    override val plugins: List<PluginMeta>
-        get() = proxyServer.pluginManager.plugins.map { it.description.toAnvilPluginMeta() }
-    override val name: String = "velocity"
-    override val version: String = proxyServer.version.version
+  override val isProxy: Boolean = true
+  override val plugins: List<PluginMeta>
+    get() = proxyServer.pluginManager.plugins.map { it.description.toAnvilPluginMeta() }
+  override val name: String = "velocity"
+  override val version: String = proxyServer.version.version
 }

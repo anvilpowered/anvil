@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -41,26 +41,26 @@ import org.koin.dsl.module
 import java.nio.file.Path
 
 interface AnvilPaperApi : AnvilApi {
-    val plugin: JavaPlugin
+  val plugin: JavaPlugin
 }
 
 fun AnvilApi.Companion.createPaper(plugin: JavaPlugin): AnvilPaperApi {
-    val logger = LogManager.getLogger(plugin.pluginMeta.name)
-    val paperModule = module {
-        single<JavaPlugin> { plugin }
-        single<Logger> { logger }
-        single<Server> { PaperServer }
-        single<PluginManager> { PaperPluginManager }
-        single<PlayerService> { PaperPlayerService }
-        single<PluginMeta> { PaperPluginMeta(plugin.pluginMeta) }
-        single { PaperPlayerService }.bind<PlayerService>()
-        singleOf(::PaperCommandExecutor).bind<CommandExecutor>()
-    }
+  val logger = LogManager.getLogger(plugin.pluginMeta.name)
+  val paperModule = module {
+    single<JavaPlugin> { plugin }
+    single<Logger> { logger }
+    single<Server> { PaperServer }
+    single<PluginManager> { PaperPluginManager }
+    single<PlayerService> { PaperPlayerService }
+    single<PluginMeta> { PaperPluginMeta(plugin.pluginMeta) }
+    single { PaperPlayerService }.bind<PlayerService>()
+    singleOf(::PaperCommandExecutor).bind<CommandExecutor>()
+  }
 
-    return object : AnvilPaperApi {
-        override val plugin: JavaPlugin = plugin
-        override val logger: Logger = logger
-        override val configDir: Path = plugin.dataFolder.toPath()
-        override val module: Module = paperModule
-    }
+  return object : AnvilPaperApi {
+    override val plugin: JavaPlugin = plugin
+    override val logger: Logger = logger
+    override val configDir: Path = plugin.dataFolder.toPath()
+    override val module: Module = paperModule
+  }
 }

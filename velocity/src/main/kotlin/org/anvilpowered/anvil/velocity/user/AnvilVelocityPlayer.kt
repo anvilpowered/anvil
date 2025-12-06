@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -29,17 +29,17 @@ import com.velocitypowered.api.proxy.Player as VelocityPlayer
 fun VelocityPlayer.toAnvilPlayer(): Player = AnvilVelocityPlayer(this)
 
 private class AnvilVelocityPlayer(
-    override val platformDelegate: VelocityPlayer,
+  override val platformDelegate: VelocityPlayer,
 ) : Player,
-    ForwardingAudience,
-    Subject by platformDelegate.toAnvilSubject() {
+  ForwardingAudience,
+  Subject by platformDelegate.toAnvilSubject() {
 
-    val delegateAudiences = listOf<Audience>(platformDelegate)
-    override fun audiences(): Iterable<Audience> = delegateAudiences
+  val delegateAudiences = listOf<Audience>(platformDelegate)
+  override fun audiences(): Iterable<Audience> = delegateAudiences
 
-    override val id: UUID = platformDelegate.uniqueId
-    override val username: String = platformDelegate.username
-    override val displayname: Component = Component.text(platformDelegate.username)
-    override val latencyMs: Int
-        get() = platformDelegate.ping.toInt()
+  override val id: UUID = platformDelegate.uniqueId
+  override val username: String = platformDelegate.username
+  override val displayname: Component = Component.text(platformDelegate.username)
+  override val latencyMs: Int
+    get() = platformDelegate.ping.toInt()
 }

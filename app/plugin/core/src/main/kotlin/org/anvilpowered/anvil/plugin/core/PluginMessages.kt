@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 
 object PluginMessages {
-    val pluginPrefix = Component.text("[Anvil Agent] ").color(NamedTextColor.GOLD)
-    val notEnoughArgs = Component.text("Not enough arguments!").color(NamedTextColor.RED)
-    val noPermission = Component.text("Insufficient Permissions!").color(NamedTextColor.RED)
+  val pluginPrefix = Component.text("[Anvil Agent] ").color(NamedTextColor.GOLD)
+  val notEnoughArgs = Component.text("Not enough arguments!").color(NamedTextColor.RED)
+  val noPermission = Component.text("Insufficient Permissions!").color(NamedTextColor.RED)
 }

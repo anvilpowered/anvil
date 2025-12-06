@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -31,13 +31,13 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer
 fun CommandContext.toAnvilCommandSource(): CommandSource = AnvilSpongeCommandSource(this)
 
 private class AnvilSpongeCommandSource(
-    override val platformDelegate: CommandContext,
+  override val platformDelegate: CommandContext,
 ) : CommandSource,
-    ForwardingAudience,
-    Subject by platformDelegate.cause().toAnvilSubject() {
+  ForwardingAudience,
+  Subject by platformDelegate.cause().toAnvilSubject() {
 
-    val delegateAudiences = listOf<Audience>(platformDelegate.cause().audience())
-    override fun audiences(): Iterable<Audience> = delegateAudiences
+  val delegateAudiences = listOf<Audience>(platformDelegate.cause().audience())
+  override fun audiences(): Iterable<Audience> = delegateAudiences
 
-    override val player: Player? = platformDelegate.cause().first(ServerPlayer::class.java).orElse(null)?.toAnvilPlayer()
+  override val player: Player? = platformDelegate.cause().first(ServerPlayer::class.java).orElse(null)?.toAnvilPlayer()
 }

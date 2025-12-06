@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -26,10 +26,10 @@ import org.anvilpowered.kbrig.builder.executesSingleSuccess
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 fun PluginCommandFactory.createList(): LiteralCommandNode<CommandSource> =
-    ArgumentBuilder.literal<CommandSource>("list")
-        .executesSingleSuccess { context ->
-            val pluginNamesString = pluginManager.plugins.joinToString(", ") { it.name }
-            context.source.sendMessage(
-                Component.text("Plugins: $pluginNamesString").color(NamedTextColor.AQUA),
-            )
-        }.build()
+  ArgumentBuilder.literal<CommandSource>("list")
+    .executesSingleSuccess { context ->
+      val pluginNamesString = pluginManager.plugins.joinToString(", ") { it.name }
+      context.source.sendMessage(
+        Component.text("Plugins: $pluginNamesString").color(NamedTextColor.AQUA),
+      )
+    }.build()

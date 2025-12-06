@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -29,17 +29,17 @@ import org.bukkit.entity.Player as PaperPlayer
 fun PaperPlayer.toAnvilPlayer(): Player = AnvilPaperPlayer(this)
 
 private class AnvilPaperPlayer(
-    override val platformDelegate: PaperPlayer,
+  override val platformDelegate: PaperPlayer,
 ) : Player,
-    ForwardingAudience,
-    Subject by platformDelegate.toAnvilSubject() {
+  ForwardingAudience,
+  Subject by platformDelegate.toAnvilSubject() {
 
-    val delegateAudiences = listOf<Audience>(platformDelegate)
-    override fun audiences(): Iterable<Audience> = delegateAudiences
+  val delegateAudiences = listOf<Audience>(platformDelegate)
+  override fun audiences(): Iterable<Audience> = delegateAudiences
 
-    override val id: UUID = platformDelegate.uniqueId
-    override val username: String = platformDelegate.name
-    override val displayname: Component = platformDelegate.displayName()
-    override val latencyMs: Int
-        get() = platformDelegate.ping
+  override val id: UUID = platformDelegate.uniqueId
+  override val username: String = platformDelegate.name
+  override val displayname: Component = platformDelegate.displayName()
+  override val latencyMs: Int
+    get() = platformDelegate.ping
 }

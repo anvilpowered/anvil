@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -19,11 +19,11 @@
 package org.anvilpowered.anvil.core.db
 
 interface MutableRepository<E : DomainEntity, C : Creates<E>> : Repository<E> {
-    suspend fun create(item: C): E
-    suspend fun put(item: C): PutResult<E>
+  suspend fun create(item: C): E
+  suspend fun put(item: C): PutResult<E>
 
-    data class PutResult<out E : DomainEntity>(
-        val entity: E,
-        val created: Boolean,
-    )
+  data class PutResult<out E : DomainEntity>(
+    val entity: E,
+    val created: Boolean,
+  )
 }

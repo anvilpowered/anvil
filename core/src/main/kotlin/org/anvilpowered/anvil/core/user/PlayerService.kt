@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -22,11 +22,11 @@ import java.util.UUID
 
 interface PlayerService {
 
-    operator fun get(username: String): Player?
+  operator fun get(username: String): Player?
 
-    operator fun get(id: UUID): Player?
+  operator fun get(id: UUID): Player?
 
-    fun getAll(startsWith: String = ""): Sequence<Player>
+  fun getAll(startsWith: String = ""): Sequence<Player>
 
-    fun count(): Int
+  fun count(): Int
 }

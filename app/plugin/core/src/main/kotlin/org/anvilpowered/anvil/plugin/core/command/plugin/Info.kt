@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -29,28 +29,28 @@ import org.anvilpowered.kbrig.context.get
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 fun PluginCommandFactory.createInfo(): LiteralCommandNode<CommandSource> =
-    ArgumentBuilder.literal<CommandSource>("info")
-        .executesUsage("anvil plugin info <name>")
-        .then(
-            ArgumentBuilder.required<CommandSource, String>("name", StringArgumentType.SingleWord)
-                .executes { context ->
-                    val name = context.get<String>("name")
-                    val plugin = pluginManager.plugins.find { it.name == name }
-                    if (plugin == null) {
-                        context.source.sendMessage(
-                            Component.text()
-                                .append(Component.text("Plugin not found: ").color(NamedTextColor.RED))
-                                .append(Component.text(name).color(NamedTextColor.WHITE)),
-                        )
-                        0
-                    } else {
-                        context.source.sendMessage(
-                            Component.text()
-                                .append(Component.text("Plugin: ").color(NamedTextColor.AQUA))
-                                .append(Component.text(plugin.name).color(NamedTextColor.WHITE)),
-                        )
-                        Command.SINGLE_SUCCESS
-                    }
-                }
-                .build(),
-        ).build()
+  ArgumentBuilder.literal<CommandSource>("info")
+    .executesUsage("anvil plugin info <name>")
+    .then(
+      ArgumentBuilder.required<CommandSource, String>("name", StringArgumentType.SingleWord)
+        .executes { context ->
+          val name = context.get<String>("name")
+          val plugin = pluginManager.plugins.find { it.name == name }
+          if (plugin == null) {
+            context.source.sendMessage(
+              Component.text()
+                .append(Component.text("Plugin not found: ").color(NamedTextColor.RED))
+                .append(Component.text(name).color(NamedTextColor.WHITE)),
+            )
+            0
+          } else {
+            context.source.sendMessage(
+              Component.text()
+                .append(Component.text("Plugin: ").color(NamedTextColor.AQUA))
+                .append(Component.text(plugin.name).color(NamedTextColor.WHITE)),
+            )
+            Command.SINGLE_SUCCESS
+          }
+        }
+        .build(),
+    ).build()

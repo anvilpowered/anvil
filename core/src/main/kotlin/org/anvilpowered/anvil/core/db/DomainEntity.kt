@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -21,12 +21,12 @@ package org.anvilpowered.anvil.core.db
 import java.util.UUID
 
 interface DomainEntity {
-    val uuid: UUID
-    // TODO: createdUtc, updatedUtc
+  val uuid: UUID
+  // TODO: createdUtc, updatedUtc
 }
 
 interface DomainFacet<E : DomainEntity> {
-    suspend fun getOriginal(): E
+  suspend fun getOriginal(): E
 }
 
 interface Creates<E : DomainEntity>

@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -30,27 +30,27 @@ import org.anvilpowered.kbrig.context.CommandContext
 import org.anvilpowered.kbrig.context.get
 
 fun KeyNamespace.keyArgument(
-    argumentName: String = "key",
-    command: (context: CommandContext<CommandSource>, key: Key<*>) -> Int,
+  argumentName: String = "key",
+  command: (context: CommandContext<CommandSource>, key: Key<*>) -> Int,
 ): RequiredArgumentBuilder<CommandSource, String> =
-    ArgumentBuilder.required<CommandSource, String>(argumentName, StringArgumentType.SingleWord)
-        .suggests { _, builder ->
-            keys.filter { it.name.contains(builder.remainingLowerCase, ignoreCase = true) }.forEach { key ->
-                builder.suggest(key.name)
-            }
-            builder.build()
-        }.executes { context ->
-            val keyName = context.get<String>(argumentName)
-            keys.find { it.name == keyName }?.let { key ->
-                command(context, key)
-            } ?: run {
-                context.source.sendMessage(
-                    Component.text()
-                        .append(Component.text("Key with name ", NamedTextColor.RED))
-                        .append(Component.text(keyName, NamedTextColor.GOLD))
-                        .append(Component.text(" not found!", NamedTextColor.RED))
-                        .build(),
-                )
-                0
-            }
-        }
+  ArgumentBuilder.required<CommandSource, String>(argumentName, StringArgumentType.SingleWord)
+    .suggests { _, builder ->
+      keys.filter { it.name.contains(builder.remainingLowerCase, ignoreCase = true) }.forEach { key ->
+        builder.suggest(key.name)
+      }
+      builder.build()
+    }.executes { context ->
+      val keyName = context.get<String>(argumentName)
+      keys.find { it.name == keyName }?.let { key ->
+        command(context, key)
+      } ?: run {
+        context.source.sendMessage(
+          Component.text()
+            .append(Component.text("Key with name ", NamedTextColor.RED))
+            .append(Component.text(keyName, NamedTextColor.GOLD))
+            .append(Component.text(" not found!", NamedTextColor.RED))
+            .build(),
+        )
+        0
+      }
+    }

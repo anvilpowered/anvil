@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,9 +24,9 @@ import org.spongepowered.api.Sponge
 import org.spongepowered.api.service.permission.Subject as SpongeSubject
 
 object SpongeCommandExecutor : CommandExecutor {
-    override suspend fun execute(source: CommandSource, command: String): Boolean =
-        Sponge.server().commandManager().process(source.platformDelegate as SpongeSubject, source, command).isSuccess
+  override suspend fun execute(source: CommandSource, command: String): Boolean =
+    Sponge.server().commandManager().process(source.platformDelegate as SpongeSubject, source, command).isSuccess
 
-    override suspend fun executeAsConsole(command: String): Boolean =
-        Sponge.server().commandManager().process(Sponge.systemSubject(), command).isSuccess
+  override suspend fun executeAsConsole(command: String): Boolean =
+    Sponge.server().commandManager().process(Sponge.systemSubject(), command).isSuccess
 }

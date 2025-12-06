@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,7 @@ import java.nio.file.Path
 
 interface AnvilSpongeApi : AnvilApi {
 
-    companion object
+  companion object
 }
 
 /**
@@ -79,21 +79,21 @@ interface AnvilSpongeApi : AnvilApi {
  * ```
  */
 fun AnvilApi.Companion.createSponge(injector: Injector): AnvilSpongeApi {
-    val logger = injector.getInstance(Logger::class.java)
+  val logger = injector.getInstance(Logger::class.java)
 
-    val spongeModule = module {
-        single<Logger> { logger }
-        single<Server> { SpongeServer }
-        single<PluginManager> { SpongePluginManager }
-        single<PlayerService> { SpongePlayerService }
-        single<PluginMeta> { SpongePluginMeta(injector.getInstance(PluginMetadata::class.java)) }
-        single { SpongePlayerService }.bind<PlayerService>()
-        single { SpongeCommandExecutor }.bind<CommandExecutor>()
-    }
+  val spongeModule = module {
+    single<Logger> { logger }
+    single<Server> { SpongeServer }
+    single<PluginManager> { SpongePluginManager }
+    single<PlayerService> { SpongePlayerService }
+    single<PluginMeta> { SpongePluginMeta(injector.getInstance(PluginMetadata::class.java)) }
+    single { SpongePlayerService }.bind<PlayerService>()
+    single { SpongeCommandExecutor }.bind<CommandExecutor>()
+  }
 
-    return object : AnvilSpongeApi {
-        override val logger: Logger = logger
-        override val configDir: Path = injector.getInstance(Key.get(Path::class.java, ConfigDir(sharedRoot = false)))
-        override val module = spongeModule
-    }
+  return object : AnvilSpongeApi {
+    override val logger: Logger = logger
+    override val configDir: Path = injector.getInstance(Key.get(Path::class.java, ConfigDir(sharedRoot = false)))
+    override val module = spongeModule
+  }
 }

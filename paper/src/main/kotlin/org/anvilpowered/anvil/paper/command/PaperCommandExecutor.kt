@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -29,12 +29,12 @@ import java.util.concurrent.Executor
 
 class PaperCommandExecutor(private val plugin: JavaPlugin) : CommandExecutor {
 
-    private val executor = Executor { runnable -> plugin.server.scheduler.runTask(plugin, runnable) }
-        .asCoroutineDispatcher()
+  private val executor = Executor { runnable -> plugin.server.scheduler.runTask(plugin, runnable) }
+    .asCoroutineDispatcher()
 
-    override suspend fun execute(source: CommandSource, command: String): Boolean =
-        withContext(executor) { Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command) }
+  override suspend fun execute(source: CommandSource, command: String): Boolean =
+    withContext(executor) { Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command) }
 
-    override suspend fun executeAsConsole(command: String): Boolean =
-        withContext(executor) { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command) }
+  override suspend fun executeAsConsole(command: String): Boolean =
+    withContext(executor) { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command) }
 }

@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -25,19 +25,19 @@ import org.anvilpowered.anvil.core.command.CommandSource
 import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
 
 class VelocityCommandExecutor(
-    private val proxyServer: ProxyServer,
+  private val proxyServer: ProxyServer,
 ) : CommandExecutor {
-    override suspend fun execute(source: CommandSource, command: String): Boolean {
-        return proxyServer.commandManager.executeAsync(
-            source.platformDelegate as VelocityCommandSource,
-            command,
-        ).await()
-    }
+  override suspend fun execute(source: CommandSource, command: String): Boolean {
+    return proxyServer.commandManager.executeAsync(
+      source.platformDelegate as VelocityCommandSource,
+      command,
+    ).await()
+  }
 
-    override suspend fun executeAsConsole(command: String): Boolean {
-        return proxyServer.commandManager.executeAsync(
-            proxyServer.consoleCommandSource,
-            command,
-        ).await()
-    }
+  override suspend fun executeAsConsole(command: String): Boolean {
+    return proxyServer.commandManager.executeAsync(
+      proxyServer.consoleCommandSource,
+      command,
+    ).await()
+  }
 }

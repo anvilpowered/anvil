@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -25,39 +25,39 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import java.nio.file.Path
 
 class ConfigurateRegistryExporter(
-    val type: ConfigurateFileType<*>,
-    val basePath: Path,
-    val pluginMeta: PluginMeta,
-    val keyNamespace: KeyNamespace,
+  val type: ConfigurateFileType<*>,
+  val basePath: Path,
+  val pluginMeta: PluginMeta,
+  val keyNamespace: KeyNamespace,
 ) {
 
-    val configPath: Path = basePath.resolve("${pluginMeta.name}.${type.fileExtension}")
+  val configPath: Path = basePath.resolve("${pluginMeta.name}.${type.fileExtension}")
 
-    fun export(registry: Registry, serializers: TypeSerializerCollection) {
-        val loader = type.createBuilder(serializers).path(configPath).build()
-        val root = loader.createNode()
-        root.setAllFrom(registry, keyNamespace)
-        loader.save(root)
-    }
+  fun export(registry: Registry, serializers: TypeSerializerCollection) {
+    val loader = type.createBuilder(serializers).path(configPath).build()
+    val root = loader.createNode()
+    root.setAllFrom(registry, keyNamespace)
+    loader.save(root)
+  }
 
-    companion object {
-        context(Module)
-        fun registerAll(basePath: Path) {
-            ConfigurateFileType.Hocon.registerExporter(basePath)
-            ConfigurateFileType.Yaml.registerExporter(basePath)
-        }
+  companion object {
+    context(Module)
+    fun registerAll(basePath: Path) {
+      ConfigurateFileType.Hocon.registerExporter(basePath)
+      ConfigurateFileType.Yaml.registerExporter(basePath)
     }
+  }
 }
 
 private fun CommentedConfigurationNode.setAllFrom(registry: Registry, keyNamespace: KeyNamespace) {
-    for (key in keyNamespace.keys) {
-        setFrom(key, registry)
-    }
+  for (key in keyNamespace.keys) {
+    setFrom(key, registry)
+  }
 }
 
 private fun <T : Any> CommentedConfigurationNode.setFrom(key: Key<T>, registry: Registry) {
-    node(key.configNodePath).let { node ->
-        node.set(key.type, registry[key])
-        node.comment(key.description)
-    }
+  node(key.configNodePath).let { node ->
+    node.set(key.type, registry[key])
+    node.comment(key.description)
+  }
 }

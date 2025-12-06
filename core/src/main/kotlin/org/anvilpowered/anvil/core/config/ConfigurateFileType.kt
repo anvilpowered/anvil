@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -31,54 +31,54 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.nio.file.Path
 
 sealed interface ConfigurateFileType<B : AbstractConfigurationLoader.Builder<B, out AbstractConfigurationLoader<CommentedConfigurationNode>>> {
-    val name: String
-    val fileExtension: String
-    fun createBuilder(serializers: TypeSerializerCollection): B
+  val name: String
+  val fileExtension: String
+  fun createBuilder(serializers: TypeSerializerCollection): B
 
-    data object Hocon : ConfigurateFileType<HoconConfigurationLoader.Builder> {
-        override val name: String = "HOCON"
-        override val fileExtension: String = "conf"
-        override fun toString(): String = fullName
-        override fun createBuilder(serializers: TypeSerializerCollection): HoconConfigurationLoader.Builder =
-            HoconConfigurationLoader.builder().configure(serializers)
-    }
+  data object Hocon : ConfigurateFileType<HoconConfigurationLoader.Builder> {
+    override val name: String = "HOCON"
+    override val fileExtension: String = "conf"
+    override fun toString(): String = fullName
+    override fun createBuilder(serializers: TypeSerializerCollection): HoconConfigurationLoader.Builder =
+      HoconConfigurationLoader.builder().configure(serializers)
+  }
 
-    data object Yaml : ConfigurateFileType<YamlConfigurationLoader.Builder> {
-        override val name: String = "YAML"
-        override val fileExtension: String = "yaml"
-        override fun toString(): String = fullName
-        override fun createBuilder(serializers: TypeSerializerCollection): YamlConfigurationLoader.Builder =
-            YamlConfigurationLoader.builder().configure(serializers).nodeStyle(NodeStyle.BLOCK)
-    }
+  data object Yaml : ConfigurateFileType<YamlConfigurationLoader.Builder> {
+    override val name: String = "YAML"
+    override val fileExtension: String = "yaml"
+    override fun toString(): String = fullName
+    override fun createBuilder(serializers: TypeSerializerCollection): YamlConfigurationLoader.Builder =
+      YamlConfigurationLoader.builder().configure(serializers).nodeStyle(NodeStyle.BLOCK)
+  }
 
-    companion object {
-        fun fromName(fileEnding: String): ConfigurateFileType<*>? = when (fileEnding) {
-            Yaml.fileExtension -> Yaml
-            Hocon.fileExtension -> Hocon
-            else -> null
-        }
+  companion object {
+    fun fromName(fileEnding: String): ConfigurateFileType<*>? = when (fileEnding) {
+      Yaml.fileExtension -> Yaml
+      Hocon.fileExtension -> Hocon
+      else -> null
     }
+  }
 }
 
 val ConfigurateFileType<*>.fullName: String
-    get() = "$name ($fileExtension)"
+  get() = "$name ($fileExtension)"
 
 context(Module)
 fun ConfigurateFileType<*>.registerExporter(basePath: Path) {
-    single {
-        ConfigurateRegistryExporter(
-            type = this@registerExporter,
-            basePath = basePath,
-            pluginMeta = get(),
-            keyNamespace = get(),
-        )
-    }.withOptions { named(fileExtension) }
+  single {
+    ConfigurateRegistryExporter(
+      type = this@registerExporter,
+      basePath = basePath,
+      pluginMeta = get(),
+      keyNamespace = get(),
+    )
+  }.withOptions { named(fileExtension) }
 }
 
 private fun <B : AbstractConfigurationLoader.Builder<B, *>> B.configure(serializers: TypeSerializerCollection): B =
-    defaultOptions {
-        it.serializers { builder ->
-            builder.registerAll(serializers)
-            builder.registerAnnotatedObjects(objectMapperFactory())
-        }
+  defaultOptions {
+    it.serializers { builder ->
+      builder.registerAll(serializers)
+      builder.registerAnnotatedObjects(objectMapperFactory())
     }
+  }

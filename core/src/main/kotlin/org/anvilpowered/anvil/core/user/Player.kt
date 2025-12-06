@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -27,11 +27,11 @@ import java.util.UUID
  */
 interface Player : Subject, Audience {
 
-    val id: UUID
+  val id: UUID
 
-    val username: String
+  val username: String
 
-    val displayname: Component
+  val displayname: Component
 
-    val latencyMs: Int
+  val latencyMs: Int
 }

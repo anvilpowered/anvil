@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -21,12 +21,12 @@ package org.anvilpowered.anvil.core.db
 import kotlin.reflect.KProperty1
 
 interface Pagination<F : DomainFacet<*>> {
-    fun limit(n: Int, offset: Long = 0): Pagination<F>
-    fun sortBy(field: KProperty1<F, Comparable<*>>, direction: SortDirection = SortDirection.ASCENDING): Pagination<F>
-    fun build(): List<F>
+  fun limit(n: Int, offset: Long = 0): Pagination<F>
+  fun sortBy(field: KProperty1<F, Comparable<*>>, direction: SortDirection = SortDirection.ASCENDING): Pagination<F>
+  fun build(): List<F>
 }
 
 enum class SortDirection {
-    ASCENDING,
-    DESCENDING,
+  ASCENDING,
+  DESCENDING,
 }

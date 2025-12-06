@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -19,11 +19,11 @@
 package org.anvilpowered.anvil.core.db
 
 interface SizedIterable<out T> : Iterable<T> {
-    fun limit(n: Int, offset: Long = 0): SizedIterable<T>
+  fun limit(n: Int, offset: Long = 0): SizedIterable<T>
 
-    fun count(): Long
+  fun count(): Long
 
-    fun empty(): Boolean
+  fun empty(): Boolean
 
-    fun copy(): SizedIterable<T>
+  fun copy(): SizedIterable<T>
 }

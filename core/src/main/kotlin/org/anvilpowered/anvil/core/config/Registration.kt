@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -26,18 +26,18 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
 context(Module)
 fun Registry.Companion.configureDefaults(
-    anvil: AnvilApi,
-    serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
+  anvil: AnvilApi,
+  serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
 ) {
-    ConfigurateRegistryExporter.registerAll(anvil.configDir)
-    val configurateRegistryClosure = ConfigurateRegistry.createDiscoveryClosure(anvil.configDir, anvil.logger, serializers)
-    val configurateRegistry = configurateRegistryClosure.discover()
-    if (configurateRegistry == null) {
-        anvil.logger.warn("No configuration file found, using environment variables only.")
-    } else {
-        anvil.logger.info("Using configuration file: ${configurateRegistry.path}")
-    }
-    single<ConfigurateRegistry.Factory.DiscoveryClosure> { configurateRegistryClosure }
-    single<Registry> { EnvironmentRegistry(get<PluginMeta>().name.uppercase(), configurateRegistry?.registry) }
-    single { ConfigCommandFactory(get(), get(), get(), getAll(), serializers) }
+  ConfigurateRegistryExporter.registerAll(anvil.configDir)
+  val configurateRegistryClosure = ConfigurateRegistry.createDiscoveryClosure(anvil.configDir, anvil.logger, serializers)
+  val configurateRegistry = configurateRegistryClosure.discover()
+  if (configurateRegistry == null) {
+    anvil.logger.warn("No configuration file found, using environment variables only.")
+  } else {
+    anvil.logger.info("Using configuration file: ${configurateRegistry.path}")
+  }
+  single<ConfigurateRegistry.Factory.DiscoveryClosure> { configurateRegistryClosure }
+  single<Registry> { EnvironmentRegistry(get<PluginMeta>().name.uppercase(), configurateRegistry?.registry) }
+  single { ConfigCommandFactory(get(), get(), get(), getAll(), serializers) }
 }

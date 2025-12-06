@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -22,17 +22,17 @@ package org.anvilpowered.anvil.core.config
  * A [Registry] that always returns the default value for all keys.
  */
 object DefaultRegistry : Registry {
-    override fun <T : Any> getDefault(key: Key<T>): T = key.fallback
-    override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E = key.fallback.getOrNull(index)
-        ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
+  override fun <T : Any> getDefault(key: Key<T>): T = key.fallback
+  override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E = key.fallback.getOrNull(index)
+    ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
 
-    override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V = key.fallback[mapKey]
-        ?: throw NoSuchElementException("No default value for key ${key.name} at key $mapKey")
+  override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V = key.fallback[mapKey]
+    ?: throw NoSuchElementException("No default value for key ${key.name} at key $mapKey")
 
-    override fun <T : Any> getStrict(key: SimpleKey<T>): T? = null
-    override fun <E : Any> getStrict(key: ListKey<E>): List<E>? = null
-    override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? = null
+  override fun <T : Any> getStrict(key: SimpleKey<T>): T? = null
+  override fun <E : Any> getStrict(key: ListKey<E>): List<E>? = null
+  override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? = null
 
-    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? = null
-    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? = null
+  override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? = null
+  override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? = null
 }

@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -25,14 +25,14 @@ import org.spongepowered.api.service.permission.Subject as SpongeSubject
 fun SpongeSubject.toAnvilSubject(): Subject = AnvilSpongeSubject(this)
 
 private class AnvilSpongeSubject(
-    override val platformDelegate: SpongeSubject,
+  override val platformDelegate: SpongeSubject,
 ) : Subject {
-    override fun hasPermission(permission: String): Boolean? =
-        platformDelegate.permissionValue(permission).toBoolean()
+  override fun hasPermission(permission: String): Boolean? =
+    platformDelegate.permissionValue(permission).toBoolean()
 }
 
 private fun Tristate.toBoolean(): Boolean? = when (this) {
-    Tristate.TRUE -> true
-    Tristate.FALSE -> false
-    Tristate.UNDEFINED -> null
+  Tristate.TRUE -> true
+  Tristate.FALSE -> false
+  Tristate.UNDEFINED -> null
 }

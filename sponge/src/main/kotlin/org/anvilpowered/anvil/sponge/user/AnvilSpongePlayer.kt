@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -27,12 +27,12 @@ import java.util.UUID
 fun ServerPlayer.toAnvilPlayer(): Player = AnvilSpongePlayer(this)
 
 private class AnvilSpongePlayer(
-    override val platformDelegate: ServerPlayer,
+  override val platformDelegate: ServerPlayer,
 ) : Player,
-    Subject by platformDelegate.toAnvilSubject() {
-    override val id: UUID = platformDelegate.uniqueId()
-    override val username: String = platformDelegate.name()
-    override val displayname: Component = platformDelegate.displayName().get()
-    override val latencyMs: Int
-        get() = platformDelegate.connection().latency()
+  Subject by platformDelegate.toAnvilSubject() {
+  override val id: UUID = platformDelegate.uniqueId()
+  override val username: String = platformDelegate.name()
+  override val displayname: Component = platformDelegate.displayName().get()
+  override val latencyMs: Int
+    get() = platformDelegate.connection().latency()
 }

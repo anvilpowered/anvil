@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,16 +24,16 @@ import org.bukkit.Bukkit
 import java.util.UUID
 
 object PaperPlayerService : PlayerService {
-    override fun get(username: String): Player? =
-        Bukkit.getPlayerExact(username)?.toAnvilPlayer()
+  override fun get(username: String): Player? =
+    Bukkit.getPlayerExact(username)?.toAnvilPlayer()
 
-    override fun get(id: UUID): Player? =
-        Bukkit.getPlayer(id)?.toAnvilPlayer()
+  override fun get(id: UUID): Player? =
+    Bukkit.getPlayer(id)?.toAnvilPlayer()
 
-    override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
-        "" -> Bukkit.getOnlinePlayers().asSequence().map { it.toAnvilPlayer() }
-        else -> Bukkit.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
-    }
+  override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
+    "" -> Bukkit.getOnlinePlayers().asSequence().map { it.toAnvilPlayer() }
+    else -> Bukkit.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
+  }
 
-    override fun count(): Int = Bukkit.getOnlinePlayers().size
+  override fun count(): Int = Bukkit.getOnlinePlayers().size
 }

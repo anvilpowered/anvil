@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -23,116 +23,116 @@ import kotlinx.serialization.json.Json
 
 interface Key<T : Any> : Comparable<Key<T>> {
 
-    val type: TypeToken<T>
+  val type: TypeToken<T>
 
-    val name: String
+  val name: String
 
-    val fallback: T
+  val fallback: T
 
-    val description: String?
+  val description: String?
+
+  /**
+   * Serializes the given value in a simple [String] representation.
+   */
+  fun serialize(value: T, json: Json = Json): String
+
+  /**
+   * Deserializes the given value from a simple [String] representation.
+   */
+  fun deserialize(value: String, json: Json = Json): T?
+
+  @KeyBuilderDsl
+  interface BuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> {
+    /**
+     * Sets the fallback value of the generated [Key].
+     *
+     * This value is used when a [Registry] does not have a value or default value for this key.
+     *
+     * @param fallback The fallback value to set
+     * @return `this`
+     */
+    @KeyBuilderDsl
+    fun fallback(fallback: T?): B
 
     /**
-     * Serializes the given value in a simple [String] representation.
+     * Sets the description of the generated [Key].
+     *
+     * This is used for documentation; for example, in a configuration file.
+     *
+     * @param description The description to set or `null` to remove it
+     * @return `this`
      */
-    fun serialize(value: T, json: Json = Json): String
+    @KeyBuilderDsl
+    fun description(description: String?): B
+  }
+
+  @KeyBuilderDsl
+  interface NamedBuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> : BuilderFacet<T, K, B> {
+    /**
+     * Sets the name of the generated [Key].
+     *
+     * The name is used to identify the key in a [Registry].
+     * It is also used as an underscore-separated node path in configuration files.
+     *
+     * Example: `JOIN_LISTENER_ENABLED` will become (in HOCON):
+     *
+     * ```
+     * join {
+     *   listener {
+     *     enabled = ...
+     *   }
+     * }
+     * ```
+     *
+     * @param name The name to set
+     * @return `this`
+     */
+    @KeyBuilderDsl
+    fun name(name: String): B
+  }
+
+  interface Builder<T : Any, K : Key<T>, B : Builder<T, K, B>> : NamedBuilderFacet<T, K, B> {
+    /**
+     * Generates a [Key] based on this builder.
+     *
+     * @return The generated [Key]
+     */
+    context(KeyNamespace)
+    @KeyBuilderDsl
+    fun build(): K
+  }
+
+  @KeyBuilderDsl
+  interface FacetedBuilder<
+    T : Any, K : Key<T>, B : FacetedBuilder<T, K, B, AF, NF>,
+    AF : BuilderFacet<T, K, AF>, NF : NamedBuilderFacet<T, K, NF>,
+    > : Builder<T, K, B> {
 
     /**
-     * Deserializes the given value from a simple [String] representation.
+     * @return This builder as an (anonymous) [BuilderFacet]
      */
-    fun deserialize(value: String, json: Json = Json): T?
+    fun asAnonymousFacet(): AF
 
-    @KeyBuilderDsl
-    interface BuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> {
-        /**
-         * Sets the fallback value of the generated [Key].
-         *
-         * This value is used when a [Registry] does not have a value or default value for this key.
-         *
-         * @param fallback The fallback value to set
-         * @return `this`
-         */
-        @KeyBuilderDsl
-        fun fallback(fallback: T?): B
+    /**
+     * @return This builder as a [NamedBuilderFacet]
+     */
+    fun asNamedFacet(): NF
+  }
 
-        /**
-         * Sets the description of the generated [Key].
-         *
-         * This is used for documentation; for example, in a configuration file.
-         *
-         * @param description The description to set or `null` to remove it
-         * @return `this`
-         */
-        @KeyBuilderDsl
-        fun description(description: String?): B
+  companion object {
+    val comparator: Comparator<Key<*>> = Comparator.comparing<Key<*>, String> { it.name }
+      .thenComparing(Comparator.comparing { it.type.type.typeName })
+
+    fun equals(a: Key<*>?, b: Key<*>?): Boolean {
+      if (a === b) return true
+      if (a == null || b == null) return false
+      return a.name == b.name && a.type.type.typeName == b.type.type.typeName
     }
 
-    @KeyBuilderDsl
-    interface NamedBuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> : BuilderFacet<T, K, B> {
-        /**
-         * Sets the name of the generated [Key].
-         *
-         * The name is used to identify the key in a [Registry].
-         * It is also used as an underscore-separated node path in configuration files.
-         *
-         * Example: `JOIN_LISTENER_ENABLED` will become (in HOCON):
-         *
-         * ```
-         * join {
-         *   listener {
-         *     enabled = ...
-         *   }
-         * }
-         * ```
-         *
-         * @param name The name to set
-         * @return `this`
-         */
-        @KeyBuilderDsl
-        fun name(name: String): B
+    fun hashCode(key: Key<*>): Int {
+      var result = key.type.hashCode()
+      result = 31 * result + key.name.hashCode()
+      return result
     }
-
-    interface Builder<T : Any, K : Key<T>, B : Builder<T, K, B>> : NamedBuilderFacet<T, K, B> {
-        /**
-         * Generates a [Key] based on this builder.
-         *
-         * @return The generated [Key]
-         */
-        context(KeyNamespace)
-        @KeyBuilderDsl
-        fun build(): K
-    }
-
-    @KeyBuilderDsl
-    interface FacetedBuilder<
-        T : Any, K : Key<T>, B : FacetedBuilder<T, K, B, AF, NF>,
-        AF : BuilderFacet<T, K, AF>, NF : NamedBuilderFacet<T, K, NF>,
-        > : Builder<T, K, B> {
-
-        /**
-         * @return This builder as an (anonymous) [BuilderFacet]
-         */
-        fun asAnonymousFacet(): AF
-
-        /**
-         * @return This builder as a [NamedBuilderFacet]
-         */
-        fun asNamedFacet(): NF
-    }
-
-    companion object {
-        val comparator: Comparator<Key<*>> = Comparator.comparing<Key<*>, String> { it.name }
-            .thenComparing(Comparator.comparing { it.type.type.typeName })
-
-        fun equals(a: Key<*>?, b: Key<*>?): Boolean {
-            if (a === b) return true
-            if (a == null || b == null) return false
-            return a.name == b.name && a.type.type.typeName == b.type.type.typeName
-        }
-
-        fun hashCode(key: Key<*>): Int {
-            var result = key.type.hashCode()
-            result = 31 * result + key.name.hashCode()
-            return result
-        }
-    }
+  }
 }

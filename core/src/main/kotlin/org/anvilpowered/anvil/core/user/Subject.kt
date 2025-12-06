@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -22,14 +22,14 @@ import org.anvilpowered.anvil.core.PlatformType
 
 interface Subject : PlatformType {
 
-    /**
-     * Checks if the subject has the specified permission.
-     *
-     * - A value of `true` indicates that the subject has the permission explicitly set.
-     * - A value of `false` indicates that the subject has the permission explicitly set to false.
-     * - A value of `null` indicates that the subject does not have the permission explicitly set.
-     */
-    fun hasPermission(permission: String): Boolean?
+  /**
+   * Checks if the subject has the specified permission.
+   *
+   * - A value of `true` indicates that the subject has the permission explicitly set.
+   * - A value of `false` indicates that the subject has the permission explicitly set to false.
+   * - A value of `null` indicates that the subject does not have the permission explicitly set.
+   */
+  fun hasPermission(permission: String): Boolean?
 }
 
 fun Subject.hasPermissionSet(permission: String): Boolean = hasPermission(permission) == true

@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -22,41 +22,41 @@ import io.leangen.geantyref.TypeToken
 import org.jetbrains.annotations.ApiStatus
 
 interface KeyNamespace {
-    val name: String
+  val name: String
 
-    val keys: Set<Key<*>>
+  val keys: Set<Key<*>>
 
-    operator fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>?
+  operator fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>?
 
-    @ApiStatus.Internal
-    fun <T : Any> add(key: Key<T>)
+  @ApiStatus.Internal
+  fun <T : Any> add(key: Key<T>)
 
-    companion object {
-        fun create(name: String): KeyNamespace {
-            return KeyNamespaceImpl(name)
-        }
+  companion object {
+    fun create(name: String): KeyNamespace {
+      return KeyNamespaceImpl(name)
     }
+  }
 }
 
 internal class KeyNamespaceImpl(override val name: String) : KeyNamespace {
-    private val keyMap: MutableMap<String, Key<*>> = mutableMapOf()
+  private val keyMap: MutableMap<String, Key<*>> = mutableMapOf()
 
-    private val _keys: MutableSet<Key<*>> = mutableSetOf()
-    override val keys: Set<Key<*>> by ::_keys
+  private val _keys: MutableSet<Key<*>> = mutableSetOf()
+  override val keys: Set<Key<*>> by ::_keys
 
-    override fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>? {
-        val key = keyMap[keyName] ?: return null
-        if (key.type != type) {
-            throw TypeCastException("Key $name has type ${key.type} which does not match provided type $type")
-        }
-        @Suppress("UNCHECKED_CAST")
-        return key as Key<T>
+  override fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>? {
+    val key = keyMap[keyName] ?: return null
+    if (key.type != type) {
+      throw TypeCastException("Key $name has type ${key.type} which does not match provided type $type")
     }
+    @Suppress("UNCHECKED_CAST")
+    return key as Key<T>
+  }
 
-    override fun <T : Any> add(key: Key<T>) {
-        check(keyMap.put(key.name, key) == null) { "Key with name ${key.name} already exists" }
-        assert(_keys.add(key)) { "Unable to add key" }
-    }
+  override fun <T : Any> add(key: Key<T>) {
+    check(keyMap.put(key.name, key) == null) { "Key with name ${key.name} already exists" }
+    assert(_keys.add(key)) { "Unable to add key" }
+  }
 }
 
 inline operator fun <reified T : Any> KeyNamespace.get(keyName: String): Key<T>? = get(keyName, TypeToken.get(T::class.java))

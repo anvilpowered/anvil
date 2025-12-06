@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -28,16 +28,16 @@ import org.anvilpowered.kbrig.tree.LiteralCommandNode
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
 class ConfigCommandFactory(
-    val registry: Registry,
-    val configurateRegistryClosure: ConfigurateRegistry.Factory.DiscoveryClosure,
-    val keyNamespace: KeyNamespace,
-    val exporters: List<ConfigurateRegistryExporter>,
-    val serializers: TypeSerializerCollection,
+  val registry: Registry,
+  val configurateRegistryClosure: ConfigurateRegistry.Factory.DiscoveryClosure,
+  val keyNamespace: KeyNamespace,
+  val exporters: List<ConfigurateRegistryExporter>,
+  val serializers: TypeSerializerCollection,
 ) {
-    fun create(): LiteralCommandNode<CommandSource> {
-        return ArgumentBuilder.literal<CommandSource>("config")
-            .then(createGet())
-            .then(createGenerate())
-            .build()
-    }
+  fun create(): LiteralCommandNode<CommandSource> {
+    return ArgumentBuilder.literal<CommandSource>("config")
+      .then(createGet())
+      .then(createGenerate())
+      .build()
+  }
 }

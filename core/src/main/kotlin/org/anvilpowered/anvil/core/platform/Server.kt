@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -22,9 +22,9 @@ import net.kyori.adventure.audience.Audience
 
 interface Server {
 
-    val platform: Platform
+  val platform: Platform
 
-    val broadcastAudience: Audience
+  val broadcastAudience: Audience
 
-    val systemSubject: Audience
+  val systemSubject: Audience
 }

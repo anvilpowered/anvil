@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,24 +24,24 @@ import org.anvilpowered.kbrig.tree.LiteralCommandNode
 import org.apache.logging.log4j.Logger
 
 class AnvilPlugin(
-    private val logger: Logger,
-    private val anvilCommandFactory: AnvilCommandFactory,
+  private val logger: Logger,
+  private val anvilCommandFactory: AnvilCommandFactory,
 ) {
 
-    fun enable() {
-        logger.info("Enabled anvil plugin")
-        logger.info("Please note that this plugin is not required to use Anvil plugins")
-    }
+  fun enable() {
+    logger.info("Enabled anvil plugin")
+    logger.info("Please note that this plugin is not required to use Anvil plugins")
+  }
 
-    fun disable() {
-        logger.info("Disabled anvil plugin")
-    }
+  fun disable() {
+    logger.info("Disabled anvil plugin")
+  }
 
-    fun registerCommands(callback: (LiteralCommandNode<CommandSource>) -> Unit) {
-        logger.info("Building command tree...")
-        val command = anvilCommandFactory.create()
-        logger.info("Registering commands...")
-        callback(command)
-        logger.info("Finished registering commands.")
-    }
+  fun registerCommands(callback: (LiteralCommandNode<CommandSource>) -> Unit) {
+    logger.info("Building command tree...")
+    val command = anvilCommandFactory.create()
+    logger.info("Registering commands...")
+    callback(command)
+    logger.info("Finished registering commands.")
+  }
 }

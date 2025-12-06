@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -26,11 +26,11 @@ import org.spongepowered.plugin.builtin.jvm.Plugin
 
 @Plugin("anvil-agent")
 class AnvilSpongePluginBootstrap @Inject constructor(
-    private val logger: Logger,
+  private val logger: Logger,
 ) {
 
-    @Listener
-    fun onServerStart(event: ConstructPluginEvent) {
-        logger.warn("Hello, world! ${event.plugin()}")
-    }
+  @Listener
+  fun onServerStart(event: ConstructPluginEvent) {
+    logger.warn("Hello, world! ${event.plugin()}")
+  }
 }

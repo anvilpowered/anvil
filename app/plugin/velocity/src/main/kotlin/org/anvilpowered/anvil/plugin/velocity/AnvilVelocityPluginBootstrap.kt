@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -32,24 +32,24 @@ import org.anvilpowered.anvil.velocity.createVelocity
 import org.koin.dsl.koinApplication
 
 @Plugin(
-    id = "anvil-agent",
-    name = "Anvil Agent",
-    version = "0.4.0-SNAPSHOT",
-    authors = ["AnvilPowered"],
+  id = "anvil-agent",
+  name = "Anvil Agent",
+  version = "0.4.0-SNAPSHOT",
+  authors = ["AnvilPowered"],
 )
 class AnvilVelocityPluginBootstrap @Inject constructor(
-    private val proxyServer: ProxyServer,
-    private val injector: Injector,
+  private val proxyServer: ProxyServer,
+  private val injector: Injector,
 ) {
 
-    private lateinit var plugin: AnvilPlugin
+  private lateinit var plugin: AnvilPlugin
 
-    @Subscribe
-    fun onProxyInit(event: ProxyInitializeEvent) {
-        plugin = koinApplication { modules(AnvilApi.createVelocity(injector).module) }.koin.get()
-        plugin.registerCommands { command ->
-            proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
-        }
-        proxyServer.eventManager.register(this, plugin)
+  @Subscribe
+  fun onProxyInit(event: ProxyInitializeEvent) {
+    plugin = koinApplication { modules(AnvilApi.createVelocity(injector).module) }.koin.get()
+    plugin.registerCommands { command ->
+      proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
     }
+    proxyServer.eventManager.register(this, plugin)
+  }
 }

@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,16 +24,16 @@ import org.anvilpowered.anvil.core.user.PlayerService
 import java.util.UUID
 
 class VelocityPlayerService(private val proxyServer: ProxyServer) : PlayerService {
-    override fun get(username: String): Player? =
-        proxyServer.getPlayer(username).orElse(null)?.toAnvilPlayer()
+  override fun get(username: String): Player? =
+    proxyServer.getPlayer(username).orElse(null)?.toAnvilPlayer()
 
-    override fun get(id: UUID): Player? =
-        proxyServer.getPlayer(id).orElse(null)?.toAnvilPlayer()
+  override fun get(id: UUID): Player? =
+    proxyServer.getPlayer(id).orElse(null)?.toAnvilPlayer()
 
-    override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
-        "" -> proxyServer.allPlayers.asSequence().map { it.toAnvilPlayer() }
-        else -> proxyServer.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
-    }
+  override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
+    "" -> proxyServer.allPlayers.asSequence().map { it.toAnvilPlayer() }
+    else -> proxyServer.matchPlayer(startsWith).asSequence().map { it.toAnvilPlayer() }
+  }
 
-    override fun count(): Int = proxyServer.playerCount
+  override fun count(): Int = proxyServer.playerCount
 }

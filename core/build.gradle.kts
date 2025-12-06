@@ -1,22 +1,22 @@
 plugins {
-    id("anvil-publish")
-    id("anvil-sign")
-    `java-library`
+  id("anvil-publish")
+  id("anvil-sign")
+  `java-library`
 }
 
 dependencies {
-    api(libs.kbrig.brigadier)
-    api(libs.kotlinx.serialization)
-    api(libs.kotlinx.coroutines)
-    api(libs.configurate.core)
-    api(libs.configurate.hocon)
-    api(libs.configurate.yaml)
-    api(libs.configurate.extra.kotlin)
-    api(libs.koin)
+  api(libs.kbrig.brigadier)
+  api(libs.kotlinx.serialization)
+  api(libs.kotlinx.coroutines)
+  api(libs.configurate.core)
+  api(libs.configurate.hocon)
+  api(libs.configurate.yaml)
+  api(libs.configurate.extra.kotlin)
+  api(libs.koin)
 
-    compileOnlyApi(libs.logging.api)
-    compileOnly(libs.annotations)
-    compileOnly(platform(libs.adventure.bom))
-    compileOnly("net.kyori:adventure-api")
-    compileOnly("net.kyori:adventure-text-minimessage")
+  compileOnlyApi(libs.logging.api)
+  compileOnly(libs.annotations)
+  compileOnly(platform(libs.adventure.bom))
+  compileOnly("net.kyori:adventure-api")
+  compileOnly("net.kyori:adventure-text-minimessage")
 }

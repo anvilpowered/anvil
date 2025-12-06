@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,11 @@ import org.spongepowered.api.Sponge
 import org.spongepowered.api.Platform as SPlatform
 
 internal object SpongePlatform : Platform {
-    override val isProxy: Boolean = false
-    override val plugins: List<PluginMeta>
-        get() = Sponge.pluginManager().plugins().map { it.metadata().toAnvilPluginMeta() }
-    override val name: String
-        get() = "sponge"
-    override val version: String
-        get() = Sponge.platform().container(SPlatform.Component.IMPLEMENTATION).metadata().version().qualifier
+  override val isProxy: Boolean = false
+  override val plugins: List<PluginMeta>
+    get() = Sponge.pluginManager().plugins().map { it.metadata().toAnvilPluginMeta() }
+  override val name: String
+    get() = "sponge"
+  override val version: String
+    get() = Sponge.platform().container(SPlatform.Component.IMPLEMENTATION).metadata().version().qualifier
 }

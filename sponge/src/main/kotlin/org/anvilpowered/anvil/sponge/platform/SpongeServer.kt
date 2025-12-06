@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,10 +24,10 @@ import org.anvilpowered.anvil.core.platform.Server
 import org.spongepowered.api.Sponge
 
 object SpongeServer : Server {
-    override val platform: Platform
-        get() = SpongePlatform
-    override val broadcastAudience: Audience
-        get() = Sponge.server().broadcastAudience()
-    override val systemSubject: Audience
-        get() = Sponge.game().systemSubject()
+  override val platform: Platform
+    get() = SpongePlatform
+  override val broadcastAudience: Audience
+    get() = Sponge.server().broadcastAudience()
+  override val systemSubject: Audience
+    get() = Sponge.game().systemSubject()
 }

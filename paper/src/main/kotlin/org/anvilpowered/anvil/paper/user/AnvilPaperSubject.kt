@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,15 +24,15 @@ import org.bukkit.permissions.Permissible
 fun Permissible.toAnvilSubject(): Subject = AnvilPaperSubject(this)
 
 private class AnvilPaperSubject(
-    override val platformDelegate: Permissible,
+  override val platformDelegate: Permissible,
 ) : Subject {
-    override fun hasPermission(permission: String): Boolean? {
-        return if (platformDelegate.hasPermission(permission)) {
-            true
-        } else if (platformDelegate.isPermissionSet(permission)) {
-            false
-        } else {
-            null
-        }
+  override fun hasPermission(permission: String): Boolean? {
+    return if (platformDelegate.hasPermission(permission)) {
+      true
+    } else if (platformDelegate.isPermissionSet(permission)) {
+      false
+    } else {
+      null
     }
+  }
 }

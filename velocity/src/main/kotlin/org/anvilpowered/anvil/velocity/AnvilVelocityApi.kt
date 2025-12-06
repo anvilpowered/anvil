@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -52,19 +52,19 @@ import java.nio.file.Path
  */
 interface AnvilVelocityApi : AnvilApi {
 
-    companion object {
-        /**
-         * Creates an Anvil API instance for Velocity.
-         *
-         * This method is meant as an alternative to [AnvilApi.Companion.createVelocity] for Java users.
-         *
-         * In Kotlin, you should use [AnvilApi.Companion.createVelocity] instead.
-         */
-        @JvmStatic
-        @JvmName("create")
-        fun doNotUse(injector: Injector): AnvilVelocityApi =
-            AnvilApi.createVelocity(injector)
-    }
+  companion object {
+    /**
+     * Creates an Anvil API instance for Velocity.
+     *
+     * This method is meant as an alternative to [AnvilApi.Companion.createVelocity] for Java users.
+     *
+     * In Kotlin, you should use [AnvilApi.Companion.createVelocity] instead.
+     */
+    @JvmStatic
+    @JvmName("create")
+    fun doNotUse(injector: Injector): AnvilVelocityApi =
+      AnvilApi.createVelocity(injector)
+  }
 }
 
 /**
@@ -103,24 +103,24 @@ interface AnvilVelocityApi : AnvilApi {
  * ```
  */
 fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
-    val proxyServer = injector.getInstance(ProxyServer::class.java)
-    val pluginDescription = injector.getInstance(PluginDescription::class.java)
-    val logger = LogManager.getLogger(pluginDescription.id)
-    val velocityModule = module {
-        single<Logger> { logger }
-        single<Server> { VelocityServer(proxyServer) }
-        single<PluginManager> { VelocityPluginManager(proxyServer.pluginManager) }
-        single<ProxyServer> { proxyServer }
-        single<PluginDescription> { pluginDescription }
-        single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
-        single<PluginMeta> { VelocityPluginMeta(pluginDescription) }
-        singleOf(::VelocityPlayerService).bind<PlayerService>()
-        singleOf(::VelocityCommandExecutor).bind<CommandExecutor>()
-    }
+  val proxyServer = injector.getInstance(ProxyServer::class.java)
+  val pluginDescription = injector.getInstance(PluginDescription::class.java)
+  val logger = LogManager.getLogger(pluginDescription.id)
+  val velocityModule = module {
+    single<Logger> { logger }
+    single<Server> { VelocityServer(proxyServer) }
+    single<PluginManager> { VelocityPluginManager(proxyServer.pluginManager) }
+    single<ProxyServer> { proxyServer }
+    single<PluginDescription> { pluginDescription }
+    single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
+    single<PluginMeta> { VelocityPluginMeta(pluginDescription) }
+    singleOf(::VelocityPlayerService).bind<PlayerService>()
+    singleOf(::VelocityCommandExecutor).bind<CommandExecutor>()
+  }
 
-    return object : AnvilVelocityApi {
-        override val logger: Logger = logger
-        override val configDir: Path = injector.getInstance(Key.get(Path::class.java, DataDirectory()))
-        override val module: Module = velocityModule
-    }
+  return object : AnvilVelocityApi {
+    override val logger: Logger = logger
+    override val configDir: Path = injector.getInstance(Key.get(Path::class.java, DataDirectory()))
+    override val module: Module = velocityModule
+  }
 }

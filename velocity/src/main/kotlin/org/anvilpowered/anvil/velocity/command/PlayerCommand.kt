@@ -1,6 +1,6 @@
 /*
- *   Catalyst - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Anvil - AnvilPowered.org
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -36,56 +36,56 @@ import org.anvilpowered.kbrig.suggestion.suggestsScoped
 import kotlin.jvm.optionals.getOrNull
 
 fun ArgumentBuilder.Companion.requirePlayerArgument(
-    proxyServer: ProxyServer,
-    argumentName: String = "player",
-    command: suspend (context: CommandContext<CommandSource>, player: Player) -> Int,
+  proxyServer: ProxyServer,
+  argumentName: String = "player",
+  command: suspend (context: CommandContext<CommandSource>, player: Player) -> Int,
 ): RequiredArgumentBuilder<CommandSource, String> =
-    required<CommandSource, String>("player", StringArgumentType.SingleWord)
-        .suggestPlayerArgument(proxyServer)
-        .executesScoped { yield(command(context, extractPlayerArgument(proxyServer, argumentName))) }
+  required<CommandSource, String>("player", StringArgumentType.SingleWord)
+    .suggestPlayerArgument(proxyServer)
+    .executesScoped { yield(command(context, extractPlayerArgument(proxyServer, argumentName))) }
 
 fun ArgumentBuilder.Companion.requirePlayerArgumentScoped(
-    proxyServer: ProxyServer,
-    argumentName: String = "player",
-    command: suspend CommandExecutionScope<CommandSource>.(player: Player) -> Unit,
+  proxyServer: ProxyServer,
+  argumentName: String = "player",
+  command: suspend CommandExecutionScope<CommandSource>.(player: Player) -> Unit,
 ): RequiredArgumentBuilder<CommandSource, String> =
-    required<CommandSource, String>("player", StringArgumentType.SingleWord)
-        .suggestPlayerArgument(proxyServer)
-        .executesScoped { command(extractPlayerArgument(proxyServer, argumentName)) }
+  required<CommandSource, String>("player", StringArgumentType.SingleWord)
+    .suggestPlayerArgument(proxyServer)
+    .executesScoped { command(extractPlayerArgument(proxyServer, argumentName)) }
 
 fun <S> RequiredArgumentBuilder<S, String>.suggestPlayerArgument(
-    proxyServer: ProxyServer,
+  proxyServer: ProxyServer,
 ): RequiredArgumentBuilder<S, String> =
-    suggestsScoped { proxyServer.allPlayers.suggestAllFiltered { it.username } }
+  suggestsScoped { proxyServer.allPlayers.suggestAllFiltered { it.username } }
 
 @CommandContextScopeDsl
 suspend fun CommandExecutionScope<CommandSource>.extractPlayerArgument(
-    proxyServer: ProxyServer,
-    argumentName: String = "player",
+  proxyServer: ProxyServer,
+  argumentName: String = "player",
 ): Player {
-    val playerName = context.get<String>(argumentName)
-    val player = proxyServer.getPlayer(playerName).getOrNull()
-    if (player == null) {
-        context.source.sendMessage(
-            Component.text()
-                .append(Component.text("Player with name ", NamedTextColor.RED))
-                .append(Component.text(playerName, NamedTextColor.GOLD))
-                .append(Component.text(" not found!", NamedTextColor.RED))
-                .build(),
-        )
-        yieldError()
-    }
-    return player
+  val playerName = context.get<String>(argumentName)
+  val player = proxyServer.getPlayer(playerName).getOrNull()
+  if (player == null) {
+    context.source.sendMessage(
+      Component.text()
+        .append(Component.text("Player with name ", NamedTextColor.RED))
+        .append(Component.text(playerName, NamedTextColor.GOLD))
+        .append(Component.text(" not found!", NamedTextColor.RED))
+        .build(),
+    )
+    yieldError()
+  }
+  return player
 }
 
 @CommandContextScopeDsl
 suspend fun CommandExecutionScope<CommandSource>.extractPlayerSource(): Player {
-    val player = extractPlayerSourceOrNull()
-    if (player == null) {
-        context.source.sendMessage(Component.text("You must be a player to use this command!", NamedTextColor.RED))
-        yieldError()
-    }
-    return player
+  val player = extractPlayerSourceOrNull()
+  if (player == null) {
+    context.source.sendMessage(Component.text("You must be a player to use this command!", NamedTextColor.RED))
+    yieldError()
+  }
+  return player
 }
 
 @CommandContextScopeDsl

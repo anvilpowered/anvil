@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -23,47 +23,47 @@ package org.anvilpowered.anvil.core.config
  */
 class EnvironmentRegistry(private val prefix: String, private val delegate: Registry? = null) : Registry {
 
-    private val Key<*>.environmentName: String
-        get() = prefix + "_" + name
+  private val Key<*>.environmentName: String
+    get() = prefix + "_" + name
 
-    override fun <T : Any> getDefault(key: Key<T>): T {
-        return delegate?.getDefault(key) ?: key.fallback
-    }
+  override fun <T : Any> getDefault(key: Key<T>): T {
+    return delegate?.getDefault(key) ?: key.fallback
+  }
 
-    override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E {
-        return delegate?.getDefault(key, index)
-            ?: key.fallback.getOrNull(index)
-            ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
-    }
+  override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E {
+    return delegate?.getDefault(key, index)
+      ?: key.fallback.getOrNull(index)
+      ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
+  }
 
-    override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V {
-        return delegate?.getDefault(key, mapKey)
-            ?: key.fallback[mapKey]
-            ?: throw NoSuchElementException("No default value for key ${key.name} with mapKey $mapKey")
-    }
+  override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V {
+    return delegate?.getDefault(key, mapKey)
+      ?: key.fallback[mapKey]
+      ?: throw NoSuchElementException("No default value for key ${key.name} with mapKey $mapKey")
+  }
 
-    override fun <T : Any> getStrict(key: SimpleKey<T>): T? {
-        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-        return key.deserialize(value)
-    }
+  override fun <T : Any> getStrict(key: SimpleKey<T>): T? {
+    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
+    return key.deserialize(value)
+  }
 
-    override fun <E : Any> getStrict(key: ListKey<E>): List<E>? {
-        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-        return key.deserialize(value)
-    }
+  override fun <E : Any> getStrict(key: ListKey<E>): List<E>? {
+    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
+    return key.deserialize(value)
+  }
 
-    override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? {
-        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, index)
-        return key.deserialize(value)[index]
-    }
+  override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? {
+    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, index)
+    return key.deserialize(value)[index]
+  }
 
-    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? {
-        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-        return key.deserialize(value)
-    }
+  override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>): Map<K, V>? {
+    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
+    return key.deserialize(value)
+  }
 
-    override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? {
-        val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, mapKey)
-        return key.deserialize(value)[mapKey]
-    }
+  override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? {
+    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, mapKey)
+    return key.deserialize(value)[mapKey]
+  }
 }

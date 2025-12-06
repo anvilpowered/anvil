@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,11 @@ import java.time.ZoneId
 
 @Suppress("PropertyName")
 open class TypeTokens {
-    val BOOLEAN: TypeToken<Boolean> = TypeToken.get(Boolean::class.javaObjectType)
-    val INTEGER: TypeToken<Int> = TypeToken.get(Int::class.javaObjectType)
-    val STRING: TypeToken<String> = TypeToken.get(String::class.java)
-    val COMPONENT: TypeToken<Component> = TypeToken.get(Component::class.java)
-    val ZONE_ID: TypeToken<ZoneId> = TypeToken.get(ZoneId::class.java)
+  val BOOLEAN: TypeToken<Boolean> = TypeToken.get(Boolean::class.javaObjectType)
+  val INTEGER: TypeToken<Int> = TypeToken.get(Int::class.javaObjectType)
+  val STRING: TypeToken<String> = TypeToken.get(String::class.java)
+  val COMPONENT: TypeToken<Component> = TypeToken.get(Component::class.java)
+  val ZONE_ID: TypeToken<ZoneId> = TypeToken.get(ZoneId::class.java)
 
-    companion object : TypeTokens()
+  companion object : TypeTokens()
 }

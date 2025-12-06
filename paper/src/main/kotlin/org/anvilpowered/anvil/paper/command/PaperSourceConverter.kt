@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -34,10 +34,10 @@ import com.mojang.brigadier.tree.LiteralCommandNode as BrigadierLiteralCommandNo
  * Converts a kbrig argument command node to a paper brigadier argument command node.
  */
 fun <T> ArgumentCommandNode<CommandSource, T>.toPaper(): BrigadierArgumentCommandNode<CommandSourceStack, T> =
-    mapSource<CommandSource, CommandSourceStack, T> { it.toAnvilCommandSource() }.toBrigadier()
+  mapSource<CommandSource, CommandSourceStack, T> { it.toAnvilCommandSource() }.toBrigadier()
 
 /**
  * Converts a kbrig literal command node to a paper brigadier literal command node.
  */
 fun LiteralCommandNode<CommandSource>.toPaper(): BrigadierLiteralCommandNode1<CommandSourceStack> =
-    mapSource<CommandSource, CommandSourceStack> { it.toAnvilCommandSource() }.toBrigadier()
+  mapSource<CommandSource, CommandSourceStack> { it.toAnvilCommandSource() }.toBrigadier()

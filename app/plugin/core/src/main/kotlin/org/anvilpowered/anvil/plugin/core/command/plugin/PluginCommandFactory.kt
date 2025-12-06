@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -27,17 +27,17 @@ import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 private val children = mapOf(
-    "help" to Component.text("Shows this help message"),
-    "list" to Component.text("Lists all plugins"),
-    "info <name>" to Component.text("Shows information about a plugin"),
+  "help" to Component.text("Shows this help message"),
+  "list" to Component.text("Lists all plugins"),
+  "info <name>" to Component.text("Shows information about a plugin"),
 )
 
 class PluginCommandFactory(val pluginManager: PluginManager) {
-    fun create(): LiteralCommandNode<CommandSource> =
-        ArgumentBuilder.literal<CommandSource>("plugin")
-            .addHelp("anvil plugin", children)
-            .requiresPermission("anvil.agent.plugin")
-            .then(createList())
-            .then(createInfo())
-            .build()
+  fun create(): LiteralCommandNode<CommandSource> =
+    ArgumentBuilder.literal<CommandSource>("plugin")
+      .addHelp("anvil plugin", children)
+      .requiresPermission("anvil.agent.plugin")
+      .then(createList())
+      .then(createInfo())
+      .build()
 }

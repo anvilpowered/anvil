@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -29,52 +29,52 @@ import org.anvilpowered.kbrig.builder.executesSingleSuccess
 // TODO: Idea: Automatically detect usage from command node tree
 
 fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(usage: String): B =
-    executes {
-        it.source.sendMessage(
-            Component.text()
-                .append(PluginMessages.pluginPrefix)
-                .append(Component.text("Command usage: ", NamedTextColor.GOLD))
-                .append(Component.text("/$usage", NamedTextColor.AQUA)),
-        )
-        0
-    }
+  executes {
+    it.source.sendMessage(
+      Component.text()
+        .append(PluginMessages.pluginPrefix)
+        .append(Component.text("Command usage: ", NamedTextColor.GOLD))
+        .append(Component.text("/$usage", NamedTextColor.AQUA)),
+    )
+    0
+  }
 
 fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children: Map<String, Component>): B =
-    executes { context ->
-        context.source.sendMessage(
-            Component.text()
-                .append(PluginMessages.pluginPrefix)
-                .append(Component.text("Command usage: ", NamedTextColor.GOLD))
-                .append(Component.text("/$baseName", NamedTextColor.GREEN))
-                .append(Component.space())
-                .append(Component.text("${children.keys.joinToString("|")} ...", NamedTextColor.GREEN))
-                .append(Component.newline())
-                .append(Component.text("For more information see ", NamedTextColor.AQUA))
-                .append(Component.text("/$baseName help", NamedTextColor.GREEN)),
-        )
-        0
-    }.then(
-        ArgumentBuilder.literal<CommandSource>("help").executesSingleSuccess { context ->
-            context.source.sendMessage(
-                Component.text()
-                    .append(PluginMessages.pluginPrefix)
-                    .append(Component.text("Command usage: ", NamedTextColor.GOLD))
-                    .append(Component.text("/$baseName", NamedTextColor.GREEN))
-                    .append(Component.newline())
-                    .append(Component.text("Subcommands:", NamedTextColor.AQUA))
-                    .append(Component.newline())
-                    .append(
-                        Component.join(
-                            JoinConfiguration.newlines(),
-                            children.map { (command, description) ->
-                                Component.text()
-                                    .append(Component.text(" /$baseName ", NamedTextColor.DARK_GRAY))
-                                    .append(Component.text(command, NamedTextColor.GREEN))
-                                    .append(Component.space())
-                                    .append(description.color(NamedTextColor.GRAY))
-                            },
-                        ),
-                    ),
-            )
-        },
+  executes { context ->
+    context.source.sendMessage(
+      Component.text()
+        .append(PluginMessages.pluginPrefix)
+        .append(Component.text("Command usage: ", NamedTextColor.GOLD))
+        .append(Component.text("/$baseName", NamedTextColor.GREEN))
+        .append(Component.space())
+        .append(Component.text("${children.keys.joinToString("|")} ...", NamedTextColor.GREEN))
+        .append(Component.newline())
+        .append(Component.text("For more information see ", NamedTextColor.AQUA))
+        .append(Component.text("/$baseName help", NamedTextColor.GREEN)),
     )
+    0
+  }.then(
+    ArgumentBuilder.literal<CommandSource>("help").executesSingleSuccess { context ->
+      context.source.sendMessage(
+        Component.text()
+          .append(PluginMessages.pluginPrefix)
+          .append(Component.text("Command usage: ", NamedTextColor.GOLD))
+          .append(Component.text("/$baseName", NamedTextColor.GREEN))
+          .append(Component.newline())
+          .append(Component.text("Subcommands:", NamedTextColor.AQUA))
+          .append(Component.newline())
+          .append(
+            Component.join(
+              JoinConfiguration.newlines(),
+              children.map { (command, description) ->
+                Component.text()
+                  .append(Component.text(" /$baseName ", NamedTextColor.DARK_GRAY))
+                  .append(Component.text(command, NamedTextColor.GREEN))
+                  .append(Component.space())
+                  .append(description.color(NamedTextColor.GRAY))
+              },
+            ),
+          ),
+      )
+    },
+  )

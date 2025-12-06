@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -26,15 +26,15 @@ import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 private val children = mapOf(
-    "help" to Component.text("Shows this help message"),
-    "plugin" to Component.text("Plugin management"),
-    "version" to Component.text("Shows the Anvil Agent version"),
+  "help" to Component.text("Shows this help message"),
+  "plugin" to Component.text("Plugin management"),
+  "version" to Component.text("Shows the Anvil Agent version"),
 )
 
 class AnvilCommandFactory(private val pluginCommandFactory: PluginCommandFactory) {
-    fun create(): LiteralCommandNode<CommandSource> =
-        ArgumentBuilder.literal<CommandSource>("anvil")
-            .addHelp("anvil", children)
-            .then(pluginCommandFactory.create())
-            .build()
+  fun create(): LiteralCommandNode<CommandSource> =
+    ArgumentBuilder.literal<CommandSource>("anvil")
+      .addHelp("anvil", children)
+      .then(pluginCommandFactory.create())
+      .build()
 }

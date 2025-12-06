@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -33,10 +33,10 @@ import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
  * Converts a kbrig argument command node to a velocity brigadier argument command node.
  */
 fun <T> ArgumentCommandNode<CommandSource, T>.toVelocity(): BrigadierArgumentCommandNode<VelocityCommandSource, T> =
-    mapSource<CommandSource, VelocityCommandSource, T> { it.toAnvilCommandSource() }.toBrigadier()
+  mapSource<CommandSource, VelocityCommandSource, T> { it.toAnvilCommandSource() }.toBrigadier()
 
 /**
  * Converts a kbrig literal command node to a velocity brigadier literal command node.
  */
 fun LiteralCommandNode<CommandSource>.toVelocity(): BrigadierLiteralCommandNode1<VelocityCommandSource> =
-    mapSource<CommandSource, VelocityCommandSource> { it.toAnvilCommandSource() }.toBrigadier()
+  mapSource<CommandSource, VelocityCommandSource> { it.toAnvilCommandSource() }.toBrigadier()

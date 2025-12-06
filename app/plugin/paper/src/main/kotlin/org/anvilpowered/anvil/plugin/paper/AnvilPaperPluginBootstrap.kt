@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2024 Contributors
+ *   Copyright (C) 2019-2026 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -31,19 +31,19 @@ import org.koin.dsl.koinApplication
 
 class AnvilPaperPluginBootstrap : JavaPlugin(), Listener {
 
-    private lateinit var plugin: AnvilPlugin
+  private lateinit var plugin: AnvilPlugin
 
-    override fun onEnable() {
-        val bootstrapPlugin = this
-        logger.info { "Registering events" }
-        plugin = koinApplication { modules(AnvilApi.createPaper(bootstrapPlugin).module) }.koin.get()
-        plugin.enable()
-        lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
-            plugin.registerCommands { command ->
-                event.registrar().register(command.toPaper())
-            }
-        }
+  override fun onEnable() {
+    val bootstrapPlugin = this
+    logger.info { "Registering events" }
+    plugin = koinApplication { modules(AnvilApi.createPaper(bootstrapPlugin).module) }.koin.get()
+    plugin.enable()
+    lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
+      plugin.registerCommands { command ->
+        event.registrar().register(command.toPaper())
+      }
     }
+  }
 
-    override fun onDisable() = plugin.disable()
+  override fun onDisable() = plugin.disable()
 }
