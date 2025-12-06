@@ -34,7 +34,6 @@ class MapKey<K : Any, V : Any> internal constructor(
   val valueType: TypeToken<V>,
   val valueSerializer: KSerializer<V>,
 ) : Key<Map<K, V>> {
-
   private val namespace: KeyNamespace = this@KeyNamespace
   private val serializer = MapSerializer(keySerializer, valueSerializer)
 
@@ -42,22 +41,46 @@ class MapKey<K : Any, V : Any> internal constructor(
     namespace.add(this)
   }
 
-  fun serializeKey(key: K, json: Json = Json): String = json.encodeToString(keySerializer, key)
-  fun deserializeKey(key: String, json: Json = Json): K = json.decodeFromString(keySerializer, key.prepareForDecode(keyType))
-  fun serializeValue(value: V, json: Json = Json): String = json.encodeToString(valueSerializer, value)
-  fun deserializeValue(value: String, json: Json = Json): V = json.decodeFromString(valueSerializer, value.prepareForDecode(valueType))
+  fun serializeKey(
+    key: K,
+    json: Json = Json,
+  ): String = json.encodeToString(keySerializer, key)
 
-  override fun serialize(value: Map<K, V>, json: Json): String = json.encodeToString(serializer, value)
-  override fun deserialize(value: String, json: Json): Map<K, V> = json.decodeFromString(serializer, value)
+  fun deserializeKey(
+    key: String,
+    json: Json = Json,
+  ): K = json.decodeFromString(keySerializer, key.prepareForDecode(keyType))
+
+  fun serializeValue(
+    value: V,
+    json: Json = Json,
+  ): String = json.encodeToString(valueSerializer, value)
+
+  fun deserializeValue(
+    value: String,
+    json: Json = Json,
+  ): V = json.decodeFromString(valueSerializer, value.prepareForDecode(valueType))
+
+  override fun serialize(
+    value: Map<K, V>,
+    json: Json,
+  ): String = json.encodeToString(serializer, value)
+
+  override fun deserialize(
+    value: String,
+    json: Json,
+  ): Map<K, V> = json.decodeFromString(serializer, value)
 
   override fun compareTo(other: Key<Map<K, V>>): Int = Key.comparator.compare(this, other)
+
   override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false
+
   override fun hashCode(): Int = Key.hashCode(this)
+
   override fun toString(): String = "MapKey<$keyType, $valueType>(name='$name')"
 
   @KeyBuilderDsl
   interface BuilderFacet<K : Any, V : Any, B : BuilderFacet<K, V, B>> : Key.BuilderFacet<Map<K, V>, MapKey<K, V>, B> {
-
     /**
      * Sets the key serializer of the generated [Key].
      *

@@ -53,9 +53,7 @@ fun ArgumentBuilder.Companion.requirePlayerArgumentScoped(
     .suggestPlayerArgument(proxyServer)
     .executesScoped { command(extractPlayerArgument(proxyServer, argumentName)) }
 
-fun <S> RequiredArgumentBuilder<S, String>.suggestPlayerArgument(
-  proxyServer: ProxyServer,
-): RequiredArgumentBuilder<S, String> =
+fun <S> RequiredArgumentBuilder<S, String>.suggestPlayerArgument(proxyServer: ProxyServer): RequiredArgumentBuilder<S, String> =
   suggestsScoped { proxyServer.allPlayers.suggestAllFiltered { it.username } }
 
 @CommandContextScopeDsl
@@ -67,7 +65,8 @@ suspend fun CommandExecutionScope<CommandSource>.extractPlayerArgument(
   val player = proxyServer.getPlayer(playerName).getOrNull()
   if (player == null) {
     context.source.sendMessage(
-      Component.text()
+      Component
+        .text()
         .append(Component.text("Player with name ", NamedTextColor.RED))
         .append(Component.text(playerName, NamedTextColor.GOLD))
         .append(Component.text(" not found!", NamedTextColor.RED))

@@ -27,17 +27,20 @@ import com.velocitypowered.api.command.CommandSource as VelocityCommandSource
 class VelocityCommandExecutor(
   private val proxyServer: ProxyServer,
 ) : CommandExecutor {
-  override suspend fun execute(source: CommandSource, command: String): Boolean {
-    return proxyServer.commandManager.executeAsync(
-      source.platformDelegate as VelocityCommandSource,
-      command,
-    ).await()
-  }
+  override suspend fun execute(
+    source: CommandSource,
+    command: String,
+  ): Boolean =
+    proxyServer.commandManager
+      .executeAsync(
+        source.platformDelegate as VelocityCommandSource,
+        command,
+      ).await()
 
-  override suspend fun executeAsConsole(command: String): Boolean {
-    return proxyServer.commandManager.executeAsync(
-      proxyServer.consoleCommandSource,
-      command,
-    ).await()
-  }
+  override suspend fun executeAsConsole(command: String): Boolean =
+    proxyServer.commandManager
+      .executeAsync(
+        proxyServer.consoleCommandSource,
+        command,
+      ).await()
 }

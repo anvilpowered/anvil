@@ -38,7 +38,6 @@ import java.nio.file.Path
  * ```
  */
 interface AnvilApi {
-
   val logger: Logger
 
   val configDir: Path

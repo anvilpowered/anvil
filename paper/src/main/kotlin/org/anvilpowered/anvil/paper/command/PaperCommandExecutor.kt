@@ -27,13 +27,17 @@ import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.concurrent.Executor
 
-class PaperCommandExecutor(private val plugin: JavaPlugin) : CommandExecutor {
+class PaperCommandExecutor(
+  private val plugin: JavaPlugin,
+) : CommandExecutor {
+  private val executor =
+    Executor { runnable -> plugin.server.scheduler.runTask(plugin, runnable) }
+      .asCoroutineDispatcher()
 
-  private val executor = Executor { runnable -> plugin.server.scheduler.runTask(plugin, runnable) }
-    .asCoroutineDispatcher()
-
-  override suspend fun execute(source: CommandSource, command: String): Boolean =
-    withContext(executor) { Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command) }
+  override suspend fun execute(
+    source: CommandSource,
+    command: String,
+  ): Boolean = withContext(executor) { Bukkit.dispatchCommand(source.platformDelegate as CommandSender, command) }
 
   override suspend fun executeAsConsole(command: String): Boolean =
     withContext(executor) { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command) }

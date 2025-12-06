@@ -39,7 +39,6 @@ import org.spongepowered.plugin.metadata.PluginMetadata
 import java.nio.file.Path
 
 interface AnvilSpongeApi : AnvilApi {
-
   companion object
 }
 
@@ -81,15 +80,16 @@ interface AnvilSpongeApi : AnvilApi {
 fun AnvilApi.Companion.createSponge(injector: Injector): AnvilSpongeApi {
   val logger = injector.getInstance(Logger::class.java)
 
-  val spongeModule = module {
-    single<Logger> { logger }
-    single<Server> { SpongeServer }
-    single<PluginManager> { SpongePluginManager }
-    single<PlayerService> { SpongePlayerService }
-    single<PluginMeta> { SpongePluginMeta(injector.getInstance(PluginMetadata::class.java)) }
-    single { SpongePlayerService }.bind<PlayerService>()
-    single { SpongeCommandExecutor }.bind<CommandExecutor>()
-  }
+  val spongeModule =
+    module {
+      single<Logger> { logger }
+      single<Server> { SpongeServer }
+      single<PluginManager> { SpongePluginManager }
+      single<PlayerService> { SpongePlayerService }
+      single<PluginMeta> { SpongePluginMeta(injector.getInstance(PluginMetadata::class.java)) }
+      single { SpongePlayerService }.bind<PlayerService>()
+      single { SpongeCommandExecutor }.bind<CommandExecutor>()
+    }
 
   return object : AnvilSpongeApi {
     override val logger: Logger = logger

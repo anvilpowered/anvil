@@ -29,19 +29,22 @@ import org.anvilpowered.anvil.core.config.serializeDefault
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
-private val prettyJson = Json {
-  prettyPrint = true
-  encodeDefaults = true
-}
+private val prettyJson =
+  Json {
+    prettyPrint = true
+    encodeDefaults = true
+  }
 
 fun ConfigCommandFactory.createGet(): LiteralCommandNode<CommandSource> =
-  ArgumentBuilder.literal<CommandSource>("get")
+  ArgumentBuilder
+    .literal<CommandSource>("get")
     .then(
       keyNamespace.keyArgument { context, key ->
         val defaultValue = registry.serializeDefault(key, prettyJson)
         val currentValue = registry.serialize(key, prettyJson)
         context.source.sendMessage(
-          Component.text()
+          Component
+            .text()
             .append(Component.text("Key ").color(NamedTextColor.GREEN))
             .append(Component.text(key.name).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
             .append(Component.newline())
@@ -50,18 +53,20 @@ fun ConfigCommandFactory.createGet(): LiteralCommandNode<CommandSource> =
             .append(Component.newline())
             .append(Component.text("Default value: ").color(NamedTextColor.GREEN))
             .append(
-              Component.text(defaultValue).color(NamedTextColor.GRAY)
+              Component
+                .text(defaultValue)
+                .color(NamedTextColor.GRAY)
                 .hoverEvent(Component.text("Click to copy default value").color(NamedTextColor.GRAY))
                 .clickEvent(ClickEvent.copyToClipboard(defaultValue)),
-            )
-            .append(Component.newline())
+            ).append(Component.newline())
             .append(Component.text("Current value: ").color(NamedTextColor.GREEN))
             .append(
-              Component.text(currentValue).color(NamedTextColor.GRAY)
+              Component
+                .text(currentValue)
+                .color(NamedTextColor.GRAY)
                 .hoverEvent(Component.text("Click to copy current value").color(NamedTextColor.GRAY))
                 .clickEvent(ClickEvent.copyToClipboard(currentValue)),
-            )
-            .build(),
+            ).build(),
         )
         1
       },

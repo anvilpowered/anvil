@@ -32,7 +32,6 @@ class ListKey<E : Any> internal constructor(
   val elementType: TypeToken<E>,
   val elementSerializer: KSerializer<E>,
 ) : Key<List<E>> {
-
   private val namespace: KeyNamespace = this@KeyNamespace
   private val serializer = ListSerializer(elementSerializer)
 
@@ -40,23 +39,36 @@ class ListKey<E : Any> internal constructor(
     namespace.add(this)
   }
 
-  fun serializeElement(element: E, json: Json = Json): String =
-    json.encodeToString(elementSerializer, element)
+  fun serializeElement(
+    element: E,
+    json: Json = Json,
+  ): String = json.encodeToString(elementSerializer, element)
 
-  fun deserializeElement(element: String, json: Json = Json): E =
-    json.decodeFromString(elementSerializer, element.prepareForDecode(elementType))
+  fun deserializeElement(
+    element: String,
+    json: Json = Json,
+  ): E = json.decodeFromString(elementSerializer, element.prepareForDecode(elementType))
 
-  override fun serialize(value: List<E>, json: Json): String = Json.encodeToString(serializer, value)
-  override fun deserialize(value: String, json: Json): List<E> = Json.decodeFromString(serializer, value)
+  override fun serialize(
+    value: List<E>,
+    json: Json,
+  ): String = Json.encodeToString(serializer, value)
+
+  override fun deserialize(
+    value: String,
+    json: Json,
+  ): List<E> = Json.decodeFromString(serializer, value)
 
   override fun compareTo(other: Key<List<E>>): Int = Key.comparator.compare(this, other)
+
   override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false
+
   override fun hashCode(): Int = Key.hashCode(this)
+
   override fun toString(): String = "ListKey<$elementType>(name='$name')"
 
   @KeyBuilderDsl
   interface BuilderFacet<E : Any, B : BuilderFacet<E, B>> : Key.BuilderFacet<List<E>, ListKey<E>, B> {
-
     /**
      * Sets the element serializer of the generated [Key].
      *

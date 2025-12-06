@@ -33,8 +33,8 @@ private class AnvilVelocityPlayer(
 ) : Player,
   ForwardingAudience,
   Subject by platformDelegate.toAnvilSubject() {
-
   val delegateAudiences = listOf<Audience>(platformDelegate)
+
   override fun audiences(): Iterable<Audience> = delegateAudiences
 
   override val id: UUID = platformDelegate.uniqueId

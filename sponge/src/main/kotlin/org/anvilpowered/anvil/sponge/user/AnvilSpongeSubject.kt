@@ -27,12 +27,12 @@ fun SpongeSubject.toAnvilSubject(): Subject = AnvilSpongeSubject(this)
 private class AnvilSpongeSubject(
   override val platformDelegate: SpongeSubject,
 ) : Subject {
-  override fun hasPermission(permission: String): Boolean? =
-    platformDelegate.permissionValue(permission).toBoolean()
+  override fun hasPermission(permission: String): Boolean? = platformDelegate.permissionValue(permission).toBoolean()
 }
 
-private fun Tristate.toBoolean(): Boolean? = when (this) {
-  Tristate.TRUE -> true
-  Tristate.FALSE -> false
-  Tristate.UNDEFINED -> null
-}
+private fun Tristate.toBoolean(): Boolean? =
+  when (this) {
+    Tristate.TRUE -> true
+    Tristate.FALSE -> false
+    Tristate.UNDEFINED -> null
+  }

@@ -30,5 +30,11 @@ internal object SpongePlatform : Platform {
   override val name: String
     get() = "sponge"
   override val version: String
-    get() = Sponge.platform().container(SPlatform.Component.IMPLEMENTATION).metadata().version().qualifier
+    get() =
+      Sponge
+        .platform()
+        .container(SPlatform.Component.IMPLEMENTATION)
+        .metadata()
+        .version()
+        .qualifier
 }

@@ -19,8 +19,10 @@
 package org.anvilpowered.anvil.core.command
 
 interface CommandExecutor {
-
-  suspend fun execute(source: CommandSource, command: String): Boolean
+  suspend fun execute(
+    source: CommandSource,
+    command: String,
+  ): Boolean
 
   suspend fun executeAsConsole(command: String): Boolean
 }

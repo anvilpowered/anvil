@@ -36,17 +36,26 @@ class SimpleKey<T : Any> internal constructor(
     namespace.add(this)
   }
 
-  override fun serialize(value: T, json: Json): String = json.encodeToString(serializer, value)
-  override fun deserialize(value: String, json: Json): T = json.decodeFromString(serializer, value.prepareForDecode(type))
+  override fun serialize(
+    value: T,
+    json: Json,
+  ): String = json.encodeToString(serializer, value)
+
+  override fun deserialize(
+    value: String,
+    json: Json,
+  ): T = json.decodeFromString(serializer, value.prepareForDecode(type))
 
   override fun compareTo(other: Key<T>): Int = Key.comparator.compare(this, other)
+
   override fun equals(other: Any?): Boolean = (other as Key<*>?)?.let { Key.equals(this, it) } ?: false
+
   override fun hashCode(): Int = Key.hashCode(this)
+
   override fun toString(): String = "SimpleKey(type=$type, name='$name')"
 
   @KeyBuilderDsl
   interface BuilderFacet<T : Any, B : BuilderFacet<T, B>> : Key.BuilderFacet<T, SimpleKey<T>, B> {
-
     /**
      * Sets the serializer of the generated [Key].
      *

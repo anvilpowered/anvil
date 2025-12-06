@@ -27,12 +27,12 @@ fun VelocitySubject.toAnvilSubject(): Subject = AnvilVelocitySubject(this)
 private class AnvilVelocitySubject(
   override val platformDelegate: VelocitySubject,
 ) : Subject {
-  override fun hasPermission(permission: String): Boolean? =
-    platformDelegate.getPermissionValue(permission).toBoolean()
+  override fun hasPermission(permission: String): Boolean? = platformDelegate.getPermissionValue(permission).toBoolean()
 }
 
-private fun Tristate.toBoolean(): Boolean? = when (this) {
-  Tristate.TRUE -> true
-  Tristate.FALSE -> false
-  Tristate.UNDEFINED -> null
-}
+private fun Tristate.toBoolean(): Boolean? =
+  when (this) {
+    Tristate.TRUE -> true
+    Tristate.FALSE -> false
+    Tristate.UNDEFINED -> null
+  }

@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.core.user
 import org.anvilpowered.anvil.core.PlatformType
 
 interface Subject : PlatformType {
-
   /**
    * Checks if the subject has the specified permission.
    *
@@ -33,5 +32,7 @@ interface Subject : PlatformType {
 }
 
 fun Subject.hasPermissionSet(permission: String): Boolean = hasPermission(permission) == true
+
 fun Subject.hasPermissionUnset(permission: String): Boolean = hasPermission(permission) == null
+
 fun Subject.hasPermissionNotSet(permission: String): Boolean = !hasPermissionSet(permission)

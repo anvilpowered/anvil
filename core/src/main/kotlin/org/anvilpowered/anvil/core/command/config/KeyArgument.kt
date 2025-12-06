@@ -33,7 +33,8 @@ fun KeyNamespace.keyArgument(
   argumentName: String = "key",
   command: (context: CommandContext<CommandSource>, key: Key<*>) -> Int,
 ): RequiredArgumentBuilder<CommandSource, String> =
-  ArgumentBuilder.required<CommandSource, String>(argumentName, StringArgumentType.SingleWord)
+  ArgumentBuilder
+    .required<CommandSource, String>(argumentName, StringArgumentType.SingleWord)
     .suggests { _, builder ->
       keys.filter { it.name.contains(builder.remainingLowerCase, ignoreCase = true) }.forEach { key ->
         builder.suggest(key.name)
@@ -45,7 +46,8 @@ fun KeyNamespace.keyArgument(
         command(context, key)
       } ?: run {
         context.source.sendMessage(
-          Component.text()
+          Component
+            .text()
             .append(Component.text("Key with name ", NamedTextColor.RED))
             .append(Component.text(keyName, NamedTextColor.GOLD))
             .append(Component.text(" not found!", NamedTextColor.RED))

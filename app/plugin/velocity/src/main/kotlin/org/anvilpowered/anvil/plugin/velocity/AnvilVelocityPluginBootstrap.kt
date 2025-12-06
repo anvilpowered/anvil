@@ -37,19 +37,20 @@ import org.koin.dsl.koinApplication
   version = "0.4.0-SNAPSHOT",
   authors = ["AnvilPowered"],
 )
-class AnvilVelocityPluginBootstrap @Inject constructor(
-  private val proxyServer: ProxyServer,
-  private val injector: Injector,
-) {
+class AnvilVelocityPluginBootstrap
+  @Inject
+  constructor(
+    private val proxyServer: ProxyServer,
+    private val injector: Injector,
+  ) {
+    private lateinit var plugin: AnvilPlugin
 
-  private lateinit var plugin: AnvilPlugin
-
-  @Subscribe
-  fun onProxyInit(event: ProxyInitializeEvent) {
-    plugin = koinApplication { modules(AnvilApi.createVelocity(injector).module) }.koin.get()
-    plugin.registerCommands { command ->
-      proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
+    @Subscribe
+    fun onProxyInit(event: ProxyInitializeEvent) {
+      plugin = koinApplication { modules(AnvilApi.createVelocity(injector).module) }.koin.get()
+      plugin.registerCommands { command ->
+        proxyServer.commandManager.register(BrigadierCommand(command.toVelocity()))
+      }
+      proxyServer.eventManager.register(this, plugin)
     }
-    proxyServer.eventManager.register(this, plugin)
   }
-}

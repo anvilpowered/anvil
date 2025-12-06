@@ -21,7 +21,6 @@ package org.anvilpowered.anvil.core.user
 import java.util.UUID
 
 interface PlayerService {
-
   operator fun get(username: String): Player?
 
   operator fun get(id: UUID): Player?

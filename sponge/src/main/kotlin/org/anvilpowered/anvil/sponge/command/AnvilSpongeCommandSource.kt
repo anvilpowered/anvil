@@ -35,9 +35,14 @@ private class AnvilSpongeCommandSource(
 ) : CommandSource,
   ForwardingAudience,
   Subject by platformDelegate.cause().toAnvilSubject() {
-
   val delegateAudiences = listOf<Audience>(platformDelegate.cause().audience())
+
   override fun audiences(): Iterable<Audience> = delegateAudiences
 
-  override val player: Player? = platformDelegate.cause().first(ServerPlayer::class.java).orElse(null)?.toAnvilPlayer()
+  override val player: Player? =
+    platformDelegate
+      .cause()
+      .first(ServerPlayer::class.java)
+      .orElse(null)
+      ?.toAnvilPlayer()
 }

@@ -61,13 +61,14 @@ context(KeyNamespace)
 inline fun <reified T : Any> Key.Companion.buildingSimple(
   type: TypeToken<T> = typeTokenOf(),
   crossinline block: SimpleKey.AnonymousBuilderFacet<T>.() -> Unit,
-): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, SimpleKey<T>>> = PropertyDelegateProvider { _, property ->
-  val builder = SimpleKeyBuilder(type)
-  builder.name(property.name)
-  builder.asAnonymousFacet().block()
-  val key = builder.build()
-  ReadOnlyProperty { _, _ -> key }
-}
+): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, SimpleKey<T>>> =
+  PropertyDelegateProvider { _, property ->
+    val builder = SimpleKeyBuilder(type)
+    builder.name(property.name)
+    builder.asAnonymousFacet().block()
+    val key = builder.build()
+    ReadOnlyProperty { _, _ -> key }
+  }
 
 /**
  * Builds a [ListKey] with the given [elementType] and configuration [block].
@@ -110,13 +111,14 @@ context(KeyNamespace)
 inline fun <reified E : Any> Key.Companion.buildingList(
   elementType: TypeToken<E> = typeTokenOf(),
   crossinline block: ListKey.AnonymousBuilderFacet<E>.() -> Unit,
-): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, ListKey<E>>> = PropertyDelegateProvider { _, property ->
-  val builder = ListKeyBuilder(elementType)
-  builder.name(property.name)
-  builder.asAnonymousFacet().block()
-  val key = builder.build()
-  ReadOnlyProperty { _, _ -> key }
-}
+): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, ListKey<E>>> =
+  PropertyDelegateProvider { _, property ->
+    val builder = ListKeyBuilder(elementType)
+    builder.name(property.name)
+    builder.asAnonymousFacet().block()
+    val key = builder.build()
+    ReadOnlyProperty { _, _ -> key }
+  }
 
 /**
  * Builds a [MapKey] with the given [keyType], [valueType] and configuration [block].
@@ -161,13 +163,14 @@ inline fun <reified K : Any, reified V : Any> Key.Companion.buildingMap(
   keyType: TypeToken<K> = typeTokenOf(),
   valueType: TypeToken<V> = typeTokenOf(),
   crossinline block: MapKey.AnonymousBuilderFacet<K, V>.() -> Unit,
-): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, MapKey<K, V>>> = PropertyDelegateProvider { _, property ->
-  val builder = MapKeyBuilder(keyType, valueType)
-  builder.name(property.name)
-  builder.asAnonymousFacet().block()
-  val key = builder.build()
-  ReadOnlyProperty { _, _ -> key }
-}
+): PropertyDelegateProvider<KeyNamespace, ReadOnlyProperty<KeyNamespace, MapKey<K, V>>> =
+  PropertyDelegateProvider { _, property ->
+    val builder = MapKeyBuilder(keyType, valueType)
+    builder.name(property.name)
+    builder.asAnonymousFacet().block()
+    val key = builder.build()
+    ReadOnlyProperty { _, _ -> key }
+  }
 
 @PublishedApi
 internal inline fun <reified T> typeTokenOf() = object : TypeToken<T>() {}

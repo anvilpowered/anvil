@@ -29,8 +29,9 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.koinApplication
 
-class AnvilPaperPluginBootstrap : JavaPlugin(), Listener {
-
+class AnvilPaperPluginBootstrap :
+  JavaPlugin(),
+  Listener {
   private lateinit var plugin: AnvilPlugin
 
   override fun onEnable() {

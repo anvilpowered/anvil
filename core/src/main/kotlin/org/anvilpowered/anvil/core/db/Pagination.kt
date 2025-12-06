@@ -21,8 +21,16 @@ package org.anvilpowered.anvil.core.db
 import kotlin.reflect.KProperty1
 
 interface Pagination<F : DomainFacet<*>> {
-  fun limit(n: Int, offset: Long = 0): Pagination<F>
-  fun sortBy(field: KProperty1<F, Comparable<*>>, direction: SortDirection = SortDirection.ASCENDING): Pagination<F>
+  fun limit(
+    n: Int,
+    offset: Long = 0,
+  ): Pagination<F>
+
+  fun sortBy(
+    field: KProperty1<F, Comparable<*>>,
+    direction: SortDirection = SortDirection.ASCENDING,
+  ): Pagination<F>
+
   fun build(): List<F>
 }
 

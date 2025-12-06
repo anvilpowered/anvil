@@ -19,6 +19,5 @@
 package org.anvilpowered.anvil.core
 
 interface PlatformType {
-
   val platformDelegate: Any
 }

@@ -46,16 +46,17 @@ interface AnvilPaperApi : AnvilApi {
 
 fun AnvilApi.Companion.createPaper(plugin: JavaPlugin): AnvilPaperApi {
   val logger = LogManager.getLogger(plugin.pluginMeta.name)
-  val paperModule = module {
-    single<JavaPlugin> { plugin }
-    single<Logger> { logger }
-    single<Server> { PaperServer }
-    single<PluginManager> { PaperPluginManager }
-    single<PlayerService> { PaperPlayerService }
-    single<PluginMeta> { PaperPluginMeta(plugin.pluginMeta) }
-    single { PaperPlayerService }.bind<PlayerService>()
-    singleOf(::PaperCommandExecutor).bind<CommandExecutor>()
-  }
+  val paperModule =
+    module {
+      single<JavaPlugin> { plugin }
+      single<Logger> { logger }
+      single<Server> { PaperServer }
+      single<PluginManager> { PaperPluginManager }
+      single<PlayerService> { PaperPlayerService }
+      single<PluginMeta> { PaperPluginMeta(plugin.pluginMeta) }
+      single { PaperPlayerService }.bind<PlayerService>()
+      singleOf(::PaperCommandExecutor).bind<CommandExecutor>()
+    }
 
   return object : AnvilPaperApi {
     override val plugin: JavaPlugin = plugin

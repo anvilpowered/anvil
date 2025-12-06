@@ -30,10 +30,12 @@ class ConfigurateRegistryExporter(
   val pluginMeta: PluginMeta,
   val keyNamespace: KeyNamespace,
 ) {
-
   val configPath: Path = basePath.resolve("${pluginMeta.name}.${type.fileExtension}")
 
-  fun export(registry: Registry, serializers: TypeSerializerCollection) {
+  fun export(
+    registry: Registry,
+    serializers: TypeSerializerCollection,
+  ) {
     val loader = type.createBuilder(serializers).path(configPath).build()
     val root = loader.createNode()
     root.setAllFrom(registry, keyNamespace)
@@ -49,13 +51,19 @@ class ConfigurateRegistryExporter(
   }
 }
 
-private fun CommentedConfigurationNode.setAllFrom(registry: Registry, keyNamespace: KeyNamespace) {
+private fun CommentedConfigurationNode.setAllFrom(
+  registry: Registry,
+  keyNamespace: KeyNamespace,
+) {
   for (key in keyNamespace.keys) {
     setFrom(key, registry)
   }
 }
 
-private fun <T : Any> CommentedConfigurationNode.setFrom(key: Key<T>, registry: Registry) {
+private fun <T : Any> CommentedConfigurationNode.setFrom(
+  key: Key<T>,
+  registry: Registry,
+) {
   node(key.configNodePath).let { node ->
     node.set(key.type, registry[key])
     node.comment(key.description)

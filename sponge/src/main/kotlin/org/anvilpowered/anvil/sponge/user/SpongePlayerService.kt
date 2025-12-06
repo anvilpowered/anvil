@@ -25,15 +25,35 @@ import java.util.UUID
 
 object SpongePlayerService : PlayerService {
   override fun get(username: String): Player? =
-    Sponge.server().player(username).orElse(null)?.toAnvilPlayer()
+    Sponge
+      .server()
+      .player(username)
+      .orElse(null)
+      ?.toAnvilPlayer()
 
   override fun get(id: UUID): Player? =
-    Sponge.server().player(id).orElse(null)?.toAnvilPlayer()
+    Sponge
+      .server()
+      .player(id)
+      .orElse(null)
+      ?.toAnvilPlayer()
 
-  override fun getAll(startsWith: String): Sequence<Player> = when (startsWith) {
-    "" -> Sponge.server().onlinePlayers().asSequence().map { it.toAnvilPlayer() }
-    else -> Sponge.server().onlinePlayers().asSequence().filter { it.name().startsWith(startsWith) }.map { it.toAnvilPlayer() }
-  }
+  override fun getAll(startsWith: String): Sequence<Player> =
+    when (startsWith) {
+      "" ->
+        Sponge
+          .server()
+          .onlinePlayers()
+          .asSequence()
+          .map { it.toAnvilPlayer() }
+      else ->
+        Sponge
+          .server()
+          .onlinePlayers()
+          .asSequence()
+          .filter { it.name().startsWith(startsWith) }
+          .map { it.toAnvilPlayer() }
+    }
 
   override fun count(): Int = Sponge.server().onlinePlayers().size
 }

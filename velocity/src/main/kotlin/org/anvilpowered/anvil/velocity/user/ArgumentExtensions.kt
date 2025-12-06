@@ -21,5 +21,4 @@ package org.anvilpowered.anvil.velocity.user
 import com.velocitypowered.api.command.CommandSource
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B =
-  requires { it.hasPermission(permission) }
+fun <B : ArgumentBuilder<CommandSource, B>> B.requiresPermission(permission: String): B = requires { it.hasPermission(permission) }

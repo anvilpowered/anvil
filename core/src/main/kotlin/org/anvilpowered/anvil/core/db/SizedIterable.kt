@@ -19,7 +19,10 @@
 package org.anvilpowered.anvil.core.db
 
 interface SizedIterable<out T> : Iterable<T> {
-  fun limit(n: Int, offset: Long = 0): SizedIterable<T>
+  fun limit(
+    n: Int,
+    offset: Long = 0,
+  ): SizedIterable<T>
 
   fun count(): Long
 

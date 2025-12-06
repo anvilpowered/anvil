@@ -8,22 +8,27 @@ plugins {
 
 val rawVersion: Provider<String> = providers.fileContents(layout.projectDirectory.file("version")).asText.map { it.trim() }
 
-val vcsBuildVersion: Provider<String> = provider {
-  System.getenv("VCS_BRANCH")?.replace('/', '-') ?: "unknown-branch"
-}.flatMap { branch ->
-  System.getenv("BUILD_NUMBER")?.let { buildNumber ->
-    providers.exec {
-      commandLine("git", "rev-parse", "--short", "HEAD")
-    }.standardOutput.asText.flatMap { gitRev ->
-      rawVersion.map { it.replace("SNAPSHOT", "BETA$buildNumber-$branch-${gitRev.trim()}") }
-    }
-  } ?: rawVersion
-}
+val vcsBuildVersion: Provider<String> =
+  provider {
+    System.getenv("VCS_BRANCH")?.replace('/', '-') ?: "unknown-branch"
+  }.flatMap { branch ->
+    System.getenv("BUILD_NUMBER")?.let { buildNumber ->
+      providers
+        .exec {
+          commandLine("git", "rev-parse", "--short", "HEAD")
+        }.standardOutput.asText
+        .flatMap { gitRev ->
+          rawVersion.map { it.replace("SNAPSHOT", "BETA$buildNumber-$branch-${gitRev.trim()}") }
+        }
+    } ?: rawVersion
+  }
 
 val isRawVersion: Provider<Boolean> = provider { project.hasProperty("rawVersion") }
 
 val projectVersion: Provider<String> =
-  isRawVersion.zip(rawVersion.zip(vcsBuildVersion) { raw, build -> raw to build }) { isRaw, versions -> if (isRaw) versions.first else versions.second }
+  isRawVersion.zip(
+    rawVersion.zip(vcsBuildVersion) { raw, build -> raw to build },
+  ) { isRaw, versions -> if (isRaw) versions.first else versions.second }
 
 logger.warn("Resolved project version ${projectVersion.get()}")
 
@@ -38,10 +43,11 @@ allprojects {
   kotlin {
     compilerOptions {
       jvmTarget = JvmTarget.JVM_21
-      freeCompilerArgs = listOf(
-        "-opt-in=kotlin.RequiresOptIn",
-        "-Xcontext-receivers",
-      )
+      freeCompilerArgs =
+        listOf(
+          "-opt-in=kotlin.RequiresOptIn",
+          "-Xcontext-receivers",
+        )
     }
   }
 

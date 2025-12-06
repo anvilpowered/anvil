@@ -21,26 +21,30 @@ package org.anvilpowered.anvil.core.config
 /**
  * A [Registry] implementation that checks environment variables.
  */
-class EnvironmentRegistry(private val prefix: String, private val delegate: Registry? = null) : Registry {
-
+class EnvironmentRegistry(
+  private val prefix: String,
+  private val delegate: Registry? = null,
+) : Registry {
   private val Key<*>.environmentName: String
     get() = prefix + "_" + name
 
-  override fun <T : Any> getDefault(key: Key<T>): T {
-    return delegate?.getDefault(key) ?: key.fallback
-  }
+  override fun <T : Any> getDefault(key: Key<T>): T = delegate?.getDefault(key) ?: key.fallback
 
-  override fun <E : Any> getDefault(key: ListKey<E>, index: Int): E {
-    return delegate?.getDefault(key, index)
+  override fun <E : Any> getDefault(
+    key: ListKey<E>,
+    index: Int,
+  ): E =
+    delegate?.getDefault(key, index)
       ?: key.fallback.getOrNull(index)
       ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
-  }
 
-  override fun <K : Any, V : Any> getDefault(key: MapKey<K, V>, mapKey: K): V {
-    return delegate?.getDefault(key, mapKey)
+  override fun <K : Any, V : Any> getDefault(
+    key: MapKey<K, V>,
+    mapKey: K,
+  ): V =
+    delegate?.getDefault(key, mapKey)
       ?: key.fallback[mapKey]
       ?: throw NoSuchElementException("No default value for key ${key.name} with mapKey $mapKey")
-  }
 
   override fun <T : Any> getStrict(key: SimpleKey<T>): T? {
     val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
@@ -52,7 +56,10 @@ class EnvironmentRegistry(private val prefix: String, private val delegate: Regi
     return key.deserialize(value)
   }
 
-  override fun <E : Any> getStrict(key: ListKey<E>, index: Int): E? {
+  override fun <E : Any> getStrict(
+    key: ListKey<E>,
+    index: Int,
+  ): E? {
     val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, index)
     return key.deserialize(value)[index]
   }
@@ -62,7 +69,10 @@ class EnvironmentRegistry(private val prefix: String, private val delegate: Regi
     return key.deserialize(value)
   }
 
-  override fun <K : Any, V : Any> getStrict(key: MapKey<K, V>, mapKey: K): V? {
+  override fun <K : Any, V : Any> getStrict(
+    key: MapKey<K, V>,
+    mapKey: K,
+  ): V? {
     val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, mapKey)
     return key.deserialize(value)[mapKey]
   }

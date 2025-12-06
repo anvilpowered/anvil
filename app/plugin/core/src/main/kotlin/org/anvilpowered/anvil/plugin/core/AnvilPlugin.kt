@@ -27,7 +27,6 @@ class AnvilPlugin(
   private val logger: Logger,
   private val anvilCommandFactory: AnvilCommandFactory,
 ) {
-
   fun enable() {
     logger.info("Enabled anvil plugin")
     logger.info("Please note that this plugin is not required to use Anvil plugins")

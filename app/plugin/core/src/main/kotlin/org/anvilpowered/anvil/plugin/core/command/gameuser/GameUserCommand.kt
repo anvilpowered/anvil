@@ -26,15 +26,17 @@ import org.anvilpowered.anvil.plugin.core.command.common.addHelp
 import org.anvilpowered.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
-private val children = mapOf(
-  "help" to Component.text("Shows this help message"),
-  "info" to Component.text("Shows information about a game user"),
-)
+private val children =
+  mapOf(
+    "help" to Component.text("Shows this help message"),
+    "info" to Component.text("Shows information about a game user"),
+  )
 
 object GameUserCommand {
   context(AnvilApi)
   fun create(): LiteralCommandNode<CommandSource> =
-    ArgumentBuilder.literal<CommandSource>("gameuser")
+    ArgumentBuilder
+      .literal<CommandSource>("gameuser")
       .addHelp("anvil gameuser", children)
       .requiresPermission("anvil.agent.gameuser")
       .build()

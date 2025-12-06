@@ -24,10 +24,9 @@ import kotlinx.serialization.KSerializer
 class SimpleKeyBuilder<T : Any>(
   type: TypeToken<T>,
 ) : AbstractKeyBuilder<T, SimpleKey<T>, SimpleKey.FacetedBuilder<T>, SimpleKey.AnonymousBuilderFacet<T>, SimpleKey.NamedBuilderFacet<T>>(
-  type,
-),
+    type,
+  ),
   SimpleKey.FacetedBuilder<T> {
-
   private var serializer: KSerializer<T>? = null
 
   override fun self(): SimpleKey.FacetedBuilder<T> = this
@@ -38,13 +37,14 @@ class SimpleKeyBuilder<T : Any>(
   }
 
   context(KeyNamespace)
-  override fun build(): SimpleKey<T> = SimpleKey(
-    type,
-    requireNotNull(name) { "Name is null" },
-    requireNotNull(fallback) { "Fallback is null" },
-    description,
-    serializer ?: type.getDefaultSerializer(),
-  )
+  override fun build(): SimpleKey<T> =
+    SimpleKey(
+      type,
+      requireNotNull(name) { "Name is null" },
+      requireNotNull(fallback) { "Fallback is null" },
+      description,
+      serializer ?: type.getDefaultSerializer(),
+    )
 
   override fun asAnonymousFacet(): SimpleKey.AnonymousBuilderFacet<T> {
     return object : SimpleKey.AnonymousBuilderFacet<T> {

@@ -22,7 +22,9 @@ import com.velocitypowered.api.proxy.ProxyServer
 import org.anvilpowered.anvil.core.platform.Platform
 import org.anvilpowered.anvil.core.platform.PluginMeta
 
-internal class VelocityPlatform(private val proxyServer: ProxyServer) : Platform {
+internal class VelocityPlatform(
+  private val proxyServer: ProxyServer,
+) : Platform {
   override val isProxy: Boolean = true
   override val plugins: List<PluginMeta>
     get() = proxyServer.pluginManager.plugins.map { it.description.toAnvilPluginMeta() }

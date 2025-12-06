@@ -26,25 +26,31 @@ interface KeyNamespace {
 
   val keys: Set<Key<*>>
 
-  operator fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>?
+  operator fun <T : Any> get(
+    keyName: String,
+    type: TypeToken<T>,
+  ): Key<T>?
 
   @ApiStatus.Internal
   fun <T : Any> add(key: Key<T>)
 
   companion object {
-    fun create(name: String): KeyNamespace {
-      return KeyNamespaceImpl(name)
-    }
+    fun create(name: String): KeyNamespace = KeyNamespaceImpl(name)
   }
 }
 
-internal class KeyNamespaceImpl(override val name: String) : KeyNamespace {
+internal class KeyNamespaceImpl(
+  override val name: String,
+) : KeyNamespace {
   private val keyMap: MutableMap<String, Key<*>> = mutableMapOf()
 
   private val _keys: MutableSet<Key<*>> = mutableSetOf()
   override val keys: Set<Key<*>> by ::_keys
 
-  override fun <T : Any> get(keyName: String, type: TypeToken<T>): Key<T>? {
+  override fun <T : Any> get(
+    keyName: String,
+    type: TypeToken<T>,
+  ): Key<T>? {
     val key = keyMap[keyName] ?: return null
     if (key.type != type) {
       throw TypeCastException("Key $name has type ${key.type} which does not match provided type $type")

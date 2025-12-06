@@ -30,15 +30,20 @@ import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.nio.file.Path
 
-sealed interface ConfigurateFileType<B : AbstractConfigurationLoader.Builder<B, out AbstractConfigurationLoader<CommentedConfigurationNode>>> {
+sealed interface ConfigurateFileType<
+  B : AbstractConfigurationLoader.Builder<B, out AbstractConfigurationLoader<CommentedConfigurationNode>>,
+> {
   val name: String
   val fileExtension: String
+
   fun createBuilder(serializers: TypeSerializerCollection): B
 
   data object Hocon : ConfigurateFileType<HoconConfigurationLoader.Builder> {
     override val name: String = "HOCON"
     override val fileExtension: String = "conf"
+
     override fun toString(): String = fullName
+
     override fun createBuilder(serializers: TypeSerializerCollection): HoconConfigurationLoader.Builder =
       HoconConfigurationLoader.builder().configure(serializers)
   }
@@ -46,17 +51,20 @@ sealed interface ConfigurateFileType<B : AbstractConfigurationLoader.Builder<B, 
   data object Yaml : ConfigurateFileType<YamlConfigurationLoader.Builder> {
     override val name: String = "YAML"
     override val fileExtension: String = "yaml"
+
     override fun toString(): String = fullName
+
     override fun createBuilder(serializers: TypeSerializerCollection): YamlConfigurationLoader.Builder =
       YamlConfigurationLoader.builder().configure(serializers).nodeStyle(NodeStyle.BLOCK)
   }
 
   companion object {
-    fun fromName(fileEnding: String): ConfigurateFileType<*>? = when (fileEnding) {
-      Yaml.fileExtension -> Yaml
-      Hocon.fileExtension -> Hocon
-      else -> null
-    }
+    fun fromName(fileEnding: String): ConfigurateFileType<*>? =
+      when (fileEnding) {
+        Yaml.fileExtension -> Yaml
+        Hocon.fileExtension -> Hocon
+        else -> null
+      }
   }
 }
 

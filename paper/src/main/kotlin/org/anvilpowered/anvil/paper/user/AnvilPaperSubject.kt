@@ -26,13 +26,12 @@ fun Permissible.toAnvilSubject(): Subject = AnvilPaperSubject(this)
 private class AnvilPaperSubject(
   override val platformDelegate: Permissible,
 ) : Subject {
-  override fun hasPermission(permission: String): Boolean? {
-    return if (platformDelegate.hasPermission(permission)) {
+  override fun hasPermission(permission: String): Boolean? =
+    if (platformDelegate.hasPermission(permission)) {
       true
     } else if (platformDelegate.isPermissionSet(permission)) {
       false
     } else {
       null
     }
-  }
 }

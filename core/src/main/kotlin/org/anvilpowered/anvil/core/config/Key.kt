@@ -22,7 +22,6 @@ import io.leangen.geantyref.TypeToken
 import kotlinx.serialization.json.Json
 
 interface Key<T : Any> : Comparable<Key<T>> {
-
   val type: TypeToken<T>
 
   val name: String
@@ -34,12 +33,18 @@ interface Key<T : Any> : Comparable<Key<T>> {
   /**
    * Serializes the given value in a simple [String] representation.
    */
-  fun serialize(value: T, json: Json = Json): String
+  fun serialize(
+    value: T,
+    json: Json = Json,
+  ): String
 
   /**
    * Deserializes the given value from a simple [String] representation.
    */
-  fun deserialize(value: String, json: Json = Json): T?
+  fun deserialize(
+    value: String,
+    json: Json = Json,
+  ): T?
 
   @KeyBuilderDsl
   interface BuilderFacet<T : Any, K : Key<T>, B : BuilderFacet<T, K, B>> {
@@ -104,10 +109,12 @@ interface Key<T : Any> : Comparable<Key<T>> {
 
   @KeyBuilderDsl
   interface FacetedBuilder<
-    T : Any, K : Key<T>, B : FacetedBuilder<T, K, B, AF, NF>,
-    AF : BuilderFacet<T, K, AF>, NF : NamedBuilderFacet<T, K, NF>,
-    > : Builder<T, K, B> {
-
+    T : Any,
+    K : Key<T>,
+    B : FacetedBuilder<T, K, B, AF, NF>,
+    AF : BuilderFacet<T, K, AF>,
+    NF : NamedBuilderFacet<T, K, NF>,
+  > : Builder<T, K, B> {
     /**
      * @return This builder as an (anonymous) [BuilderFacet]
      */
@@ -120,10 +127,15 @@ interface Key<T : Any> : Comparable<Key<T>> {
   }
 
   companion object {
-    val comparator: Comparator<Key<*>> = Comparator.comparing<Key<*>, String> { it.name }
-      .thenComparing(Comparator.comparing { it.type.type.typeName })
+    val comparator: Comparator<Key<*>> =
+      Comparator
+        .comparing<Key<*>, String> { it.name }
+        .thenComparing(Comparator.comparing { it.type.type.typeName })
 
-    fun equals(a: Key<*>?, b: Key<*>?): Boolean {
+    fun equals(
+      a: Key<*>?,
+      b: Key<*>?,
+    ): Boolean {
       if (a === b) return true
       if (a == null || b == null) return false
       return a.name == b.name && a.type.type.typeName == b.type.type.typeName

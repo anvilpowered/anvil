@@ -21,10 +21,14 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 
 abstract class AbstractKeyBuilder<
-  T : Any, K : Key<T>, B : Key.FacetedBuilder<T, K, B, AF, NF>,
-  AF : Key.BuilderFacet<T, K, AF>, NF : Key.NamedBuilderFacet<T, K, NF>,
-  >(val type: TypeToken<T>) : Key.FacetedBuilder<T, K, B, AF, NF> {
-
+  T : Any,
+  K : Key<T>,
+  B : Key.FacetedBuilder<T, K, B, AF, NF>,
+  AF : Key.BuilderFacet<T, K, AF>,
+  NF : Key.NamedBuilderFacet<T, K, NF>,
+>(
+  val type: TypeToken<T>,
+) : Key.FacetedBuilder<T, K, B, AF, NF> {
   var name: String? = null
   var fallback: T? = null
   var description: String? = null

@@ -34,10 +34,10 @@ class ConfigCommandFactory(
   val exporters: List<ConfigurateRegistryExporter>,
   val serializers: TypeSerializerCollection,
 ) {
-  fun create(): LiteralCommandNode<CommandSource> {
-    return ArgumentBuilder.literal<CommandSource>("config")
+  fun create(): LiteralCommandNode<CommandSource> =
+    ArgumentBuilder
+      .literal<CommandSource>("config")
       .then(createGet())
       .then(createGenerate())
       .build()
-  }
 }

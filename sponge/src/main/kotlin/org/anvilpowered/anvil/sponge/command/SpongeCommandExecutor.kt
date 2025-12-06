@@ -24,9 +24,20 @@ import org.spongepowered.api.Sponge
 import org.spongepowered.api.service.permission.Subject as SpongeSubject
 
 object SpongeCommandExecutor : CommandExecutor {
-  override suspend fun execute(source: CommandSource, command: String): Boolean =
-    Sponge.server().commandManager().process(source.platformDelegate as SpongeSubject, source, command).isSuccess
+  override suspend fun execute(
+    source: CommandSource,
+    command: String,
+  ): Boolean =
+    Sponge
+      .server()
+      .commandManager()
+      .process(source.platformDelegate as SpongeSubject, source, command)
+      .isSuccess
 
   override suspend fun executeAsConsole(command: String): Boolean =
-    Sponge.server().commandManager().process(Sponge.systemSubject(), command).isSuccess
+    Sponge
+      .server()
+      .commandManager()
+      .process(Sponge.systemSubject(), command)
+      .isSuccess
 }

@@ -51,7 +51,6 @@ import java.nio.file.Path
  * If you are using Java, the method [AnvilVelocityApi.doNotUse] is provided as an alternative.
  */
 interface AnvilVelocityApi : AnvilApi {
-
   companion object {
     /**
      * Creates an Anvil API instance for Velocity.
@@ -62,8 +61,7 @@ interface AnvilVelocityApi : AnvilApi {
      */
     @JvmStatic
     @JvmName("create")
-    fun doNotUse(injector: Injector): AnvilVelocityApi =
-      AnvilApi.createVelocity(injector)
+    fun doNotUse(injector: Injector): AnvilVelocityApi = AnvilApi.createVelocity(injector)
   }
 }
 
@@ -106,17 +104,18 @@ fun AnvilApi.Companion.createVelocity(injector: Injector): AnvilVelocityApi {
   val proxyServer = injector.getInstance(ProxyServer::class.java)
   val pluginDescription = injector.getInstance(PluginDescription::class.java)
   val logger = LogManager.getLogger(pluginDescription.id)
-  val velocityModule = module {
-    single<Logger> { logger }
-    single<Server> { VelocityServer(proxyServer) }
-    single<PluginManager> { VelocityPluginManager(proxyServer.pluginManager) }
-    single<ProxyServer> { proxyServer }
-    single<PluginDescription> { pluginDescription }
-    single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
-    single<PluginMeta> { VelocityPluginMeta(pluginDescription) }
-    singleOf(::VelocityPlayerService).bind<PlayerService>()
-    singleOf(::VelocityCommandExecutor).bind<CommandExecutor>()
-  }
+  val velocityModule =
+    module {
+      single<Logger> { logger }
+      single<Server> { VelocityServer(proxyServer) }
+      single<PluginManager> { VelocityPluginManager(proxyServer.pluginManager) }
+      single<ProxyServer> { proxyServer }
+      single<PluginDescription> { pluginDescription }
+      single<PluginContainer> { injector.getInstance(PluginContainer::class.java) }
+      single<PluginMeta> { VelocityPluginMeta(pluginDescription) }
+      singleOf(::VelocityPlayerService).bind<PlayerService>()
+      singleOf(::VelocityCommandExecutor).bind<CommandExecutor>()
+    }
 
   return object : AnvilVelocityApi {
     override val logger: Logger = logger

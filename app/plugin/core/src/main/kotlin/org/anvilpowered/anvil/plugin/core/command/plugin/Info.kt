@@ -29,28 +29,31 @@ import org.anvilpowered.kbrig.context.get
 import org.anvilpowered.kbrig.tree.LiteralCommandNode
 
 fun PluginCommandFactory.createInfo(): LiteralCommandNode<CommandSource> =
-  ArgumentBuilder.literal<CommandSource>("info")
+  ArgumentBuilder
+    .literal<CommandSource>("info")
     .executesUsage("anvil plugin info <name>")
     .then(
-      ArgumentBuilder.required<CommandSource, String>("name", StringArgumentType.SingleWord)
+      ArgumentBuilder
+        .required<CommandSource, String>("name", StringArgumentType.SingleWord)
         .executes { context ->
           val name = context.get<String>("name")
           val plugin = pluginManager.plugins.find { it.name == name }
           if (plugin == null) {
             context.source.sendMessage(
-              Component.text()
+              Component
+                .text()
                 .append(Component.text("Plugin not found: ").color(NamedTextColor.RED))
                 .append(Component.text(name).color(NamedTextColor.WHITE)),
             )
             0
           } else {
             context.source.sendMessage(
-              Component.text()
+              Component
+                .text()
                 .append(Component.text("Plugin: ").color(NamedTextColor.AQUA))
                 .append(Component.text(plugin.name).color(NamedTextColor.WHITE)),
             )
             Command.SINGLE_SUCCESS
           }
-        }
-        .build(),
+        }.build(),
     ).build()

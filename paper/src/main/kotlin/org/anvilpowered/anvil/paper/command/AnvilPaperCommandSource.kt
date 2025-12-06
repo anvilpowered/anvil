@@ -39,8 +39,8 @@ private class AnvilPaperCommandSource(
 ) : CommandSource,
   ForwardingAudience,
   Subject by platformDelegate.toAnvilSubject() {
-
   val delegateAudiences = listOf<Audience>(platformDelegate)
+
   override fun audiences(): Iterable<Audience> = delegateAudiences
 
   override val player: Player? = (platformDelegate as? PaperPlayer)?.toAnvilPlayer()

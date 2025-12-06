@@ -51,9 +51,7 @@ fun ArgumentBuilder.Companion.requirePlayerArgumentScoped(
     .suggestPlayerArgument(playerService)
     .executesScoped { command(extractPlayerArgument(playerService, argumentName)) }
 
-fun <S> RequiredArgumentBuilder<S, String>.suggestPlayerArgument(
-  playerService: PlayerService,
-): RequiredArgumentBuilder<S, String> =
+fun <S> RequiredArgumentBuilder<S, String>.suggestPlayerArgument(playerService: PlayerService): RequiredArgumentBuilder<S, String> =
   suggestsScoped { playerService.getAll().suggestAllFiltered { it.username } }
 
 @CommandContextScopeDsl
@@ -65,7 +63,8 @@ suspend fun CommandExecutionScope<CommandSource>.extractPlayerArgument(
   val player = playerService[playerName]
   if (player == null) {
     context.source.sendMessage(
-      Component.text()
+      Component
+        .text()
         .append(Component.text("Player with name ", NamedTextColor.RED))
         .append(Component.text(playerName, NamedTextColor.GOLD))
         .append(Component.text(" not found!", NamedTextColor.RED))

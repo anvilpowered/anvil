@@ -31,7 +31,8 @@ import org.anvilpowered.kbrig.builder.executesSingleSuccess
 fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(usage: String): B =
   executes {
     it.source.sendMessage(
-      Component.text()
+      Component
+        .text()
         .append(PluginMessages.pluginPrefix)
         .append(Component.text("Command usage: ", NamedTextColor.GOLD))
         .append(Component.text("/$usage", NamedTextColor.AQUA)),
@@ -39,10 +40,14 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.executesUsage(usage: String): B =
     0
   }
 
-fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children: Map<String, Component>): B =
+fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(
+  baseName: String,
+  children: Map<String, Component>,
+): B =
   executes { context ->
     context.source.sendMessage(
-      Component.text()
+      Component
+        .text()
         .append(PluginMessages.pluginPrefix)
         .append(Component.text("Command usage: ", NamedTextColor.GOLD))
         .append(Component.text("/$baseName", NamedTextColor.GREEN))
@@ -56,7 +61,8 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children
   }.then(
     ArgumentBuilder.literal<CommandSource>("help").executesSingleSuccess { context ->
       context.source.sendMessage(
-        Component.text()
+        Component
+          .text()
           .append(PluginMessages.pluginPrefix)
           .append(Component.text("Command usage: ", NamedTextColor.GOLD))
           .append(Component.text("/$baseName", NamedTextColor.GREEN))
@@ -67,7 +73,8 @@ fun <B : ArgumentBuilder<CommandSource, B>> B.addHelp(baseName: String, children
             Component.join(
               JoinConfiguration.newlines(),
               children.map { (command, description) ->
-                Component.text()
+                Component
+                  .text()
                   .append(Component.text(" /$baseName ", NamedTextColor.DARK_GRAY))
                   .append(Component.text(command, NamedTextColor.GREEN))
                   .append(Component.space())

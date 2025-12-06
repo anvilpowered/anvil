@@ -29,14 +29,13 @@ import java.time.Duration
 import java.util.regex.Pattern
 
 @CommandContextScopeDsl
-suspend fun CommandExecutionScope<CommandSource>.extractDurationArgument(
-  argumentName: String = "duration",
-): Duration {
+suspend fun CommandExecutionScope<CommandSource>.extractDurationArgument(argumentName: String = "duration"): Duration {
   val durationString = context.get<String>(argumentName)
   val matcher = timePattern.matcher(durationString)
   if (!matcher.matches() || durationString.isBlank()) {
     context.source.sendMessage(
-      Component.text()
+      Component
+        .text()
         .append(Component.text("Invalid duration format", NamedTextColor.RED, TextDecoration.BOLD))
         .append(Component.newline())
         .append(Component.text("Expected format (example): ", NamedTextColor.GRAY))
@@ -70,7 +69,10 @@ suspend fun CommandExecutionScope<CommandSource>.extractDurationArgument(
   )
 }
 
-fun Duration.format(maxCharacters: Int = -1, maxUnits: Int = -1): String {
+fun Duration.format(
+  maxCharacters: Int = -1,
+  maxUnits: Int = -1,
+): String {
   if (maxCharacters == 0 || maxUnits == 0) {
     return ""
   }
@@ -86,12 +88,13 @@ fun Duration.format(maxCharacters: Int = -1, maxUnits: Int = -1): String {
     val fallThrough: Boolean = false,
   )
 
-  val initialState = State(
-    result = "",
-    secondsLeft = seconds,
-    maxCharacters = maxCharacters.takeIf { it >= 0 } ?: Int.MAX_VALUE,
-    maxUnits = maxUnits.takeIf { it >= 0 } ?: Int.MAX_VALUE,
-  )
+  val initialState =
+    State(
+      result = "",
+      secondsLeft = seconds,
+      maxCharacters = maxCharacters.takeIf { it >= 0 } ?: Int.MAX_VALUE,
+      maxUnits = maxUnits.takeIf { it >= 0 } ?: Int.MAX_VALUE,
+    )
 
   return sequenceOf(
     "year" to SECONDS_IN_YEAR,
@@ -106,20 +109,23 @@ fun Duration.format(maxCharacters: Int = -1, maxUnits: Int = -1): String {
       return@fold state
     }
 
-    val result = when (val num = state.secondsLeft / divisor) {
-      0L -> return@fold state
-      1L -> "${state.result}$num $label, "
-      else -> "${state.result}$num ${label}s, "
-    }
+    val result =
+      when (val num = state.secondsLeft / divisor) {
+        0L -> return@fold state
+        1L -> "${state.result}$num $label, "
+        else -> "${state.result}$num ${label}s, "
+      }
 
-    state.copy(
-      result = result,
-      secondsLeft = state.secondsLeft % divisor,
-      maxCharacters = state.maxCharacters - result.length,
-      maxUnits = state.maxUnits - 1,
-    ).takeIf { it.maxCharacters >= 0 && it.maxUnits >= 0 }
+    state
+      .copy(
+        result = result,
+        secondsLeft = state.secondsLeft % divisor,
+        maxCharacters = state.maxCharacters - result.length,
+        maxUnits = state.maxUnits - 1,
+      ).takeIf { it.maxCharacters >= 0 && it.maxUnits >= 0 }
       ?: state.copy(fallThrough = true)
-  }.result.substringBeforeLast(',')
+  }.result
+    .substringBeforeLast(',')
 }
 
 private const val SECONDS_IN_YEAR: Long = 31536000
@@ -129,12 +135,13 @@ private const val SECONDS_IN_DAY: Long = 86400
 private const val SECONDS_IN_HOUR: Long = 3600
 private const val SECONDS_IN_MINUTE: Long = 60
 
-private val timePattern: Pattern = Pattern.compile(
-  "\\s*((?<years>-?[0-9]*)\\s*[yY])?" +
-    "\\s*((?<months>-?[0-9]*)\\s*M)?" +
-    "\\s*((?<weeks>-?[0-9]*)\\s*[wW])?" +
-    "\\s*((?<days>-?[0-9]*)\\s*[dD])?" +
-    "\\s*((?<hours>-?[0-9]*)\\s*[hH])?" +
-    "\\s*((?<minutes>-?[0-9]*)\\s*m)?" +
-    "\\s*((?<seconds>-?[0-9]*)\\s*[sS])?\\s*",
-)
+private val timePattern: Pattern =
+  Pattern.compile(
+    "\\s*((?<years>-?[0-9]*)\\s*[yY])?" +
+      "\\s*((?<months>-?[0-9]*)\\s*M)?" +
+      "\\s*((?<weeks>-?[0-9]*)\\s*[wW])?" +
+      "\\s*((?<days>-?[0-9]*)\\s*[dD])?" +
+      "\\s*((?<hours>-?[0-9]*)\\s*[hH])?" +
+      "\\s*((?<minutes>-?[0-9]*)\\s*m)?" +
+      "\\s*((?<seconds>-?[0-9]*)\\s*[sS])?\\s*",
+  )

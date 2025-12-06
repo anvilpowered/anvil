@@ -22,7 +22,10 @@ import java.util.UUID
 
 interface Repository<E : DomainEntity> {
   suspend fun findById(id: UUID): E?
+
   suspend fun exists(id: UUID): Boolean
+
   suspend fun countAll(): Long
+
   suspend fun deleteById(id: UUID): Boolean
 }

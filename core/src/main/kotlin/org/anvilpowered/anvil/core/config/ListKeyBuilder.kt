@@ -25,10 +25,9 @@ import kotlinx.serialization.KSerializer
 class ListKeyBuilder<E : Any>(
   private val elementType: TypeToken<E>,
 ) : AbstractKeyBuilder<List<E>, ListKey<E>, ListKey.FacetedBuilder<E>, ListKey.AnonymousBuilderFacet<E>, ListKey.NamedBuilderFacet<E>>(
-  createListTypeToken(elementType),
-),
+    createListTypeToken(elementType),
+  ),
   ListKey.FacetedBuilder<E> {
-
   private var elementSerializer: KSerializer<E>? = null
 
   override fun self(): ListKey.FacetedBuilder<E> = this
@@ -40,14 +39,15 @@ class ListKeyBuilder<E : Any>(
 
   context(KeyNamespace)
   @Suppress("UNCHECKED_CAST")
-  override fun build(): ListKey<E> = ListKey(
-    type,
-    requireNotNull(name) { "Name is null" },
-    requireNotNull(fallback) { "Fallback is null" },
-    description,
-    elementType,
-    elementSerializer ?: elementType.getDefaultSerializer(),
-  )
+  override fun build(): ListKey<E> =
+    ListKey(
+      type,
+      requireNotNull(name) { "Name is null" },
+      requireNotNull(fallback) { "Fallback is null" },
+      description,
+      elementType,
+      elementSerializer ?: elementType.getDefaultSerializer(),
+    )
 
   override fun asAnonymousFacet(): ListKey.AnonymousBuilderFacet<E> {
     return object : ListKey.AnonymousBuilderFacet<E> {

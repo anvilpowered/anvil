@@ -25,12 +25,13 @@ import org.spongepowered.api.event.lifecycle.ConstructPluginEvent
 import org.spongepowered.plugin.builtin.jvm.Plugin
 
 @Plugin("anvil-agent")
-class AnvilSpongePluginBootstrap @Inject constructor(
-  private val logger: Logger,
-) {
-
-  @Listener
-  fun onServerStart(event: ConstructPluginEvent) {
-    logger.warn("Hello, world! ${event.plugin()}")
+class AnvilSpongePluginBootstrap
+  @Inject
+  constructor(
+    private val logger: Logger,
+  ) {
+    @Listener
+    fun onServerStart(event: ConstructPluginEvent) {
+      logger.warn("Hello, world! ${event.plugin()}")
+    }
   }
-}

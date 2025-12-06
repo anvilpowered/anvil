@@ -23,7 +23,9 @@ import org.anvilpowered.anvil.core.platform.PluginMeta
 
 internal fun PluginDescription.toAnvilPluginMeta() = VelocityPluginMeta(this)
 
-internal class VelocityPluginMeta(private val delegate: PluginDescription) : PluginMeta {
+internal class VelocityPluginMeta(
+  private val delegate: PluginDescription,
+) : PluginMeta {
   override val name: String
     get() = delegate.id
 }

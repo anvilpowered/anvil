@@ -23,7 +23,9 @@ import org.spongepowered.plugin.metadata.PluginMetadata
 
 internal fun PluginMetadata.toAnvilPluginMeta() = SpongePluginMeta(this)
 
-internal class SpongePluginMeta(private val delegate: PluginMetadata) : PluginMeta {
+internal class SpongePluginMeta(
+  private val delegate: PluginMetadata,
+) : PluginMeta {
   override val name: String
     get() = delegate.id()
 }

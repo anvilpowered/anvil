@@ -25,8 +25,9 @@ import java.util.UUID
 /**
  * An online player.
  */
-interface Player : Subject, Audience {
-
+interface Player :
+  Subject,
+  Audience {
   val id: UUID
 
   val username: String

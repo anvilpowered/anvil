@@ -25,7 +25,9 @@ import io.papermc.paper.plugin.configuration.PluginMeta as PaperPluginMeta
 
 internal fun PaperPluginMeta.toAnvilPluginMeta() = PaperPluginMeta(this)
 
-class PaperPluginMeta(private val delegate: PaperPluginMeta) : PluginMeta {
+class PaperPluginMeta(
+  private val delegate: PaperPluginMeta,
+) : PluginMeta {
   override val name: String
     get() = delegate.name
 }
