@@ -18,4 +18,6 @@
 
 package org.anvilpowered.anvil.core.config
 
+import scala.annotation.StaticAnnotation
+
 trait KeyBuilderDsl extends StaticAnnotation

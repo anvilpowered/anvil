@@ -18,18 +18,16 @@
 
 package org.anvilpowered.anvil.core.config
 
+import cats.syntax.traverse.*
 import io.leangen.geantyref.TypeToken
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.Json
 
 class ListKey[E](
-  override val typeTok: TypeToken[List[E]],
-  override val name: String,
-  override val fallback: List[E],
-  override val description: Option[String],
-  val elementType: TypeToken[E],
-  val elementSerializer: KSerializer[E],
+    override val typeTok: TypeToken[List[E]],
+    override val name: String,
+    override val fallback: List[E],
+    override val description: Option[String],
+    val elementType: TypeToken[E],
+    val elementSerializer: KSerializer[E],
 ) extends Key[List[E]] {
 //  private val namespace: KeyNamespace = this@KeyNamespace
   private val serializer = ListSerializer(elementSerializer)
@@ -39,26 +37,26 @@ class ListKey[E](
 //  }
 
   def serializeElement(
-    element: E,
+      element: E,
   ): String = ???
 //    json.encodeToString(elementSerializer, element)
 
   def deserializeElement(
-    element: String,
+      element: String,
   ): E = ???
 //    json.decodeFromString(elementSerializer, element.prepareForDecode(elementType))
 
   override def serialize(
-    value: List[E],
-    json: Json,
-  ): String = Json.encodeToString(serializer, value)
+      value: List[E],
+  ): String = ???
+  // Json.encodeToString(serializer, value)
 
   override def deserialize(
-    value: String,
-    json: Json,
-  ): List[E] = Json.decodeFromString(serializer, value)
+      value: String,
+  ): List[E] = ???
+//    Json.decodeFromString(serializer, value)
 
-  override def compareTo(other: Key[List[E]]): Int = Key.comparator.compare(this, other)
+//  override def compareTo(other: Key[List[E]]): Int = Key.comparator.compare(this, other)
 
 //  override def equals(other: Any): Boolean = (other as Key[*]?)?.let { Key.equals(this, it) } ?: false
 
@@ -67,40 +65,33 @@ class ListKey[E](
   override def toString(): String = "ListKey[$elementType](name='$name')"
 }
 
-object {
+object ListKey {
   @KeyBuilderDsl
-  trait BuilderFacet[E, B : BuilderFacet[E, B]] : Key.BuilderFacet[List[E], ListKey[E], B] {
-    /**
-     * Sets the element serializer of the generated [Key].
-     *
-     * This is entirely optional, as the default serializer will be used if this is not set.
-     * The default serializer requires the element type to be trivially serializable or annotated with `@Serializable`
-     * from the kotlinx-serialization framework.
-     *
-     * @param serializer The element serializer to set or `null` to use the default
-     * @return `this`
-     */
+  trait BuilderFacet[E] extends Key.BuilderFacet[List[E], ListKey[E]] {
+
+    /** Sets the element serializer of the generated [Key].
+      *
+      * This is entirely optional, as the default serializer will be used if this is not set. The default serializer requires the element type to be
+      * trivially serializable or annotated with `@Serializable` from the kotlinx-serialization framework.
+      *
+      * @param serializer
+      *   The element serializer to set or `null` to use the default
+      * @return
+      *   `this`
+      */
     @KeyBuilderDsl
-    def elementSerializer(serializer: KSerializer[E]): B
+    def elementSerializer(serializer: KSerializer[E]): this.type
   }
 
   @KeyBuilderDsl
-  trait AnonymousBuilderFacet[E : Any] :
-    BuilderFacet[E, AnonymousBuilderFacet[E]],
-    Key.BuilderFacet[List[E], ListKey[E], AnonymousBuilderFacet[E]]
+  trait AnonymousBuilderFacet[E] extends BuilderFacet[E], Key.BuilderFacet[List[E], ListKey[E]]
 
   @KeyBuilderDsl
-  trait NamedBuilderFacet[E : Any] :
-    BuilderFacet[E, NamedBuilderFacet[E]],
-    Key.NamedBuilderFacet[List[E], ListKey[E], NamedBuilderFacet[E]]
+  trait NamedBuilderFacet[E] extends BuilderFacet[E], Key.NamedBuilderFacet[List[E], ListKey[E]]
 
   @KeyBuilderDsl
-  trait Builder[E : Any] :
-    BuilderFacet[E, Builder[E]],
-    Key.Builder[List[E], ListKey[E], Builder[E]]
+  trait Builder[E] extends BuilderFacet[E], Key.Builder[List[E], ListKey[E]]
 
   @KeyBuilderDsl
-  trait FacetedBuilder[E : Any] :
-    BuilderFacet[E, FacetedBuilder[E]],
-    Key.FacetedBuilder[List[E], ListKey[E], FacetedBuilder[E], AnonymousBuilderFacet[E], NamedBuilderFacet[E]]
+  trait FacetedBuilder[E] extends BuilderFacet[E], Key.FacetedBuilder[List[E], ListKey[E], AnonymousBuilderFacet[E], NamedBuilderFacet[E]]
 }

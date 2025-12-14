@@ -19,7 +19,6 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
-import kotlinx.serialization.json.Json
 
 trait Key[T] {
   val typeTok: TypeToken[T]
@@ -45,7 +44,7 @@ object Key {
   given ordering: Ordering[Key[?]] = Ordering.by(_.name)
 
   @KeyBuilderDsl
-  trait BuilderFacet[T: Any, K: Key[T]] {
+  trait BuilderFacet[T, K <: Key[T]] {
 
     /** Sets the fallback value of the generated [Key].
       *
@@ -73,7 +72,7 @@ object Key {
   }
 
   @KeyBuilderDsl
-  trait NamedBuilderFacet[T: Any, K: Key[T]] extends BuilderFacet[T, K] {
+  trait NamedBuilderFacet[T, K <: Key[T]] extends BuilderFacet[T, K] {
 
     /** Sets the name of the generated [Key].
       *
@@ -98,7 +97,7 @@ object Key {
     def name(name: String): this.type
   }
 
-  trait Builder[T: Any, K: Key[T]] extends NamedBuilderFacet[T, K] {
+  trait Builder[T, K <: Key[T]] extends NamedBuilderFacet[T, K] {
 
     /** Generates a [Key] based on this builder.
       *
@@ -111,10 +110,10 @@ object Key {
 
   @KeyBuilderDsl
   trait FacetedBuilder[
-      T: Any,
-      K: Key[T],
-      AF: BuilderFacet[T, K, AF],
-      NF: NamedBuilderFacet[T, K, NF],
+      T,
+      K <: Key[T],
+      AF <: BuilderFacet[T, K],
+      NF <: NamedBuilderFacet[T, K],
   ] extends Builder[T, K] {
 
     /** @return
