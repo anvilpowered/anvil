@@ -1,81 +1,18 @@
-### Intellij ###
 .idea/
-*.iws
-out/
-*.iml
-.idea_modules/
-atlassian-ide-plugin.xml
 
-### Eclipse ###
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-.recommenders
-.externalToolBuilders/
-*.launch
-.factorypath
-.recommenders/
-.apt_generated/
-.project
-.classpath
+### SBT ###
+# Simple Build Tool
+# http://www.scala-sbt.org/release/docs/Getting-Started/Directories.html#configuring-version-control
 
-### Linux ###
-*~
-.fuse_hidden*
-.directory
-.Trash-*
-.nfs*
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.history
+.cache
+.lib/
 
-### macOS ###
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
-### Windows ###
-# Windows thumbnail cache files
-Thumbs.db
-ehthumbs.db
-ehthumbs_vista.db
-*.stackdump
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.lnk
-
-### Gradle ###
-.gradle
-# build/ already defined under netbeans
-gradle-app.setting
-!gradle-wrapper.jar
-.gradletasknamecache
-
-### Kotlin/JS ###
-yarn.lock
+### SBT Patch ###
+.bsp/
