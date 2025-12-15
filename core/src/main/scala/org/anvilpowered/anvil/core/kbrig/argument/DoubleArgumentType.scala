@@ -20,14 +20,14 @@ object DoubleArgumentType {
 
   val all = ArgumentType(
     DoubleArgumentParser(Double.MinValue, Double.MaxValue),
-    SuggestionProvider.empty,
+    SuggestionProvider.Empty,
     Set(),
   )
 
   def of[S](
       min: Double,
       max: Double,
-      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.empty,
+      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.Empty,
       examples: Set[String] = Set(),
   ) = ArgumentType(
     DoubleArgumentParser(min, max),

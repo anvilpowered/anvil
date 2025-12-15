@@ -20,14 +20,14 @@ object IntegerArgumentType {
 
   val all = ArgumentType(
     IntegerArgumentParser(Int.MinValue, Int.MaxValue),
-    SuggestionProvider.empty,
+    SuggestionProvider.Empty,
     Set(),
   )
 
   def of[S](
       min: Integer,
       max: Integer,
-      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.empty,
+      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.Empty,
       examples: Set[String] = Set(),
   ) = ArgumentType(
     IntegerArgumentParser(min, max),

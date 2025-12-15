@@ -1,6 +1,6 @@
 /*
  *   Anvil - AnvilPowered.org
- *   Copyright (C) 2019-2026 Contributors
+ *   Copyright (C) 2019-2024 Contributors
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as published by
@@ -16,19 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.core.kbrig.suggestion
 
-import net.kyori.adventure.audience.Audience
-import org.anvilpowered.anvil.core.PlatformType
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.Subject
-
-trait CommandSource extends
-  PlatformType,
-  Audience,
-  Subject {
-  /**
-   * The [Player] associated with the executed command, if any.
-   */
-  val player: Option[Player]
+case class SuggestionsBuilder(
+    input: String,
+    start: Int,
+) {
+  private val inputLowerCase: String = input.toLowerCase
+  private val remaining: String = input.substring(start)
+  val remainingLowerCase: String = inputLowerCase.substring(start)
+  
+  
 }

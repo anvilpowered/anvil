@@ -18,14 +18,14 @@ object FloatArgumentType {
 
   val all = ArgumentType(
     FloatArgumentParser(Float.MinValue, Float.MaxValue),
-    SuggestionProvider.empty,
+    SuggestionProvider.Empty,
     Set(),
   )
 
   def of[S](
       min: Float,
       max: Float,
-      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.empty,
+      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.Empty,
       examples: Set[String] = Set(),
   ) = ArgumentType(
     FloatArgumentParser(min, max),

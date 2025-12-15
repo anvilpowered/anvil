@@ -18,17 +18,17 @@ import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider
 
 object StringArgumentType {
   def singleWord(
-      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.empty,
+      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.Empty,
       examples: Set[String] = Set("word", "words_with_underscores"),
   ) = ArgumentType(SingleWord, suggestionProvider, examples)
 
   def quotedPhrase(
-      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.empty,
+      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.Empty,
       examples: Set[String] = Set("\"quoted phrase\"", "word", "\"\""),
   ) = ArgumentType(QuotedPhrase, suggestionProvider, examples)
 
   def greedyPhrase(
-      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.empty,
+      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.Empty,
       examples: Set[String] = Set("word", "words with spaces", "\"and symbols\""),
   ) = ArgumentType(GreedyPhrase, suggestionProvider, examples)
 

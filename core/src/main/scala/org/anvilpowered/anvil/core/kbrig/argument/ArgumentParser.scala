@@ -2,8 +2,7 @@ package org.anvilpowered.anvil.core.kbrig.argument
 
 import cats.Monad
 import cats.data.EitherT
-import org.anvilpowered.kbrig.StringReader.ParseT
-import org.anvilpowered.kbrig.exception.ParseError
+import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
 
 import scala.math.Ordered.orderingToOrdered
 

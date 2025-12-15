@@ -18,14 +18,14 @@ object LongArgumentType {
 
   val all = ArgumentType(
     LongArgumentParser(Long.MinValue, Long.MaxValue),
-    SuggestionProvider.empty,
+    SuggestionProvider.Empty,
     Set(),
   )
 
   def of[S](
       min: Long,
       max: Long,
-      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.empty,
+      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.Empty,
       examples: Set[String] = Set(),
   ) = ArgumentType(
     LongArgumentParser(min, max),

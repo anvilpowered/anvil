@@ -9,17 +9,24 @@ package org.anvilpowered.anvil.core.kbrig.suggestion
 
 import cats.Applicative
 import cats.data.ReaderT
+import cats.effect.IO
 import cats.kernel.Monoid
 import org.anvilpowered.anvil.core.kbrig.context.StringRange
+import cats.syntax.all.*
 
 case class Suggestions(range: StringRange, list: Seq[Suggestion]) {
   def isEmpty: Boolean = list.isEmpty
 }
 
 object Suggestions {
+  /** Models the computation of suggestions from a partial input string.
+   */
+  type SuggestT[F[_]] = ReaderT[F, String, Suggestions]
+  val SuggestT: ReaderT.type = ReaderT
+  
   val empty = Suggestions(StringRange.at(0), Seq())
 
-  def ofOne[F[_]: Applicative](text: String, tooltip: Option[String] = None): ReaderT[F, String, Suggestions] =
+  def ofOne[F[_]: Applicative](text: String, tooltip: Option[String] = None): SuggestT[F] =
     for {
       input <- ReaderT.ask[F, String]
     } yield
@@ -30,6 +37,28 @@ object Suggestions {
         Suggestions(range, Seq(Suggestion(range, text, tooltip)))
       }
 
+  given Monoid[Suggestions] with {
+    def empty: Suggestions = Suggestions.empty
+
+    def combine(x: Suggestions, y: Suggestions): Suggestions = {
+      // Combine based on your logic - here's one approach:
+      if (x.isEmpty) y
+      else if (y.isEmpty) x
+      else {
+        // Merge the ranges and combine the suggestion lists
+        val newRange = StringRange.between(
+          Math.min(x.range.start, y.range.start),
+          Math.max(x.range.end, y.range.end)
+        )
+        Suggestions(newRange, x.list ++ y.list)
+      }
+    }
+  }
+  
+
+  def foo: SuggestT[IO] =
+    List(Suggestions.ofOne[IO]("hello"), Suggestions.ofOne[IO]("there")).combineAll
+    
   def create(command: String, suggestions: Seq[Suggestion]): Suggestions = {
     if (suggestions.isEmpty) {
       return empty
