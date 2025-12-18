@@ -21,48 +21,48 @@ package org.anvilpowered.anvil.core.config
 import io.leangen.geantyref.TypeToken
 import org.jetbrains.annotations.ApiStatus
 
+import scala.collection.mutable
+import scala.reflect.ClassTag
+
 trait KeyNamespace {
   val name: String
 
-  val keys: Set[Key[*]]
+  val keys: Set[Key[?]]
 
-  operator def [T : Any] get(
-    keyName: String,
-    type: TypeToken[T],
-  ): Key[T]?
+  def get[T: TypeToken](keyName: String): Option[Key[T]]
 
-  @ApiStatus.Internal
-  def [T : Any] add(key: Key[T])
+  def add[T](key: Key[T]): Unit
+}
 
-  companion object {
-    def create(name: String): KeyNamespace = KeyNamespaceImpl(name)
+object KeyNamespace {
+  def create(name: String): KeyNamespace = KeyNamespaceImpl(name)
+
+  extension (namespace: KeyNamespace) {
+    def apply[T](keyName: String)(using tag: ClassTag[T]): Option[Key[T]] =
+      namespace.get(keyName)(using TypeToken.get[T](tag.runtimeClass.asInstanceOf[Class[T]]))
   }
 }
 
-internal class KeyNamespaceImpl(
-  override val name: String,
-) : KeyNamespace {
-  private val keyMap: MutableMap[String, Key[*]] = mutableMapOf()
+private class KeyNamespaceImpl(override val name: String) extends KeyNamespace {
+  private val keyMap: mutable.Map[String, Key[?]] = mutable.Map()
 
-  private val _keys: MutableSet[Key[*]] = mutableSetOf()
-  override val keys: Set[Key[*]] by ::_keys
+  private val _keys: mutable.Set[Key[?]] = mutable.Set()
+  override val keys: Set[Key[?]] = _keys.toSet
 
-  override def [T : Any] get(
-    keyName: String,
-    type: TypeToken[T],
-  ): Key[T]? {
-    val key = keyMap[keyName] ?: return null
-    if (key.type != type) {
-      throw TypeCastException("Key $name has type ${key.type} which does not match provided type $type")
+  override def get[T: ClassTag](keyName: String, typeTok: TypeToken[T]): Option[Key[T]] = {
+    for {
+      key <- keyMap.get(keyName)
+    } yield {
+      if (key.typeTok == typeTok) {
+        key.asInstanceOf[Key[T]]
+      } else {
+        throw new ClassCastException(s"Key $name has type ${key.typeTok} which does not match provided type $typeTok")
+      }
     }
-    @Suppress("UNCHECKED_CAST")
-    return key as Key[T]
   }
 
-  override def [T : Any] add(key: Key[T]) {
-    check(keyMap.put(key.name, key) == null) { "Key with name ${key.name} already exists" }
-    assert(_keys.add(key)) { "Unable to add key" }
+  override def add[T](key: Key[T]): Unit = {
+    require(keyMap.put(key.name, key).isEmpty, s"Key with name ${key.name} already exists")
+    assert(_keys.add(key), "Unable to add key")
   }
 }
-
-inline operator def [reified T : Any] KeyNamespace.get(keyName: String): Key[T]? = get(keyName, TypeToken.get(T::class.java))

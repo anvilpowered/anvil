@@ -23,23 +23,17 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.json.Json
 
-context(KeyNamespace)
-class MapKey[K : Any, V : Any] internal constructor(
-  override val type: TypeToken[Map[K, V]],
+class MapKey[K, V](
+  override val typeTok: TypeToken[Map[K, V]],
   override val name: String,
   override val fallback: Map[K, V],
-  override val description: String?,
+  override val description: Option[String],
   val keyType: TypeToken[K],
   val keySerializer: KSerializer[K],
   val valueType: TypeToken[V],
   val valueSerializer: KSerializer[V],
-) : Key[Map[K, V]] {
-  private val namespace: KeyNamespace = this@KeyNamespace
+) extends Key[Map[K, V]] {
   private val serializer = MapSerializer(keySerializer, valueSerializer)
-
-  init {
-    namespace.add(this)
-  }
 
   def serializeKey(
     key: K,
@@ -71,16 +65,14 @@ class MapKey[K : Any, V : Any] internal constructor(
     json: Json,
   ): Map[K, V] = json.decodeFromString(serializer, value)
 
-  override def compareTo(other: Key[Map[K, V]]): Int = Key.comparator.compare(this, other)
+  override def toString: String = s"MapKey[$keyType, $valueType](name='$name')"
 
-  override def equals(other: Any?): Boolean = (other as Key[*]?)?.let { Key.equals(this, it) } ?: false
+}
 
-  override def hashCode(): Int = Key.hashCode(this)
-
-  override def toString(): String = "MapKey[$keyType, $valueType](name='$name')"
+object MapKey {
 
   @KeyBuilderDsl
-  trait BuilderFacet[K : Any, V : Any, B : BuilderFacet[K, V, B]] : Key.BuilderFacet[Map[K, V], MapKey[K, V], B] {
+  trait BuilderFacet[K, V] extends Key.BuilderFacet[Map[K, V], MapKey[K, V]] {
     /**
      * Sets the key serializer of the generated [Key].
      *
@@ -109,22 +101,22 @@ class MapKey[K : Any, V : Any] internal constructor(
   }
 
   @KeyBuilderDsl
-  trait AnonymousBuilderFacet[K : Any, V : Any] :
-    BuilderFacet[K, V, AnonymousBuilderFacet[K, V]],
-    Key.BuilderFacet[Map[K, V], MapKey[K, V], AnonymousBuilderFacet[K, V]]
+  trait AnonymousBuilderFacet[K, V] extends
+    BuilderFacet[K, V],
+    Key.BuilderFacet[Map[K, V], MapKey[K, V]]
 
   @KeyBuilderDsl
-  trait NamedBuilderFacet[K : Any, V : Any] :
-    BuilderFacet[K, V, NamedBuilderFacet[K, V]],
-    Key.NamedBuilderFacet[Map[K, V], MapKey[K, V], NamedBuilderFacet[K, V]]
+  trait NamedBuilderFacet[K, V] extends
+    BuilderFacet[K, V],
+    Key.NamedBuilderFacet[Map[K, V], MapKey[K, V]]
 
   @KeyBuilderDsl
-  trait Builder[K : Any, V : Any] :
-    BuilderFacet[K, V, Builder[K, V]],
-    Key.Builder[Map[K, V], MapKey[K, V], Builder[K, V]]
+  trait Builder[K, V] extends
+    BuilderFacet[K, V],
+    Key.Builder[Map[K, V], MapKey[K, V]]
 
   @KeyBuilderDsl
-  trait FacetedBuilder[K : Any, V : Any] :
-    BuilderFacet[K, V, FacetedBuilder[K, V]],
-    Key.FacetedBuilder[Map[K, V], MapKey[K, V], FacetedBuilder[K, V], AnonymousBuilderFacet[K, V], NamedBuilderFacet[K, V]]
+  trait FacetedBuilder[K, V] extends
+    BuilderFacet[K, V],
+    Key.FacetedBuilder[Map[K, V], MapKey[K, V], FacetedBuilder[K, V], NamedBuilderFacet[K, V]]
 }

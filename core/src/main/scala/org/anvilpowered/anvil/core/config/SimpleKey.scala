@@ -19,74 +19,56 @@
 package org.anvilpowered.anvil.core.config
 
 import io.leangen.geantyref.TypeToken
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.json.Json
 
-context(KeyNamespace)
-class SimpleKey[T : Any] internal constructor(
-  override val type: TypeToken[T],
-  override val name: String,
-  override val fallback: T,
-  override val description: String?,
-  val serializer: KSerializer[T],
-) : Key[T] {
-  private val namespace: KeyNamespace = this@KeyNamespace
-
-  init {
-    namespace.add(this)
-  }
+class SimpleKey[T](
+    override val typeTok: TypeToken[T],
+    override val name: String,
+    override val fallback: T,
+    override val description: Option[String],
+    val serializer: KSerializer[T],
+) extends Key[T] {
 
   override def serialize(
-    value: T,
-    json: Json,
+      value: T,
+      json: Json,
   ): String = json.encodeToString(serializer, value)
 
   override def deserialize(
-    value: String,
-    json: Json,
-  ): T = json.decodeFromString(serializer, value.prepareForDecode(type))
+      value: String,
+      json: Json,
+  ): T = json.decodeFromString(serializer, value.prepareForDecode(typeTok))
 
-  override def compareTo(other: Key[T]): Int = Key.comparator.compare(this, other)
+  override def toString: String = s"SimpleKey(type=$typeTok, name='$name')"
 
-  override def equals(other: Any?): Boolean = (other as Key[*]?)?.let { Key.equals(this, it) } ?: false
+}
 
-  override def hashCode(): Int = Key.hashCode(this)
-
-  override def toString(): String = "SimpleKey(type=$type, name='$name')"
-
+object SimpleKey {
   @KeyBuilderDsl
-  trait BuilderFacet[T : Any, B : BuilderFacet[T, B]] : Key.BuilderFacet[T, SimpleKey[T], B] {
-    /**
-     * Sets the serializer of the generated [Key].
-     *
-     * This is entirely optional, as the default serializer will be used if this is not set.
-     * The default serializer requires the element type to be trivially serializable or annotated with `@Serializable`
-     * from the kotlinx-serialization framework.
-     *
-     * @param serializer The serializer to set or `null` to use the default
-     * @return `this`
-     */
+  trait BuilderFacet[T] extends Key.BuilderFacet[T, SimpleKey[T]] {
+
+    /** Sets the serializer of the generated [Key].
+      *
+      * This is entirely optional, as the default serializer will be used if this is not set. The default serializer requires the element type to be
+      * trivially serializable or annotated with `@Serializable` from the kotlinx-serialization framework.
+      *
+      * @param serializer
+      *   The serializer to set or `null` to use the default
+      * @return
+      *   `this`
+      */
     @KeyBuilderDsl
-    def serializer(serializer: KSerializer[T]?): B
+    def serializer(serializer: Option[KSerializer[T]]): B
   }
 
   @KeyBuilderDsl
-  trait AnonymousBuilderFacet[T : Any] :
-    BuilderFacet[T, AnonymousBuilderFacet[T]],
-    Key.BuilderFacet[T, SimpleKey[T], AnonymousBuilderFacet[T]]
+  trait AnonymousBuilderFacet[T] extends BuilderFacet[T], Key.BuilderFacet[T, SimpleKey[T]]
 
   @KeyBuilderDsl
-  trait NamedBuilderFacet[T : Any] :
-    BuilderFacet[T, NamedBuilderFacet[T]],
-    Key.NamedBuilderFacet[T, SimpleKey[T], NamedBuilderFacet[T]]
+  trait NamedBuilderFacet[T] extends BuilderFacet[T], Key.NamedBuilderFacet[T, SimpleKey[T]]
 
   @KeyBuilderDsl
-  trait Builder[T : Any] :
-    BuilderFacet[T, Builder[T]],
-    Key.Builder[T, SimpleKey[T], Builder[T]]
+  trait Builder[T] extends BuilderFacet[T], Key.Builder[T, SimpleKey[T]]
 
   @KeyBuilderDsl
-  trait FacetedBuilder[T : Any] :
-    BuilderFacet[T, FacetedBuilder[T]],
-    Key.FacetedBuilder[T, SimpleKey[T], FacetedBuilder[T], AnonymousBuilderFacet[T], NamedBuilderFacet[T]]
+  trait FacetedBuilder[T] extends BuilderFacet[T], Key.FacetedBuilder[T, SimpleKey[T], AnonymousBuilderFacet[T], NamedBuilderFacet[T]]
 }

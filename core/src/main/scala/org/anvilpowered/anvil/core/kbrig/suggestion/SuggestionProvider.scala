@@ -14,7 +14,6 @@ import cats.kernel.Monoid
 import cats.syntax.all._
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.exception.ArgumentError
-import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 
 trait SuggestionProvider[-S] {
@@ -22,8 +21,6 @@ trait SuggestionProvider[-S] {
 }
 
 object SuggestionProvider {
-  
-
   val Empty: SuggestionProvider[Any] = new SuggestionProvider[Any] {
     def suggest[F[_]: Monad](context: CommandContext[Any]): SuggestT[F] =
       SuggestT.pure(Suggestions.empty)

@@ -18,62 +18,18 @@
 
 package org.anvilpowered.anvil.core.config
 
-/**
- * A [Registry] implementation that checks environment variables.
- */
+/** A [[Registry]] implementation that checks environment variables.
+  */
 class EnvironmentRegistry(
-  private val prefix: String,
-  private val delegate: Registry? = null,
-) : Registry {
-  private val Key[*].environmentName: String
-    get() = prefix + "_" + name
+    private val prefix: String,
+    private val delegate: Option[Registry] = None,
+) extends Registry {
+  private def envName(key: Key[?]): String = prefix + "_" + key.name
 
-  override def [T : Any] getDefault(key: Key[T]): T = delegate?.getDefault(key) ?: key.fallback
-
-  override def [E : Any] getDefault(
-    key: ListKey[E],
-    index: Int,
-  ): E =
-    delegate?.getDefault(key, index)
-      ?: key.fallback.getOrNull(index)
-      ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
-
-  override def [K : Any, V : Any] getDefault(
-    key: MapKey[K, V],
-    mapKey: K,
-  ): V =
-    delegate?.getDefault(key, mapKey)
-      ?: key.fallback[mapKey]
-      ?: throw NoSuchElementException("No default value for key ${key.name} with mapKey $mapKey")
-
-  override def [T : Any] getStrict(key: SimpleKey[T]): T? {
-    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-    return key.deserialize(value)
-  }
-
-  override def [E : Any] getStrict(key: ListKey[E]): List[E]? {
-    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-    return key.deserialize(value)
-  }
-
-  override def [E : Any] getStrict(
-    key: ListKey[E],
-    index: Int,
-  ): E? {
-    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, index)
-    return key.deserialize(value)[index]
-  }
-
-  override def [K : Any, V : Any] getStrict(key: MapKey[K, V]): Map[K, V]? {
-    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key)
-    return key.deserialize(value)
-  }
-
-  override def [K : Any, V : Any] getStrict(
-    key: MapKey[K, V],
-    mapKey: K,
-  ): V? {
-    val value = System.getenv(key.environmentName) ?: return delegate?.getStrict(key, mapKey)
-    return key.deserialize(value)[mapKey]
+  override def getDefault[T](key: Key[T]): T = delegate.map(_.getDefault(key)).getOrElse(key.fallback)
+  override def get[T](key: Key[T]): Option[T] = {
+    Option(System.getenv(envName(key)))
+      .flatMap(key.deserialize)
+      .orElse(delegate.flatMap(_.get(key)))
   }
 }

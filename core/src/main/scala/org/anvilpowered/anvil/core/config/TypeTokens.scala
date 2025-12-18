@@ -22,13 +22,10 @@ import io.leangen.geantyref.TypeToken
 import net.kyori.adventure.text.Component
 import java.time.ZoneId
 
-@Suppress("PropertyName")
-open class TypeTokens {
-  val BOOLEAN: TypeToken[Boolean] = TypeToken.get(Boolean::class.javaObjectType)
-  val INTEGER: TypeToken[Int] = TypeToken.get(Int::class.javaObjectType)
-  val STRING: TypeToken[String] = TypeToken.get(String::class.java)
-  val COMPONENT: TypeToken[Component] = TypeToken.get(Component::class.java)
-  val ZONE_ID: TypeToken[ZoneId] = TypeToken.get(ZoneId::class.java)
-
-  companion object : TypeTokens()
+object TypeTokens {
+  val BOOLEAN: TypeToken[Boolean] = TypeToken.get(Boolean.getClass.asInstanceOf[Class[Boolean]])
+  val INTEGER: TypeToken[Int] = TypeToken.get(Int.getClass.asInstanceOf[Class[Int]])
+  val STRING: TypeToken[String] = TypeToken.get(String.getClass.asInstanceOf[Class[String]])
+  val COMPONENT: TypeToken[Component] = TypeToken.get(Component.getClass.asInstanceOf[Class[Component]])
+  val ZONE_ID: TypeToken[ZoneId] = TypeToken.get(ZoneId.getClass.asInstanceOf[Class[ZoneId]])
 }

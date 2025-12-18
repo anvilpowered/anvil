@@ -18,54 +18,31 @@
 
 package org.anvilpowered.anvil.core.config
 
+import cats.effect.IO
+import org.anvilpowered.anvil.core.config.ConfigurateRegistry.getConfigNodePath
 import org.anvilpowered.anvil.core.platform.PluginMeta
-import org.koin.core.module.Module
 import org.spongepowered.configurate.CommentedConfigurationNode
+import org.spongepowered.configurate.loader.AbstractConfigurationLoader
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
+
 import java.nio.file.Path
 
-class ConfigurateRegistryExporter(
-  val type: ConfigurateFileType[*],
-  val basePath: Path,
-  val pluginMeta: PluginMeta,
-  val keyNamespace: KeyNamespace,
+class ConfigurateRegistryExporter[B <: AbstractConfigurationLoader.Builder[B, AbstractConfigurationLoader[CommentedConfigurationNode]]](
+    val fileType: ConfigurateFileType[B],
+    val basePath: Path,
+    val pluginMeta: PluginMeta,
+    val keyNamespace: KeyNamespace,
 ) {
-  val configPath: Path = basePath.resolve("${pluginMeta.name}.${type.fileExtension}")
+  val configPath: Path = basePath.resolve(s"${pluginMeta.name}.${fileType.fileExtension}")
 
-  def export(
-    registry: Registry,
-    serializers: TypeSerializerCollection,
-  ) {
-    val loader = type.createBuilder(serializers).path(configPath).build()
+  def exportRegistry(registry: Registry, serializers: TypeSerializerCollection): IO[Unit] = IO.blocking {
+    val loader = fileType.createBuilder(serializers).path(configPath).build()
     val root = loader.createNode()
-    root.setAllFrom(registry, keyNamespace)
-    loader.save(root)
-  }
-
-  companion object {
-    context(Module)
-    def registerAll(basePath: Path) {
-      ConfigurateFileType.Hocon.registerExporter(basePath)
-      ConfigurateFileType.Yaml.registerExporter(basePath)
+    keyNamespace.keys.foreach { key =>
+      val n = root.node(key.getConfigNodePath)
+      n.set(key.typeTok, registry(key))
+      key.description.foreach(n.comment)
     }
-  }
-}
-
-private def CommentedConfigurationNode.setAllFrom(
-  registry: Registry,
-  keyNamespace: KeyNamespace,
-) {
-  for (key in keyNamespace.keys) {
-    setFrom(key, registry)
-  }
-}
-
-private def [T : Any] CommentedConfigurationNode.setFrom(
-  key: Key[T],
-  registry: Registry,
-) {
-  node(key.configNodePath).let { node -]
-    node.set(key.type, registry[key])
-    node.comment(key.description)
+    loader.save(root)
   }
 }

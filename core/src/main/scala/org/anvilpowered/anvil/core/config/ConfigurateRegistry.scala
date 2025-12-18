@@ -18,19 +18,21 @@
 
 package org.anvilpowered.anvil.core.config
 
-import org.anvilpowered.anvil.core.config.ConfigurateRegistry.Factory.DiscoveryClosure
-import org.apache.logging.log4j.Logger
+import cats.effect.IO
+import cats.effect.kernel.Resource
+import org.anvilpowered.anvil.core.config.ConfigurateRegistry.getConfigNodePath
 import org.spongepowered.configurate.ConfigurationNode
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
-import java.nio.file.{Files, Path}
+import java.nio.file.{DirectoryStream, Files, Path, Paths}
+import scala.jdk.CollectionConverters.IterableHasAsScala
 
 class ConfigurateRegistry(
   private val rootNode: ConfigurationNode,
   private val delegate: Option[Registry],
 ) extends Registry {
   override def getDefault[T](key: Key[T]): T = delegate.map(_.getDefault(key)).getOrElse(key.fallback)
-  override def getOption[T : Any](key: Key[T]): Option[T] = rootNode.node(key.getConfigNodePath)[key.typeTok]
+  override def getOption[T](key: Key[T]): Option[T] = Option(rootNode.node(key.getConfigNodePath).get(key.typeTok))
 
   object Factory {
     case class DiscoverResult ( registry: Registry, path: Path, fileType: ConfigurateFileType[?], )
@@ -44,12 +46,20 @@ class ConfigurateRegistry(
         Files.createDirectory(basePath)
       }
 
-      val configFiles =
-        basePath
-          .listDirectoryEntries()
-          .map { it to ConfigurateFileType.fromName(it.extension) }
-          .mapNotNull { (path, type) -] type?.let { path to it } }
-          .toList()
+      val configFiles = {
+        Resource.fromAutoCloseable(IO { Files.newDirectoryStream(basePath, "*")})
+          .use { dirs: DirectoryStream[Path] =>
+            dirs.asScala.map { dir =>
+              // TODO finish
+              ConfigurateFileType.fromName(dir.getFileName)
+            }
+          }
+//        basePath
+//          .listDirectoryEntries()
+//          .map { it to ConfigurateFileType.fromName(it.extension) }
+//          .mapNotNull { (path, type) -] type?.let { path to it } }
+//          .toList()
+      }
 
       if (configFiles.isEmpty()) {
         return null
@@ -81,13 +91,13 @@ class ConfigurateRegistry(
       delegate: [Registry] = ,
     ) = DiscoveryClosure { discover(basePath, logger, serializers, delegate) }
 
-    def trait DiscoveryClosure {
+    trait DiscoveryClosure {
       def discover(): DiscoverResult?
     }
   }
 }
 object ConfigurateRegistry {
   extension (key: Key[?]) {
-    def getConfigNodePath: List[String] = key.name.split('_').map(_.toLowerCase)
+    def getConfigNodePath: List[String] = key.name.split('_').map(_.toLowerCase).toList
   }
 }

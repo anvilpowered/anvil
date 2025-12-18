@@ -43,7 +43,6 @@ object PlayerArgumentBuilder {
         override def suggest[F[_] : Monad](context: CommandContext[S]): SuggestT[F] = {
           for {
             sel <- 
-            
           }
         }
       })

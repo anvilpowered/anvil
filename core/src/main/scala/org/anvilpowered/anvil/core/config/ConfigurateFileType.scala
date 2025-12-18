@@ -18,37 +18,29 @@
 
 package org.anvilpowered.anvil.core.config
 
-import org.koin.core.module.Module
-import org.koin.core.module.dsl.named
-import org.koin.core.module.dsl.withOptions
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader
-import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader
 import org.spongepowered.configurate.objectmapping.ObjectMapper
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
-import org.spongepowered.configurate.yaml.NodeStyle
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader
+import org.spongepowered.configurate.yaml.{NodeStyle, YamlConfigurationLoader}
 
 import java.nio.file.Path
 
 sealed trait ConfigurateFileType[
-  B <: AbstractConfigurationLoader.Builder[B, AbstractConfigurationLoader[CommentedConfigurationNode]],
+    B <: AbstractConfigurationLoader.Builder[B, AbstractConfigurationLoader[CommentedConfigurationNode]],
 ] {
   val name: String
   val fileExtension: String
 
   def createBuilder(serializers: TypeSerializerCollection): B
-
 }
 
 object ConfigurateFileType {
   object Hocon extends ConfigurateFileType[HoconConfigurationLoader.Builder] {
     override val name: String = "HOCON"
     override val fileExtension: String = "conf"
-
-    override def toString(): String = fullName
-
+    override def toString: String = this.fullName
     override def createBuilder(serializers: TypeSerializerCollection): HoconConfigurationLoader.Builder =
       HoconConfigurationLoader.builder().configure(serializers)
   }
@@ -56,25 +48,23 @@ object ConfigurateFileType {
   object Yaml extends ConfigurateFileType[YamlConfigurationLoader.Builder] {
     override val name: String = "YAML"
     override val fileExtension: String = "yaml"
-
-    override def toString(): String = fullName
-
+    override def toString: String = this.fullName
     override def createBuilder(serializers: TypeSerializerCollection): YamlConfigurationLoader.Builder =
       YamlConfigurationLoader.builder().configure(serializers).nodeStyle(NodeStyle.BLOCK)
   }
 
-  def fromName(fileEnding: String): Option[ConfigurateFileType[*]] =
+  def fromName(fileEnding: String): Option[ConfigurateFileType[?]] =
     fileEnding match {
-      case Yaml.fileExtension => Yaml
-      case Hocon.fileExtension => Hocon
-      case _ => None
+      case Yaml.fileExtension  => Some(Yaml)
+      case Hocon.fileExtension => Some(Hocon)
+      case _                   => None
     }
 
   extension (fileType: ConfigurateFileType[?]) {
-    def fullName: String = s"$name ($fileExtension)"
+    def fullName: String = s"${fileType.name} (${fileType.fileExtension})"
   }
 
-  extension [B <: AbstractConfigurationLoader.Builder[B, *]](builder: B) {
+  extension [B <: AbstractConfigurationLoader.Builder[B, ?]](builder: B) {
     def configure(serializers: TypeSerializerCollection): B = {
       builder.defaultOptions { x =>
         x.serializers { b =>

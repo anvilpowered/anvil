@@ -19,38 +19,9 @@
 package org.anvilpowered.anvil.core.config
 
 /**
- * A [Registry] that always returns the default value for all keys.
+ * A [[Registry]] that always returns the default value for all keys.
  */
-object DefaultRegistry : Registry {
-  override def [T : Any] getDefault(key: Key[T]): T = key.fallback
-
-  override def [E : Any] getDefault(
-    key: ListKey[E],
-    index: Int,
-  ): E =
-    key.fallback.getOrNull(index)
-      ?: throw NoSuchElementException("No default value for key ${key.name} at index $index")
-
-  override def [K : Any, V : Any] getDefault(
-    key: MapKey[K, V],
-    mapKey: K,
-  ): V =
-    key.fallback[mapKey]
-      ?: throw NoSuchElementException("No default value for key ${key.name} at key $mapKey")
-
-  override def [T : Any] getStrict(key: SimpleKey[T]): T? = null
-
-  override def [E : Any] getStrict(key: ListKey[E]): List[E]? = null
-
-  override def [E : Any] getStrict(
-    key: ListKey[E],
-    index: Int,
-  ): E? = null
-
-  override def [K : Any, V : Any] getStrict(key: MapKey[K, V]): Map[K, V]? = null
-
-  override def [K : Any, V : Any] getStrict(
-    key: MapKey[K, V],
-    mapKey: K,
-  ): V? = null
+object DefaultRegistry extends Registry {
+  override def getDefault[T](key: Key[T]): T = key.fallback
+    override def get[T](key: Key[T]): Option[T] = None
 }
