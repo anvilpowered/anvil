@@ -20,19 +20,21 @@ package org.anvilpowered.anvil.core.user
 
 import org.anvilpowered.anvil.core.PlatformType
 
-trait Subject : PlatformType {
-  /**
-   * Checks if the subject has the specified permission.
-   *
-   * - A value of `true` indicates that the subject has the permission explicitly set.
-   * - A value of `false` indicates that the subject has the permission explicitly set to false.
-   * - A value of `null` indicates that the subject does not have the permission explicitly set.
-   */
-  def hasPermission(permission: String): Boolean?
+trait Subject extends PlatformType {
+
+  /** Checks if the subject has the specified permission.
+    *
+    *   - A value of `true` indicates that the subject has the permission explicitly set.
+    *   - A value of `false` indicates that the subject has the permission explicitly set to false.
+    *   - A value of `None` indicates that the subject does not have the permission explicitly set.
+    */
+  def hasPermission(permission: String): Option[Boolean]
 }
 
-def Subject.hasPermissionSet(permission: String): Boolean = hasPermission(permission) == true
-
-def Subject.hasPermissionUnset(permission: String): Boolean = hasPermission(permission) == null
-
-def Subject.hasPermissionNotSet(permission: String): Boolean = !hasPermissionSet(permission)
+object Subject {
+  extension (subject: Subject) {
+    def hasPermissionSet(permission: String): Boolean = subject.hasPermission(permission).getOrElse(false)
+    def hasPermissionUnset(permission: String): Boolean = subject.hasPermission(permission).isEmpty
+    def hasPermissionNotSet(permission: String): Boolean = !subject.hasPermissionSet(permission)
+  }
+}

@@ -20,14 +20,12 @@ package org.anvilpowered.anvil.core.user
 
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
+
 import java.util.UUID
 
-/**
- * An online player.
- */
-trait Player :
-  Subject,
-  Audience {
+/** An online player.
+  */
+trait Player extends Subject, Audience {
   val id: UUID
 
   val username: String

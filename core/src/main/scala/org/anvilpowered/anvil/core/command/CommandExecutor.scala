@@ -18,11 +18,33 @@
 
 package org.anvilpowered.anvil.core.command
 
-trait CommandExecutor {
-  suspend def execute(
-    source: CommandSource,
-    command: String,
-  ): Boolean
+import cats.effect.IO
+import cats.{FlatMap, Monad}
+import org.anvilpowered.anvil.core.kbrig.StringReader
+import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import org.anvilpowered.anvil.core.kbrig.argument.{BooleanArgumentParser, StringArgumentParser, StringArgumentType}
 
-  suspend def executeAsConsole(command: String): Boolean
+trait CommandExecutor[F[_]: Monad] {
+  def execute(
+      source: CommandSource,
+      command: String,
+  ): F[Boolean]
+
+  def executeAsConsole(command: String): F[Boolean]
 }
+
+def foo(cmd: CommandExecutor, src: CommandSource): Unit = {
+  for {
+    _ <- IO.println("Hello")
+    b <- cmd.execute(src, "test")
+    c <- cmd.execute(src, "test" + b)
+    s <- IO.println("World")
+  } yield s
+}
+
+def bar[F[_]: Monad]: ParseT[F, (Boolean, String, String)] =
+  for {
+    a <- BooleanArgumentParser.parse
+    b <- StringArgumentParser.SingleWord.parse
+    c <- StringArgumentParser.GreedyPhrase.parse
+  } yield (a, b, c)

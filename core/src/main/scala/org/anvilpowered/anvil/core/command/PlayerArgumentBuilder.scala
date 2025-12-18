@@ -21,25 +21,19 @@ package org.anvilpowered.anvil.core.command
 import cats.Monad
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.PlayerService
 import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
-import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
-import org.anvilpowered.anvil.core.kbrig.builder.RequiredArgumentBuilder
-import org.anvilpowered.anvil.core.kbrig.context.CommandContext
-import org.anvilpowered.anvil.core.kbrig.context.CommandContextScopeDsl
-import org.anvilpowered.anvil.core.kbrig.context.CommandExecutionScope
-import org.anvilpowered.anvil.core.kbrig.context.executesScoped
-import org.anvilpowered.anvil.core.kbrig.context.get
-import org.anvilpowered.anvil.core.kbrig.context.yieldError
-import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, suggestsScoped}
+import org.anvilpowered.anvil.core.kbrig.builder.{ArgumentBuilder, RequiredArgumentBuilder}
+import org.anvilpowered.anvil.core.kbrig.context.*
+import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider
 import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider.SuggestT
+import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
+import org.anvilpowered.anvil.core.user.{Player, PlayerService}
 
 object PlayerArgumentBuilder {
   def requiredPlayedArgument(
     playerService: PlayerService,
     argumentName: String = "player",
-    //      command: 
+//          command: 
   ): RequiredArgumentBuilder[Player, String] = ???
   //      builder.required[CommandSource, String]("player", )
   
@@ -48,7 +42,7 @@ object PlayerArgumentBuilder {
       builder.suggests(new SuggestionProvider[S] {
         override def suggest[F[_] : Monad](context: CommandContext[S]): SuggestT[F] = {
           for {
-            sel
+            sel <- 
             
           }
         }

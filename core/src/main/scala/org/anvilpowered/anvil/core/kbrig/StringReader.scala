@@ -10,7 +10,7 @@ package org.anvilpowered.anvil.core.kbrig
 
 import cats.data.{EitherT, StateT}
 import cats.{Applicative, Monad, data}
-import org.anvilpowered.kbrig.exception.{ArgumentError, CommandSyntaxException, ParseError}
+import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandSyntaxException, ParseError}
 
 import java.lang
 import scala.annotation.tailrec
@@ -162,7 +162,7 @@ object StringReader {
     val offset = reader.skipWhile(isAllowedInUnquotedString)
     EitherT.pure(reader.advanceCursor(offset), reader.peekSlice(offset))
   }
-  
+
   def readRemainingString[F[_]: Monad]: ParseT[F, String] = StateT { reader =>
     EitherT.pure(reader.advanceCursor(reader.remainingLength), reader.remaining)
   }

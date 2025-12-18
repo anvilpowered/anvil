@@ -20,15 +20,11 @@ package org.anvilpowered.anvil.core.command
 
 import net.kyori.adventure.audience.Audience
 import org.anvilpowered.anvil.core.PlatformType
-import org.anvilpowered.anvil.core.user.Player
-import org.anvilpowered.anvil.core.user.Subject
+import org.anvilpowered.anvil.core.user.{Player, Subject}
 
-trait CommandSource extends
-  PlatformType,
-  Audience,
-  Subject {
-  /**
-   * The [Player] associated with the executed command, if any.
-   */
+trait CommandSource extends PlatformType, Audience, Subject {
+
+  /** The [Player] associated with the executed command, if any.
+    */
   val player: Option[Player]
 }

@@ -25,7 +25,7 @@ trait DomainEntity {
   // TODO: createdUtc, updatedUtc
 }
 
-trait DomainFacet[E : DomainEntity] {
+trait DomainFacet[E <: DomainEntity] {
   suspend def getOriginal(): E
 }
 

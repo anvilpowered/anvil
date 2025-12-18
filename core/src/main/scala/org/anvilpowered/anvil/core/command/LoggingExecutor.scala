@@ -18,37 +18,29 @@
 
 package org.anvilpowered.anvil.core.command
 
-import org.apache.logging.log4j.Logger
+import cats.effect.IO
+import cats.syntax.all.*
+import cats.{Applicative, FlatMap, Monad}
+import org.typelevel.log4cats.Logger
 
-def CommandExecutor.withLogging(
-  logger: Logger,
-  prefix: String = "command",
-): CommandExecutor =
-  object : CommandExecutor {
-    private def log(
-      success: Boolean,
-      prefix: String,
-      command: String,
-    ) {
-      if (success) {
-        logger.info("$prefix: $command")
-      } else {
-        logger.error("Failed to execute $prefix: $command")
-      }
-    }
+extension [F[_]: Monad](executor: CommandExecutor[F]) {
+  def withLogging(prefix: String = "command")(using logger: Logger[F]): CommandExecutor[F] = {
+    def log(success: Boolean, command: String, name: String): F[Unit] =
+      if (success) logger.info(s"$name executed $prefix: $command")
+      else logger.error(s"$name failed to execute $prefix: $command")
 
-    override suspend def execute(
-      source: CommandSource,
-      command: String,
-    ): Boolean {
-      val success = this@withLogging.execute(source, command)
-      log(success, prefix, command)
-      return success
-    }
+    new CommandExecutor {
+      override def execute(source: CommandSource, command: String): F[Boolean] =
+        for {
+          success <- executor.execute(source, command)
+          _ <- log(success, command, source.player.map(_.username).getOrElse("<n/a>"))
+        } yield success
 
-    override suspend def executeAsConsole(command: String): Boolean {
-      val success = this@withLogging.executeAsConsole(command)
-      log(success, "console via $prefix", command)
-      return success
+      override def executeAsConsole(command: String): F[Boolean] =
+        for {
+          success <- executor.executeAsConsole(command)
+          _ <- log(success, command, "Console")
+        } yield success
     }
   }
+}

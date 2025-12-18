@@ -14,7 +14,7 @@ import org.anvilpowered.anvil.core.kbrig.StringReader
 import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandSyntaxException}
-import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider.SuggestT
+import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 
 val BooleanArgumentType = ArgumentType(
