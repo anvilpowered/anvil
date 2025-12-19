@@ -40,7 +40,7 @@ class ConfigurateRegistryExporter[B <: AbstractConfigurationLoader.Builder[B, Ab
     val root = loader.createNode()
     keyNamespace.keys.foreach { key =>
       val n = root.node(key.getConfigNodePath)
-      n.set(key.typeTok, registry(key))
+      n.set(key.typeToken, registry(key))
       key.description.foreach(n.comment)
     }
     loader.save(root)

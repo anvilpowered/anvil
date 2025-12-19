@@ -18,85 +18,51 @@
 
 package org.anvilpowered.anvil.core.config
 
-import cats.effect.IO
+import cats.data.OptionT
+import cats.effect.{Concurrent, IO}
 import cats.effect.kernel.Resource
 import org.anvilpowered.anvil.core.config.ConfigurateRegistry.getConfigNodePath
 import org.spongepowered.configurate.ConfigurationNode
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
-import java.nio.file.{DirectoryStream, Files, Path, Paths}
 import scala.jdk.CollectionConverters.IterableHasAsScala
+import cats.syntax.all.*
+import fs2.io.file.{Files, Path}
 
 class ConfigurateRegistry(
   private val rootNode: ConfigurationNode,
   private val delegate: Option[Registry],
 ) extends Registry {
   override def getDefault[T](key: Key[T]): T = delegate.map(_.getDefault(key)).getOrElse(key.fallback)
-  override def getOption[T](key: Key[T]): Option[T] = Option(rootNode.node(key.getConfigNodePath).get(key.typeTok))
-
-  object Factory {
-    case class DiscoverResult ( registry: Registry, path: Path, fileType: ConfigurateFileType[?], )
-
-    def discover(
-      basePath: Path,
-      serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
-      delegate: Option[Registry] = None,
-    ): Option[DiscoverResult] = {
-      if (Files.notExists(basePath)) {
-        Files.createDirectory(basePath)
-      }
-
-      val configFiles = {
-        Resource.fromAutoCloseable(IO { Files.newDirectoryStream(basePath, "*")})
-          .use { dirs: DirectoryStream[Path] =>
-            dirs.asScala.map { dir =>
-              // TODO finish
-              ConfigurateFileType.fromName(dir.getFileName)
-            }
-          }
-//        basePath
-//          .listDirectoryEntries()
-//          .map { it to ConfigurateFileType.fromName(it.extension) }
-//          .mapNotNull { (path, type) -] type?.let { path to it } }
-//          .toList()
-      }
-
-      if (configFiles.isEmpty()) {
-        return null
-      } else if (configFiles.size > 1) {
-        throw IllegalStateException(
-          "Detected multiple configuration files for plugin ${basePath.fileName}: ${configFiles.map { it.first }}. " +
-            "Please make sure there is only one configuration file per plugin",
-        )
-      }
-
-      val (path, fileType) = configFiles.single()
-      return DiscoverResult(
-        ConfigurateRegistry(
-          fileType
-            .createBuilder(serializers)
-            .path(path)
-            .build()
-            .load(),
-          delegate,
-        ),
-        path,
-        type,
-      )
-    }
-
-    def createDiscoveryClosure(
-      basePath: Path,
-      serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
-      delegate: [Registry] = ,
-    ) = DiscoveryClosure { discover(basePath, logger, serializers, delegate) }
-
-    trait DiscoveryClosure {
-      def discover(): DiscoverResult?
-    }
-  }
+  override def getOption[T](key: Key[T]): Option[T] = Option(rootNode.node(key.getConfigNodePath).get(key.typeToken))
 }
 object ConfigurateRegistry {
+  case class DiscoverResult(registry: Registry, path: Path, fileType: ConfigurateFileType[?])
+
+  def discover(
+    basePath: Path,
+    serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
+    delegate: Option[Registry] = None,
+  ): OptionT[IO, DiscoverResult] =
+    for {
+      configFiles <- OptionT.liftF(Files[IO]
+        .list(basePath)
+        .mapFilter(path => ConfigurateFileType.fromName(path.extName).map(path -> _))
+        .compile
+        .toList)
+      _ <- OptionT.liftF(IO.raiseWhen(configFiles.size > 1)(
+        new IllegalStateException(
+          s"Detected multiple configuration files for plugin ${basePath.fileName}: ${configFiles.map(_._1)}. " +
+            "Please make sure there is only one configuration file per plugin"
+        )
+      ))
+      (path, fileType) <- OptionT.fromOption(configFiles.headOption)
+    } yield {
+      val rootNode = fileType.createBuilder(serializers).path(path.toNioPath).build().load()
+      val registry = ConfigurateRegistry(rootNode, delegate)
+      DiscoverResult(registry, path, fileType)
+    }
+
   extension (key: Key[?]) {
     def getConfigNodePath: List[String] = key.name.split('_').map(_.toLowerCase).toList
   }

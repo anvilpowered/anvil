@@ -53,10 +53,10 @@ private class KeyNamespaceImpl(override val name: String) extends KeyNamespace {
     for {
       key <- keyMap.get(keyName)
     } yield {
-      if (key.typeTok == typeTok) {
+      if (key.typeToken == typeTok) {
         key.asInstanceOf[Key[T]]
       } else {
-        throw new ClassCastException(s"Key $name has type ${key.typeTok} which does not match provided type $typeTok")
+        throw new ClassCastException(s"Key $name has type ${key.typeToken} which does not match provided type $typeTok")
       }
     }
   }
