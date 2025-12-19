@@ -18,6 +18,8 @@
 
 package org.anvilpowered.anvil.core.db
 
+import cats.effect.IO
+
 import java.util.UUID
 
 trait DomainEntity {
@@ -26,7 +28,7 @@ trait DomainEntity {
 }
 
 trait DomainFacet[E <: DomainEntity] {
-  suspend def getOriginal(): E
+  def getOriginal: IO[E]
 }
 
-trait Creates[E : DomainEntity]
+trait Creates[E <: DomainEntity]

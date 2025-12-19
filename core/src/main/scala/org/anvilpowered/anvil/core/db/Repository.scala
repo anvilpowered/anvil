@@ -18,14 +18,16 @@
 
 package org.anvilpowered.anvil.core.db
 
+import cats.data.ReaderT
+
 import java.util.UUID
 
-trait Repository[E : DomainEntity] {
-  suspend def findById(id: UUID): E?
+trait Repository[E <: DomainEntity] {
+  def findById[F[_]]: ReaderT[F, UUID, Option[E]]
 
-  suspend def exists(id: UUID): Boolean
+  def exists[F[_]]: ReaderT[F, UUID, Boolean]
 
-  suspend def countAll(): Long
+  def countAll[F[_]]: F[Long]
 
-  suspend def deleteById(id: UUID): Boolean
+  def deleteById(id: UUID): Boolean
 }
