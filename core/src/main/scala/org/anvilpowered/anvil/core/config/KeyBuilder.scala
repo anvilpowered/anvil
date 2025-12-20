@@ -17,19 +17,22 @@
  */
 
 package org.anvilpowered.anvil.core.config
-import cats.kernel.CommutativeMonoid
+import cats.Monoid
+import io.circe.generic.semiauto.*
+import io.circe.{Codec, Decoder, Encoder}
 import io.leangen.geantyref.TypeToken
 
 import scala.annotation.tailrec
 import scala.quoted.*
 import scala.reflect.ClassTag
 
-inline def createKey[T](fallback: T, description: Option[String] = None)(using tag: ClassTag[T], monoid: CommutativeMonoid[T]): Key[T] =
-  ${ createKeyImpl('tag, 'monoid, 'fallback, 'description) }
+inline def createKey[T](fallback: T, description: Option[String] = None)(using tag: ClassTag[T], codec: Codec[T], monoid: Monoid[T]): Key[T] =
+  ${ createKeyImpl('tag, 'codec, 'monoid, 'fallback, 'description) }
 
 def createKeyImpl[T: Type](
     tag: Expr[ClassTag[T]],
-    monoid: Expr[CommutativeMonoid[T]],
+    codec: Expr[Codec[T]],
+    monoid: Expr[Monoid[T]],
     fallback: Expr[T],
     description: Expr[Option[String]],
 )(using Quotes): Expr[Key[T]] = {
@@ -51,8 +54,19 @@ def createKeyImpl[T: Type](
   val name = findEnclosingValName(Symbol.spliceOwner)
 
   '{
-    Key(TypeToken.get[T]($tag.runtimeClass.asInstanceOf[Class[T]]), $monoid, ${ Expr(name) }, $fallback, $description)
+    Key(${ Expr(name) }, TypeToken.get[T]($tag.runtimeClass.asInstanceOf[Class[T]]), $codec, $monoid, $fallback, $description)
   }
 }
 
-val foo = createKey(4)
+case class Foo(s: String)
+
+implicit val fooCodec: Codec[Foo] = deriveCodec
+implicit val fooMonoid: Monoid[Foo] = new Monoid[Foo] {
+  override def empty: Foo = Foo(Monoid[String].empty)
+  override def combine(x: Foo, y: Foo): Foo = Foo(Monoid[String].combine(x.s, y.s))
+}
+val foo = createKey(Foo("test"))
+
+given Codec[String] = Codec.from(Decoder[String], Encoder[String])
+
+val bar = createKey("foo")

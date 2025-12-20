@@ -18,27 +18,27 @@
 
 package org.anvilpowered.anvil.core.config
 
-import cats.kernel.CommutativeMonoid
+import cats.Monoid
+import io.circe.Codec
 import io.leangen.geantyref.TypeToken
 
 case class Key[T](
-    typeToken: TypeToken[T],
-    monoid: CommutativeMonoid[T],
     name: String,
+    typeToken: TypeToken[T],
+
+    /** The [[Codec]] instance for this [[Key]] defines how values are serialized to and deserialized from a JSON representation.
+      */
+    codec: Codec[T],
+
+    /** The [[Monoid]] instance for this [[Key]] defines how values are combined if multiple values are present.
+      *
+      * The combine implementation is expected be left-based (i.e. the left argument should be preferred) if it is not possible to incorporate the values
+      * of both arguments.
+      */
+    monoid: Monoid[T],
     fallback: T,
     description: Option[String],
-) {
-
-  /** Serializes the given value in a simple [String] representation.
-    */
-  def serialize(value: T): String
-
-  /** TODO: Option -> Either with error message
-    *
-    * <p> Deserializes the given value from a simple [String] representation.
-    */
-  def deserialize(value: String): Option[T]
-}
+)
 
 object Key {
   given ordering: Ordering[Key[?]] = Ordering.by(_.name)
