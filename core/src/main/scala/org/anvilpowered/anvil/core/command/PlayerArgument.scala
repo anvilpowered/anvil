@@ -19,33 +19,42 @@
 package org.anvilpowered.anvil.core.command
 
 import cats.Monad
+import cats.data.{OptionT, ReaderT}
+import cats.effect.Concurrent
+import cats.implicits.toFlatMapOps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
 import org.anvilpowered.anvil.core.kbrig.builder.{ArgumentBuilder, RequiredArgumentBuilder}
 import org.anvilpowered.anvil.core.kbrig.context.*
-import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider
-import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
+import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 import org.anvilpowered.anvil.core.user.{Player, PlayerService}
 
-object PlayerArgumentBuilder {
+object PlayerArgument {
   def requiredPlayedArgument(
-    playerService: PlayerService,
-    argumentName: String = "player",
-//          command: 
+      playerService: PlayerService,
+      argumentName: String = "player",
+//          command:
   ): RequiredArgumentBuilder[Player, String] = ???
   //      builder.required[CommandSource, String]("player", )
-  
+
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
     def suggestPlayerArgument(using playerService: PlayerService): RequiredArgumentBuilder[S, String] =
       builder.suggests(new SuggestionProvider[S] {
-        override def suggest[F[_] : Monad](context: CommandContext[S]): SuggestT[F] = {
-          for {
-            sel <- 
-          }
-        }
+        override def suggest[F[_]: Concurrent](context: CommandContext[S]): SuggestT[F] =
+          Suggestions.of(ReaderT(playerService.getAll), _.username)
       })
+  }
+
+  def extract[F[_]: Monad](
+      context: CommandContext[CommandSource],
+      argumentName: String = "player",
+  )(using playerService: PlayerService): OptionT[F, Player] = {
+    for {
+      playerName <- context.extract[F, String](argumentName)
+      player <- playerService.get[F](playerName)
+    } yield player
   }
 }
 //def ArgumentBuilder.Companion.requirePlayerArgument(

@@ -9,9 +9,9 @@ package org.anvilpowered.anvil.core.kbrig.suggestion
 
 import cats.{Applicative, Monad}
 import cats.data.{EitherT, Kleisli, ReaderT, StateT}
-import cats.effect.IO
+import cats.effect.{Concurrent, IO}
 import cats.kernel.Monoid
-import cats.syntax.all._
+import cats.syntax.all.*
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.exception.ArgumentError
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
@@ -22,7 +22,7 @@ trait SuggestionProvider[-S] {
 
 object SuggestionProvider {
   val Empty: SuggestionProvider[Any] = new SuggestionProvider[Any] {
-    def suggest[F[_]: Monad](context: CommandContext[Any]): SuggestT[F] =
-      SuggestT.pure(Suggestions.empty)
+    def suggest[F[_]: Concurrent](context: CommandContext[Any]): SuggestT[F] =
+      SuggestT.pure(Suggestions.Empty)
   }
 }

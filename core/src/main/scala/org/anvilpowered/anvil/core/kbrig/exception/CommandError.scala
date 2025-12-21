@@ -9,10 +9,11 @@ trait CommandError {
 
 trait ArgumentError {
   def argument: String
+  def text: Component
 }
 
 case class NoArg(override val argument: String) extends ArgumentError {
-  val text: Component = Component
+  override val text: Component = Component
     .text()
     .append(Component.text("No such argument ").color(NamedTextColor.RED))
     .append(Component.text(argument).color(NamedTextColor.GOLD))

@@ -8,8 +8,9 @@
 package org.anvilpowered.anvil.core.kbrig.context
 
 import cats.Monad
-import cats.data.{EitherT, ReaderT}
+import cats.data.{EitherT, OptionT, ReaderT}
 import cats.effect.IO
+import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandError}
 
 import scala.annotation.tailrec
@@ -32,7 +33,6 @@ object CommandContext {
   }
 
   extension [S](context: CommandContext[S]) {
-    def fetch[F[_]: Monad, T: ClassTag]: ReaderT[[X] =>> EitherT[F, ArgumentError, X], String, T] = context.argumentFetcher.fetch
 
     def lastChild: CommandContext[S] = {
       @tailrec def findLast(ctx: CommandContext[S]): CommandContext[S] =
@@ -44,11 +44,12 @@ object CommandContext {
       findLast(context)
     }
   }
+  
 }
 
 trait ArgumentFetcher {
 
   /** Fetch the argument with the name matching the string input.
     */
-  def fetch[F[_]: Monad, T: ClassTag]: ReaderT[[X] =>> EitherT[F, ArgumentError, X], String, T]
+  def fetch[F[_]: Monad, T: ClassTag](name: String): EitherT[F, ArgumentError, T]
 }

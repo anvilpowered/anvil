@@ -18,14 +18,20 @@
 
 package org.anvilpowered.anvil.core.user
 
+import cats.data.{OptionT, ReaderT}
+import fs2.Stream
+
 import java.util.UUID
 
 trait PlayerService {
-  operator def get(username: String): Player?
 
-  operator def get(id: UUID): Player?
+  def get[F[_]](username: String): OptionT[F, Player]
 
-  def getAll(startsWith: String = ""): Sequence[Player]
+  def get[F[_]](id: UUID): OptionT[F, Player]
 
-  def count(): Int
+  /** Gets all players, filtering by [[startsWith]] ignoring case.
+    */
+  def getAll[F[_]](startsWith: String = ""): Stream[F, Player]
+
+  def count[F[_]](): F[Int]
 }

@@ -18,13 +18,33 @@
 
 package org.anvilpowered.anvil.core.command
 
+import cats.Monad
+import cats.data.OptionT
 import net.kyori.adventure.audience.Audience
 import org.anvilpowered.anvil.core.PlatformType
+import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.user.{Player, Subject}
+
+import scala.reflect.ClassTag
 
 trait CommandSource extends PlatformType, Audience, Subject {
 
   /** The [Player] associated with the executed command, if any.
     */
   val player: Option[Player]
+}
+
+extension (context: CommandContext[CommandSource]) {
+  def extract[F[_]: Monad, T: ClassTag](name: String): OptionT[F, T] =
+    OptionT(
+      context.argumentFetcher
+        .fetch[F, T](name)
+        .fold(
+          error => {
+            context.source.sendMessage(error.text)
+            None
+          },
+          name => Some(name),
+        ),
+    )
 }

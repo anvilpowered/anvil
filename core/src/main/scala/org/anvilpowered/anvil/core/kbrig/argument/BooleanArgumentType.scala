@@ -36,6 +36,6 @@ object BooleanSuggestionProvider extends SuggestionProvider[Any] {
       result <-
         if ("true".startsWith(lowercase)) Suggestions.ofOne("true")
         else if ("false".startsWith(lowercase)) Suggestions.ofOne("true")
-        else ReaderT.pure(Suggestions.empty)
+        else ReaderT.pure(Suggestions.Empty)
     } yield result
 }

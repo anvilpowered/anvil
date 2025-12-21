@@ -25,7 +25,7 @@ class RootCommandNode[S](children: Map[String, CommandNode[S]])
 
   override val usageText: String = ""
 
-  def suggest[F[_]: Monad](context: CommandContext[S]): SuggestT[F] = SuggestT.pure(Suggestions.empty)
+  def suggest[F[_]: Monad](context: CommandContext[S]): SuggestT[F] = SuggestT.pure(Suggestions.Empty)
 
   override def toBuilder: ArgumentBuilder[S] = {
     throw UnsupportedOperationException("Cannot convert root into a builder")

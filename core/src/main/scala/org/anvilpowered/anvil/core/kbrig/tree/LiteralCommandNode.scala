@@ -33,7 +33,7 @@ class LiteralCommandNode[S](
         if (literalLowerCase.regionMatches(0, input, 0, input.length)) {
           Suggestions.ofOne(name)
         } else {
-          SuggestT.pure(Suggestions.empty)
+          SuggestT.pure(Suggestions.Empty)
         }
     } yield result
   }

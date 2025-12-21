@@ -33,7 +33,4 @@ class ArgumentType[-S, T](
     val parser: ArgumentParser[T],
     val suggestionProvider: SuggestionProvider[S],
     val examples: Set[String], // TODO: Custom examples for default argument types are not correctly converted to Brigadier's format
-) {
-  import parser.parse
-  import suggestionProvider.suggest
-}
+)
