@@ -19,43 +19,67 @@
 package org.anvilpowered.anvil.core.command
 
 import cats.Monad
-import cats.data.{OptionT, ReaderT}
-import cats.effect.Concurrent
+import cats.data.{EitherT, OptionT, ReaderT}
+import cats.effect.{Concurrent, Temporal}
 import cats.implicits.toFlatMapOps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
 import org.anvilpowered.anvil.core.kbrig.builder.{ArgumentBuilder, RequiredArgumentBuilder}
 import org.anvilpowered.anvil.core.kbrig.context.*
+import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandError, NotFoundError}
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 import org.anvilpowered.anvil.core.user.{Player, PlayerService}
 
 object PlayerArgument {
-  def requiredPlayedArgument(
-      playerService: PlayerService,
-      argumentName: String = "player",
-//          command:
-  ): RequiredArgumentBuilder[Player, String] = ???
-  //      builder.required[CommandSource, String]("player", )
+//  def requiredPlayedArgument(
+//      argumentName: String = "player",
+//      command: (context: CommandContext[CommandSource], player: Player) => F[Int],
+//  )(using playerService: PlayerService): RequiredArgumentBuilder[CommandSource, String] = {
+//    given PlayerService = playerService
+//    ArgumentBuilder
+//      .required[CommandSource, String]("player", StringArgumentType.singleWord())
+//      .suggestPlayerArgument
+//      .executes(new Command[S] {
+//        def execute[F[_] : Concurrent](context: CommandContext[CommandSource]): F[Int] =
+//          PlayerArgument.extract[F](context, argumentName)
+//            .map()
+//      })
+//  }
 
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
-    def suggestPlayerArgument(using playerService: PlayerService): RequiredArgumentBuilder[S, String] =
+    def suggestPlayerArgument(using playerService: PlayerService): builder.type =
       builder.suggests(new SuggestionProvider[S] {
-        override def suggest[F[_]: Concurrent](context: CommandContext[S]): SuggestT[F] =
-          Suggestions.of(ReaderT(playerService.getAll), _.username)
+        override def suggest[F[_]: Temporal](context: CommandContext[S]): SuggestT[F] =
+          Suggestions.ofStream(ReaderT(playerService.getAll), _.username)
       })
   }
 
+  /** Extract a player from an argument.
+    */
   def extract[F[_]: Monad](
       context: CommandContext[CommandSource],
       argumentName: String = "player",
-  )(using playerService: PlayerService): OptionT[F, Player] = {
+  )(using playerService: PlayerService): EitherT[F, CommandError, Player] =
     for {
       playerName <- context.extract[F, String](argumentName)
-      player <- playerService.get[F](playerName)
+      player <- playerService
+        .get[F](playerName)
+        .toRight(NotFoundError("player", playerName))
     } yield player
-  }
+
+  def extractSource[F[_]: Monad](
+      context: CommandContext[CommandSource],
+  ): EitherT[F, CommandError, Player] =
+    EitherT.fromEither(context.source.player.toRight(MustBePlayerError))
+}
+
+case object MustBePlayerError extends CommandError {
+  override def text: Component = Component
+    .text("You must be a player to use this command!")
+    .color(NamedTextColor.RED)
 }
 //def ArgumentBuilder.Companion.requirePlayerArgument(
 //  playerService: PlayerService,
@@ -78,39 +102,3 @@ object PlayerArgument {
 //def [S] RequiredArgumentBuilder[S, String].suggestPlayerArgument(playerService: PlayerService): RequiredArgumentBuilder[S, String] =
 //  suggestsScoped { playerService.getAll().suggestAllFiltered { it.username } }
 //
-//@CommandContextScopeDsl
-//suspend def CommandExecutionScope[CommandSource].extractPlayerArgument(
-//  playerService: PlayerService,
-//  argumentName: String = "player",
-//): Player {
-//  val playerName = context.get[String](argumentName)
-//  val player = playerService[playerName]
-//  if (player == null) {
-//    context.source.sendMessage(
-//      Component
-//        .text()
-//        .append(Component.text("Player with name ", NamedTextColor.RED))
-//        .append(Component.text(playerName, NamedTextColor.GOLD))
-//        .append(Component.text(" not found!", NamedTextColor.RED))
-//        .build(),
-//    )
-//    yieldError()
-//  }
-//  return player
-//}
-//
-//@CommandContextScopeDsl
-//suspend def CommandExecutionScope[CommandSource].extractPlayerSource(): Player {
-//  val player = extractPlayerSourceOrNull()
-//  if (player == null) {
-//    context.source.sendMessage(Component.text("You must be a player to use this command!", NamedTextColor.RED))
-//    yieldError()
-//  }
-//  return player
-//}
-//
-//@CommandContextScopeDsl
-//def CommandContext.Scope[CommandSource].extractPlayerSourceOrNull(): Player? = context.source.player
-//
-//@CommandContextScopeDsl
-//suspend def CommandContext.Scope[CommandSource].extractPlayerSourceOrAbort(): Player = extractPlayerSourceOrNull() ?: abort()

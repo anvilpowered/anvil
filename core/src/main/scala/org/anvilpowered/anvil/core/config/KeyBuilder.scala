@@ -54,7 +54,7 @@ def createKeyImpl[T: Type](
   val name = findEnclosingValName(Symbol.spliceOwner)
 
   '{
-    Key(${ Expr(name) }, TypeToken.get[T]($tag.runtimeClass.asInstanceOf[Class[T]]), $codec, $monoid, $fallback, $description)
+    Key(${ Expr(name) }, Key.typeTokenOf[T], $codec, $monoid, $fallback, $description)
   }
 }
 
@@ -70,3 +70,4 @@ val foo = createKey(Foo("test"))
 given Codec[String] = Codec.from(Decoder[String], Encoder[String])
 
 val bar = createKey("foo")
+

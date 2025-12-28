@@ -8,13 +8,15 @@
 package org.anvilpowered.anvil.core.kbrig.suggestion
 
 import cats.data.ReaderT
-import cats.effect.{Concurrent, IO}
 import cats.effect.IO.asyncForIO
+import cats.effect.{Concurrent, IO}
 import cats.kernel.Monoid
 import cats.syntax.all.*
 import cats.{Applicative, Monad, Show}
 import fs2.Stream
 import org.anvilpowered.anvil.core.kbrig.context.StringRange
+
+import scala.annotation.targetName
 
 case class Suggestions(range: StringRange, list: Seq[Suggestion]) {
   def isEmpty: Boolean = list.isEmpty
@@ -39,7 +41,9 @@ object Suggestions {
       if (text == input.text) Empty
       else Suggestions(input.range, Seq(Suggestion(input.range, text, tooltip)))
 
-  def of[F[_]: Concurrent, T](
+  /** Creates suggestions from a [[Stream]] given the current input.
+    */
+  def ofStream[F[_]: Concurrent, T](
       stream: ReaderT[[X] =>> Stream[F, X], String, T],
       toText: T => String,
       toTooltip: T => Option[String] = { (_: T) => None },
@@ -49,18 +53,31 @@ object Suggestions {
       .map { item => Suggestion(input.range, toText(item), toTooltip(item)) }
       .compile
       .toList
-      .map { list => create(input.text, list) }
+      .map { items => create(input.text, items) }
+  }
+
+  /** Creates suggestions from an [[Iterable]] given the current input.
+    */
+  def ofSeq[F[_]: Concurrent, T](
+      iter: ReaderT[F, String, Seq[T]],
+      toText: T => String,
+      toTooltip: T => Option[String] = { (_: T) => None },
+  ): SuggestT[F] = SuggestT { input =>
+    iter
+      .run(input.text)
+      .map { items =>
+        items.map { item => Suggestion(input.range, toText(item), toTooltip(item)) }
+      }
+      .map { items => create(input.text, items) }
   }
 
   given Monoid[Suggestions] with {
     def empty: Suggestions = Suggestions.Empty
 
     def combine(x: Suggestions, y: Suggestions): Suggestions = {
-      // Combine based on your logic - here's one approach:
       if (x.isEmpty) y
       else if (y.isEmpty) x
       else {
-        // Merge the ranges and combine the suggestion lists
         val newRange = StringRange.between(
           Math.min(x.range.start, y.range.start),
           Math.max(x.range.end, y.range.end),

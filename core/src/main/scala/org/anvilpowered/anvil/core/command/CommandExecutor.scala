@@ -32,19 +32,3 @@ trait CommandExecutor[F[_]: Monad] {
 
   def executeAsConsole(command: String): F[Boolean]
 }
-
-def foo(cmd: CommandExecutor, src: CommandSource): Unit = {
-  for {
-    _ <- IO.println("Hello")
-    b <- cmd.execute(src, "test")
-    c <- cmd.execute(src, "test" + b)
-    s <- IO.println("World")
-  } yield s
-}
-
-def bar[F[_]: Monad]: ParseT[F, (Boolean, String, String)] =
-  for {
-    a <- BooleanArgumentParser.parse
-    b <- StringArgumentParser.SingleWord.parse
-    c <- StringArgumentParser.GreedyPhrase.parse
-  } yield (a, b, c)

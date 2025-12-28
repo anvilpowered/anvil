@@ -31,13 +31,13 @@ class ConfigCommandFactory(
   val registry: Registry,
   val configurateRegistryClosure: ConfigurateRegistry.Factory.DiscoveryClosure,
   val keyNamespace: KeyNamespace,
-  val exporters: List[ConfigurateRegistryExporter],
+  val exporters: List[ConfigurateRegistryExporter[?]],
   val serializers: TypeSerializerCollection,
 ) {
   def create(): LiteralCommandNode[CommandSource] =
     ArgumentBuilder
       .literal[CommandSource]("config")
-      .then(createGet())
-      .then(createGenerate())
+      .thenArg(createGet())
+      .thenArg(createGenerate())
       .build()
 }

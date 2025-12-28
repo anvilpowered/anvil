@@ -7,8 +7,10 @@
  */
 package org.anvilpowered.anvil.core.kbrig
 
-import org.anvilpowered.kbrig.context.CommandContext
+import cats.Applicative
+import cats.effect.{Concurrent, Temporal}
+import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 
 trait Command[-S] {
-  def execute(context: CommandContext[S]): Int
+  def execute[F[_]: Temporal](context: CommandContext[S]): F[Int]
 }

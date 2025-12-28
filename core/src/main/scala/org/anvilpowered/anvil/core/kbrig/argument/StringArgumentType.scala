@@ -7,7 +7,7 @@
  */
 package org.anvilpowered.anvil.core.kbrig.argument
 
-import cats.Monad
+import cats.{Applicative, Monad}
 import cats.effect.IO
 import cats.data.Kleisli
 import org.anvilpowered.anvil.core.kbrig.StringReader
@@ -18,18 +18,18 @@ import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandSyntax
 import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider
 
 object StringArgumentType {
-  def singleWord(
-      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.Empty,
+  def singleWord[S](
+      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.Empty,
       examples: Set[String] = Set("word", "words_with_underscores"),
   ) = ArgumentType(SingleWord, suggestionProvider, examples)
 
-  def quotedPhrase(
-      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.Empty,
+  def quotedPhrase[S](
+      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.Empty,
       examples: Set[String] = Set("\"quoted phrase\"", "word", "\"\""),
   ) = ArgumentType(QuotedPhrase, suggestionProvider, examples)
 
-  def greedyPhrase(
-      suggestionProvider: SuggestionProvider[String] = SuggestionProvider.Empty,
+  def greedyPhrase[S](
+      suggestionProvider: SuggestionProvider[S] = SuggestionProvider.Empty,
       examples: Set[String] = Set("word", "words with spaces", "\"and symbols\""),
   ) = ArgumentType(GreedyPhrase, suggestionProvider, examples)
 }

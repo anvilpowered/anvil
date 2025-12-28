@@ -1,8 +1,9 @@
 package org.anvilpowered.anvil.core.kbrig.tree
 
 import cats.Monad
+import cats.effect.{Concurrent, Temporal}
 import org.anvilpowered.anvil.core.kbrig.argument.ArgumentType
-import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider.SuggestT
+import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.tree.{LiteralCommandNode, RootCommandNode}
 
 /*
@@ -77,7 +78,7 @@ object SourceConverter {
   extension [S, R](original: SuggestionProvider[S]) {
     def mapSource(f: R => S): SuggestionProvider[R] =
       new SuggestionProvider[R] {
-        override def suggest[F[_]: Monad](context: CommandContext[R]): SuggestT[F] = original.suggest(context.mapToOriginalSource(f))
+        override def suggest[F[_]: Temporal](context: CommandContext[R]): SuggestT[F] = original.suggest(context.mapToOriginalSource(f))
       }
   }
 
@@ -86,7 +87,9 @@ object SourceConverter {
   }
 
   extension [S, R](original: Command[S]) {
-    def mapSource(f: R => S): Command[R] = (context: CommandContext[R]) => original.execute(context.mapToOriginalSource(f))
+    def mapSource(f: R => S): Command[R] = new Command[R] {
+      override def execute[F[_]: Temporal](context: CommandContext[R]): F[Int] = original.execute(context.mapToOriginalSource(f))
+    }
   }
 
   extension [S, R](original: CommandContext[R]) {

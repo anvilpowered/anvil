@@ -9,6 +9,7 @@ package org.anvilpowered.anvil.core.kbrig.builder
 
 import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.argument.ArgumentType
+import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.tree.CommandNode
 
 import scala.collection.mutable
@@ -45,7 +46,7 @@ abstract class ArgumentBuilder[S] {
 
   def executes(command: Command[S]): this.type = executes(Some(command))
 
-    def requires(requirement: S => Boolean): this.type = {
+  def requires(requirement: S => Boolean): this.type = {
     this.requirement = requirement
     this
   }

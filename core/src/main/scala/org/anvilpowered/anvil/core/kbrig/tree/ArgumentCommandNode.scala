@@ -9,13 +9,13 @@ package org.anvilpowered.anvil.core.kbrig.tree
 
 import cats.Monad
 import cats.data.{EitherT, Kleisli, ReaderT}
-import cats.effect.IO
+import cats.effect.{Concurrent, IO, Temporal}
 import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.argument.ArgumentType
 import org.anvilpowered.anvil.core.kbrig.builder.RequiredArgumentBuilder
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.exception.ArgumentError
-import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider.SuggestT
+import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 
 class ArgumentCommandNode[S, T](
@@ -33,7 +33,7 @@ class ArgumentCommandNode[S, T](
 
   override val examples: Set[String] = argType.examples
 
-  override def suggest[F[_]: Monad](context: CommandContext[S]): SuggestT[F] = {
+  override def suggest[F[_]: Temporal](context: CommandContext[S]): SuggestT[F] = {
     customSuggestions.getOrElse(argType.suggestionProvider).suggest(context)
   }
 

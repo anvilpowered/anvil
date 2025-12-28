@@ -13,6 +13,9 @@ project/plugins/project/
 .history
 .cache
 .lib/
+.bloop
+.metals
+.vscode
 
 ### SBT Patch ###
 .bsp/

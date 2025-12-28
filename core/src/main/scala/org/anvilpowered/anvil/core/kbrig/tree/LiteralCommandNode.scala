@@ -11,8 +11,8 @@ import cats.Monad
 import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.builder.LiteralArgumentBuilder
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
-import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions
+import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.{Input, SuggestT}
 
 class LiteralCommandNode[S](
     literal: String,
@@ -28,9 +28,9 @@ class LiteralCommandNode[S](
 
   def suggest[F[_]: Monad](context: CommandContext[S]): SuggestT[F] = {
     for {
-      input <- SuggestT.ask[F, String]
+      input <- SuggestT.ask[F, Input]
       result <-
-        if (literalLowerCase.regionMatches(0, input, 0, input.length)) {
+        if (literalLowerCase.regionMatches(0, input.text, 0, input.text.length)) {
           Suggestions.ofOne(name)
         } else {
           SuggestT.pure(Suggestions.Empty)
