@@ -18,10 +18,10 @@
 
 package org.anvilpowered.anvil.core.command
 
-import cats.{Applicative, Monad}
 import cats.data.{EitherT, ReaderT}
-import cats.effect.Temporal
+import cats.effect.Async
 import cats.syntax.all.*
+import cats.{Applicative, Monad}
 import io.leangen.geantyref.TypeToken
 import org.anvilpowered.anvil.core.command.CommandSource.extract
 import org.anvilpowered.anvil.core.config.{Key, KeyNamespace}
@@ -30,23 +30,26 @@ import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
 import org.anvilpowered.anvil.core.kbrig.builder.{ArgumentBuilder, RequiredArgumentBuilder}
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.exception.{ArgTypeCastError, CommandError, NotFoundError}
-import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
+import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 
 import scala.reflect.ClassTag
 
 object KeyArgument {
-  
+
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
     def suggestKeyArgument(using namespace: KeyNamespace): builder.type =
       builder.suggests(new SuggestionProvider[S] {
-        override def suggest[F[_]](context: CommandContext[S])(using F: Temporal[F]): SuggestT[F] =
-          Suggestions.ofSeq(ReaderT { prefix =>
-            F.pure(namespace.keys.filter(_.name.startsWith(prefix)).toSeq)
-          }, _.name)
+        override def suggest[F[_]](context: CommandContext[S])(using F: Async[F]): SuggestT[F] =
+          Suggestions.ofSeq(
+            ReaderT { prefix =>
+              F.pure(namespace.keys.filter(_.name.startsWith(prefix)).toSeq)
+            },
+            _.name,
+          )
       })
   }
-  
+
   inline def extract[F[_]: Monad, T](
       context: CommandContext[?],
       argumentName: String = "key",
@@ -64,16 +67,59 @@ object KeyArgument {
         .find(_.name == keyName)
         .toOptionT
         .toRight(NotFoundError("key", keyName))
-      keyT <- EitherT.cond(
+      keyT <- EitherT.cond[F][CommandError, Key[T]](
         key.typeToken == typeToken,
         key.asInstanceOf[Key[T]],
         ArgTypeCastError("key", typeToken.getType, key.typeToken.getType, argumentName),
       )
     } yield keyT
 
-  def simpleBuilder[T](
-      typeToken: TypeToken[T],
+  def extractUntyped[F[_]: Monad](
+      context: CommandContext[?],
       argumentName: String = "key",
-  )(using namespace: KeyNamespace): RequiredArgumentBuilder[CommandSource, Key[T]] =
-    ???
+  )(using namespace: KeyNamespace): EitherT[F, CommandError, Key[?]] =
+    for {
+      keyName <- context.extract[F, String](argumentName)
+      key <- namespace.keys
+        .find(_.name == keyName)
+        .toOptionT
+        .toRight(NotFoundError("key", keyName))
+    } yield key
+
+  def simpleBuilder[S, T](
+      typeToken: TypeToken[T],
+      executes: [F[_]: Monad] => (context: CommandContext[S], key: Key[T]) => EitherT[F, CommandError, Int],
+      argumentName: String = "key",
+  )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] =
+    ArgumentBuilder
+      .required[S, String](argumentName, StringArgumentType.singleWord())
+      .suggestKeyArgument
+      .executes(new Command[S] {
+        override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] =
+          for {
+            key <- KeyArgument.extract[F, T](typeToken, context, argumentName)
+            result <- executes[F](context, key)
+          } yield result
+      })
+
+  def simpleBuilderT[S](
+      executes: [F[_]: Async, T] => (context: CommandContext[S], key: Key[T]) => EitherT[F, CommandError, Int],
+  )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] = simpleBuilderT(executes, "key")
+
+  def simpleBuilderT[S](
+      executes: [F[_]: Async, T] => (context: CommandContext[S], key: Key[T]) => EitherT[F, CommandError, Int],
+      argumentName: String,
+  )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] =
+    ArgumentBuilder
+      .required[S, String](argumentName, StringArgumentType.singleWord())
+      .suggestKeyArgument
+      .executes(new Command[S] {
+        override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] = {
+          type T
+          for {
+            key <- KeyArgument.extract[F, T](context, argumentName)
+            result <- executes[F, T](context, key)
+          } yield result
+        }
+      })
 }

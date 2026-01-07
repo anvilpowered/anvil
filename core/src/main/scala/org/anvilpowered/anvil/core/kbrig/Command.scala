@@ -8,9 +8,11 @@
 package org.anvilpowered.anvil.core.kbrig
 
 import cats.Applicative
-import cats.effect.{Concurrent, Temporal}
+import cats.data.EitherT
+import cats.effect.{Async, Concurrent}
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
+import org.anvilpowered.anvil.core.kbrig.exception.CommandError
 
 trait Command[-S] {
-  def execute[F[_]: Temporal](context: CommandContext[S]): F[Int]
+  def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int]
 }

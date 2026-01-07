@@ -1,8 +1,10 @@
 package org.anvilpowered.anvil.core.kbrig.tree
 
 import cats.Monad
-import cats.effect.{Concurrent, Temporal}
+import cats.data.EitherT
+import cats.effect.{Async, Concurrent}
 import org.anvilpowered.anvil.core.kbrig.argument.ArgumentType
+import org.anvilpowered.anvil.core.kbrig.exception.CommandError
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.tree.{LiteralCommandNode, RootCommandNode}
 
@@ -78,7 +80,7 @@ object SourceConverter {
   extension [S, R](original: SuggestionProvider[S]) {
     def mapSource(f: R => S): SuggestionProvider[R] =
       new SuggestionProvider[R] {
-        override def suggest[F[_]: Temporal](context: CommandContext[R]): SuggestT[F] = original.suggest(context.mapToOriginalSource(f))
+        override def suggest[F[_]: Async](context: CommandContext[R]): SuggestT[F] = original.suggest(context.mapToOriginalSource(f))
       }
   }
 
@@ -88,7 +90,8 @@ object SourceConverter {
 
   extension [S, R](original: Command[S]) {
     def mapSource(f: R => S): Command[R] = new Command[R] {
-      override def execute[F[_]: Temporal](context: CommandContext[R]): F[Int] = original.execute(context.mapToOriginalSource(f))
+      override def execute[F[_]: Async](context: CommandContext[R]): EitherT[F, CommandError, Int] =
+        original.execute(context.mapToOriginalSource(f))
     }
   }
 

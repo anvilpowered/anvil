@@ -18,8 +18,11 @@
 
 package org.anvilpowered.anvil.core.command.config
 
+import cats.data.OptionT
+import cats.effect.Async
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.config.ConfigurateRegistry
+import org.anvilpowered.anvil.core.config.ConfigurateRegistry.DiscoverResult
 import org.anvilpowered.anvil.core.config.ConfigurateRegistryExporter
 import org.anvilpowered.anvil.core.config.KeyNamespace
 import org.anvilpowered.anvil.core.config.Registry
@@ -29,7 +32,7 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
 class ConfigCommandFactory(
   val registry: Registry,
-  val configurateRegistryClosure: ConfigurateRegistry.Factory.DiscoveryClosure,
+  val discover: [F[_]: Async] => () => OptionT[F, DiscoverResult],
   val keyNamespace: KeyNamespace,
   val exporters: List[ConfigurateRegistryExporter[?]],
   val serializers: TypeSerializerCollection,

@@ -7,8 +7,11 @@
  */
 package org.anvilpowered.anvil.core.kbrig.builder
 
+import cats.effect.Async
 import org.anvilpowered.anvil.core.kbrig.argument.ArgumentType
+import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.suggestion.SuggestionProvider
+import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.tree.ArgumentCommandNode
 
 class RequiredArgumentBuilder[S, T](
@@ -21,7 +24,13 @@ class RequiredArgumentBuilder[S, T](
     suggestionsProvider = provider
     this
   }
+
   def suggests(provider: SuggestionProvider[S]): this.type = suggests(Some(provider))
+
+  def suggests(provider: [F[_]: Async] => (context: CommandContext[S]) => SuggestT[F]): this.type =
+    suggests(new SuggestionProvider[S] {
+      override def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F] = provider[F](context)
+    })
 
   override def build(): ArgumentCommandNode[S, T] =
     ArgumentCommandNode(name, argType, command, requirement, forward, forks, children, suggestionsProvider)

@@ -18,32 +18,30 @@
 
 package org.anvilpowered.anvil.core.config
 
-import cats.{Monad, Monoid}
 import cats.data.OptionT
 import cats.effect.Sync
 import cats.kernel.CommutativeMonoid
 import cats.kernel.instances.OptionMonoid
 import cats.syntax.all.*
+import cats.{Monad, Monoid}
 
 trait Registry {
   def getDefault[T](key: Key[T]): T
 
-  def get[F[_]: Monad, T](key: Key[T]): OptionT[F, T]
+  def get[T](key: Key[T]): Option[T]
 
-  def apply[F[_]: Monad, T](key: Key[T]): F[T] = get(key).getOrElse(getDefault(key))
+  def apply[T](key: Key[T]): T = get(key).getOrElse(getDefault(key))
 }
 
 object EmptyRegistry extends Registry {
   override def getDefault[T](key: Key[T]): T = key.fallback
-  override def get[F[_]: Sync, T](key: Key[T]): OptionT[F, T] = OptionT.none
+  override def get[T](key: Key[T]): Option[T] = None
 }
 
 object RegistryMonoid extends Monoid[Registry] {
   override def empty: Registry = EmptyRegistry
   override def combine(x: Registry, y: Registry): Registry = new Registry {
     override def getDefault[T](key: Key[T]): T = key.monoid.combine(x.getDefault(key), y.getDefault(key))
-    override def get[F[_]: Monad, T](key: Key[T]): OptionT[F, T] = {
-      OptionT { (x.get(key).value, y.get(key).value).mapN(OptionMonoid[T](using key.monoid).combine) }
-    }
+    override def get[T](key: Key[T]): Option[T] = OptionMonoid[T](using key.monoid).combine(x.get(key), y.get(key))
   }
 }

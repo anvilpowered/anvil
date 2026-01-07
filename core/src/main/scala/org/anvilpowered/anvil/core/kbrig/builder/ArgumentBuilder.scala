@@ -7,9 +7,12 @@
  */
 package org.anvilpowered.anvil.core.kbrig.builder
 
+import cats.data.EitherT
+import cats.effect.Async
 import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.argument.ArgumentType
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
+import org.anvilpowered.anvil.core.kbrig.exception.CommandError
 import org.anvilpowered.anvil.core.kbrig.tree.CommandNode
 
 import scala.collection.mutable
@@ -45,6 +48,11 @@ abstract class ArgumentBuilder[S] {
   }
 
   def executes(command: Command[S]): this.type = executes(Some(command))
+
+  def executes(command: [F[_]: Async] => (context: CommandContext[S]) => EitherT[F, CommandError, Int]): this.type =
+    executes(new Command[S] {
+      override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] = command[F](context)
+    })
 
   def requires(requirement: S => Boolean): this.type = {
     this.requirement = requirement

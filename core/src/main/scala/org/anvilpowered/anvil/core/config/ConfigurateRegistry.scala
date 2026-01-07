@@ -19,43 +19,48 @@
 package org.anvilpowered.anvil.core.config
 
 import cats.data.OptionT
-import cats.effect.{Concurrent, IO}
 import cats.effect.kernel.Resource
+import cats.effect.{Async, Concurrent, IO}
+import cats.syntax.all.*
+import fs2.io.file.{Files, Path}
 import org.anvilpowered.anvil.core.config.ConfigurateRegistry.getConfigNodePath
 import org.spongepowered.configurate.ConfigurationNode
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
 import scala.jdk.CollectionConverters.IterableHasAsScala
-import cats.syntax.all.*
-import fs2.io.file.{Files, Path}
 
 class ConfigurateRegistry(
-  private val rootNode: ConfigurationNode,
-  private val delegate: Option[Registry],
+    private val rootNode: ConfigurationNode,
+    private val delegate: Option[Registry],
 ) extends Registry {
   override def getDefault[T](key: Key[T]): T = delegate.map(_.getDefault(key)).getOrElse(key.fallback)
   override def getOption[T](key: Key[T]): Option[T] = Option(rootNode.node(key.getConfigNodePath).get(key.typeToken))
 }
+
 object ConfigurateRegistry {
   case class DiscoverResult(registry: Registry, path: Path, fileType: ConfigurateFileType[?])
 
-  def discover(
-    basePath: Path,
-    serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
-    delegate: Option[Registry] = None,
-  ): OptionT[IO, DiscoverResult] =
+  def discover[F[_]](
+      basePath: Path,
+      serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
+      delegate: Option[Registry] = None,
+  )(using F: Async[F]): OptionT[F, DiscoverResult] =
     for {
-      configFiles <- OptionT.liftF(Files[IO]
-        .list(basePath)
-        .mapFilter(path => ConfigurateFileType.fromName(path.extName).map(path -> _))
-        .compile
-        .toList)
-      _ <- OptionT.liftF(IO.raiseWhen(configFiles.size > 1)(
-        new IllegalStateException(
-          s"Detected multiple configuration files for plugin ${basePath.fileName}: ${configFiles.map(_._1)}. " +
-            "Please make sure there is only one configuration file per plugin"
-        )
-      ))
+      configFiles <- OptionT.liftF(
+        Files[F]
+          .list(basePath)
+          .mapFilter(path => ConfigurateFileType.fromName(path.extName).map(path -> _))
+          .compile
+          .toList,
+      )
+      _ <- OptionT.liftF(
+        F.raiseWhen(configFiles.size > 1)(
+          new IllegalStateException(
+            s"Detected multiple configuration files for plugin ${basePath.fileName}: ${configFiles.map(_._1)}. " +
+              "Please make sure there is only one configuration file per plugin",
+          ),
+        ),
+      )
       (path, fileType) <- OptionT.fromOption(configFiles.headOption)
     } yield {
       val rootNode = fileType.createBuilder(serializers).path(path.toNioPath).build().load()

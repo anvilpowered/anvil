@@ -18,58 +18,64 @@
 
 package org.anvilpowered.anvil.core.command.config
 
+import cats.Monad
+import cats.data.EitherT
+import cats.effect.{Async, IO, Sync}
+import cats.syntax.all.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.{NamedTextColor, TextDecoration}
-import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.core.config.{serialize, serializeDefault}
+import org.anvilpowered.anvil.core.command.{CommandSource, KeyArgument}
+import org.anvilpowered.anvil.core.config.{Key, KeyNamespace}
 import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
+import org.anvilpowered.anvil.core.kbrig.context.CommandContext
+import org.anvilpowered.anvil.core.kbrig.exception.{CommandError, NotFoundError}
 import org.anvilpowered.anvil.core.kbrig.tree.LiteralCommandNode
 
-//private val prettyJson =
-//  Json {
-//    prettyPrint = true
-//    encodeDefaults = true
-//  }
-
 extension (factory: ConfigCommandFactory) {
-  def createGet(): LiteralCommandNode[CommandSource] =
+  // TODO: Replace CommandSource with typeclass on S
+  def createGet(using KeyNamespace): LiteralCommandNode[CommandSource] =
     ArgumentBuilder
       .literal[CommandSource]("get")
       .thenArg(
-        ArgumentBuilder
-          .required()
+        KeyArgument.simpleBuilderT([F[_], T] =>
+          (context, key) =>
+            (F: Async[F]) ?=> {
+              EitherT.liftF(F.delay {
+                val defaultValue = key.codec(factory.registry.getDefault(key)).spaces2
+                val currentValue = key.codec(factory.registry(key)).spaces2
+                context.source.sendMessage(
+                  Component
+                    .text()
+                    .append(Component.text("Key ").color(NamedTextColor.GREEN))
+                    .append(Component.text(key.name).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
+                    .append(Component.newline())
+                    .append(Component.text("Type: ").color(NamedTextColor.GREEN))
+                    .append(Component.text(key.typeToken.getType.toString).color(NamedTextColor.GRAY))
+                    .append(Component.newline())
+                    .append(Component.text("Default value: ").color(NamedTextColor.GREEN))
+                    .append(
+                      Component
+                        .text(defaultValue)
+                        .color(NamedTextColor.GRAY)
+                        .hoverEvent(Component.text("Click to copy default value").color(NamedTextColor.GRAY))
+                        .clickEvent(ClickEvent.copyToClipboard(defaultValue)),
+                    )
+                    .append(Component.newline())
+                    .append(Component.text("Current value: ").color(NamedTextColor.GREEN))
+                    .append(
+                      Component
+                        .text(currentValue)
+                        .color(NamedTextColor.GRAY)
+                        .hoverEvent(Component.text("Click to copy current value").color(NamedTextColor.GRAY))
+                        .clickEvent(ClickEvent.copyToClipboard(currentValue)),
+                    )
+                    .build(),
+                )
+                1
+              })
+            },
+        ),
       )
-      .thenArg(
-        keyNamespace.keyArgument { context, key -]
-          val defaultValue = registry.serializeDefault(key, prettyJson)
-          val currentValue = registry.serialize(key, prettyJson)
-          context.source.sendMessage(
-            Component
-              .text()
-              .append(Component.text("Key ").color(NamedTextColor.GREEN))
-              .append(Component.text(key.name).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
-              .append(Component.newline())
-              .append(Component.text("Type: ").color(NamedTextColor.GREEN))
-              .append(Component.text(key.type.type.toString()).color(NamedTextColor.GRAY))
-              .append(Component.newline())
-              .append(Component.text("Default value: ").color(NamedTextColor.GREEN))
-              .append(
-                Component
-                  .text(defaultValue)
-                  .color(NamedTextColor.GRAY)
-                  .hoverEvent(Component.text("Click to copy default value").color(NamedTextColor.GRAY))
-                  .clickEvent(ClickEvent.copyToClipboard(defaultValue)),
-              ).append(Component.newline())
-              .append(Component.text("Current value: ").color(NamedTextColor.GREEN))
-              .append(
-                Component
-                  .text(currentValue)
-                  .color(NamedTextColor.GRAY)
-                  .hoverEvent(Component.text("Click to copy current value").color(NamedTextColor.GRAY))
-                  .clickEvent(ClickEvent.copyToClipboard(currentValue)),
-              ).build(),
-          )
-          1
-        },
-      ).build()
+      .build()
+}

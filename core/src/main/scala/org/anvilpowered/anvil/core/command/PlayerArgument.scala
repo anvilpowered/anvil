@@ -20,7 +20,7 @@ package org.anvilpowered.anvil.core.command
 
 import cats.Monad
 import cats.data.{EitherT, OptionT, ReaderT}
-import cats.effect.{Concurrent, Temporal}
+import cats.effect.{Async, Concurrent}
 import cats.implicits.toFlatMapOps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -52,7 +52,7 @@ object PlayerArgument {
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
     def suggestPlayerArgument(using playerService: PlayerService): builder.type =
       builder.suggests(new SuggestionProvider[S] {
-        override def suggest[F[_]: Temporal](context: CommandContext[S]): SuggestT[F] =
+        override def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F] =
           Suggestions.ofStream(ReaderT(playerService.getAll), _.username)
       })
   }

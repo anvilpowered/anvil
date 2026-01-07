@@ -9,7 +9,7 @@ package org.anvilpowered.anvil.core.kbrig.tree
 
 import cats.Monad
 import cats.data.{EitherT, Kleisli, ReaderT}
-import cats.effect.{Concurrent, IO, Temporal}
+import cats.effect.{Async, Concurrent, IO}
 import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.argument.ArgumentType
 import org.anvilpowered.anvil.core.kbrig.builder.RequiredArgumentBuilder
@@ -33,7 +33,7 @@ class ArgumentCommandNode[S, T](
 
   override val examples: Set[String] = argType.examples
 
-  override def suggest[F[_]: Temporal](context: CommandContext[S]): SuggestT[F] = {
+  override def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F] = {
     customSuggestions.getOrElse(argType.suggestionProvider).suggest(context)
   }
 
