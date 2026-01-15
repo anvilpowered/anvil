@@ -18,6 +18,17 @@
 
 package org.anvilpowered.anvil.core
 
+import cats.effect.Async
+
 trait PlatformType {
   val platformDelegate: Any
+}
+
+
+def foo(f: [F[_]: Async] => Int => Int): String = ???
+
+def foo(x: Int): Unit = ???
+
+def bar(): Unit = {
+  foo([F[_]: Async] => x => x + 5).getChars
 }

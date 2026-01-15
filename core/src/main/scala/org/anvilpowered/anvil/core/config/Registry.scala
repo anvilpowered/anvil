@@ -33,13 +33,13 @@ trait Registry {
   def apply[T](key: Key[T]): T = get(key).getOrElse(getDefault(key))
 }
 
-object EmptyRegistry extends Registry {
+object DefaultRegistry extends Registry {
   override def getDefault[T](key: Key[T]): T = key.fallback
   override def get[T](key: Key[T]): Option[T] = None
 }
 
 object RegistryMonoid extends Monoid[Registry] {
-  override def empty: Registry = EmptyRegistry
+  override def empty: Registry = DefaultRegistry
   override def combine(x: Registry, y: Registry): Registry = new Registry {
     override def getDefault[T](key: Key[T]): T = key.monoid.combine(x.getDefault(key), y.getDefault(key))
     override def get[T](key: Key[T]): Option[T] = OptionMonoid[T](using key.monoid).combine(x.get(key), y.get(key))

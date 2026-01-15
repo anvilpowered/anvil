@@ -18,12 +18,14 @@
 
 package org.anvilpowered.anvil.core.config
 
-import cats.effect.IO
+import cats.data.EitherT
+import cats.effect.{Async, IO}
 import org.anvilpowered.anvil.core.config.ConfigurateRegistry.getConfigNodePath
 import org.anvilpowered.anvil.core.platform.PluginMeta
-import org.spongepowered.configurate.CommentedConfigurationNode
+import org.spongepowered.configurate.{CommentedConfigurationNode, ConfigurateException}
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
+import cats.syntax.all.*
 
 import java.nio.file.Path
 
@@ -35,14 +37,16 @@ class ConfigurateRegistryExporter[B <: AbstractConfigurationLoader.Builder[B, Ab
 ) {
   val configPath: Path = basePath.resolve(s"${pluginMeta.name}.${fileType.fileExtension}")
 
-  def exportRegistry(registry: Registry, serializers: TypeSerializerCollection): IO[Unit] = IO.blocking {
-    val loader = fileType.createBuilder(serializers).path(configPath).build()
-    val root = loader.createNode()
-    keyNamespace.keys.foreach { key =>
-      val n = root.node(key.getConfigNodePath)
-      n.set(key.typeToken, registry(key))
-      key.description.foreach(n.comment)
-    }
-    loader.save(root)
-  }
+  def exportRegistry[F[_]](registry: Registry, serializers: TypeSerializerCollection)(using F: Async[F]): EitherT[F, ConfigurateException, Unit] = EitherT(
+    F.blocking {
+      val loader = fileType.createBuilder(serializers).path(configPath).build()
+      val root = loader.createNode()
+      keyNamespace.keys.foreach { key =>
+        val n = root.node(key.getConfigNodePath)
+        n.set(key.typeToken, registry(key))
+        key.description.foreach(n.comment)
+      }
+      loader.save(root)
+    }.attemptNarrow[ConfigurateException],
+  )
 }
