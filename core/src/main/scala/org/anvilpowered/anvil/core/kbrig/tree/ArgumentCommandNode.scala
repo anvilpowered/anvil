@@ -41,8 +41,8 @@ class ArgumentCommandNode[S, T](
     RequiredArgumentBuilder[S, T](name, argType)
       .requires(requirement)
       .forward(redirect, forks)
-      .suggests(customSuggestions)
-      .executes(command)
+      .suggestsOption(customSuggestions)
+      .executesOption(command)
   }
 
   override def toString: String = s"[argument $name:$argType]"

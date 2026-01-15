@@ -41,7 +41,7 @@ class LiteralCommandNode[S](
     LiteralArgumentBuilder(name)
       .requires(requirement)
       .forward(redirect, forks)
-      .executes(command)
+      .executesOption(command)
 
   override val examples: Set[String] = Set(name)
   override def toString: String = s"<literal $name>"

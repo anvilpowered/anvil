@@ -42,17 +42,12 @@ abstract class ArgumentBuilder[S] {
 
   def thenArg(argument: ArgumentBuilder[S]): this.type = thenArg(argument.build())
 
-  def executes(command: Option[Command[S]]): this.type = {
+  def executesOption(command: Option[Command[S]]): this.type = {
     this.command = command
     this
   }
 
-  def executes(command: Command[S]): this.type = executes(Some(command))
-
-  def executes(command: [F[_]: Async] => (context: CommandContext[S]) => EitherT[F, CommandError, Int]): this.type =
-    executes(new Command[S] {
-      override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] = command[F](context)
-    })
+  def executes(command: Command[S]): this.type = executesOption(Some(command))
 
   def requires(requirement: S => Boolean): this.type = {
     this.requirement = requirement

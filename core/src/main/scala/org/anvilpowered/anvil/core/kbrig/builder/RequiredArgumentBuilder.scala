@@ -20,19 +20,12 @@ class RequiredArgumentBuilder[S, T](
 ) extends ArgumentBuilder[S] {
   private var suggestionsProvider: Option[SuggestionProvider[S]] = None
 
-//  def suggests(provider: Option[SuggestionProvider[S]]): this.type = {
-//    suggestionsProvider = provider
-//    this
-//  }
-
-//  def suggests(provider: SuggestionProvider[S]): this.type = suggests(Some(provider))
-
-  def suggests(provider: [F[_]: Async] => (context: CommandContext[S]) => SuggestT[F]): this.type = {
-    suggestionsProvider = Some(new SuggestionProvider[S] {
-      override def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F] = provider[F](context)
-    })
+  def suggestsOption(suggestionsProvider: Option[SuggestionProvider[S]]): this.type = {
+    this.suggestionsProvider = suggestionsProvider
     this
   }
+
+  def suggests(suggestionsProvider: SuggestionProvider[S]): this.type = suggestsOption(Some(suggestionsProvider))
 
   override def build(): ArgumentCommandNode[S, T] =
     ArgumentCommandNode(name, argType, command, requirement, forward, forks, children, suggestionsProvider)
