@@ -23,30 +23,32 @@ import cats.effect.Async
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.core.config.{ConfigurateRegistryExporter, DefaultRegistry, fullName}
+import org.anvilpowered.anvil.core.config.{ConfigurateRegistry, ConfigurateRegistryExporter, DefaultRegistry, fullName}
 import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
 import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.anvil.core.kbrig.context.*
-import org.anvilpowered.anvil.core.kbrig.exception.{CommandError, NotFoundError}
+import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandError, NotFoundError}
 import org.anvilpowered.anvil.core.kbrig.tree.LiteralCommandNode
 
 import java.nio.file.Files
 
 object Generate {
   extension (factory: ConfigCommandFactory) {
-    def createGenerate(): LiteralCommandNode[CommandSource] =
+    def createGenerate: LiteralCommandNode[CommandSource] =
       ArgumentBuilder
         .literal[CommandSource]("generate")
         .executes(BaseCmd(factory))
         .thenArg(
           ArgumentBuilder
             .required[CommandSource, String]("type", StringArgumentType.singleWord())
-            .suggests([F[_]] => (context, builder) => (F: Async[F]) ?=>
-              factory.exporters
-                .filter(_.fileType.name.toLowerCase.startsWith(builder.remainingLowerCase))
-                .foreach(exporter => builder.suggest(exporter.fileType.name))
-              builder.build()
+            .suggests([F[_]] =>
+              (context, builder) =>
+                (F: Async[F]) ?=>
+                  factory.exporters
+                    .filter(_.fileType.name.toLowerCase.startsWith(builder.remainingLowerCase))
+                    .foreach(exporter => builder.suggest(exporter.fileType.name))
+                  builder.build(),
             )
             .executes(ExporterCmd(factory, force = false))
             .thenArg(
@@ -80,20 +82,27 @@ object Generate {
         targetType <- context.extract[F, String]("type")
         exporter <- factory.exporters.find(_.fileType.name == targetType) match {
           case Some(exporter) => EitherT.pure[F, CommandError](exporter)
-          case None => EitherT.leftT(NotFoundError("configurate exporter type", targetType))
+          case None           => EitherT.leftT(NotFoundError("configurate exporter type", targetType))
         }
-        _ <- EitherT.liftF(F.delay{executeExport(context, exporter)})
-      } yield 1
+        result <- executeExport[F](context, exporter)
+      } yield result
 
-    private def executeExport(context: CommandContext[CommandSource], exporter: ConfigurateRegistryExporter[?]): Unit = {
+    private def executeExport[F[_]](
+        context: CommandContext[CommandSource],
+        exporter: ConfigurateRegistryExporter[?],
+    )(using F: Async[F]): EitherT[F, CommandError, Int] = {
       val newType = exporter.fileType
       val newPath = exporter.configPath.toString
 
-      val configurateRegistry = factory.configurateRegistryClosure.discover()
-      if (configurateRegistry != null) {
-        val existingType = configurateRegistry.fileType
-        val existingPath = configurateRegistry.path.toString
+      val discoverResult = factory.discover[F].leftMap(ExportError(_))
 
+//      return for {
+//        existingType = discoverResult.fileType
+//        existingPath = discoverResult.path.toString
+//        res <- // recover
+//      } yield 1
+
+      if (configurateRegistry != null) {
         if (force) {
           context.source.sendMessage(
             Component
@@ -162,5 +171,14 @@ object Generate {
           .build(),
       )
     }
+  }
+
+  case class ExportError(error: String) extends CommandError {
+    override def text: Component = Component
+      .text()
+      .append(Component.text("Error occurred during configuration export:").color(NamedTextColor.RED))
+      .append(Component.newline())
+      .append(Component.text(error).color(NamedTextColor.RED))
+      .build()
   }
 }

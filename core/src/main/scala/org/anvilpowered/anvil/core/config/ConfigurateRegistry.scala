@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.core.config
 
-import cats.data.OptionT
+import cats.data.{EitherT, OptionT}
 import cats.effect.kernel.Resource
 import cats.effect.{Async, Concurrent, IO}
 import cats.syntax.all.*
@@ -44,24 +44,21 @@ object ConfigurateRegistry {
       basePath: Path,
       serializers: TypeSerializerCollection = TypeSerializerCollection.defaults(),
       delegate: Option[Registry] = None,
-  )(using F: Async[F]): OptionT[F, DiscoverResult] =
+  )(using F: Async[F]): EitherT[F, String, DiscoverResult] =
     for {
-      configFiles <- OptionT.liftF(
+      configFiles <- EitherT.liftF(
         Files[F]
           .list(basePath)
           .mapFilter(path => ConfigurateFileType.fromName(path.extName).map(path -> _))
           .compile
           .toList,
       )
-      _ <- OptionT.liftF(
-        F.raiseWhen(configFiles.size > 1)(
-          new IllegalStateException(
-            s"Detected multiple configuration files for plugin ${basePath.fileName}: ${configFiles.map(_._1)}. " +
-              "Please make sure there is only one configuration file per plugin",
-          ),
-        ),
+      (path, fileType) <- EitherT.cond(
+        configFiles.size == 1,
+        configFiles.head,
+        s"Detected multiple configuration files for plugin ${basePath.fileName}: ${configFiles.map(_._1)}. " +
+          "Please make sure there is only one configuration file per plugin",
       )
-      (path, fileType) <- OptionT.fromOption(configFiles.headOption)
     } yield {
       val rootNode = fileType.createBuilder(serializers).path(path.toNioPath).build().load()
       val registry = ConfigurateRegistry(rootNode, delegate)
