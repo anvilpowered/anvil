@@ -22,11 +22,12 @@ import cats.data.{EitherT, ReaderT}
 import cats.effect.Async
 import cats.kernel.Monoid
 import cats.syntax.all.*
-import fs2.io.file.Files as Files2
+import fs2.io.file.{Path, Files}
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.core.config.{ConfigurateRegistry, ConfigurateRegistryExporter, DefaultRegistry}
+import org.anvilpowered.anvil.core.config.ConfigurateRegistry.DiscoverResult
+import org.anvilpowered.anvil.core.config.{ConfigurateFileType, ConfigurateRegistry, ConfigurateRegistryExporter, DefaultRegistry}
 import org.anvilpowered.anvil.core.kbrig.Command
 import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
 import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
@@ -35,8 +36,6 @@ import org.anvilpowered.anvil.core.kbrig.exception.*
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.{Suggestion, Suggestions}
 import org.anvilpowered.anvil.core.kbrig.tree.LiteralCommandNode
-
-import java.nio.file.Files
 
 object Generate {
   extension (factory: ConfigCommandFactory) {
@@ -96,41 +95,11 @@ object Generate {
         context: CommandContext[CommandSource],
         exporter: ConfigurateRegistryExporter[?],
     )(using F: Async[F]): EitherT[F, CommandError, Int] = {
-      val newFileType = exporter.fileType
-      val newPath = exporter.configPath
       for {
         discoverResult <- factory.discover[F](using F).leftMap[CommandError](ExportError(_))
         _ <- discoverResult match {
-          case Some(result) =>
-            // if the config already exists
-            if (force) for {
-              deleted <- EitherT.liftF(Files2[F].deleteIfExists(result.path))
-              _ <-
-                if (deleted) EitherT.liftF(F.delay {
-                  context.source.sendMessage(
-                    Component
-                      .text()
-                      .append(Component.text("File ", NamedTextColor.YELLOW))
-                      .append(Component.text(result.path.toString, NamedTextColor.GOLD))
-                      .append(Component.text(" already exists! ", NamedTextColor.YELLOW))
-                      .append(Component.newline())
-                      .append(
-                        Component.text(
-                          if (newFileType == result.fileType) {
-                            "Overwriting because of --force!"
-                          } else {
-                            s"Replacing with $newPath because of --force!"
-                          },
-                          NamedTextColor.YELLOW,
-                        ),
-                      )
-                      .build(),
-                  )
-                })
-                else EitherT.leftT(CouldNotDeleteError("file", result.path.toString))
-            } yield 1
-            else EitherT.leftT(AlreadyExistsReplaceError("file", result.path.toString, Option.when(newFileType == result.fileType) { newPath.toString }))
-          case None => EitherT.liftF(F.pure(()))
+          case Some(result) => deleteIfExists[F](context, result, exporter.fileType, exporter.configPath)
+          case None         => EitherT.liftF(F.pure(()))
         }
         _ <- exporter.exportRegistry(DefaultRegistry, factory.serializers).leftMap(ConfigurateCommandError(_))
         _ <- EitherT.liftF(F.delay {
@@ -138,7 +107,7 @@ object Generate {
             Component
               .text()
               .append(Component.text("Generated ", NamedTextColor.GREEN))
-              .append(Component.text(newPath.toString, NamedTextColor.GOLD))
+              .append(Component.text(exporter.configPath.toString, NamedTextColor.GOLD))
               .append(Component.text("!", NamedTextColor.GREEN))
               .append(Component.newline())
               .append(Component.text("Please restart the server to apply changes.", NamedTextColor.DARK_GREEN))
@@ -147,6 +116,47 @@ object Generate {
         })
       } yield 1
     }
+
+    private def deleteIfExists[F[_]](
+        context: CommandContext[CommandSource],
+        result: DiscoverResult,
+        newFileType: ConfigurateFileType[?],
+        newPath: Path,
+    )(using F: Async[F]): EitherT[F, CommandError, Unit] =
+      if (force) for {
+        deleted <- EitherT.liftF(Files[F].deleteIfExists(result.path))
+        _ <-
+          if (deleted) EitherT.liftF(F.delay {
+            context.source.sendMessage(
+              Component
+                .text()
+                .append(Component.text("File ", NamedTextColor.YELLOW))
+                .append(Component.text(result.path.toString, NamedTextColor.GOLD))
+                .append(Component.text(" already exists! ", NamedTextColor.YELLOW))
+                .append(Component.newline())
+                .append(
+                  Component.text(
+                    if (newFileType == result.fileType) {
+                      "Overwriting because of --force!"
+                    } else {
+                      s"Replacing with $newPath because of --force!"
+                    },
+                    NamedTextColor.YELLOW,
+                  ),
+                )
+                .build(),
+            )
+          })
+          else EitherT.leftT(CouldNotDeleteError("file", result.path.toString))
+      } yield 1
+      else
+        EitherT.leftT(
+          AlreadyExistsReplaceError(
+            "file",
+            result.path.toString,
+            Option.when(newFileType != result.fileType) { newPath.toString },
+          ),
+        )
   }
 
   case class ExportError(error: String) extends CommandError {
