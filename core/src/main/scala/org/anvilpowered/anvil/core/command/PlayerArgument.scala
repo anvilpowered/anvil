@@ -20,7 +20,6 @@ package org.anvilpowered.anvil.core.command
 
 import cats.Monad
 import cats.data.{EitherT, OptionT, ReaderT}
-import cats.effect.{Async, Concurrent}
 import cats.implicits.toFlatMapOps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -32,29 +31,12 @@ import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandError,
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 import org.anvilpowered.anvil.core.user.{Player, PlayerService}
+import cats.effect.kernel.Async
 
 object PlayerArgument {
-//  def requiredPlayedArgument(
-//      argumentName: String = "player",
-//      command: (context: CommandContext[CommandSource], player: Player) => F[Int],
-//  )(using playerService: PlayerService): RequiredArgumentBuilder[CommandSource, String] = {
-//    given PlayerService = playerService
-//    ArgumentBuilder
-//      .required[CommandSource, String]("player", StringArgumentType.singleWord())
-//      .suggestPlayerArgument
-//      .executes(new Command[S] {
-//        def execute[F[_] : Concurrent](context: CommandContext[CommandSource]): F[Int] =
-//          PlayerArgument.extract[F](context, argumentName)
-//            .map()
-//      })
-//  }
-
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
     def suggestPlayerArgument(using playerService: PlayerService): builder.type =
-      builder.suggests(new SuggestionProvider[S] {
-        override def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F] =
-          Suggestions.ofStream(ReaderT(playerService.getAll), _.username)
-      })
+      builder.suggests([F[_]: Async] => _ => Suggestions.ofStream(ReaderT(playerService.getAll), _.username))
   }
 
   /** Extract a player from an argument.

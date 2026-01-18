@@ -38,8 +38,8 @@ extension (factory: ConfigCommandFactory) {
     ArgumentBuilder
       .literal[CommandSource]("get")
       .thenArg(
-        KeyArgument.simpleBuilderT([F[_], T] =>
-          (context, key) =>
+        KeyArgument.simpleBuilderUntyped[CommandSource]([F[_]] =>
+          (context: CommandContext[CommandSource], key: Key[?]) =>
             (F: Async[F]) ?=> {
               EitherT.liftF(F.delay {
                 val defaultValue = key.codec(factory.registry.getDefault(key)).spaces2

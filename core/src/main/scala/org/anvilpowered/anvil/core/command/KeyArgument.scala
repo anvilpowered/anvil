@@ -39,18 +39,19 @@ object KeyArgument {
 
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
     def suggestKeyArgument(using namespace: KeyNamespace): builder.type =
-      builder.suggests(new SuggestionProvider[S] {
-        override def suggest[F[_]](context: CommandContext[S])(using F: Async[F]): SuggestT[F] =
-          Suggestions.ofSeq(
-            ReaderT { prefix =>
-              F.pure(namespace.keys.filter(_.name.startsWith(prefix)).toSeq)
-            },
-            _.name,
-          )
-      })
+      builder.suggests([F[_]] =>
+        (context: CommandContext[S]) =>
+          (F: Async[F]) ?=>
+            Suggestions.ofSeq(
+              ReaderT { prefix =>
+                F.pure(namespace.keys.filter(_.name.startsWith(prefix)).toSeq)
+              },
+              _.name,
+            ),
+      )
   }
 
-  inline def extract[F[_]: Monad, T](
+  inline def extractC[F[_]: Monad, T](
       context: CommandContext[?],
       argumentName: String = "key",
   )(using namespace: KeyNamespace): EitherT[F, CommandError, Key[T]] =
@@ -94,7 +95,7 @@ object KeyArgument {
     ArgumentBuilder
       .required[S, String](argumentName, StringArgumentType.singleWord())
       .suggestKeyArgument
-      .executes(new Command[S] {
+      .executesCmd(new Command[S] {
         override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] =
           for {
             key <- KeyArgument.extract[F, T](typeToken, context, argumentName)
@@ -102,23 +103,22 @@ object KeyArgument {
           } yield result
       })
 
-  def simpleBuilderT[S](
-      executes: [F[_]: Async, T] => (context: CommandContext[S], key: Key[T]) => EitherT[F, CommandError, Int],
-  )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] = simpleBuilderT(executes, "key")
+  def simpleBuilderUntyped[S](
+      executes: [F[_]: Async] => (context: CommandContext[S], key: Key[?]) => EitherT[F, CommandError, Int],
+  )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] = simpleBuilderUntyped(executes, "key")
 
-  def simpleBuilderT[S](
-      executes: [F[_]: Async, T] => (context: CommandContext[S], key: Key[T]) => EitherT[F, CommandError, Int],
+  def simpleBuilderUntyped[S](
+      executes: [F[_]: Async] => (context: CommandContext[S], key: Key[?]) => EitherT[F, CommandError, Int],
       argumentName: String,
   )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] =
     ArgumentBuilder
       .required[S, String](argumentName, StringArgumentType.singleWord())
       .suggestKeyArgument
-      .executes(new Command[S] {
+      .executesCmd(new Command[S] {
         override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] = {
-          type T
           for {
-            key <- KeyArgument.extract[F, T](context, argumentName)
-            result <- executes[F, T](context, key)
+            key <- KeyArgument.extractUntyped[F](context, argumentName)
+            result <- executes[F](context, key)
           } yield result
         }
       })

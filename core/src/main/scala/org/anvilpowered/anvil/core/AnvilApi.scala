@@ -18,28 +18,33 @@
 
 package org.anvilpowered.anvil.core
 
-import org.apache.logging.log4j.Logger
-import org.koin.core.module.Module
-import java.nio.file.Path
+import cats.data.EitherT
+import cats.effect.Async
+import cats.effect.ExitCode
+import cats.effect.IO
+import cats.effect.IOApp
+import cats.effect.Resource
+import fs2.io.file.Path
+import natchez.Trace.Implicits.noop
+import skunk.Session
+import skunk.codec.all.*
+import skunk.implicits.*
 
-/**
- * To create an instance of this trait, use the `AnvilApi.create` function.
- * This is available for each platform in the corresponding `anvil-[platform]` module.
- *
- * Generally, the method will look something like this:
- * ```kt
- * AnvilApi.create[[[platform]]]("my-plugin", ....)
- * ```
- *
- * For example, for Velocity:
- *
- * ```kt
- * AnvilApi.createVelocity("my-plugin", ....)
- * ```
- */
+/** To create an instance of this trait, use the `AnvilApi.create` function. This is available for each platform in the corresponding `anvil-[platform]`
+  * module.
+  *
+  * Generally, the method will look something like this:
+  * ```kt
+  * AnvilApi.create[[[platform]]]("my-plugin", ....)
+  * ```
+  *
+  * For example, for Velocity:
+  *
+  * ```kt
+  * AnvilApi.createVelocity("my-plugin", ....)
+  * ```
+  */
 trait AnvilApi {
-  val logger: Logger
-
   val configDir: Path
 
   val module: Module

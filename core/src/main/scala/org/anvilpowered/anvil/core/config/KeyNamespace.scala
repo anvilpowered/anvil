@@ -49,7 +49,7 @@ private class KeyNamespaceImpl(override val name: String) extends KeyNamespace {
   private val _keys: mutable.Set[Key[?]] = mutable.Set()
   override val keys: Set[Key[?]] = _keys.toSet
 
-  override def get[T: ClassTag](keyName: String, typeTok: TypeToken[T]): Option[Key[T]] = {
+  override def get[T](keyName: String)(using typeTok: TypeToken[T]): Option[Key[T]] = {
     for {
       key <- keyMap.get(keyName)
     } yield {

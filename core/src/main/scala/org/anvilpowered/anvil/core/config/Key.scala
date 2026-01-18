@@ -43,5 +43,6 @@ case class Key[T](
 object Key {
   given ordering: Ordering[Key[?]] = Ordering.by(_.name)
 
-  inline def typeTokenOf[T]: TypeToken[T] = new TypeToken[T]() {}
+  // inline def typeTokenOf[T]: TypeToken[T] = new TypeToken[T]() {}
+  inline def typeTokenOf[T]: TypeToken[T] = ???
 }

@@ -57,17 +57,3 @@ def createKeyImpl[T: Type](
     Key(${ Expr(name) }, Key.typeTokenOf[T], $codec, $monoid, $fallback, $description)
   }
 }
-
-case class Foo(s: String)
-
-implicit val fooCodec: Codec[Foo] = deriveCodec
-implicit val fooMonoid: Monoid[Foo] = new Monoid[Foo] {
-  override def empty: Foo = Foo(Monoid[String].empty)
-  override def combine(x: Foo, y: Foo): Foo = Foo(Monoid[String].combine(x.s, y.s))
-}
-val foo = createKey(Foo("test"))
-
-given Codec[String] = Codec.from(Decoder[String], Encoder[String])
-
-val bar = createKey("foo")
-

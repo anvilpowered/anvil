@@ -13,6 +13,7 @@ import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
+import cats.effect.kernel.Async
 
 class RootCommandNode[S](children: Map[String, CommandNode[S]])
     extends CommandNode[S](
@@ -26,7 +27,7 @@ class RootCommandNode[S](children: Map[String, CommandNode[S]])
 
   override val usageText: String = ""
 
-  def suggest[F[_]: Concurrent](context: CommandContext[S]): SuggestT[F] = SuggestT.pure(Suggestions.Empty)
+  def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F] = SuggestT.pure(Suggestions.Empty)
 
   override def toBuilder: ArgumentBuilder[S] = {
     throw UnsupportedOperationException("Cannot convert root into a builder")

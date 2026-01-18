@@ -16,6 +16,7 @@ import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandSyntaxException}
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.{Input, SuggestT}
 import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
+import cats.effect.kernel.Async
 
 val BooleanArgumentType = ArgumentType(
   BooleanArgumentParser,
@@ -29,7 +30,7 @@ object BooleanArgumentParser extends ArgumentParser[Boolean] {
 
 object BooleanSuggestionProvider extends SuggestionProvider[Any] {
 
-  override def suggest[F[_]: Monad](context: CommandContext[Any]): SuggestT[F] =
+  override def suggest[F[_]: Async](context: CommandContext[Any]): SuggestT[F] =
     for {
       input <- ReaderT.ask[F, Input]
       lowercase = input.text.toLowerCase

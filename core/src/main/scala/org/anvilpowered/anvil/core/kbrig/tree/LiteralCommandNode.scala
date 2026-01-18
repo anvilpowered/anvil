@@ -13,6 +13,7 @@ import org.anvilpowered.anvil.core.kbrig.builder.LiteralArgumentBuilder
 import org.anvilpowered.anvil.core.kbrig.context.CommandContext
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.{Input, SuggestT}
+import cats.effect.kernel.Async
 
 class LiteralCommandNode[S](
     literal: String,
@@ -26,7 +27,7 @@ class LiteralCommandNode[S](
   override val usageText: String = name
   private val literalLowerCase: String = name.toLowerCase
 
-  def suggest[F[_]: Monad](context: CommandContext[S]): SuggestT[F] = {
+  def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F] = {
     for {
       input <- SuggestT.ask[F, Input]
       result <-

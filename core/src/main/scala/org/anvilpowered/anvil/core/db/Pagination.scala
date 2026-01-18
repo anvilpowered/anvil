@@ -18,23 +18,22 @@
 
 package org.anvilpowered.anvil.core.db
 
-import kotlin.reflect.KProperty1
+trait Pagination[F <: DomainFacet[?]] {
+  def limit(n: Int, offset: Long = 0): Pagination[F]
 
-trait Pagination[F : DomainFacet[*]] {
-  def limit(
-    n: Int,
-    offset: Long = 0,
-  ): Pagination[F]
-
-  def sortBy(
-    field: KProperty1[F, Comparable[*]],
-    direction: SortDirection = SortDirection.ASCENDING,
-  ): Pagination[F]
+  // def sortBy(
+  //   field: KProperty1[F, Comparable[?]],
+  //   direction: SortDirection = SortDirection.ASCENDING,
+  // ): Pagination[F]
 
   def build(): List[F]
+
+  def foo(): Unit = {
+    val foo = 5
+    println(foo)
+  }
 }
 
-enum class SortDirection {
-  ASCENDING,
-  DESCENDING,
-}
+// enum SortDirection {
+//   case ASCENDING, DESCENDING
+// }

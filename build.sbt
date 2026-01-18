@@ -1,6 +1,9 @@
 ThisBuild / version := "0.4.0-SNAPSHOT"
 ThisBuild / scalaVersion := "3.7.4"
-ThisBuild / scalacOptions += "-Wnonunit-statement"
+ThisBuild / scalacOptions ++= Seq(
+  "-Wnonunit-statement",
+  "-deprecation",
+)
 
 lazy val root = (project in file("."))
   .settings(

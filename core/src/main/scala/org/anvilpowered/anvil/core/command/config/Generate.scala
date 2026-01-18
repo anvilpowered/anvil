@@ -42,23 +42,23 @@ object Generate {
     def createGenerate: LiteralCommandNode[CommandSource] =
       ArgumentBuilder
         .literal[CommandSource]("generate")
-        .executes(BaseCmd(factory))
+        .executesCmd(BaseCmd(factory))
         .thenArg(
           ArgumentBuilder
             .required[CommandSource, String]("type", StringArgumentType.singleWord())
             .suggests([F[_]] =>
-              context =>
+              (context: CommandContext[CommandSource]) =>
                 (F: Async[F]) ?=>
                   Suggestions.ofSeq[F, ConfigurateRegistryExporter[?]](
                     ReaderT { text => F.pure(factory.exporters.filter(_.fileType.name.toLowerCase.startsWith(text))) },
                     _.fileType.name,
                   ),
             )
-            .executes(ExporterCmd(factory, force = false))
+            .executesCmd(ExporterCmd(factory, force = false))
             .thenArg(
               ArgumentBuilder
                 .literal[CommandSource]("--force")
-                .executes(ExporterCmd(factory, force = true))
+                .executesCmd(ExporterCmd(factory, force = true))
                 .build(),
             )
             .build(),
@@ -124,7 +124,7 @@ object Generate {
         newPath: Path,
     )(using F: Async[F]): EitherT[F, CommandError, Unit] =
       if (force) for {
-        deleted <- EitherT.liftF(Files[F].deleteIfExists(result.path))
+        deleted <- EitherT.liftF(Files.forAsync[F].deleteIfExists(result.path))
         _ <-
           if (deleted) EitherT.liftF(F.delay {
             context.source.sendMessage(
@@ -148,7 +148,7 @@ object Generate {
             )
           })
           else EitherT.leftT(CouldNotDeleteError("file", result.path.toString))
-      } yield 1
+      } yield ()
       else
         EitherT.leftT(
           AlreadyExistsReplaceError(

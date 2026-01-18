@@ -18,7 +18,10 @@
 
 package org.anvilpowered.anvil.core.config
 
+import io.circe.parser.decode
+
 /** A [[Registry]] implementation that checks environment variables.
+  * TODO: Pulling environment variables is not pure. They should all be parsed at launch and all errors printed.
   */
 class EnvironmentRegistry(
     private val prefix: String,
@@ -29,7 +32,7 @@ class EnvironmentRegistry(
   override def getDefault[T](key: Key[T]): T = delegate.map(_.getDefault(key)).getOrElse(key.fallback)
   override def get[T](key: Key[T]): Option[T] = {
     Option(System.getenv(envName(key)))
-      .flatMap(key.deserialize)
+      .flatMap(decode[T](_)(using key.codec).toOption) // TODO: Error is ignored
       .orElse(delegate.flatMap(_.get(key)))
   }
 }

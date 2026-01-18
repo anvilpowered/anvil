@@ -34,7 +34,7 @@ class ConfigurateRegistry(
     private val delegate: Option[Registry],
 ) extends Registry {
   override def getDefault[T](key: Key[T]): T = delegate.map(_.getDefault(key)).getOrElse(key.fallback)
-  override def getOption[T](key: Key[T]): Option[T] = Option(rootNode.node(key.getConfigNodePath).get(key.typeToken))
+  override def get[T](key: Key[T]): Option[T] = Option(rootNode.node(key.getConfigNodePath).get(key.typeToken))
 }
 
 object ConfigurateRegistry {
@@ -47,7 +47,7 @@ object ConfigurateRegistry {
   )(using F: Async[F]): EitherT[F, String, DiscoverResult] =
     for {
       configFiles <- EitherT.liftF(
-        Files[F]
+        Files.forAsync[F]
           .list(basePath)
           .mapFilter(path => ConfigurateFileType.fromName(path.extName).map(path -> _))
           .compile

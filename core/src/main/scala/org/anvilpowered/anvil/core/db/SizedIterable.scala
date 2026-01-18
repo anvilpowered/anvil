@@ -18,15 +18,12 @@
 
 package org.anvilpowered.anvil.core.db
 
-trait SizedIterable[out T] : Iterable[T] {
-  def limit(
-    n: Int,
-    offset: Long = 0,
-  ): SizedIterable[T]
+trait SizedIterable[+T] extends Iterable[T] {
+  def limit(n: Int, offset: Long = 0): SizedIterable[T]
 
-  def count(): Long
+  def count: Long
 
-  def empty(): Boolean
+  def isEmpty: Boolean
 
-  def copy(): SizedIterable[T]
+  def copy: SizedIterable[T]
 }

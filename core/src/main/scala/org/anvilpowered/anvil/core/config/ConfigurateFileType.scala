@@ -28,7 +28,7 @@ import org.spongepowered.configurate.yaml.{NodeStyle, YamlConfigurationLoader}
 import java.nio.file.Path
 
 sealed trait ConfigurateFileType[
-    B <: AbstractConfigurationLoader.Builder[B, AbstractConfigurationLoader[CommentedConfigurationNode]],
+    B <: AbstractConfigurationLoader.Builder[B, ? <: AbstractConfigurationLoader[CommentedConfigurationNode]],
 ] {
   val name: String
   val fileExtension: String

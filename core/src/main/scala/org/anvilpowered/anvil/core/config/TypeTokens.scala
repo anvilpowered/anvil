@@ -23,9 +23,9 @@ import net.kyori.adventure.text.Component
 import java.time.ZoneId
 
 object TypeTokens {
-  val BOOLEAN: TypeToken[Boolean] = TypeToken.get(Boolean.getClass.asInstanceOf[Class[Boolean]])
-  val INTEGER: TypeToken[Int] = TypeToken.get(Int.getClass.asInstanceOf[Class[Int]])
-  val STRING: TypeToken[String] = TypeToken.get(String.getClass.asInstanceOf[Class[String]])
-  val COMPONENT: TypeToken[Component] = TypeToken.get(Component.getClass.asInstanceOf[Class[Component]])
-  val ZONE_ID: TypeToken[ZoneId] = TypeToken.get(ZoneId.getClass.asInstanceOf[Class[ZoneId]])
+  val BOOLEAN: TypeToken[Boolean] = TypeToken.get(classOf[Boolean])
+  val INTEGER: TypeToken[Int] = TypeToken.get(classOf[Int])
+  val STRING: TypeToken[String] = TypeToken.get(classOf[String])
+  val COMPONENT: TypeToken[Component] = TypeToken.get(classOf[Component])
+  val ZONE_ID: TypeToken[ZoneId] = TypeToken.get(classOf[ZoneId])
 }

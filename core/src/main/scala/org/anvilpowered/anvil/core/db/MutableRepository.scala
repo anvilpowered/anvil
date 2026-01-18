@@ -18,12 +18,12 @@
 
 package org.anvilpowered.anvil.core.db
 
-trait MutableRepository[E : DomainEntity, C : Creates[E]] : Repository[E] {
-  suspend def create(item: C): E
+trait MutableRepository[E <: DomainEntity, C <: Creates[E]] extends Repository[E] {
+  def create(item: C): E
 
-  suspend def put(item: C): PutResult[E]
+  def put(item: C): PutResult[E]
 
-  data class PutResult[out E : DomainEntity](
+  case class PutResult[+E <: DomainEntity](
     val entity: E,
     val created: Boolean,
   )
