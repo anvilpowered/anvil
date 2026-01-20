@@ -1,3 +1,4 @@
+ThisBuild / organization := "org.anvilpowered"
 ThisBuild / version := "0.4.0-SNAPSHOT"
 ThisBuild / scalaVersion := "3.7.4"
 ThisBuild / scalacOptions ++= Seq(

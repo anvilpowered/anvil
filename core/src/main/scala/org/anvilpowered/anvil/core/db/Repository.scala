@@ -21,13 +21,15 @@ package org.anvilpowered.anvil.core.db
 import cats.data.ReaderT
 
 import java.util.UUID
+import cats.data.OptionT
+import cats.effect.Async
 
 trait Repository[E <: DomainEntity] {
-  def findById[F[_]]: ReaderT[F, UUID, Option[E]]
+  def findById[F[_]: Async](uuid: UUID): OptionT[F, E]
 
-  def exists[F[_]]: ReaderT[F, UUID, Boolean]
+  def exists[F[_]: Async](uuid: UUID): OptionT[F, Boolean]
 
-  def countAll[F[_]]: F[Long]
+  def countAll[F[_]: Async]: F[Long]
 
-  def deleteById(id: UUID): Boolean
+  def deleteById[F[_]: Async](id: UUID): F[Boolean]
 }

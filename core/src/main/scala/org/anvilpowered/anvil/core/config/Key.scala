@@ -21,6 +21,10 @@ package org.anvilpowered.anvil.core.config
 import cats.Monoid
 import io.circe.Codec
 import io.leangen.geantyref.TypeToken
+import scala.quoted.Quotes
+import scala.reflect.ClassTag
+import scala.quoted.*
+import scala.annotation.tailrec
 
 case class Key[T](
     name: String,
@@ -45,4 +49,36 @@ object Key {
 
   // inline def typeTokenOf[T]: TypeToken[T] = new TypeToken[T]() {}
   inline def typeTokenOf[T]: TypeToken[T] = ???
+
+  inline def create[T](fallback: T, description: Option[String] = None)(using tag: ClassTag[T], codec: Codec[T], monoid: Monoid[T]): Key[T] =
+    ${ createKeyImpl('tag, 'codec, 'monoid, 'fallback, 'description) }
+
+  def createKeyImpl[T: Type](
+      tag: Expr[ClassTag[T]],
+      codec: Expr[Codec[T]],
+      monoid: Expr[Monoid[T]],
+      fallback: Expr[T],
+      description: Expr[Option[String]],
+  )(using Quotes): Expr[Key[T]] = {
+    import quotes.reflect.*
+
+    @tailrec
+    def findEnclosingValName(sym: Symbol): String = sym.tree match {
+      case ValDef(name, _, _)                                   => name
+      case DefDef(name, _, _, _) if name.startsWith("$anonfun") =>
+        // anonymous function, go up
+        findEnclosingValName(sym.owner)
+      case _ =>
+        sym.owner match {
+          case owner if owner != Symbol.noSymbol => findEnclosingValName(owner)
+          case _                                 => "unknown"
+        }
+    }
+
+    val name = findEnclosingValName(Symbol.spliceOwner)
+
+    '{
+      Key(${ Expr(name) }, Key.typeTokenOf[T], $codec, $monoid, $fallback, $description)
+    }
+  }
 }

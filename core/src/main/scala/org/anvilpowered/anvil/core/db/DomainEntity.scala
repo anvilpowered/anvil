@@ -23,12 +23,18 @@ import cats.effect.IO
 import java.util.UUID
 
 trait DomainEntity {
-  val uuid: UUID
+  val id: UUID
   // TODO: createdUtc, updatedUtc
 }
 
 trait DomainFacet[E <: DomainEntity] {
-  def getOriginal: IO[E]
+  def getOriginal: E
 }
 
 trait Creates[E <: DomainEntity]
+
+object DomainEntity {
+  given [E <: DomainEntity](using entity: E): DomainFacet[E] with {
+    override def getOriginal: E = entity
+  }
+}
