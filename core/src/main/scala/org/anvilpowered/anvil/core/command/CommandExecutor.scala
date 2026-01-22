@@ -18,11 +18,12 @@
 
 package org.anvilpowered.anvil.core.command
 
-import cats.effect.IO
-import cats.{FlatMap, Monad}
+import cats.Monad
 import org.anvilpowered.anvil.core.kbrig.StringReader
 import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
-import org.anvilpowered.anvil.core.kbrig.argument.{BooleanArgumentParser, StringArgumentParser, StringArgumentType}
+import org.anvilpowered.anvil.core.kbrig.argument.BooleanArgumentParser
+import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentParser
+import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
 
 trait CommandExecutor[F[_]: Monad] {
   def execute(

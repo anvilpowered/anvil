@@ -1,9 +1,14 @@
 ThisBuild / organization := "org.anvilpowered"
 ThisBuild / version := "0.4.0-SNAPSHOT"
-ThisBuild / scalaVersion := "3.7.4"
+ThisBuild / scalaVersion := "3.8.1"
 ThisBuild / scalacOptions ++= Seq(
   "-Wnonunit-statement",
+  "-Yexplicit-nulls",
   "-deprecation",
+)
+
+ThisBuild / resolvers ++= Seq(
+  "papermc" at "https://repo.papermc.io/repository/maven-public/",
 )
 
 lazy val root = (project in file("."))
@@ -32,3 +37,12 @@ lazy val core = (project in file("core"))
       "co.fs2" %% "fs2-io",
     ).map(_ % "3.12.2"),
   )
+
+lazy val platformPaper = (project in file("platform/paper"))
+  .settings(
+    name := "platform-paper",
+    libraryDependencies ++= Seq(
+      "io.papermc.paper" % "paper-api" % "1.21.11-R0.1-SNAPSHOT" % "provided"
+    )
+  )
+  .dependsOn(core)

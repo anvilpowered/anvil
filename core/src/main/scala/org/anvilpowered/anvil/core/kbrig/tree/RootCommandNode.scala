@@ -18,9 +18,9 @@ import cats.effect.kernel.Async
 class RootCommandNode[S](children: Map[String, CommandNode[S]])
     extends CommandNode[S](
       name = "",
-      command = null,
+      command = None,
       requirement = _ => true,
-      redirect = null,
+      redirect = None,
       forks = false,
       children,
     ) {

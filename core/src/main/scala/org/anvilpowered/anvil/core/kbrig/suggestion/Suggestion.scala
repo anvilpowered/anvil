@@ -14,7 +14,7 @@ import org.anvilpowered.anvil.core.kbrig.context.StringRange
 case class Suggestion(
     range: StringRange,
     text: String,
-    tooltip: Option[String] = null,
+    tooltip: Option[String] = None,
 ) {
   def apply(input: String): String = {
     if (range.start == 0 && range.end == input.length) {

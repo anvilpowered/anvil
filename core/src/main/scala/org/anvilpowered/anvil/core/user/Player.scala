@@ -25,12 +25,13 @@ import java.util.UUID
 
 /** An online player.
   */
-trait Player extends Subject, Audience {
-  val id: UUID
+case class Player(
+    id: PlayerId,
+    username: String,
+    displayname: Component,
+    latencyMs: Int,
+    subject: Subject,
+    audience: Audience,
+)
 
-  val username: String
-
-  val displayname: Component
-
-  val latencyMs: Int
-}
+opaque type PlayerId = UUID
