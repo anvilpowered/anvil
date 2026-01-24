@@ -19,11 +19,20 @@
 package org.anvilpowered.anvil.core.platform
 
 import net.kyori.adventure.audience.Audience
+import java.net.InetSocketAddress
 
-trait Server {
-  val platform: Platform
+case class Server(
+    name: String,
+    address: InetSocketAddress,
+    platform: Platform,
+    plugins: List[PluginMeta],
+)
 
-  val broadcastAudience: Audience
-
-  val systemSubject: Audience
+object Server {
+  given ordering: Ordering[Server] = Ordering.by(_.name)
 }
+// trait Server2 {
+//   val broadcastAudience: Audience
+//
+//   val systemSubject: Audience
+// }

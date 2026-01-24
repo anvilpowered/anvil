@@ -18,10 +18,14 @@
 
 package org.anvilpowered.anvil.core.platform
 
-trait Platform {
-  val name: String
-  val version: String
+import org.anvilpowered.anvil.core.platform.Platform.MCVersion
 
-  val isProxy: Boolean
-  val plugins: List[PluginMeta]
+case class Platform(
+    name: String,
+    version: String,
+    mcVersion: MCVersion,
+)
+
+object Platform {
+  case class MCVersion(protocol: Int, name: String)
 }
