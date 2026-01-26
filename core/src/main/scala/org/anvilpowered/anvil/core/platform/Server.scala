@@ -18,18 +18,20 @@
 
 package org.anvilpowered.anvil.core.platform
 
-import net.kyori.adventure.audience.Audience
+import org.anvilpowered.anvil.core.chat.{Audience, WithAudience}
+
 import java.net.InetSocketAddress
 
 case class Server(
     name: String,
     address: InetSocketAddress,
     platform: Platform,
-    plugins: List[PluginMeta],
+    audience: Audience,
 )
 
 object Server {
   given ordering: Ordering[Server] = Ordering.by(_.name)
+  given withAudience: WithAudience[Server] = _.audience
 }
 // trait Server2 {
 //   val broadcastAudience: Audience

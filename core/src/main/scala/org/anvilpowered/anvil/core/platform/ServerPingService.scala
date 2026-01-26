@@ -15,7 +15,8 @@ object ServerPingService {
   extension (server: Server)(using ps: ServerPingService) {
     def ping[F[_]: Async]: F[Response] = ps.ping(server)
   }
-  case class Response(players: Players, description: Component)
+  // TODO: Create multiple ping variants with different information
+  case class Response(players: Players, description: Component, plugins: List[PluginMeta])
   case class Players(online: Int, max: Int, sample: SamplePlayer)
   case class SamplePlayer(name: String, id: UUID)
 }

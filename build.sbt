@@ -22,9 +22,11 @@ lazy val core = (project in file("core"))
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-effect" % "3.6.3",
       "org.typelevel" %% "log4cats-slf4j" % "2.7.1",
-      "net.kyori" % "adventure-api" % "4.26.1",
       "org.tpolecat" %% "skunk-core" % "0.6.5",
     ) ++ Seq(
+      "net.kyori" % "adventure-api",
+      "net.kyori" % "adventure-text-minimessage",
+    ).map(_ % "4.26.1") ++ Seq(
       "org.spongepowered" % "configurate-core",
       "org.spongepowered" % "configurate-hocon",
       "org.spongepowered" % "configurate-yaml",
@@ -35,14 +37,19 @@ lazy val core = (project in file("core"))
     ).map(_ % "0.14.15") ++ Seq(
       "co.fs2" %% "fs2-core",
       "co.fs2" %% "fs2-io",
-    ).map(_ % "3.12.2"),
+    ).map(_ % "3.12.2") ++ Seq(
+      "org.http4s" %% "http4s-core",
+      "org.http4s" %% "http4s-client",
+      "org.http4s" %% "http4s-server",
+      "org.http4s" %% "http4s-dsl",
+    ).map(_ % "0.23.33"),
   )
 
 lazy val platformPaper = (project in file("platform/paper"))
   .settings(
     name := "platform-paper",
     libraryDependencies ++= Seq(
-      "io.papermc.paper" % "paper-api" % "1.21.11-R0.1-SNAPSHOT" % "provided"
-    )
+      "io.papermc.paper" % "paper-api" % "1.21.11-R0.1-SNAPSHOT" % "provided",
+    ),
   )
   .dependsOn(core)

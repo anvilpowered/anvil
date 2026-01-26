@@ -38,3 +38,13 @@ object Subject {
     def hasPermissionNotSet(permission: String): Boolean = !subject.hasPermissionSet(permission)
   }
 }
+
+trait WithSubject[-T] {
+  def subject(obj: T): Subject
+}
+
+object WithSubject {
+  extension [T: WithSubject as ws](obj: T) {
+    def subject: Subject = ws.subject(obj)
+  }
+}

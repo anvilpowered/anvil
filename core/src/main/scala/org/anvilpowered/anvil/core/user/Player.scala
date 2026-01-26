@@ -18,8 +18,8 @@
 
 package org.anvilpowered.anvil.core.user
 
-import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.core.chat.{Audience, WithAudience}
 
 import java.util.UUID
 
@@ -35,3 +35,7 @@ case class Player(
 )
 
 opaque type PlayerId = UUID
+
+object Player {
+  given WithAudience[Player] = _.audience
+}
