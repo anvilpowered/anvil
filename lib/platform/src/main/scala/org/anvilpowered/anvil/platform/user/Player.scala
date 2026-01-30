@@ -16,16 +16,26 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform.user
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.chat.{Audience, WithAudience}
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+import java.util.UUID
 
-  def executeAsConsole(command: String): F[Boolean]
+/** An online player.
+  */
+case class Player(
+    id: PlayerId,
+    username: String,
+    displayname: Component,
+    latencyMs: Int,
+    subject: Subject,
+    audience: Audience,
+)
+
+opaque type PlayerId = UUID
+
+object Player {
+  given WithAudience[Player] = _.audience
 }

@@ -22,20 +22,10 @@ import cats.data.{EitherT, ReaderT}
 import cats.effect.Async
 import cats.kernel.Monoid
 import cats.syntax.all.*
-import fs2.io.file.{Path, Files}
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import fs2.io.file.{Files, Path}
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.config.ConfigurateRegistry.DiscoverResult
-import org.anvilpowered.anvil.core.config.{ConfigurateFileType, ConfigurateRegistry, ConfigurateRegistryExporter, DefaultRegistry}
-import org.anvilpowered.anvil.core.kbrig.Command
-import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
-import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
-import org.anvilpowered.anvil.core.kbrig.context.*
-import org.anvilpowered.anvil.core.kbrig.exception.*
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
-import org.anvilpowered.anvil.core.kbrig.suggestion.{Suggestion, Suggestions}
-import org.anvilpowered.anvil.core.kbrig.tree.LiteralCommandNode
 
 object Generate {
   extension (factory: ConfigCommandFactory) {

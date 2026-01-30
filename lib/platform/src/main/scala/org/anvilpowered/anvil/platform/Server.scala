@@ -16,16 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import org.anvilpowered.anvil.chat.WithAudience
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+import java.net.InetSocketAddress
 
-  def executeAsConsole(command: String): F[Boolean]
+case class Server(
+    name: String,
+    address: InetSocketAddress,
+    platform: Platform,
+    audience: Audience,
+)
+
+object Server {
+  given ordering: Ordering[Server] = Ordering.by(_.name)
+  given withAudience: WithAudience[Server] = _.audience
 }
+// trait Server2 {
+//   val broadcastAudience: Audience
+//
+//   val systemSubject: Audience
+// }

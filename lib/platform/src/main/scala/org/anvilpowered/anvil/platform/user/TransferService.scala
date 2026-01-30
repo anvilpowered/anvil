@@ -16,16 +16,18 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform.user
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import cats.effect.Async
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+trait TransferService {
+  def transfer[F[_]: Async](player: Player)(host: String, port: Int): F[Unit]
+  def storeCookie[F[_]: Async](player: Player)(key: String, value: Array[Byte]): F[Unit]
+}
 
-  def executeAsConsole(command: String): F[Boolean]
+object TransferService {
+  extension (player: Player)(using tr: TransferService) {
+    def transfer[F[_]: Async](host: String, port: Int): F[Unit] = tr.transfer(player)(host, port)
+    def storeCookie[F[_]: Async](key: String, value: Array[Byte]): F[Unit] = tr.storeCookie(player)(key, value)
+  }
 }

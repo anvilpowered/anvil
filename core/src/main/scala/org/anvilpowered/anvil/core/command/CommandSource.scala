@@ -21,15 +21,12 @@ package org.anvilpowered.anvil.core.command
 import cats.data.{EitherT, OptionT}
 import cats.effect.IO
 import cats.{Monad, MonadError}
-import net.kyori.adventure.audience.Audience
 import org.anvilpowered.anvil.core.PlatformType
-import org.anvilpowered.anvil.core.kbrig.context.CommandContext
-import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandError}
-import org.anvilpowered.anvil.core.user.{Player, Subject}
 
+import javax.security.auth.Subject
 import scala.reflect.ClassTag
 
-trait CommandSource extends PlatformType, Audience, Subject {
+trait CommandSource extends PlatformType, Subject {
 
   /** The [Player] associated with the executed command, if any.
     */

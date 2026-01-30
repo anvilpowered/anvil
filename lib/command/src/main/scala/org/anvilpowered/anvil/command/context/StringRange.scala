@@ -15,17 +15,19 @@
  *     You should have received a copy of the GNU Affero General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.command.context
 
-package org.anvilpowered.anvil.core.command
+import org.anvilpowered.anvil.command.StringReader
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+case class StringRange(start: Int, end: Int) {
+  val isEmpty: Boolean = start == end
+  val length: Int = end - start
+  def get(reader: StringReader): String = reader.string.substring(start, end)
+  def get(string: String): String = string.substring(start, end)
+}
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
-
-  def executeAsConsole(command: String): F[Boolean]
+object StringRange {
+  def at(pos: Int): StringRange = StringRange(pos, pos)
+  def between(start: Int, end: Int): StringRange = StringRange(start, end)
+  def encompassing(a: StringRange, b: StringRange): StringRange = StringRange(math.min(a.start, b.start), math.max(a.end, b.end))
 }

@@ -22,15 +22,7 @@ import cats.Monad
 import cats.data.EitherT
 import cats.effect.{Async, IO, Sync}
 import cats.syntax.all.*
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.event.ClickEvent
-import net.kyori.adventure.text.format.{NamedTextColor, TextDecoration}
 import org.anvilpowered.anvil.core.command.{CommandSource, KeyArgument}
-import org.anvilpowered.anvil.core.config.{Key, KeyNamespace}
-import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
-import org.anvilpowered.anvil.core.kbrig.context.CommandContext
-import org.anvilpowered.anvil.core.kbrig.exception.{CommandError, NotFoundError}
-import org.anvilpowered.anvil.core.kbrig.tree.LiteralCommandNode
 
 extension (factory: ConfigCommandFactory) {
   // TODO: Replace CommandSource with typeclass on S

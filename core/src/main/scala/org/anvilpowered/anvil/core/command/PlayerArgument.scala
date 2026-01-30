@@ -21,16 +21,7 @@ package org.anvilpowered.anvil.core.command
 import cats.Monad
 import cats.data.{EitherT, OptionT, ReaderT}
 import cats.implicits.toFlatMapOps
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
-import org.anvilpowered.anvil.core.kbrig.Command
-import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
-import org.anvilpowered.anvil.core.kbrig.builder.{ArgumentBuilder, RequiredArgumentBuilder}
-import org.anvilpowered.anvil.core.kbrig.context.*
-import org.anvilpowered.anvil.core.kbrig.exception.{ArgumentError, CommandError, NotFoundError}
-import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
-import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
-import org.anvilpowered.anvil.core.user.{Player, PlayerService}
+import org.anvilpowered.anvil.command.suggestion.Suggestions.SuggestT
 import cats.effect.kernel.Async
 
 object PlayerArgument {

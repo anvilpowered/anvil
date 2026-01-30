@@ -15,17 +15,30 @@
  *     You should have received a copy of the GNU Affero General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.command.exception
 
-package org.anvilpowered.anvil.core.command
+class CommandSyntaxException(message: String) extends Exception(message) {
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+  def this(message: String, input: String, cursor: Int) =
+    this(message + CommandSyntaxException.getContext(input, cursor))
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+}
+object CommandSyntaxException {
+  val CONTEXT_AMOUNT = 10
 
-  def executeAsConsole(command: String): F[Boolean]
+  def getContext(input: String, cursor: Int): String = {
+    require(cursor >= 0)
+    val builder = new StringBuilder(" at position $cursor: ")
+    val adjustedCursor = math.min(input.length, cursor)
+    if (adjustedCursor > CONTEXT_AMOUNT) {
+      builder.append("...")
+    }
+    builder.append(
+      input,
+      math.max(0, adjustedCursor - CONTEXT_AMOUNT),
+      adjustedCursor
+    )
+    builder.append("<--[HERE]")
+    builder.toString()
+  }
 }

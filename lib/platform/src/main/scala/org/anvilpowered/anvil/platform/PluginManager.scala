@@ -16,16 +16,8 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
-
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
-
-  def executeAsConsole(command: String): F[Boolean]
+trait PluginManager {
+  val plugins: List[PluginMeta]
 }

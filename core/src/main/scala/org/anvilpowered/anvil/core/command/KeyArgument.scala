@@ -24,14 +24,7 @@ import cats.syntax.all.*
 import cats.{Applicative, Monad}
 import io.leangen.geantyref.TypeToken
 import org.anvilpowered.anvil.core.command.CommandSource.extract
-import org.anvilpowered.anvil.core.config.{Key, KeyNamespace}
-import org.anvilpowered.anvil.core.kbrig.Command
-import org.anvilpowered.anvil.core.kbrig.argument.StringArgumentType
-import org.anvilpowered.anvil.core.kbrig.builder.{ArgumentBuilder, RequiredArgumentBuilder}
-import org.anvilpowered.anvil.core.kbrig.context.CommandContext
-import org.anvilpowered.anvil.core.kbrig.exception.{ArgTypeCastError, CommandError, NotFoundError}
 import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
-import org.anvilpowered.anvil.core.kbrig.suggestion.{SuggestionProvider, Suggestions}
 
 import scala.reflect.ClassTag
 

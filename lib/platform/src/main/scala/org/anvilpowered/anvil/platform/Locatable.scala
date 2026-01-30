@@ -16,16 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import cats.effect.Async
+import cats.data.OptionT
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+trait Locatable[-T] {
+  def isLocal(obj: T): Boolean
+  def locate[F[_]: Async](obj: T): OptionT[F, Server]
+}
 
-  def executeAsConsole(command: String): F[Boolean]
+object Locatable {
+  extension [T: Locatable as ls](obj: T) {
+    def isLocal: Boolean = ls.isLocal(obj)
+    def locate[F[_]: Async]: OptionT[F, Server] = ls.locate(obj)
+  }
 }

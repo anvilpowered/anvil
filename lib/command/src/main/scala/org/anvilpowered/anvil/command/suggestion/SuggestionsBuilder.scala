@@ -16,16 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.command.suggestion
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+case class SuggestionsBuilder(
+    input: String,
+    start: Int,
+) {
+  private val inputLowerCase: String = input.toLowerCase
+  private val remaining: String = input.substring(start)
+  val remainingLowerCase: String = inputLowerCase.substring(start)
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
 
-  def executeAsConsole(command: String): F[Boolean]
 }

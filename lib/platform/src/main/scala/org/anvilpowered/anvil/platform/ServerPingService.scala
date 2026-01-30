@@ -16,16 +16,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import cats.effect.Async
+import net.kyori.adventure.text.Component
+import ServerPingService.Players
+import ServerPingService.Response
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+import java.util.UUID
 
-  def executeAsConsole(command: String): F[Boolean]
+trait ServerPingService {
+  def ping[F[_]: Async](server: Server): F[Response]
+}
+
+object ServerPingService {
+  extension (server: Server)(using ps: ServerPingService) {
+    def ping[F[_]: Async]: F[Response] = ps.ping(server)
+  }
+  // TODO: Create multiple ping variants with different information
+  case class Response(players: Players, description: Component, plugins: List[PluginMeta])
+  case class Players(online: Int, max: Int, sample: SamplePlayer)
+  case class SamplePlayer(name: String, id: UUID)
 }

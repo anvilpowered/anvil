@@ -16,16 +16,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import Platform.MCVersion
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+case class Platform(
+    name: String,
+    version: String,
+    mcVersion: MCVersion,
+)
 
-  def executeAsConsole(command: String): F[Boolean]
+object Platform {
+  case class MCVersion(protocol: Int, name: String)
 }

@@ -16,16 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.config
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import scala.io.circe.parser.decode
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+/** A [[Registry]] implementation that checks environment variables.
+  * TODO: Pulling environment variables is not pure. They should all be parsed at launch and all errors printed.
+  */
+class EnvironmentRegistry(
+    private val prefix: String,
+    private val delegate: Option[Registry] = None,
+) extends Registry {
+  private def envName(key: Key[?]): String = prefix + "_" + key.name
 
-  def executeAsConsole(command: String): F[Boolean]
+  override def getDefault[T](key: Key[T]): T = delegate.map(_.getDefault(key)).getOrElse(key.fallback)
+  override def get[T](key: Key[T]): Option[T] = {
+    Option(System.getenv(envName(key)))
+      .flatMap(decode[T](_)(using key.codec).toOption) // TODO: Error is ignored
+      .orElse(delegate.flatMap(_.get(key)))
+  }
 }

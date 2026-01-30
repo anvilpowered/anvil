@@ -23,9 +23,6 @@ import cats.effect.Async
 import org.anvilpowered.anvil.core.command.CommandSource
 import org.anvilpowered.anvil.core.command.config.Generate.createGenerate
 import org.anvilpowered.anvil.core.config.ConfigurateRegistry.DiscoverResult
-import org.anvilpowered.anvil.core.config.{ConfigurateRegistry, ConfigurateRegistryExporter, KeyNamespace, Registry}
-import org.anvilpowered.anvil.core.kbrig.builder.ArgumentBuilder
-import org.anvilpowered.anvil.core.kbrig.tree.LiteralCommandNode
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
 
 class ConfigCommandFactory(

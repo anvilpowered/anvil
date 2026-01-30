@@ -15,17 +15,14 @@
  *     You should have received a copy of the GNU Affero General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.command
 
-package org.anvilpowered.anvil.core.command
+import cats.Applicative
+import cats.data.EitherT
+import cats.effect.{Async, Concurrent}
+import org.anvilpowered.anvil.command.context.CommandContext
+import org.anvilpowered.anvil.command.exception.CommandError
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
-
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
-
-  def executeAsConsole(command: String): F[Boolean]
+trait Command[-S] {
+  def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int]
 }

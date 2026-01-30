@@ -16,16 +16,22 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform.user
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import cats.data.{OptionT, ReaderT}
+import fs2.Stream
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
+import java.util.UUID
 
-  def executeAsConsole(command: String): F[Boolean]
+trait PlayerService {
+
+  def get[F[_]](username: String): OptionT[F, Player]
+
+  def get[F[_]](id: UUID): OptionT[F, Player]
+
+  /** Gets all players, filtering by [[startsWith]] ignoring case.
+    */
+  def getAll[F[_]](startsWith: String = ""): Stream[F, Player]
+
+  def count[F[_]](): F[Int]
 }

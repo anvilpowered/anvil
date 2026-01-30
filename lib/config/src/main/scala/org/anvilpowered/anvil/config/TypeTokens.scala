@@ -16,16 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.config
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+import java.time.ZoneId
+import scala.io.leangen.geantyref.TypeToken
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
-
-  def executeAsConsole(command: String): F[Boolean]
+object TypeTokens {
+  val BOOLEAN: TypeToken[Boolean] = TypeToken.get(classOf[Boolean])
+  val INTEGER: TypeToken[Int] = TypeToken.get(classOf[Int])
+  val STRING: TypeToken[String] = TypeToken.get(classOf[String])
+  val COMPONENT: TypeToken[Component] = TypeToken.get(classOf[Component])
+  val ZONE_ID: TypeToken[ZoneId] = TypeToken.get(classOf[ZoneId])
 }

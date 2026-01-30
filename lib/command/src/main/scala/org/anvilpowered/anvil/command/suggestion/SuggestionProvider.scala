@@ -15,17 +15,24 @@
  *     You should have received a copy of the GNU Affero General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.anvilpowered.anvil.command.suggestion
 
-package org.anvilpowered.anvil.core.command
+import cats.data.{EitherT, Kleisli, ReaderT, StateT}
+import cats.effect.{Async, Concurrent, IO}
+import cats.kernel.Monoid
+import cats.syntax.all.*
+import cats.{Applicative, Monad}
+import Suggestions.SuggestT
+import org.anvilpowered.anvil.command.context.CommandContext
+import org.anvilpowered.anvil.command.exception.ArgumentError
 
-import cats.Monad
-import org.anvilpowered.anvil.core.kbrig.StringReader.ParseT
+trait SuggestionProvider[-S] {
+  def suggest[F[_]: Async](context: CommandContext[S]): SuggestT[F]
+}
 
-trait CommandExecutor[F[_]: Monad] {
-  def execute(
-      source: CommandSource,
-      command: String,
-  ): F[Boolean]
-
-  def executeAsConsole(command: String): F[Boolean]
+object SuggestionProvider {
+  val Empty: SuggestionProvider[Any] = new SuggestionProvider[Any] {
+    def suggest[F[_]: Async](context: CommandContext[Any]): SuggestT[F] =
+      SuggestT.pure(Suggestions.Empty)
+  }
 }
