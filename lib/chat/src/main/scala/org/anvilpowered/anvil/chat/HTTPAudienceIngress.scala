@@ -41,10 +41,16 @@ import scala.concurrent.duration.*
 class HTTPAudienceIngress {
   case class SendMessageRequest(message: Component, boundChatType: Option[ChatType.Bound])
   object SendMessageRequest {
-    import MiniMessageCodec.codec
+    import MiniMessageCodec.given
+    import ChatTypeCodec.given
     given decoder[F[_]: Concurrent]: EntityDecoder[F, SendMessageRequest] = jsonOf[F, SendMessageRequest]
   }
   case class SendSignedMessageRequest(message: SignedMessage, boundChatType: ChatType.Bound)
+  object SendSignedMessageRequest {
+    import MiniMessageCodec.given
+    import ChatTypeCodec.given
+    given decoder[F[_]: Concurrent]: EntityDecoder[F, SendSignedMessageRequest] = jsonOf[F, SendSignedMessageRequest]
+  }
   given componentDecoder[F[_]: Async as F]: EntityDecoder[F, Component] with {
     override def decode(m: Media[F], strict: Boolean): DecodeResult[F, Component] = EitherT.liftF(
       for {
@@ -60,8 +66,11 @@ class HTTPAudienceIngress {
     HttpRoutes.of[F] {
       case r @ POST -> Root / "sendMessage" => {
         for {
-          result <- r.as[Component]
-          a <- audience.sendMessage(result)
+          request <- r.as[SendMessageRequest]
+          a <- request.boundChatType match {
+            case Some(bound) => audience.sendMessage(request.message, bound)
+            case None => audience.sendMessage(request.message)
+          }
           resp <-
             if (a) {
               Ok("Sent Message")
@@ -71,7 +80,7 @@ class HTTPAudienceIngress {
 
         } yield resp
       }
-      case POST -> Root / "send2" => Ok()
+      case POST -> Root / "sendSignedMessage" => Ok()
     }
   }
 }

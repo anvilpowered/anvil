@@ -17,7 +17,17 @@ ThisBuild / libraryDependencies ++= Seq(
 ) ++ Seq(
   "fs2-core",
   "fs2-io",
-).map("co.fs2" %% _ % "3.12.2")
+).map("co.fs2" %% _ % "3.12.2") ++ Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser",
+).map(_ % "0.14.15") ++ Seq(
+  "http4s-core",
+  "http4s-client",
+  "http4s-server",
+  "http4s-dsl",
+  "http4s-circe",
+).map("org.http4s" %% _ % "0.23.33")
 
 lazy val root = (project in file("."))
   .settings(
@@ -29,17 +39,7 @@ lazy val core = (project in file("core"))
     name := "anvil-core",
     libraryDependencies ++= Seq(
       "org.tpolecat" %% "skunk-core" % "0.6.5",
-    ) ++ Seq(
-      "io.circe" %% "circe-core",
-      "io.circe" %% "circe-generic",
-      "io.circe" %% "circe-parser",
-    ).map(_ % "0.14.15") ++ Seq(
-      "http4s-core",
-      "http4s-client",
-      "http4s-server",
-      "http4s-dsl",
-      "http4s-circe",
-    ).map("org.http4s" %% _ % "0.23.33"),
+    ),
   )
 
 lazy val key = (project in file("lib/key"))
@@ -67,7 +67,7 @@ lazy val chat = (project in file("lib/chat"))
       "adventure-text-minimessage",
     ).map("net.kyori" % _ % "4.26.1"),
   )
-  .dependsOn(core)
+//  .dependsOn(core)
 
 lazy val command = (project in file("lib/command"))
   .settings(

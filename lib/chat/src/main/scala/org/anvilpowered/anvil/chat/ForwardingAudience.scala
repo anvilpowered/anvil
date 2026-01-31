@@ -17,7 +17,6 @@ import net.kyori.adventure.sound.Sound.Emitter
 import net.kyori.adventure.sound.{Sound, SoundStop}
 import net.kyori.adventure.text.{Component, ComponentLike}
 import net.kyori.adventure.title.{Title, TitlePart}
-import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.foo
 
 import java.util.UUID
 

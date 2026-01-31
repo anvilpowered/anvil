@@ -18,24 +18,59 @@
 
 package org.anvilpowered.anvil.chat
 
-import io.circe.{Codec, Decoder, Encoder}
+import io.circe.Codec
+import io.circe.Decoder
+import io.circe.Encoder
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.spongepowered.configurate.ConfigurationNode
-import org.spongepowered.configurate.serialize.TypeSerializer
-
-import java.lang.reflect.Type
+import net.kyori.adventure.chat.SignedMessage
+import java.time.Instant
+import net.kyori.adventure.chat.SignedMessage.Signature
+import java.util.Base64
+import net.kyori.adventure.identity.Identity
+import java.util.UUID
+import cats.syntax.all.*
+// import io.circe.syntax.*
+// import io.circe.generic.auto.*
 
 object MiniMessageCodec {
   given codec: Codec[Component] = Codec.from(
     Decoder.decodeString.map { MiniMessage.miniMessage().deserialize(_, Seq.empty*) },
     Encoder.encodeString.contramap { MiniMessage.miniMessage().serialize(_) },
   )
+  case class SignedMessageImpl(
+      override val identity: Identity,
+      override val timestamp: Instant,
+      override val salt: Long,
+      override val signature: Signature,
+      override val unsignedContent: Component,
+      override val message: String,
+  ) extends SignedMessage
 
-  given typeSerializer: TypeSerializer[Component] with {
-    override def deserialize(`type`: Type, node: ConfigurationNode): Component =
-      MiniMessage.miniMessage().deserialize(node.getString(), Seq.empty*)
-    override def serialize(`type`: Type, obj: Component, node: ConfigurationNode): Unit =
-      node.set(MiniMessage.miniMessage().serialize(obj))
-  }
+  case class SignatureImpl(override val bytes: Array[Byte]) extends Signature
+
+  given uuidCodec: Codec[UUID] = Codec.from(Decoder.decodeUUID, Encoder.encodeUUID)
+
+  given identityCodec: Codec[Identity] = Codec[UUID].imap(Identity.identity)(_.uuid)
+
+  given signatureCodec: Codec[Signature] = Codec.from(
+    Decoder.decodeString.emap { str =>
+      try {
+        Right(SignatureImpl(Base64.getDecoder.decode(str)))
+      } catch {
+        case e: IllegalArgumentException =>
+          Left(s"Invalid Base64 string: ${e.getMessage}")
+      }
+    },
+    Encoder.encodeString.contramap[Signature](sig => Base64.getEncoder.encodeToString(sig.bytes)),
+  )
+  given signedCodec: Codec[SignedMessage] = Codec.from(
+    Decoder.forProduct6("identity", "timestamp", "salt", "signature", "unsignedContent", "message") {
+      (identity: Identity, timestamp: Instant, salt: Long, signature: Signature, unsignedContent: Component, message: String) =>
+        SignedMessageImpl(identity, timestamp, salt, signature, unsignedContent, message)
+    },
+    Encoder.forProduct6("identity", "timestamp", "salt", "signature", "unsignedContent", "message") { msg =>
+      (msg.identity, msg.timestamp, msg.salt, msg.signature, msg.unsignedContent, msg.message)
+    },
+  )
 }
