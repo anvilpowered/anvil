@@ -34,13 +34,6 @@ trait Audience extends Pointered {
 
   def sendMessage[F[_]: Async](signedMessage: SignedMessage, boundChatType: ChatType.Bound): F[Boolean]
 
-  def deleteMessage[F[_]: Async as F](signedMessage: SignedMessage): F[Boolean] =
-    if (signedMessage.canDelete) {
-      deleteMessage(signedMessage.signature())
-    } else {
-      F.pure(false)
-    }
-
   def deleteMessage[F[_]: Async](signature: SignedMessage.Signature): F[Boolean]
 
   /* ========== Action Bar ========== */
@@ -50,10 +43,10 @@ trait Audience extends Pointered {
   /* ========== Player List ========== */
 
   def sendPlayerListHeader[F[_]: Async](header: Component): F[Boolean] =
-    sendPlayerListHeaderAndFooter(header, Component.empty())
+    sendPlayerListHeaderAndFooter(header, Component.empty)
 
   def sendPlayerListFooter[F[_]: Async](footer: Component): F[Boolean] =
-    sendPlayerListHeaderAndFooter(Component.empty(), footer)
+    sendPlayerListHeaderAndFooter(Component.empty, footer)
 
   def sendPlayerListHeaderAndFooter[F[_]: Async](header: Component, footer: Component): F[Boolean]
 

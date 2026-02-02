@@ -42,13 +42,6 @@ lazy val core = (project in file("core"))
     ),
   )
 
-lazy val key = (project in file("lib/key"))
-  .settings(
-    name := "anvil-key",
-    libraryDependencies ++= Seq(
-      "adventure-key",
-    ).map("net.kyori" % _ % "4.26.1"),
-  )
 lazy val config = (project in file("lib/config"))
   .settings(
     name := "anvil-config",

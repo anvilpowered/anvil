@@ -29,6 +29,8 @@ import io.circe.syntax.*
 import net.kyori.adventure.chat.{ChatType, SignedMessage}
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import org.anvilpowered.anvil.chat.MiniMessageCodec.given
+import org.anvilpowered.anvil.chat.ChatTypeCodec.given
 import org.http4s.*
 import org.http4s.circe.jsonOf
 import org.http4s.client.Client
@@ -41,16 +43,29 @@ import scala.concurrent.duration.*
 class HTTPAudienceIngress {
   case class SendMessageRequest(message: Component, boundChatType: Option[ChatType.Bound])
   object SendMessageRequest {
-    import MiniMessageCodec.given
-    import ChatTypeCodec.given
     given decoder[F[_]: Concurrent]: EntityDecoder[F, SendMessageRequest] = jsonOf[F, SendMessageRequest]
   }
+
   case class SendSignedMessageRequest(message: SignedMessage, boundChatType: ChatType.Bound)
   object SendSignedMessageRequest {
-    import MiniMessageCodec.given
-    import ChatTypeCodec.given
     given decoder[F[_]: Concurrent]: EntityDecoder[F, SendSignedMessageRequest] = jsonOf[F, SendSignedMessageRequest]
   }
+
+  case class MessageRequest(message: Component)
+  object MessageRequest {
+    given decoder[F[_]: Concurrent]: EntityDecoder[F, MessageRequest] = jsonOf[F, MessageRequest]
+  }
+
+  case class SignatureRequest(signature: SignedMessage.Signature)
+  object SignatureRequest {
+    given decoder[F[_]: Concurrent]: EntityDecoder[F, SignatureRequest] = jsonOf[F, SignatureRequest]
+  }
+
+  case class SendPlayerList(header: Option[Component], footer: Option[Component])
+  object SendPlayerList {
+    given decoder[F[_]: Concurrent]: EntityDecoder[F, SendPlayerList] = jsonOf[F, SendPlayerList]
+  }
+
   given componentDecoder[F[_]: Async as F]: EntityDecoder[F, Component] with {
     override def decode(m: Media[F], strict: Boolean): DecodeResult[F, Component] = EitherT.liftF(
       for {
@@ -63,24 +78,38 @@ class HTTPAudienceIngress {
   def createService[F[_]: Async as F](audience: Audience): HttpRoutes[F] = {
     object dsl extends Http4sDsl[F]
     import dsl.*
-    HttpRoutes.of[F] {
-      case r @ POST -> Root / "sendMessage" => {
-        for {
-          request <- r.as[SendMessageRequest]
-          a <- request.boundChatType match {
-            case Some(bound) => audience.sendMessage(request.message, bound)
-            case None => audience.sendMessage(request.message)
-          }
-          resp <-
-            if (a) {
-              Ok("Sent Message")
-            } else {
-              InternalServerError("Could not decode message")
-            }
+    val routes = List(
+      createPf[F, SendMessageRequest]("sendMessage") { request =>
+        request.boundChatType match {
+          case Some(bound) => audience.sendMessage(request.message, bound)
+          case None        => audience.sendMessage(request.message)
+        }
+      },
+      createPf[F, SendSignedMessageRequest]("sendSignedMessage") { request =>
+        audience.sendMessage(request.message, request.boundChatType)
+      },
+      createPf[F, SignatureRequest]("deleteMessage")(audience.deleteMessage.compose(_.signature)),
+      createPf[F, MessageRequest]("sendActionBar")(audience.sendActionBar.compose(_.message)),
+      createPf[F, SendPlayerList]("sendPlayerList") { request =>
+        audience.sendPlayerListHeaderAndFooter(
+          request.header.getOrElse(Component.empty),
+          request.footer.getOrElse(Component.empty),
+        )
+      },
+      // TODO: Rest of audience
+    )
+    HttpRoutes.of(routes.reduce(_ orElse _))
+  }
 
-        } yield resp
-      }
-      case POST -> Root / "sendSignedMessage" => Ok()
+  private def createPf[F[_]: Async as F, A](path: String)(run: A => F[Boolean])(using EntityDecoder[F, A]): PartialFunction[Request[F], F[Response[F]]] = {
+    object dsl extends Http4sDsl[F]
+    import dsl.*
+    { case r @ POST -> Root / path =>
+      for {
+        request <- r.as[A]
+        result <- run(request)
+        resp <- if (result) Ok("Sent Message") else InternalServerError("Could not decode message")
+      } yield resp
     }
   }
 }
