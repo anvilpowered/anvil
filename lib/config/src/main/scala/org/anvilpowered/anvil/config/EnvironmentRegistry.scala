@@ -18,7 +18,7 @@
 
 package org.anvilpowered.anvil.config
 
-import scala.io.circe.parser.decode
+import io.circe.parser.decode
 
 /** A [[Registry]] implementation that checks environment variables.
   * TODO: Pulling environment variables is not pure. They should all be parsed at launch and all errors printed.

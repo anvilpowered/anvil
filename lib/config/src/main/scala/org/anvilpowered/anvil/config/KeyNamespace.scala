@@ -21,7 +21,7 @@ package org.anvilpowered.anvil.config
 import org.jetbrains.annotations.ApiStatus
 
 import scala.collection.mutable
-import scala.io.leangen.geantyref.TypeToken
+import io.leangen.geantyref.TypeToken
 import scala.reflect.ClassTag
 
 trait KeyNamespace {

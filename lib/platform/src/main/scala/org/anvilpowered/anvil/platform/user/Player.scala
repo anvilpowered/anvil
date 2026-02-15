@@ -20,22 +20,24 @@ package org.anvilpowered.anvil.platform.user
 
 import net.kyori.adventure.text.Component
 import org.anvilpowered.anvil.chat.{Audience, WithAudience}
+import org.anvilpowered.anvil.platform.user.Player.{Id, Username}
 
 import java.util.UUID
 
 /** An online player.
   */
 case class Player(
-    id: PlayerId,
-    username: String,
+    id: Id,
+    username: Username,
     displayname: Component,
     latencyMs: Int,
     subject: Subject,
     audience: Audience,
 )
 
-opaque type PlayerId = UUID
-
 object Player {
+  case class Id(value: UUID) extends AnyVal
+  case class Username(value: String) extends AnyVal
+  given WithSubject[Player] = _.subject
   given WithAudience[Player] = _.audience
 }

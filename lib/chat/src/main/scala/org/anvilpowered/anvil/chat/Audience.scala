@@ -1,7 +1,6 @@
 package org.anvilpowered.anvil.chat
 
 import cats.effect.kernel.Async
-import cats.kernel.Monoid
 import cats.syntax.all.*
 import net.kyori.adventure.audience.Audience as KAudience
 import net.kyori.adventure.bossbar.BossBar
@@ -19,6 +18,7 @@ import net.kyori.adventure.text.{Component, ComponentLike}
 import net.kyori.adventure.title.{Title, TitlePart}
 
 import java.util.UUID
+import scala.language.implicitConversions
 
 trait Audience extends Pointered {
 
@@ -280,12 +280,12 @@ object Audience {
   }
 }
 
-trait WithAudience[-T] {
-  def audience(obj: T): Audience
+trait WithAudience[A] {
+  def audience(obj: A): Audience
 }
 
 object WithAudience {
-  extension [T: WithAudience as wa](obj: T) {
-    def audience: Audience = wa.audience(obj)
+  extension [A: WithAudience as A](obj: A) {
+    def audience: Audience = A.audience(obj)
   }
 }

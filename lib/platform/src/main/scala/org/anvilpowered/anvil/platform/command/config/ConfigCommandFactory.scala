@@ -16,14 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command.config
+package org.anvilpowered.anvil.platform.command.config
 
 import cats.data.{EitherT, Nested, OptionT}
 import cats.effect.Async
-import org.anvilpowered.anvil.core.command.CommandSource
-import org.anvilpowered.anvil.core.command.config.Generate.createGenerate
-import org.anvilpowered.anvil.core.config.ConfigurateRegistry.DiscoverResult
+import Generate.createGenerate
+import org.anvilpowered.anvil.config.Registry
+import org.anvilpowered.anvil.platform.command.CommandSource
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
+import org.anvilpowered.anvil.config.ConfigurateRegistry.DiscoverResult
+import org.anvilpowered.anvil.config.ConfigurateRegistryExporter
+import org.anvilpowered.anvil.command.tree.LiteralCommandNode
+import org.anvilpowered.anvil.config.KeyNamespace
+import org.anvilpowered.anvil.command.builder.ArgumentBuilder
 
 class ConfigCommandFactory(
     val registry: Registry,

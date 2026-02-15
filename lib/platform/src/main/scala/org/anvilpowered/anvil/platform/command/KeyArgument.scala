@@ -16,20 +16,32 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform.command
 
-import cats.data.{EitherT, ReaderT}
+import CommandSource.extract
+import cats.Applicative
+import cats.Monad
+import cats.data.EitherT
+import cats.data.ReaderT
 import cats.effect.Async
 import cats.syntax.all.*
-import cats.{Applicative, Monad}
 import io.leangen.geantyref.TypeToken
-import org.anvilpowered.anvil.core.command.CommandSource.extract
-import org.anvilpowered.anvil.core.kbrig.suggestion.Suggestions.SuggestT
+import org.anvilpowered.anvil.command.Command
+import org.anvilpowered.anvil.command.argument.StringArgumentType
+import org.anvilpowered.anvil.command.builder.ArgumentBuilder
+import org.anvilpowered.anvil.command.builder.RequiredArgumentBuilder
+import org.anvilpowered.anvil.command.context.CommandContext
+import org.anvilpowered.anvil.command.exception.ArgTypeCastError
+import org.anvilpowered.anvil.command.exception.CommandError
+import org.anvilpowered.anvil.command.exception.NotFoundError
+import org.anvilpowered.anvil.command.suggestion.Suggestions
+import org.anvilpowered.anvil.config.Key
+import org.anvilpowered.anvil.config.KeyNamespace
 
 import scala.reflect.ClassTag
+import net.kyori.adventure.text.Component
 
 object KeyArgument {
-
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
     def suggestKeyArgument(using namespace: KeyNamespace): builder.type =
       builder.suggests([F[_]] =>
@@ -82,14 +94,14 @@ object KeyArgument {
 
   def simpleBuilder[S, T](
       typeToken: TypeToken[T],
-      executes: [F[_]: Monad] => (context: CommandContext[S], key: Key[T]) => EitherT[F, CommandError, Int],
+      executes: [F[_]: Monad] => (context: CommandContext[S], key: Key[T]) => EitherT[F, CommandError, Component],
       argumentName: String = "key",
   )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] =
     ArgumentBuilder
       .required[S, String](argumentName, StringArgumentType.singleWord())
       .suggestKeyArgument
       .executesCmd(new Command[S] {
-        override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] =
+        override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Component] =
           for {
             key <- KeyArgument.extract[F, T](typeToken, context, argumentName)
             result <- executes[F](context, key)
@@ -97,18 +109,18 @@ object KeyArgument {
       })
 
   def simpleBuilderUntyped[S](
-      executes: [F[_]: Async] => (context: CommandContext[S], key: Key[?]) => EitherT[F, CommandError, Int],
+      executes: [F[_]: Async] => (context: CommandContext[S], key: Key[?]) => EitherT[F, CommandError, Component],
   )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] = simpleBuilderUntyped(executes, "key")
 
   def simpleBuilderUntyped[S](
-      executes: [F[_]: Async] => (context: CommandContext[S], key: Key[?]) => EitherT[F, CommandError, Int],
+      executes: [F[_]: Async] => (context: CommandContext[S], key: Key[?]) => EitherT[F, CommandError, Component],
       argumentName: String,
   )(using namespace: KeyNamespace): RequiredArgumentBuilder[S, String] =
     ArgumentBuilder
       .required[S, String](argumentName, StringArgumentType.singleWord())
       .suggestKeyArgument
       .executesCmd(new Command[S] {
-        override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] = {
+        override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Component] = {
           for {
             key <- KeyArgument.extractUntyped[F](context, argumentName)
             result <- executes[F](context, key)

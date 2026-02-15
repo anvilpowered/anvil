@@ -16,10 +16,26 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core
+package org.anvilpowered.anvil.platform.command
 
-import cats.effect.Async
+import cats.Monad
+import cats.data.EitherT
+import org.anvilpowered.anvil.chat.Audience
+import org.anvilpowered.anvil.command.context.CommandContext
+import org.anvilpowered.anvil.command.exception.ArgumentError
+import org.anvilpowered.anvil.platform.user.{Player, Subject}
 
-trait PlatformType {
-  val platformDelegate: Any
+import scala.reflect.ClassTag
+
+case class CommandSource(
+    subject: Subject,
+    audience: Audience,
+    player: Option[Player],
+)
+
+object CommandSource {
+  extension (context: CommandContext[?]) {
+    def extract[F[_]: Monad, T: ClassTag](name: String): EitherT[F, ArgumentError, T] =
+      context.argumentFetcher.fetch[F, T](name)
+  }
 }

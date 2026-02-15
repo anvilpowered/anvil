@@ -19,7 +19,8 @@
 package org.anvilpowered.anvil.config
 
 import java.time.ZoneId
-import scala.io.leangen.geantyref.TypeToken
+import io.leangen.geantyref.TypeToken
+import java.awt.Component
 
 object TypeTokens {
   val BOOLEAN: TypeToken[Boolean] = TypeToken.get(classOf[Boolean])

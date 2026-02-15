@@ -36,6 +36,7 @@ import org.anvilpowered.anvil.command.suggestion.Suggestions.SuggestT
 import org.anvilpowered.anvil.command.Command
 import org.anvilpowered.anvil.command.context.CommandContext
 import org.anvilpowered.anvil.command.suggestion.SuggestionProvider
+import net.kyori.adventure.text.Component
 
 /** Converts the given [ArgumentCommandNode] with source type [S] to an [ArgumentCommandNode] with source type [R].
   */
@@ -106,7 +107,7 @@ object SourceConverter {
 
   extension [S, R](original: Command[S]) {
     def mapSource(f: R => S): Command[R] = new Command[R] {
-      override def execute[F[_]: Async](context: CommandContext[R]): EitherT[F, CommandError, Int] =
+      override def execute[F[_]: Async](context: CommandContext[R]): EitherT[F, CommandError, Component] =
         original.execute(context.mapToOriginalSource(f))
     }
   }

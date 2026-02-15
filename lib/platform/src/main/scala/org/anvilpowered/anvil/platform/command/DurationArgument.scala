@@ -16,11 +16,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform.command
 
 import cats.data.{EitherT, OptionT, Validated}
 import cats.syntax.all.*
 import cats.{Functor, Monad, MonadError}
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.{NamedTextColor, TextDecoration}
+import org.anvilpowered.anvil.command.context.CommandContext
+import org.anvilpowered.anvil.command.exception.{CommandError, ParseError}
 
 import java.time.Duration
 import java.util.regex.{Matcher, Pattern}

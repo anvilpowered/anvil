@@ -18,9 +18,7 @@
 
 package org.anvilpowered.anvil.platform.user
 
-import org.anvilpowered.anvil.core.PlatformType
-
-trait Subject extends PlatformType {
+trait Subject {
 
   /** Checks if the subject has the specified permission.
     *
@@ -39,12 +37,12 @@ object Subject {
   }
 }
 
-trait WithSubject[-T] {
-  def subject(obj: T): Subject
+trait WithSubject[S] {
+  def subject(obj: S): Subject
 }
 
 object WithSubject {
-  extension [T: WithSubject as ws](obj: T) {
-    def subject: Subject = ws.subject(obj)
+  extension [S: WithSubject as S](obj: S) {
+    def subject: Subject = S.subject(obj)
   }
 }

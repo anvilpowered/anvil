@@ -27,22 +27,17 @@ ThisBuild / libraryDependencies ++= Seq(
   "http4s-server",
   "http4s-dsl",
   "http4s-circe",
-).map("org.http4s" %% _ % "0.23.33")
+).map("org.http4s" %% _ % "0.23.33") ++ Seq(
+  "adventure-api",
+  "adventure-text-minimessage",
+).map("net.kyori" % _ % "4.26.1")
 
 lazy val root = (project in file("."))
   .settings(
     name := "anvil",
   )
 
-lazy val core = (project in file("core"))
-  .settings(
-    name := "anvil-core",
-    libraryDependencies ++= Seq(
-      "org.tpolecat" %% "skunk-core" % "0.6.5",
-    ),
-  )
-
-lazy val config = (project in file("lib/config"))
+lazy val libconfig = (project in file("lib/config"))
   .settings(
     name := "anvil-config",
     libraryDependencies ++= Seq(
@@ -52,27 +47,32 @@ lazy val config = (project in file("lib/config"))
     ).map("org.spongepowered" % _ % "4.2.0"),
   )
 
-lazy val chat = (project in file("lib/chat"))
+lazy val libchat = (project in file("lib/chat"))
   .settings(
     name := "anvil-chat",
-    libraryDependencies ++= Seq(
-      "adventure-api",
-      "adventure-text-minimessage",
-    ).map("net.kyori" % _ % "4.26.1"),
   )
 //  .dependsOn(core)
 
-lazy val command = (project in file("lib/command"))
+lazy val libcommand = (project in file("lib/command"))
   .settings(
     name := "anvil-command",
   )
-  .dependsOn(chat)
+  .dependsOn(libchat)
 
-lazy val platform = (project in file("lib/platform"))
+lazy val libplatform = (project in file("lib/platform"))
   .settings(
     name := "anvil-platform",
   )
-  .dependsOn(chat)
+  .dependsOn(libconfig, libcommand)
+
+val publishAllLocal = taskKey[Unit]("Publish all")
+publishAllLocal := {
+  (libchat / publishLocal).value
+  (libcommand / publishLocal).value
+  (libconfig / publishLocal).value
+  (libplatform / publishLocal).value
+  ()
+}
 
 //lazy val platformPaper = (project in file("platform/paper"))
 //  .settings(

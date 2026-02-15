@@ -22,7 +22,8 @@ import cats.data.EitherT
 import cats.effect.{Async, Concurrent}
 import org.anvilpowered.anvil.command.context.CommandContext
 import org.anvilpowered.anvil.command.exception.CommandError
+import net.kyori.adventure.text.Component
 
 trait Command[-S] {
-  def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int]
+  def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Component]
 }

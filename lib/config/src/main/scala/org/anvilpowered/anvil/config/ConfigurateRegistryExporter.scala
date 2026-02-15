@@ -23,7 +23,6 @@ import cats.effect.{Async, IO}
 import cats.syntax.all.*
 import fs2.io.file.Path
 import org.anvilpowered.anvil.config.ConfigurateRegistry.getConfigNodePath
-import org.anvilpowered.anvil.core.platform.PluginMeta
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader
 import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import org.spongepowered.configurate.{CommentedConfigurationNode, ConfigurateException}
@@ -31,12 +30,12 @@ import org.spongepowered.configurate.{CommentedConfigurationNode, ConfigurateExc
 class ConfigurateRegistryExporter[B <: AbstractConfigurationLoader.Builder[B, AbstractConfigurationLoader[CommentedConfigurationNode]]](
     val fileType: ConfigurateFileType[B],
     val basePath: Path,
-    val pluginMeta: PluginMeta,
+    val pluginName: String,
     val keyNamespace: KeyNamespace,
 ) {
-  val configPath: Path = basePath.resolve(s"${pluginMeta.name}.${fileType.fileExtension}")
+  val configPath: Path = basePath.resolve(s"$pluginName.${fileType.fileExtension}")
 
-  def exportRegistry[F[_]](registry: Registry, serializers: TypeSerializerCollection)(using F: Async[F]): EitherT[F, ConfigurateException, Unit] = EitherT(
+  def exportRegistry[F[_]: Async as F](registry: Registry, serializers: TypeSerializerCollection): EitherT[F, ConfigurateException, Unit] = EitherT(
     F.blocking {
       val loader = fileType.createBuilder(serializers).path(configPath.toNioPath).build()
       val root = loader.createNode()

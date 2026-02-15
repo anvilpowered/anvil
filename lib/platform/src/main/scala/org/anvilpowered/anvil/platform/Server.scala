@@ -21,6 +21,7 @@ package org.anvilpowered.anvil.platform
 import org.anvilpowered.anvil.chat.WithAudience
 
 import java.net.InetSocketAddress
+import org.anvilpowered.anvil.chat.Audience
 
 case class Server(
     name: String,

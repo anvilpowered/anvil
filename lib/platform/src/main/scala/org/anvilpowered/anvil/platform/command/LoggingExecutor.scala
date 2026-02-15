@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform.command
 
 import cats.effect.IO
 import cats.syntax.all.*
@@ -33,7 +33,7 @@ extension [F[_]: Monad](executor: CommandExecutor[F]) {
       override def execute(source: CommandSource, command: String): F[Boolean] =
         for {
           success <- executor.execute(source, command)
-          _ <- log(success, command, source.player.map(_.username).getOrElse("<n/a>"))
+          _ <- log(success, command, source.player.map(_.username.value).getOrElse("<n/a>"))
         } yield success
 
       override def executeAsConsole(command: String): F[Boolean] =

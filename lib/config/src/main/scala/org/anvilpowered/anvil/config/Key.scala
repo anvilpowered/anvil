@@ -21,8 +21,8 @@ package org.anvilpowered.anvil.config
 import cats.Monoid
 
 import scala.annotation.tailrec
-import scala.io.circe.Codec
-import scala.io.leangen.geantyref.TypeToken
+import io.circe.Codec
+import io.leangen.geantyref.TypeToken
 import scala.quoted.*
 import scala.reflect.ClassTag
 

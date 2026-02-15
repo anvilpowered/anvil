@@ -26,6 +26,7 @@ import org.anvilpowered.anvil.command.exception.CommandError
 import org.anvilpowered.anvil.command.tree.CommandNode
 
 import scala.collection.mutable
+import net.kyori.adventure.text.Component
 
 abstract class ArgumentBuilder[S] {
 
@@ -59,9 +60,9 @@ abstract class ArgumentBuilder[S] {
 
   def executesCmd(command: Command[S]): this.type = executesOption(Some(command))
 
-  def executes(command: [F[_]: Async] => CommandContext[S] => EitherT[F, CommandError, Int]): this.type =
+  def executes(command: [F[_]: Async] => CommandContext[S] => EitherT[F, CommandError, Component]): this.type =
     executesCmd(new Command[S] {
-      override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Int] =
+      override def execute[F[_]: Async](context: CommandContext[S]): EitherT[F, CommandError, Component] =
         command[F](context)
     })
 

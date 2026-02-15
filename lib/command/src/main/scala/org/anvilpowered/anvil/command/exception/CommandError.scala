@@ -100,13 +100,3 @@ case class ParseError(input: String, message: String) extends CommandError {
     .append(Component.text(": " + message).color(NamedTextColor.RED))
     .build()
 }
-
-//case class ConfigurateCommandError(ex: ConfigurateException) extends CommandError {
-//  override def text: Component = Component
-//    .text()
-//    .append(Component.text(s"A configurate exception occurred: ${ex.getClass}"))
-//    .append(Component.newline())
-//    .append(Component.text(ex.getMessage))
-//    .color(NamedTextColor.RED)
-//    .build()
-//}

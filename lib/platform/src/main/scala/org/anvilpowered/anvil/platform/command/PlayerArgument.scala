@@ -16,18 +16,27 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.anvilpowered.anvil.core.command
+package org.anvilpowered.anvil.platform.command
 
 import cats.Monad
 import cats.data.{EitherT, OptionT, ReaderT}
 import cats.implicits.toFlatMapOps
 import org.anvilpowered.anvil.command.suggestion.Suggestions.SuggestT
 import cats.effect.kernel.Async
+import org.anvilpowered.anvil.command.builder.RequiredArgumentBuilder
+import net.kyori.adventure.text.Component
+import org.anvilpowered.anvil.command.context.CommandContext
+import org.anvilpowered.anvil.command.exception.CommandError
+import org.anvilpowered.anvil.command.suggestion.Suggestions
+import org.anvilpowered.anvil.platform.user.PlayerService
+import org.anvilpowered.anvil.platform.user.Player
+import net.kyori.adventure.text.format.NamedTextColor
+import org.anvilpowered.anvil.command.exception.NotFoundError
 
 object PlayerArgument {
   extension [S](builder: RequiredArgumentBuilder[S, String]) {
     def suggestPlayerArgument(using playerService: PlayerService): builder.type =
-      builder.suggests([F[_]: Async] => _ => Suggestions.ofStream(ReaderT(playerService.getAll), _.username))
+      builder.suggests([F[_]: Async] => _ => Suggestions.ofStream(ReaderT(playerService.getAll), _.username.value))
   }
 
   /** Extract a player from an argument.
