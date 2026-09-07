@@ -1,6 +1,6 @@
 [versions]
 configurate = "4.2.0"
-kotlin = "2.2.21"
+kotlin = "2.4.20"
 log4j = "2.25.2"
 
 [libraries]
